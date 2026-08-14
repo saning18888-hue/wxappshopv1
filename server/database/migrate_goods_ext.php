@@ -22,18 +22,19 @@ function addCol($pdo, $table, $col, $def) {
 }
 
 addCol($pdo, 'goods', 'ext_json', "TEXT NOT NULL DEFAULT '{}'");
-addCol($pdo, 'goods', 'updated_at', "TEXT DEFAULT CURRENT_TIMESTAMP");
+// SQLite 不允许 ALTER TABLE ADD COLUMN 使用非常量默认值(如 CURRENT_TIMESTAMP)，故此处用可空列
+addCol($pdo, 'goods', 'updated_at', "TEXT");
 addCol($pdo, 'goods_specs', 'sort', "INTEGER NOT NULL DEFAULT 0");
-addCol($pdo, 'goods_specs', 'created_at', "TEXT DEFAULT CURRENT_TIMESTAMP");
+addCol($pdo, 'goods_specs', 'created_at', "TEXT");
 addCol($pdo, 'goods_spec_values', 'sort', "INTEGER NOT NULL DEFAULT 0");
-addCol($pdo, 'goods_spec_values', 'created_at', "TEXT DEFAULT CURRENT_TIMESTAMP");
+addCol($pdo, 'goods_spec_values', 'created_at', "TEXT");
 
 $pdo->exec("
 CREATE TABLE IF NOT EXISTS goods_attrs (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   goods_id   INTEGER NOT NULL,
   name       TEXT NOT NULL DEFAULT '',
-  values     TEXT NOT NULL DEFAULT '[]',
+  attr_values TEXT NOT NULL DEFAULT '[]',
   used       INTEGER NOT NULL DEFAULT 0,
   sort       INTEGER NOT NULL DEFAULT 0,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP

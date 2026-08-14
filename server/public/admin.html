@@ -148,7 +148,7 @@
     /* Modal */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100}
     .modal.show{display:flex}
-    .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md)}
+    .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md);font-size:14px;line-height:1.5}
     .modal-card.lg{width:860px}
     .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
     .modal-header h3{font-size:15px;font-weight:600}
@@ -184,9 +184,10 @@
     .goods-form-row .field.third{flex:0 0 33.333%}
     .goods-form-row .field.quarter{flex:0 0 25%}
     .goods-form-row .field textarea,.goods-panel .field textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;font-size:13px;background:#f7f8fa;min-height:80px;resize:vertical;font-family:inherit}
+    .modal-card .field label{font-size:13px}
     .goods-form-row .field textarea:focus,.goods-panel .field textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
     .field label .req{color:#ff4d4f;margin-right:3px}
-    .field-hint{font-size:12px;color:var(--text-muted);margin-top:6px}
+    .field-hint{font-size:13px;color:var(--text-muted);margin-top:6px}
     .field-hint.warn{color:#ff4d4f}
     .radio-group{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-top:6px}
     .radio input{accent-color:var(--primary)}
@@ -211,17 +212,17 @@
     /* 规格 / SKU */
     .spec-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;background:#fff}
     .spec-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    .spec-head input{flex:1;font-weight:600}
+    .spec-head input{flex:1;font-weight:600;font-size:13px}
     .spec-values{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .spec-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:#f2f3f5;border:1px solid var(--border);font-size:12px;color:var(--text-secondary)}
+    .spec-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:#f2f3f5;border:1px solid var(--border);font-size:13px;color:var(--text-secondary)}
     .spec-tag .remove{width:14px;height:14px;border-radius:50%;border:0;background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
     .spec-tag .remove:hover{color:#ff4d4f}
-    .spec-add-input{width:110px;padding:5px 10px;border:1px dashed #d0d6e0;border-radius:20px;background:transparent;font-size:12px;outline:none}
+    .spec-add-input{width:110px;padding:5px 10px;border:1px dashed #d0d6e0;border-radius:20px;background:transparent;font-size:13px;outline:none}
     .spec-add-input:focus{border-color:var(--primary)}
     .sku-table{width:100%;border-collapse:collapse;margin-top:8px}
-    .sku-table th,.sku-table td{padding:10px 8px;font-size:12px;border-bottom:1px solid var(--border);text-align:left}
+    .sku-table th,.sku-table td{padding:10px 8px;font-size:13px;border-bottom:1px solid var(--border);text-align:left}
     .sku-table th{background:#f7f8fa;color:var(--text-secondary);font-weight:600}
-    .sku-table input{width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px}
+    .sku-table input{width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:13px}
     .sku-empty{padding:30px;text-align:center;color:var(--text-muted);font-size:13px}
 
     /* 属性 */
@@ -241,7 +242,7 @@
     .rte-toolbar button{width:28px;height:28px;border:0;background:transparent;border-radius:6px;cursor:pointer;color:var(--text-secondary);font-size:14px;display:flex;align-items:center;justify-content:center}
     .rte-toolbar button:hover{background:#e8eaed;color:var(--text)}
     .rte-toolbar button.active{background:var(--primary-50);color:var(--primary)}
-    .rte-editor{min-height:220px;padding:12px;outline:none;font-size:14px;line-height:1.6;overflow:auto}
+    .rte-editor{min-height:220px;padding:12px;outline:none;font-size:13px;line-height:1.6;overflow:auto}
     .rte-editor p{margin:0 0 8px}
     .rte-editor img{max-width:100%}
 
@@ -725,14 +726,15 @@
 
         <!-- 商品属性 -->
         <div class="goods-panel" id="tab-attr" style="padding:0 20px 18px">
-          <div class="attr-toolbar"><button class="btn" onclick="openAttrManager()">+ 管理属性</button><span class="muted" style="line-height:30px">勾选属性后将在商品详情页展示</span></div>
-          <div id="attrList" class="attr-list"></div>
+          <div class="attr-toolbar"><span class="muted">为商品设置参数属性，勾选“展示”后将在商品详情页呈现（与规格维护方式一致）</span></div>
+          <div id="attrList"></div>
+          <button class="btn outline" onclick="addAttr()">+ 添加属性</button>
         </div>
 
         <!-- 详情介绍 -->
         <div class="goods-panel" id="tab-detail" style="padding:0 20px 18px">
           <div class="rte-wrap">
-            <div class="rte-toolbar" id="rteToolbar">
+            <div class="rte-toolbar" id="rteToolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
               <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
               <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
               <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
@@ -825,33 +827,6 @@
         <button class="btn gray" onclick="closeGoodsModal()">取消</button>
         <button class="btn" onclick="saveGoods()">确定</button>
       </div>
-    </div>
-  </div>
-
-  <!-- 属性管理弹窗 -->
-  <div id="attrModal" class="modal">
-    <div class="modal-card lg">
-      <div class="modal-header"><h3>属性管理</h3><span class="close" onclick="closeAttrModal()">&times;</span></div>
-      <div class="modal-body">
-        <div class="toolbar"><button class="btn" onclick="addAttrItem()">+ 添加属性</button></div>
-        <div class="table-wrap"><table><thead><tr><th>属性名称</th><th>属性值</th><th>使用</th><th>排序</th><th>操作</th></tr></thead><tbody id="attrMgrBody"></tbody></table></div>
-      </div>
-      <div class="modal-footer"><button class="btn gray" onclick="closeAttrModal()">取消</button><button class="btn" onclick="confirmAttrManager()">确定</button></div>
-    </div>
-  </div>
-
-  <!-- 属性值编辑弹窗 -->
-  <div id="attrValueModal" class="modal">
-    <div class="modal-card">
-      <div class="modal-header"><h3 id="attrValueTitle">添加属性值</h3><span class="close" onclick="closeAttrValueModal()">&times;</span></div>
-      <div class="modal-body">
-        <div class="field"><label><span class="req">*</span>属性名称</label><input id="avName" placeholder="属性名称"></div>
-        <div class="field"><label>属性值</label>
-          <div style="display:flex;gap:8px;margin-bottom:10px"><input id="avInput" placeholder="输入属性值后回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addAttrValueTag()}"><button class="btn" onclick="addAttrValueTag()">添加属性值</button></div>
-          <div class="spec-values" id="avTags"></div>
-        </div>
-      </div>
-      <div class="modal-footer"><button class="btn gray" onclick="closeAttrValueModal()">取消</button><button class="btn" onclick="saveAttrValueItem()">确定</button></div>
     </div>
   </div>
 
@@ -1344,69 +1319,62 @@
       </tbody></table>`;
     }
 
-    /* Attrs */
-    function renderAttrs(){
-      const wrap=document.getElementById('attrList');
-      if(!gState.attrs.length){wrap.innerHTML='<div class="attr-empty">暂无属性，点击“管理属性”添加</div>';return;}
-      wrap.innerHTML=gState.attrs.map((a,i)=>`
-        <div class="attr-row">
-          <input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0;renderAttrs()">
-          <div class="name">${a.name}</div>
-          <div class="vals">${(a.values||[]).join('、')}</div>
-          <div class="sort-btns">
-            <button onclick="moveAttr(${i},-1)">↑</button>
-            <button onclick="moveAttr(${i},1)">↓</button>
-          </div>
-        </div>`).join('');
+    /* Attrs（与规格一致的卡片式维护） */
+    function addAttr(){
+      gState.attrs.push({id:'at_'+Date.now(),name:'',values:[],used:0,sort:gState.attrs.length});
+      renderAttrs();
     }
+    function removeAttr(idx){gState.attrs.splice(idx,1);renderAttrs();}
+    function updateAttrName(idx,val){gState.attrs[idx].name=val;}
+    function addAttrValue(idx,val){if(!val.trim())return;gState.attrs[idx].values.push(val.trim());renderAttrs();}
+    function removeAttrValue(aIdx,vIdx){gState.attrs[aIdx].values.splice(vIdx,1);renderAttrs();}
     function moveAttr(idx,dir){
       const n=idx+dir;if(n<0||n>=gState.attrs.length)return;
       [gState.attrs[idx],gState.attrs[n]]=[gState.attrs[n],gState.attrs[idx]];
       renderAttrs();
     }
-    function openAttrManager(){renderAttrMgr();document.getElementById('attrModal').classList.add('show');}
-    function closeAttrModal(){document.getElementById('attrModal').classList.remove('show');}
-    function renderAttrMgr(){
-      document.getElementById('attrMgrBody').innerHTML=gState.attrs.map((a,i)=>`
-        <tr>
-          <td>${a.name}</td>
-          <td>${(a.values||[]).join('、')}</td>
-          <td><input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0;renderAttrMgr();renderAttrs();"></td>
-          <td><button class="btn sm gray" onclick="moveAttr(${i},-1);renderAttrMgr()">↑</button><button class="btn sm gray" onclick="moveAttr(${i},1);renderAttrMgr()">↓</button></td>
-          <td><button class="btn sm outline" onclick="editAttrItem(${i})">编辑</button><button class="btn sm danger" onclick="gState.attrs.splice(${i},1);renderAttrMgr();renderAttrs();">删除</button></td>
-        </tr>`).join('');
+    function renderAttrs(){
+      const wrap=document.getElementById('attrList');
+      if(!gState.attrs.length){wrap.innerHTML='<div class="attr-empty">暂无属性，点击“+ 添加属性”添加</div>';return;}
+      wrap.innerHTML=gState.attrs.map((a,i)=>`
+        <div class="spec-card">
+          <div class="spec-head">
+            <input value="${escapeAttr(a.name)}" placeholder="属性名（如材质、产地）" oninput="updateAttrName(${i},this.value)">
+            <label class="check-item" style="white-space:nowrap"><input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0"> 详情页展示</label>
+            <button class="btn sm danger" onclick="removeAttr(${i})">删除属性</button>
+          </div>
+          <div class="spec-values">
+            ${(a.values||[]).map((v,vi)=>`<span class="spec-tag">${escapeAttr(v)}<span class="remove" onclick="removeAttrValue(${i},${vi})">&times;</span></span>`).join('')}
+            <input class="spec-add-input" placeholder="输入属性值回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addAttrValue(${i},this.value);this.value='';}">
+          </div>
+        </div>`).join('');
     }
-    function addAttrItem(){gState.editingAttrIdx=null;document.getElementById('attrValueTitle').textContent='添加属性';document.getElementById('avName').value='';document.getElementById('avTags').innerHTML='';gState.avValues=[];document.getElementById('attrValueModal').classList.add('show');}
-    function editAttrItem(idx){
-      gState.editingAttrIdx=idx;const a=gState.attrs[idx];
-      document.getElementById('attrValueTitle').textContent='编辑属性值';document.getElementById('avName').value=a.name;gState.avValues=[...(a.values||[])];renderAvTags();
-      document.getElementById('attrValueModal').classList.add('show');
-    }
-    function closeAttrValueModal(){document.getElementById('attrValueModal').classList.remove('show');}
-    function addAttrValueTag(){const v=document.getElementById('avInput').value.trim();if(!v)return;gState.avValues.push(v);document.getElementById('avInput').value='';renderAvTags();}
-    function removeAvTag(idx){gState.avValues.splice(idx,1);renderAvTags();}
-    function renderAvTags(){document.getElementById('avTags').innerHTML=gState.avValues.map((v,i)=>`<span class="spec-tag">${v}<span class="remove" onclick="removeAvTag(${i})">&times;</span></span>`).join('');}
-    function saveAttrValueItem(){
-      const name=document.getElementById('avName').value.trim();if(!name){toast('请输入属性名称');return;}
-      const item={name,values:[...gState.avValues],used:0,sort:gState.editingAttrIdx===null?gState.attrs.length:gState.attrs[gState.editingAttrIdx].sort};
-      if(gState.editingAttrIdx===null)gState.attrs.push(item);else gState.attrs[gState.editingAttrIdx]={...gState.attrs[gState.editingAttrIdx],...item};
-      closeAttrValueModal();renderAttrMgr();renderAttrs();
-    }
-    function confirmAttrManager(){closeAttrModal();renderAttrs();}
+    function escapeAttr(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-    /* Rich text editor */
+    /* Rich text editor（保存选区，工具栏/插入资源时不会丢失光标） */
+    let gDetailRange=null;
+    const gDetailEl=document.getElementById('gDetail');
+    document.addEventListener('selectionchange',()=>{
+      const s=window.getSelection();
+      if(s&&s.rangeCount&&gDetailEl.contains(s.anchorNode)){gDetailRange=s.getRangeAt(0).cloneRange();}
+    });
+    function restoreDetailRange(){
+      if(!gDetailRange)return;
+      gDetailEl.focus();
+      const s=window.getSelection();s.removeAllRanges();s.addRange(gDetailRange);
+    }
     document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
-      const cmd=b.dataset.cmd;document.execCommand(cmd,false,null);document.getElementById('gDetail').focus();
+      const cmd=b.dataset.cmd;restoreDetailRange();document.execCommand(cmd,false,null);
       b.classList.toggle('active',document.queryCommandState(cmd));
     }));
     async function insertDetailImage(){
       const input=document.createElement('input');input.type='file';input.accept='image/*';
-      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url)document.execCommand('insertImage',false,url);}};
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){restoreDetailRange();document.execCommand('insertImage',false,url);}}};
       input.click();
     }
     async function insertDetailVideo(){
       const input=document.createElement('input');input.type='file';input.accept='video/*';
-      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url)document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}};
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url){restoreDetailRange();document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}}};
       input.click();
     }
     function addMessageField(){const name=prompt('留言字段名称');if(name)document.getElementById('gMessage').value=name;}
@@ -1457,7 +1425,7 @@
       document.getElementById('gShareTitle').value=ext.share_title||'';
       gState.shareCover=ext.share_cover||'';renderShareCover();
 
-      gState.specs=(g.spec_groups||[]).map(s=>({id:'sp_'+s.id,name:s.name,values:s.values.map(v=>({id:'sv_'+v.id,value:v.value}))}));
+      gState.specs=(g.spec_groups||[]).map(s=>({id:'sp_'+s.id,name:s.name,values:s.values.map(v=>({id:String(v.id),value:v.value}))}));
       gState.skus=(g.skus||[]).map(s=>({spec_value_ids:(s.spec_value_ids||'').split(','),price:s.price,market_price:s.market_price,stock:s.stock,image:s.image}));
       syncSkus();
       gState.attrs=(g.attrs||[]).map(a=>({...a,values:a.values||[]}));

@@ -175,7 +175,7 @@ class GoodsService
             return [
                 'id'       => $a['id'],
                 'name'     => $a['name'],
-                'values'   => json_decode($a['values'] ?? '[]', true) ?: [],
+                'values'   => json_decode($a['attr_values'] ?? '[]', true) ?: [],
                 'used'     => (int) $a['used'],
                 'sort'     => (int) $a['sort'],
             ];
@@ -274,7 +274,7 @@ class GoodsService
             Db::name('goods_attrs')->insert([
                 'goods_id'   => $goodsId,
                 'name'       => $a['name'] ?? '',
-                'values'     => json_encode($a['values'] ?? [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+                'attr_values' => json_encode($a['values'] ?? [], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
                 'used'       => intval($a['used'] ?? 0),
                 'sort'       => intval($a['sort'] ?? $i),
                 'created_at' => date('Y-m-d H:i:s'),
