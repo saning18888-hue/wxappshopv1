@@ -1,0 +1,11 @@
+<view class="home">
+  <view class="search-bar">
+    <view class="search-box">
+      <text class="search-ico">🔍</text>
+      <input class="search-input" placeholder="搜索你想要的好物" confirm-type="search" bindconfirm="onSearch" />
+    </view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <diy-render wx:else components="{{components}}" goodsList="{{goodsList}}" cats="{{cats}}" />
+</view>

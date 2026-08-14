@@ -1,0 +1,22 @@
+<view class="list">
+  <view class="sort-bar">
+    <view wx:for="{{sorts}}" wx:key="key" class="sort-item {{sort === item.key ? 'active' : ''}}"
+      data-sort="{{item.key}}" bindtap="setSort">
+      {{item.label}}
+    </view>
+  </view>
+
+  <view wx:if="{{list.length === 0 && !loading}}" class="empty">暂无商品</view>
+
+  <view class="goods-grid">
+    <view wx:for="{{list}}" wx:key="id" class="goods-cell" data-id="{{item.id}}" bindtap="goDetail">
+      <image class="goods-cover" src="{{item.cover}}" mode="aspectFill" />
+      <view class="goods-name">{{item.title}}</view>
+      <view class="goods-sub muted">{{item.subtitle}}</view>
+      <view class="goods-price price">¥{{item.price}}
+        <text class="goods-market muted">¥{{item.market_price}}</text>
+      </view>
+      <view class="goods-sales muted">已售{{item.sales}}</view>
+    </view>
+  </view>
+</view>

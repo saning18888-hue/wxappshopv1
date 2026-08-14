@@ -1,0 +1,18 @@
+.home { min-height: 100vh; }
+.search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #FF6B35;
+  padding: 16rpx 24rpx;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 999rpx;
+  padding: 0 24rpx;
+  height: 72rpx;
+}
+.search-ico { font-size: 28rpx; margin-right: 12rpx; color: #999; }
+.search-input { flex: 1; font-size: 28rpx; }

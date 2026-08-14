@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商城运营后台</title>
+  <style>
+    :root{
+      --primary:#FF6B35;
+      --primary-50:#FFF5F0;
+      --primary-100:#FFE8DE;
+      --green:#00B86B;
+      --bg:#F5F6F8;
+      --surface:#FFFFFF;
+      --border:#EBECEF;
+      --text:#262626;
+      --text-secondary:#595959;
+      --text-muted:#8C8C8C;
+      --radius:10px;
+      --radius-sm:6px;
+      --shadow:0 2px 8px rgba(0,0,0,.04);
+      --shadow-md:0 4px 16px rgba(0,0,0,.06);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+    a{color:var(--primary);text-decoration:none}
+    h1,h2,h3,h4,p{margin:0}
+    button{font-family:inherit;cursor:pointer}
+
+    /* Login */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff8f5 0%,#f5f6f8 100%)}
+    .login-card{width:360px;background:var(--surface);padding:36px;border-radius:var(--radius);box-shadow:var(--shadow-md)}
+    .login-card h2{margin-bottom:8px;font-size:22px}
+    .login-card .sub{color:var(--text-muted);margin-bottom:26px;font-size:13px}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px}
+    .field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border .2s}
+    .field input:focus{border-color:var(--primary)}
+    .btn{border:0;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;background:var(--primary);color:#fff;transition:opacity .2s,transform .1s}
+    .btn:hover{opacity:.9}
+    .btn:active{transform:translateY(1px)}
+    .btn.gray{background:#f0f0f0;color:var(--text-secondary)}
+    .btn.green{background:var(--green)}
+    .btn.sm{padding:6px 12px;font-size:12px}
+    .btn.outline{background:#fff;color:var(--primary);border:1px solid var(--primary-100)}
+    .hidden{display:none!important}
+
+    /* Layout */
+    #mainView{display:flex;min-height:100vh}
+
+    /* Level 1 sidebar */
+    .sidebar-l1{width:92px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:16px 0;z-index:10}
+    .sidebar-l1 .brand{font-size:13px;font-weight:800;color:var(--primary);margin-bottom:14px;text-align:center;letter-spacing:.5px}
+    .l1-nav{width:100%}
+    .l1-item{width:100%;display:flex;flex-direction:column;align-items:center;padding:13px 0;cursor:pointer;color:var(--text-muted);transition:all .15s;border-left:3px solid transparent;position:relative}
+    .l1-item:hover{color:var(--text-secondary);background:#fafafa}
+    .l1-item.active{color:var(--primary);background:var(--primary-50);border-left-color:var(--primary)}
+    .l1-item svg{width:22px;height:22px;margin-bottom:5px;stroke-width:1.7}
+    .l1-item span{font-size:12px;line-height:1.2}
+    .l1-foot{margin-top:auto;font-size:11px;color:#bfbfbf;text-align:center;line-height:1.5;padding:10px 6px}
+
+    /* Level 2 sidebar */
+    .sidebar-l2{width:186px;flex-shrink:0;background:#f7f8fa;border-right:1px solid var(--border);padding:10px 0;display:flex;flex-direction:column}
+    .l2-title{font-size:13px;font-weight:700;color:var(--text-muted);padding:12px 20px 8px;margin:0;text-transform:uppercase;letter-spacing:1px}
+    .l2-nav{padding:4px 0}
+    .l2-item{padding:10px 18px 10px 20px;font-size:13px;color:var(--text-secondary);cursor:pointer;border-radius:0 22px 22px 0;margin:2px 12px 2px 0;transition:all .12s;display:flex;align-items:center;gap:10px;position:relative}
+    .l2-item:hover{color:var(--primary);background:rgba(255,107,53,.06)}
+    .l2-item.active{color:var(--primary);background:var(--primary-50);font-weight:600}
+    .l2-item svg{width:16px;height:16px;flex-shrink:0;stroke-width:1.9}
+    .l2-item .txt{flex:1}
+    .l2-item .tag{font-size:10px;padding:1px 6px;border-radius:8px;background:#e8e8e8;color:#888;margin-left:auto}
+    .l2-item .arrow{width:14px;height:14px;stroke-width:2;transition:transform .2s;margin-left:auto}
+    .l2-item.expanded .arrow{transform:rotate(90deg)}
+    .l2-sub{padding-left:46px;padding-right:18px;overflow:hidden;max-height:0;transition:max-height .2s ease}
+    .l2-sub.open{max-height:200px}
+    .l2-sub-item{padding:7px 0;font-size:12px;color:var(--text-muted);cursor:pointer;transition:color .12s}
+    .l2-sub-item:hover,.l2-sub-item.active{color:var(--primary)}
+
+    /* Main area */
+    .main{flex:1;display:flex;flex-direction:column;min-width:0}
+    .topbar{background:var(--surface);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+    .topbar h1{font-size:16px;color:var(--text);font-weight:600}
+    .topbar .right{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text-muted)}
+
+    .content{padding:20px 22px;flex:1;overflow:auto}
+    .card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+    .card h3{font-size:15px;margin-bottom:16px;font-weight:600}
+    .toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+    .toolbar input,.toolbar select{padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px}
+    .toolbar input:focus,.toolbar select:focus{border-color:var(--primary)}
+    .muted{color:var(--text-muted);font-size:13px}
+
+    /* Stats */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-bottom:18px}
+    .stat-card{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:transform .15s}
+    .stat-card:hover{transform:translateY(-2px)}
+    .stat-card .label{font-size:12px;color:var(--text-muted);margin-bottom:6px}
+    .stat-card .value{font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+    .stat-card .trend{font-size:12px;margin-top:6px}
+    .trend.up{color:var(--green)}
+    .trend.down{color:#ff4d4f}
+    .trend.warn{color:var(--primary)}
+    .quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+    .quick-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;transition:all .15s}
+    .quick-item:hover{border-color:var(--primary-100);background:var(--primary-50)}
+    .quick-item svg{width:20px;height:20px;margin-bottom:6px;stroke:var(--primary)}
+    .quick-item div{font-size:12px;color:var(--text-secondary)}
+
+    /* Table */
+    .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
+    table{width:100%;border-collapse:collapse;background:var(--surface)}
+    th,td{padding:12px 14px;text-align:left;font-size:13px;border-bottom:1px solid var(--border)}
+    th{background:#fafafa;color:var(--text-secondary);font-weight:600}
+    tr:hover td{background:#fafafa}
+    .thumb{width:44px;height:44px;object-fit:cover;border-radius:var(--radius-sm);background:#f0f0f0}
+    .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px}
+    .badge.gray{background:#f0f0f0;color:#666}
+    .badge.green{background:#e6f7ef;color:var(--green)}
+    .badge.orange{background:var(--primary-50);color:var(--primary)}
+    .badge.red{background:#fff1f0;color:#ff4d4f}
+
+    /* Pagination */
+    .pager{display:flex;gap:8px;justify-content:center;margin-top:16px;align-items:center}
+    .pager button{padding:5px 12px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:12px;color:var(--text-secondary)}
+    .pager button:disabled{opacity:.5;cursor:not-allowed}
+    .pager button:not(:disabled):hover{border-color:var(--primary);color:var(--primary)}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100}
+    .modal.show{display:flex}
+    .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md)}
+    .modal-card.lg{width:860px}
+    .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .modal-header h3{font-size:15px;font-weight:600}
+    .modal-header .close{font-size:20px;color:var(--text-muted);cursor:pointer;line-height:1}
+    .modal-body{padding:18px 20px;overflow:auto}
+    .modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+    .form-row{display:flex;gap:16px;margin-bottom:14px}
+    .form-row .field{flex:1;margin-bottom:0}
+    .form-row .field label{font-size:12px}
+    .form-row .field input,.form-row .field select,.form-row .field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px}
+    .form-row .field input:focus,.form-row .field select:focus,.form-row .field textarea:focus{border-color:var(--primary)}
+    .form-row .field textarea{min-height:80px;resize:vertical;font-family:inherit}
+    .img-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .img-preview img{height:56px;width:56px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
+    .json-area{width:100%;min-height:300px;font-family:monospace;font-size:12px;line-height:1.5;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none}
+    .json-area:focus{border-color:var(--primary)}
+
+    /* Design builder */
+    .builder{display:grid;grid-template-columns:260px 1fr;gap:16px}
+    .comp-list{display:flex;flex-direction:column;gap:10px}
+    .comp-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:grab;transition:all .15s}
+    .comp-item:hover{border-color:var(--primary-100);box-shadow:var(--shadow)}
+    .comp-item .name{font-size:13px;font-weight:600;margin-bottom:4px}
+    .comp-item .hint{font-size:11px;color:var(--text-muted)}
+    .stage{background:#f5f5f5;border-radius:var(--radius);min-height:420px;padding:14px;overflow:auto}
+    .stage-empty{text-align:center;color:var(--text-muted);padding:60px 20px}
+    .stage-component{background:var(--surface);border:1px dashed #d9d9d9;border-radius:var(--radius-sm);margin-bottom:10px;padding:12px;position:relative}
+    .stage-component:hover{border-color:var(--primary)}
+    .stage-component .actions{position:absolute;right:10px;top:10px;display:flex;gap:6px}
+    .stage-component .actions button{padding:3px 8px;font-size:11px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;color:var(--text-secondary)}
+    .stage-component .actions button:hover{border-color:var(--primary);color:var(--primary)}
+    .phone-preview{width:260px;background:var(--surface);border:12px solid #333;border-radius:30px;overflow:hidden;box-shadow:var(--shadow-md)}
+    .phone-preview .screen{height:420px;overflow:auto;background:#f8f8f8;padding:10px}
+    .phone-preview .screen img{max-width:100%;border-radius:var(--radius-sm)}
+    .designer{display:grid;grid-template-columns:1fr 290px;gap:16px}
+
+    /* Empty / placeholder */
+    .empty{text-align:center;padding:70px 20px;color:var(--text-muted)}
+    .empty svg{width:64px;height:64px;margin-bottom:16px;stroke:var(--primary);opacity:.6}
+    .empty h3{font-size:18px;color:var(--text);margin-bottom:8px}
+    .empty p{font-size:13px;margin-bottom:6px}
+
+    /* Toast */
+    .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none}
+    .toast.show{opacity:1}
+
+    @media (max-width:900px){
+      .sidebar-l1{width:76px}
+      .sidebar-l1 .brand{display:none}
+      .sidebar-l2{width:150px}
+      .designer,.builder{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <!-- Login -->
+  <div id="loginWrap" class="login-wrap">
+    <div class="login-card">
+      <h2>商城运营后台</h2>
+      <p class="sub">B2C 小程序商城 · 管理端</p>
+      <div class="field"><label>账号</label><input id="user" value="admin"></div>
+      <div class="field"><label>密码</label><input id="pass" type="password" value="admin123"></div>
+      <button class="btn" style="width:100%;padding:11px" onclick="login()">登录</button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="mainView" class="hidden">
+    <!-- 一级菜单 -->
+    <aside class="sidebar-l1">
+      <div class="brand">商城后台</div>
+      <nav class="l1-nav" id="l1Nav"></nav>
+      <div class="l1-foot">admin<br>admin123</div>
+    </aside>
+
+    <!-- 二级菜单 -->
+    <aside class="sidebar-l2" id="l2Sidebar">
+      <h2 class="l2-title" id="l2Title">概况</h2>
+      <nav class="l2-nav" id="l2Nav"></nav>
+    </aside>
+
+    <!-- 主内容 -->
+    <div class="main">
+      <div class="topbar">
+        <h1 id="pageTitle">运营概览</h1>
+        <div class="right">
+          <span id="who">admin</span>
+          <button class="btn gray sm" onclick="logout()">退出</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- 概况 -->
+        <div id="overviewPanel" class="panel hidden">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="label">今日订单</div>
+              <div class="value" id="ovOrder">-</div>
+              <div class="trend up">↑ 12% 较昨日</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">今日销售额</div>
+              <div class="value" id="ovSale">-</div>
+              <div class="trend up">↑ 8% 较昨日</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">待发货</div>
+              <div class="value" id="ovPending">-</div>
+              <div class="trend warn">需处理</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">在售商品</div>
+              <div class="value" id="ovGoods">-</div>
+              <div class="trend up">↑ 2 新增</div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>快捷入口</h3>
+            <div class="quick-grid">
+              <div class="quick-item" onclick="switchMenu('goods','list')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                <div>商品列表</div>
+              </div>
+              <div class="quick-item" onclick="switchMenu('orders','list')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2H9V5Z"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>
+                <div>订单列表</div>
+              </div>
+              <div class="quick-item" onclick="switchMenu('shop','templates')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                <div>我的模板</div>
+              </div>
+              <div class="quick-item" onclick="switchMenu('goods','category')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                <div>分类管理</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>最近动态</h3>
+            <p class="muted">暂无最新动态，功能持续完善中。</p>
+          </div>
+        </div>
+
+        <!-- 商品列表 -->
+        <div id="goodsPanel" class="panel hidden">
+          <div class="card">
+            <div class="toolbar">
+              <select id="goodsCat"><option value="0">全部分类</option></select>
+              <input id="goodsKw" placeholder="搜索商品标题">
+              <button class="btn" onclick="loadGoods()">查询</button>
+              <button class="btn outline" onclick="openGoodsModal()">+ 新增商品</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>封面</th><th>标题</th><th>分类</th><th>价格</th><th>库存</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody id="goodsBody"></tbody>
+              </table>
+            </div>
+            <div class="pager" id="goodsPager"></div>
+          </div>
+        </div>
+
+        <!-- 订单列表 -->
+        <div id="ordersPanel" class="panel hidden">
+          <div class="card">
+            <div class="toolbar">
+              <select id="orderStatus">
+                <option value="-1">全部状态</option>
+                <option value="0">待付款</option>
+                <option value="1">待发货</option>
+                <option value="2">待收货</option>
+                <option value="3">已完成</option>
+                <option value="-2">已取消</option>
+              </select>
+              <button class="btn" onclick="loadOrders()">查询</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>订单号</th><th>用户</th><th>金额</th><th>状态</th><th>时间</th><th>操作</th></tr></thead>
+                <tbody id="ordersBody"></tbody>
+              </table>
+            </div>
+            <div class="pager" id="ordersPager"></div>
+          </div>
+        </div>
+
+        <!-- 首页装修 -->
+        <div id="designPanel" class="panel hidden">
+          <div class="card" style="padding-bottom:12px">
+            <div class="toolbar" style="justify-content:space-between">
+              <h3>首页 DIY 装修</h3>
+              <div>
+                <button class="btn outline sm" onclick="loadDesign()">刷新</button>
+                <button class="btn green sm" onclick="saveDesign()">保存草稿</button>
+                <button class="btn sm" onclick="publishDesign()">发布上线</button>
+              </div>
+            </div>
+            <div class="designer">
+              <div>
+                <div class="builder">
+                  <div class="comp-list">
+                    <div class="comp-item" onclick="addComp('banner')">
+                      <div class="name">图片轮播</div>
+                      <div class="hint">添加顶部 Banner 广告位</div>
+                    </div>
+                    <div class="comp-item" onclick="addComp('icons')">
+                      <div class="name">金刚区</div>
+                      <div class="hint">快捷入口图标宫格</div>
+                    </div>
+                    <div class="comp-item" onclick="addComp('goods')">
+                      <div class="name">精选好物</div>
+                      <div class="hint">商品横向/瀑布流推荐</div>
+                    </div>
+                    <div class="comp-item" onclick="addComp('title')">
+                      <div class="name">标题栏</div>
+                      <div class="hint">带副标题的分区标题</div>
+                    </div>
+                    <div class="comp-item" onclick="addComp('notice')">
+                      <div class="name">公告</div>
+                      <div class="hint">滚动通知/活动提示</div>
+                    </div>
+                    <div class="comp-item" onclick="addComp('coupon')">
+                      <div class="name">优惠券</div>
+                      <div class="hint">领券入口（二期）</div>
+                    </div>
+                  </div>
+                  <div class="stage" id="designStage">
+                    <div class="stage-empty">点击左侧组件添加到首页<br>拖动可排序，点击编辑</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <textarea id="designJson" class="json-area" spellcheck="false"></textarea>
+                <p class="muted" style="margin-top:8px">可直接编辑 JSON，修改后点「保存草稿」生效。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 通用占位 -->
+        <div id="placeholderPanel" class="panel hidden">
+          <div class="card">
+            <div class="empty">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>
+              <h3>模块建设中</h3>
+              <p>该功能尚未开放，敬请期待后续版本。</p>
+              <p class="muted">当前已接入：概况、店铺（我的模板）、商品、订单</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 商品编辑弹窗 -->
+  <div id="goodsModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="goodsModalTitle">新增商品</h3><span class="close" onclick="closeGoodsModal()">&times;</span></div>
+      <div class="modal-body">
+        <input type="hidden" id="gId">
+        <div class="form-row">
+          <div class="field"><label>商品标题</label><input id="gTitle" placeholder="请输入标题"></div>
+          <div class="field"><label>副标题</label><input id="gSub" placeholder="简短卖点"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>分类</label><select id="gCat"></select></div>
+          <div class="field"><label>状态</label><select id="gStatus"><option value="1">上架</option><option value="0">下架</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>售价（元）</label><input id="gPrice" type="number" step="0.01"></div>
+          <div class="field"><label>市场价（元）</label><input id="gMarket" type="number" step="0.01"></div>
+          <div class="field"><label>库存</label><input id="gStock" type="number"></div>
+        </div>
+        <div class="field">
+          <label>商品图片 URL（每行一个，首张为封面）</label>
+          <textarea id="gImages" rows="3" placeholder="https://example.com/1.jpg"></textarea>
+          <div class="img-preview" id="gImgPreview"></div>
+        </div>
+        <div class="field"><label>详情 HTML</label><textarea id="gDetail" rows="4"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeGoodsModal()">取消</button>
+        <button class="btn" onclick="saveGoods()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 订单详情弹窗 -->
+  <div id="orderModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>订单详情</h3><span class="close" onclick="closeOrderModal()">&times;</span></div>
+      <div class="modal-body" id="orderDetail"></div>
+      <div class="modal-footer" id="orderFooter"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const BASE='/admin';
+    const token=()=>localStorage.getItem('admin_token')||'';
+
+    /* 菜单配置 */
+    const ICONS={
+      overview:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+      shop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/></svg>',
+      goods:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2.13-1.23"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>',
+      orders:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2H9V5Z"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>',
+      data:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
+      content:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M9 7h6"/><path d="M9 11h6"/></svg>',
+      system:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12.22 2h-.44a2 2 0 0 0-2 1.72l-.28 2.1a9.99 9.99 0 0 0-1.93.56l-1.8-1.4a2 2 0 0 0-2.5 0L2.55 5.73a2 2 0 0 0 0 2.5l1.4 1.8a10 10 0 0 0-.56 1.93l-2.1.28A2 2 0 0 0 0 13.78v.44a2 2 0 0 0 1.72 2l2.1.28c.14.66.33 1.3.56 1.93l-1.4 1.8a2 2 0 0 0 0 2.5l1.01 1.01a2 2 0 0 0 2.5 0l1.8-1.4a10 10 0 0 0 1.93.56l.28 2.1a2 2 0 0 0 2 1.72h.44a2 2 0 0 0 2-1.72l.28-2.1a10 10 0 0 0 1.93-.56l1.8 1.4a2 2 0 0 0 2.5 0l1.01-1.01a2 2 0 0 0 0-2.5l-1.4-1.8a10 10 0 0 0 .56-1.93l2.1-.28A2 2 0 0 0 24 14.22v-.44a2 2 0 0 0-1.72-2l-2.1-.28a10 10 0 0 0-.56-1.93l1.4-1.8a2 2 0 0 0 0-2.5l-1.01-1.01a2 2 0 0 0-2.5 0l-1.8 1.4a10 10 0 0 0-1.93-.56l-.28-2.1A2 2 0 0 0 12.22 2Z"/><circle cx="12" cy="12" r="3"/></svg>',
+      plugins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+      layout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>',
+      store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/></svg>',
+      settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 9 4.6V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>',
+      truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
+      mapPin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+      tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><circle cx="7" cy="7" r="1"/></svg>',
+      package:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2.13-1.23"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>',
+      layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+      ruler:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 5h18"/><path d="M3 19h18"/><path d="M5 3v16"/><path d="M19 5v14"/><path d="M9 3v5"/><path d="M15 3v5"/><path d="M9 16v5"/><path d="M15 16v5"/></svg>',
+      listCheck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>',
+      clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 12h6"/><path d="M9 16h6"/><rect x="4" y="4" width="16" height="18" rx="2"/></svg>',
+      rotateCcw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
+      creditCard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+      message:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+      checkCircle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>',
+      pieChart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
+      trendingUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>',
+      box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2.13-1.23"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>',
+      globe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+      barChart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>',
+      home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>',
+      fileText:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
+      image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
+      grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+      images:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/><path d="M18 3v18"/></svg>',
+      link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+      externalLink:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>',
+      shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>',
+      clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+      paperclip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
+      share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51 15.42 17.49"/><path d="M15.41 6.51 8.59 10.49"/></svg>',
+      megaphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6c0-1.3.8-2.4 2-2.8"/><path d="M16 8.5v6.8"/></svg>',
+      users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      briefcase:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+      tool:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+      userCheck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m16 11 2 2 4-4"/></svg>',
+      chevron:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>'
+    };
+
+    const MENU=[
+      {key:'overview',label:'概况',icon:ICONS.overview,children:[
+        {key:'dashboard',label:'运营概览',icon:ICONS.pieChart,panel:'overviewPanel',default:true}
+      ]},
+      {key:'shop',label:'店铺',icon:ICONS.shop,children:[
+        {key:'templates',label:'我的模板',icon:ICONS.layout,panel:'designPanel',default:true},
+        {key:'base',label:'基础设置',icon:ICONS.settings},
+        {key:'info',label:'店铺设置',icon:ICONS.store},
+        {key:'delivery',label:'配送设置',icon:ICONS.truck}
+      ]},
+      {key:'member',label:'会员',icon:ICONS.users,children:[
+        {key:'list',label:'会员列表',icon:ICONS.users,default:true},
+        {key:'group',label:'会员分组',icon:ICONS.userCheck}
+      ]},
+      {key:'goods',label:'商品',icon:ICONS.goods,children:[
+        {key:'list',label:'商品列表',icon:ICONS.package,panel:'goodsPanel',default:true},
+        {key:'category',label:'商品分类',icon:ICONS.layers},
+        {key:'sku',label:'商品规格',icon:ICONS.ruler},
+        {key:'attr',label:'商品属性',icon:ICONS.listCheck}
+      ]},
+      {key:'orders',label:'订单',icon:ICONS.orders,children:[
+        {key:'list',label:'订单列表',icon:ICONS.clipboard,panel:'ordersPanel',default:true},
+        {key:'refund',label:'订单售后',icon:ICONS.rotateCcw},
+        {key:'cards',label:'电子卡券',icon:ICONS.creditCard},
+        {key:'review',label:'评论管理',icon:ICONS.message},
+        {key:'verify',label:'核销管理',icon:ICONS.checkCircle}
+      ]},
+      {key:'data',label:'数据',icon:ICONS.data,children:[
+        {key:'overview',label:'商城概况',icon:ICONS.pieChart,default:true},
+        {key:'trade',label:'交易分析',icon:ICONS.trendingUp},
+        {key:'goods',label:'商品分析',icon:ICONS.box},
+        {key:'web',label:'网站分析',icon:ICONS.globe},
+        {key:'summary',label:'汇总分析',icon:ICONS.barChart}
+      ]},
+      {key:'content',label:'内容',icon:ICONS.content,children:[
+        {key:'article',label:'文章管理',icon:ICONS.fileText,default:true},
+        {key:'banner',label:'banner管理',icon:ICONS.image},
+        {key:'cube',label:'魔方导航',icon:ICONS.grid},
+        {key:'album',label:'相册管理',icon:ICONS.images},
+        {key:'iframe',label:'内嵌网页',icon:ICONS.link},
+        {key:'miniapp',label:'跳转小程序',icon:ICONS.externalLink}
+      ]},
+      {key:'system',label:'系统',icon:ICONS.system,children:[
+        {key:'site',label:'站点设置',icon:ICONS.settings,default:true},
+        {key:'log',label:'操作日志',icon:ICONS.clock},
+        {key:'attach',label:'附件设置',icon:ICONS.paperclip},
+        {key:'sms',label:'短信管理',icon:ICONS.message},
+        {key:'permission',label:'权限管理',icon:ICONS.shield,children:[
+          {key:'group',label:'用户组'},
+          {key:'user',label:'用户列表'},
+          {key:'staff',label:'员工管理'},
+          {key:'dept',label:'部门管理'}
+        ]}
+      ]},
+      {key:'plugins',label:'插件',icon:ICONS.plugins,children:[
+        {key:'all',label:'全部',icon:ICONS.grid,default:true},
+        {key:'channel',label:'渠道',icon:ICONS.share},
+        {key:'marketing',label:'营销',icon:ICONS.megaphone},
+        {key:'member',label:'会员',icon:ICONS.users},
+        {key:'industry',label:'行业',icon:ICONS.briefcase},
+        {key:'tool',label:'工具',icon:ICONS.tool},
+        {key:'super',label:'超管',icon:ICONS.userCheck}
+      ]}
+    ];
+
+    let state={first:'overview',second:'dashboard'};
+    let expanded=new Set();
+
+    function findChild(parent,key){
+      for(const c of parent.children){
+        if(c.key===key) return c;
+        if(c.children){ for(const s of c.children){ if(s.key===key) return s; } }
+      }
+      return parent.children[0];
+    }
+
+    function renderSidebar(){
+      const l1=document.getElementById('l1Nav');
+      l1.innerHTML=MENU.map(m=>{
+        const active=m.key===state.first?'active':'';
+        return `<div class="l1-item ${active}" onclick="switchMenu('${m.key}')">${m.icon}<span>${m.label}</span></div>`;
+      }).join('');
+
+      const parent=MENU.find(m=>m.key===state.first)||MENU[0];
+      document.getElementById('l2Title').textContent=parent.label;
+      const l2=document.getElementById('l2Nav');
+      l2.innerHTML=parent.children.map(c=>{
+        const hasChildren=c.children && c.children.length;
+        const isActive=c.key===state.second || (hasChildren && c.children.some(s=>s.key===state.second));
+        const activeClass=isActive?'active':'';
+        const expandClass=hasChildren && expanded.has(c.key)?'expanded':'';
+        const isLeaf=!hasChildren;
+        const tag=isLeaf && !c.panel?'<span class="tag">待上线</span>':'';
+        const arrow=hasChildren?`<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>`:'';
+        const click=hasChildren?`toggleExpand('${c.key}')`:`switchMenu('${parent.key}','${c.key}')`;
+        let html=`<div class="l2-item ${activeClass} ${expandClass}" onclick="${click}">${c.icon||''}<span class="txt">${c.label}</span>${tag}${arrow}</div>`;
+        if(hasChildren){
+          const openClass=expanded.has(c.key)||isActive?'open':'';
+          html+=`<div class="l2-sub ${openClass}">${c.children.map(s=>{
+            const subActive=s.key===state.second?'active':'';
+            return `<div class="l2-sub-item ${subActive}" onclick="switchMenu('${parent.key}','${s.key}')">${s.label}</div>`;
+          }).join('')}</div>`;
+        }
+        return html;
+      }).join('');
+    }
+
+    function toggleExpand(key){
+      if(expanded.has(key)) expanded.delete(key); else expanded.add(key);
+      renderSidebar();
+    }
+
+    function switchMenu(first,second){
+      const parent=MENU.find(m=>m.key===first)||MENU[0];
+      if(!second){
+        const def=parent.children.find(c=>c.default)||parent.children[0];
+        second=def.key;
+      }
+      parent.children.forEach(c=>{
+        if(c.children && c.children.some(s=>s.key===second)) expanded.add(c.key);
+      });
+      state={first,second};
+      renderSidebar();
+      const child=findChild(parent,second);
+      document.getElementById('pageTitle').textContent=child.label;
+
+      document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+      const panelId=child.panel||'placeholderPanel';
+      const panel=document.getElementById(panelId);
+      if(panel) panel.classList.remove('hidden');
+
+      if(panelId==='goodsPanel') loadGoods();
+      if(panelId==='ordersPanel') loadOrders();
+      if(panelId==='designPanel') loadDesign();
+      if(panelId==='overviewPanel') loadOverviewStats();
+      window.scrollTo(0,0);
+    }
+
+    function loadOverviewStats(){
+      // 先用静态模拟，后续可对接 /admin/stats
+      document.getElementById('ovOrder').textContent='128';
+      document.getElementById('ovSale').textContent='¥3,420';
+      document.getElementById('ovPending').textContent='23';
+      document.getElementById('ovGoods').textContent='86';
+    }
+
+    /* Auth */
+    async function fetchA(url,opts={}){
+      opts.headers=opts.headers||{};
+      opts.headers['X-Admin-Token']=token();
+      if(opts.body && typeof opts.body==='object'){
+        opts.headers['Content-Type']='application/json';
+        opts.body=JSON.stringify(opts.body);
+      }
+      const r=await fetch(url,opts);
+      if(r.status===401){logout();throw new Error('未授权');}
+      return r.json();
+    }
+    function toast(msg){
+      const t=document.getElementById('toast');
+      t.textContent=msg;t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),2000);
+    }
+    async function login(){
+      const username=document.getElementById('user').value;
+      const password=document.getElementById('pass').value;
+      const r=await fetch(`${BASE}/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+      const d=await r.json();
+      if(d.code===0){
+        localStorage.setItem('admin_token',d.data.token);
+        localStorage.setItem('admin_user',d.data.username||username);
+        document.getElementById('loginWrap').classList.add('hidden');
+        document.getElementById('mainView').classList.remove('hidden');
+        document.getElementById('who').textContent=d.data.username||username;
+        renderSidebar();
+        switchMenu('overview','dashboard');
+      }else{toast(d.msg||'登录失败');}
+    }
+    function logout(){
+      localStorage.removeItem('admin_token');
+      document.getElementById('mainView').classList.add('hidden');
+      document.getElementById('loginWrap').classList.remove('hidden');
+    }
+
+    /* Goods */
+    let goodsPage=1;
+    async function loadCategories(){
+      const d=await fetchA(`${BASE}/categories`);
+      if(d.code!==0) return;
+      const opts=d.data.list.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+      document.getElementById('goodsCat').innerHTML='<option value="0">全部分类</option>'+opts;
+      document.getElementById('gCat').innerHTML=opts;
+    }
+    function fmtMoney(n){return '¥'+(n/100).toFixed(2);}
+    function statusBadge(s){return s==1?'<span class="badge green">上架</span>':'<span class="badge gray">下架</span>';}
+    async function loadGoods(){
+      const cat=document.getElementById('goodsCat').value;
+      const kw=document.getElementById('goodsKw').value;
+      const q=`?category_id=${cat}&keyword=${encodeURIComponent(kw)}&page=${goodsPage}&page_size=10`;
+      const d=await fetchA(`${BASE}/goods${q}`);
+      if(d.code!==0){toast(d.msg);return;}
+      const tb=document.getElementById('goodsBody');
+      tb.innerHTML=d.data.list.map(g=>`<tr>
+        <td>${g.id}</td>
+        <td><img class="thumb" src="${g.cover||''}" onerror="this.style.display='none'"></td>
+        <td><div style="font-weight:600">${g.title}</div><div class="muted">${g.subtitle||''}</div></td>
+        <td>${g.category_name||'-'}</td>
+        <td>${fmtMoney(g.price)}</td>
+        <td>${g.stock}</td>
+        <td>${statusBadge(g.status)}</td>
+        <td>
+          <button class="btn sm outline" onclick="editGoods(${g.id})">编辑</button>
+          <button class="btn sm gray" onclick="removeGoods(${g.id})">删除</button>
+        </td>
+      </tr>`).join('');
+      const p=d.data.pagination||{};
+      document.getElementById('goodsPager').innerHTML=`
+        <button ${goodsPage<=1?'disabled':''} onclick="goodsPage--;loadGoods()">上一页</button>
+        <span style="font-size:12px;color:#888">第 ${p.page||goodsPage} / ${p.last_page||1} 页</span>
+        <button ${goodsPage>=(p.last_page||1)?'disabled':''} onclick="goodsPage++;loadGoods()">下一页</button>`;
+    }
+    function openGoodsModal(){document.getElementById('goodsModal').classList.add('show');document.getElementById('goodsModalTitle').textContent='新增商品';clearGoodsForm();}
+    function closeGoodsModal(){document.getElementById('goodsModal').classList.remove('show');}
+    function clearGoodsForm(){['gId','gTitle','gSub','gPrice','gMarket','gStock','gDetail','gImages'].forEach(id=>document.getElementById(id).value='');document.getElementById('gStatus').value='1';document.getElementById('gImgPreview').innerHTML='';}
+    document.getElementById('gImages')?.addEventListener('input',()=>{
+      const urls=document.getElementById('gImages').value.split('\n').filter(u=>u.trim());
+      document.getElementById('gImgPreview').innerHTML=urls.map(u=>`<img src="${u}" onerror="this.style.display='none'">`).join('');
+    });
+    async function editGoods(id){
+      const d=await fetchA(`${BASE}/goods?keyword=&page=1&page_size=1000`);
+      if(d.code!==0){toast(d.msg);return;}
+      const g=d.data.list.find(x=>x.id==id);if(!g){toast('商品不存在');return;}
+      document.getElementById('gId').value=g.id;
+      document.getElementById('gTitle').value=g.title;
+      document.getElementById('gSub').value=g.subtitle||'';
+      document.getElementById('gCat').value=g.category_id||'';
+      document.getElementById('gPrice').value=(g.price/100).toFixed(2);
+      document.getElementById('gMarket').value=(g.market_price/100).toFixed(2);
+      document.getElementById('gStock').value=g.stock;
+      document.getElementById('gStatus').value=g.status;
+      document.getElementById('gDetail').value=g.detail||'';
+      const imgs=g.images||[];
+      document.getElementById('gImages').value=imgs.join('\n');
+      document.getElementById('gImgPreview').innerHTML=imgs.map(u=>`<img src="${u}" onerror="this.style.display='none'">`).join('');
+      document.getElementById('goodsModalTitle').textContent='编辑商品';
+      document.getElementById('goodsModal').classList.add('show');
+    }
+    async function saveGoods(){
+      const id=document.getElementById('gId').value;
+      const images=document.getElementById('gImages').value.split('\n').map(s=>s.trim()).filter(Boolean);
+      const body={
+        id:id||0,
+        title:document.getElementById('gTitle').value,
+        subtitle:document.getElementById('gSub').value,
+        category_id:document.getElementById('gCat').value,
+        price:document.getElementById('gPrice').value,
+        market_price:document.getElementById('gMarket').value,
+        stock:document.getElementById('gStock').value,
+        status:document.getElementById('gStatus').value,
+        detail_html:document.getElementById('gDetail').value,
+        images
+      };
+      const url=id?`${BASE}/goods/${id}`:`${BASE}/goods`;
+      const method=id?'PUT':'POST';
+      const d=await fetchA(url,{method,body});
+      if(d.code===0){toast('保存成功');closeGoodsModal();loadGoods();}else{toast(d.msg);}
+    }
+    async function removeGoods(id){
+      if(!confirm('确认删除该商品？'))return;
+      const d=await fetchA(`${BASE}/goods/${id}`,{method:'DELETE'});
+      if(d.code===0){toast('删除成功');loadGoods();}else{toast(d.msg);}
+    }
+
+    /* Orders */
+    let ordersPage=1;
+    const ORDER_STATUS={0:'待付款',1:'待发货',2:'待收货',3:'已完成','-2':'已取消'};
+    function statusBadgeO(s){
+      const map={'0':'badge orange','1':'badge orange','2':'badge green','3':'badge gray','-2':'badge red'};
+      return `<span class="badge ${map[s]||'badge gray'}">${ORDER_STATUS[s]||s}</span>`;
+    }
+    async function loadOrders(){
+      const status=document.getElementById('orderStatus').value;
+      const q=`?status=${status}&page=${ordersPage}&page_size=10`;
+      const d=await fetchA(`${BASE}/orders${q}`);
+      if(d.code!==0){toast(d.msg);return;}
+      const tb=document.getElementById('ordersBody');
+      tb.innerHTML=d.data.list.map(o=>`<tr>
+        <td><b>${o.order_no}</b></td>
+        <td>${o.user_name||o.user_id||'-'}</td>
+        <td>${fmtMoney(o.total_amount)}</td>
+        <td>${statusBadgeO(o.status)}</td>
+        <td>${o.created_at||'-'}</td>
+        <td><button class="btn sm outline" onclick="viewOrder(${o.id})">详情</button></td>
+      </tr>`).join('');
+      const p=d.data.pagination||{};
+      document.getElementById('ordersPager').innerHTML=`
+        <button ${ordersPage<=1?'disabled':''} onclick="ordersPage--;loadOrders()">上一页</button>
+        <span style="font-size:12px;color:#888">第 ${p.page||ordersPage} / ${p.last_page||1} 页</span>
+        <button ${ordersPage>=(p.last_page||1)?'disabled':''} onclick="ordersPage++;loadOrders()">下一页</button>`;
+    }
+    async function viewOrder(id){
+      const d=await fetchA(`${BASE}/orders/${id}`);
+      if(d.code!==0){toast(d.msg);return;}
+      const o=d.data;
+      const items=(o.items||[]).map(i=>`<div style="display:flex;gap:10px;margin:8px 0;padding:8px;background:#fafafa;border-radius:6px">
+        <img src="${i.cover||''}" style="width:50px;height:50px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">
+        <div><div style="font-weight:600">${i.title}</div><div class="muted">${i.sku_desc||''} x${i.quantity} · ${fmtMoney(i.price)}</div></div>
+      </div>`).join('');
+      document.getElementById('orderDetail').innerHTML=`
+        <p><b>订单号：</b>${o.order_no}</p>
+        <p><b>状态：</b>${statusBadgeO(o.status)}</p>
+        <p><b>金额：</b>${fmtMoney(o.total_amount)}（运费 ${fmtMoney(o.freight_amount||0)}）</p>
+        <p><b>收货人：</b>${o.receiver_name||'-'} ${o.receiver_mobile||''}</p>
+        <p><b>地址：</b>${o.receiver_address||'-'}</p>
+        <p><b>下单时间：</b>${o.created_at||'-'}</p>
+        <h4 style="margin:14px 0 8px">商品明细</h4>${items||'<p class="muted">无明细</p>'}`;
+      const footer=document.getElementById('orderFooter');
+      footer.innerHTML='';
+      const statusBtns=[];
+      if(o.status==0) statusBtns.push(['标记取消','-2']);
+      if(o.status==1) statusBtns.push(['标记发货',2]);
+      statusBtns.forEach(([label,val])=>{
+        const b=document.createElement('button');b.className='btn sm';b.textContent=label;b.onclick=()=>changeStatus(id,val);footer.appendChild(b);
+      });
+      footer.appendChild(Object.assign(document.createElement('button'),{className:'btn gray sm',textContent:'关闭',onclick:closeOrderModal}));
+      document.getElementById('orderModal').classList.add('show');
+    }
+    function closeOrderModal(){document.getElementById('orderModal').classList.remove('show');}
+    async function changeStatus(id,status){
+      const d=await fetchA(`${BASE}/orders/${id}/status`,{method:'POST',body:{status}});
+      if(d.code===0){toast('状态更新成功');closeOrderModal();loadOrders();}else{toast(d.msg);}
+    }
+
+    /* Design */
+    let designConfig={page:'home',components:[]};
+    async function loadDesign(){
+      const d=await fetchA(`${BASE}/design/home`);
+      if(d.code!==0){toast(d.msg);return;}
+      const cfg=d.data.published_config||{page:'home',components:[]};
+      designConfig=JSON.parse(JSON.stringify(cfg));
+      document.getElementById('designJson').value=JSON.stringify(designConfig,null,2);
+      renderStage();
+    }
+    function renderStage(){
+      const stage=document.getElementById('designStage');
+      if(!designConfig.components.length){stage.innerHTML='<div class="stage-empty">点击左侧组件添加到首页<br>拖动可排序，点击编辑</div>';return;}
+      stage.innerHTML=designConfig.components.map((c,i)=>`<div class="stage-component" draggable="true" ondragstart="dragStart(event,${i})" ondrop="drop(event,${i})" ondragover="allowDrop(event)">
+        <div class="actions">
+          <button onclick="moveComp(${i},-1)">↑</button>
+          <button onclick="moveComp(${i},1)">↓</button>
+          <button onclick="removeComp(${i})">删除</button>
+        </div>
+        <div style="font-weight:600">${compName(c.type)}</div>
+        <div class="muted" style="font-size:12px;margin-top:4px">${compSummary(c)}</div>
+      </div>`).join('');
+      document.getElementById('designJson').value=JSON.stringify(designConfig,null,2);
+    }
+    function compName(t){return {banner:'图片轮播',icons:'金刚区',goods:'精选好物',title:'标题栏',notice:'公告',coupon:'优惠券'}[t]||t;}
+    function compSummary(c){
+      if(c.type==='banner') return (c.images||[]).map(x=>x.title||'图片').join(' / ')||'未配置图片';
+      if(c.type==='icons') return `${(c.items||[]).length} 个入口`;
+      if(c.type==='goods') return `样式：${c.style||'单列'} / ${(c.ids||[]).length} 个商品`;
+      if(c.type==='title') return c.title||'未填写标题';
+      if(c.type==='notice') return c.text||'未填写公告';
+      if(c.type==='coupon') return '优惠券组件';
+      return JSON.stringify(c).slice(0,60);
+    }
+    function addComp(type){
+      const defaults={
+        banner:{type:'banner',images:[{image:'https://via.placeholder.com/750x300?text=Banner1',link:''},{image:'https://via.placeholder.com/750x300?text=Banner2',link:''}]},
+        icons:{type:'icons',items:[{name:'分类',icon:'',link:''},{name:'秒杀',icon:'',link:''},{name:'拼团',icon:'',link:''},{name:'领券',icon:'',link:''}]},
+        goods:{type:'goods',style:'单列',ids:[],title:'精选好物',subtitle:'为您推荐'},
+        title:{type:'title',title:'限时特惠',subtitle:'更多 >',align:'left'},
+        notice:{type:'notice',text:'重要公告：本商城全新上线，欢迎选购！',style:'marquee'},
+        coupon:{type:'coupon',title:'领券专区',style:'horizontal'}
+      };
+      designConfig.components.push(JSON.parse(JSON.stringify(defaults[type])));
+      renderStage();
+    }
+    function removeComp(i){designConfig.components.splice(i,1);renderStage();}
+    function moveComp(i,dir){
+      const j=i+dir;if(j<0||j>=designConfig.components.length)return;
+      [designConfig.components[i],designConfig.components[j]]=[designConfig.components[j],designConfig.components[i]];
+      renderStage();
+    }
+    let dragIdx=null;
+    function dragStart(e,i){dragIdx=i;e.dataTransfer.effectAllowed='move';}
+    function allowDrop(e){e.preventDefault();}
+    function drop(e,i){e.preventDefault();if(dragIdx===null||dragIdx===i)return;const arr=designConfig.components;const [m]=arr.splice(dragIdx,1);arr.splice(i,0,m);dragIdx=null;renderStage();}
+    document.getElementById('designJson')?.addEventListener('input',()=>{
+      try{designConfig=JSON.parse(document.getElementById('designJson').value);renderStage();}catch(e){}
+    });
+    async function saveDesign(){
+      try{designConfig=JSON.parse(document.getElementById('designJson').value);}catch(e){toast('JSON 格式错误');return;}
+      const d=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:designConfig,remark:'后台保存'}});
+      toast(d.code===0?'草稿保存成功':(d.msg||'保存失败'));
+    }
+    async function publishDesign(){
+      try{designConfig=JSON.parse(document.getElementById('designJson').value);}catch(e){toast('JSON 格式错误');return;}
+      const d=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
+      toast(d.code===0?'发布成功':(d.msg||'发布失败'));
+    }
+
+    /* Init */
+    (async()=>{
+      if(localStorage.getItem('admin_token')){
+        try{
+          await fetchA(`${BASE}/goods?page=1&page_size=1`);
+          document.getElementById('loginWrap').classList.add('hidden');
+          document.getElementById('mainView').classList.remove('hidden');
+          document.getElementById('who').textContent=localStorage.getItem('admin_user')||'admin';
+          await loadCategories();
+          renderSidebar();
+          switchMenu('overview','dashboard');
+        }catch(e){logout();}
+      }
+    })();
+  </script>
+</body>
+</html>

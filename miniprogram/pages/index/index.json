@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "diy-render": "/components/diy-render/diy-render"
+  },
+  "navigationBarTitleText": "优选商城",
+  "enablePullDownRefresh": false
+}

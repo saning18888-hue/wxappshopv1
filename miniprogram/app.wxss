@@ -1,0 +1,48 @@
+/* 全局样式与设计变量 */
+page {
+  --primary: #FF6B35;
+  --green: #00B86B;
+  --text: #222222;
+  --muted: #999999;
+  --line: #eeeeee;
+  --bg: #f5f5f5;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+}
+
+view, text, image, scroll-view, swiper, button { box-sizing: border-box; }
+
+.price { color: var(--primary); font-weight: 600; }
+.price-symbol { font-size: 22rpx; }
+.muted { color: var(--muted); }
+.line { border-top: 1rpx solid var(--line); }
+
+/* 通用卡片 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin: 16rpx;
+  padding: 24rpx;
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  line-height: 88rpx;
+  height: 88rpx;
+  text-align: center;
+}
+.btn-primary[disabled] { background: #ffc4ad; }
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 120rpx 0;
+  font-size: 28rpx;
+}

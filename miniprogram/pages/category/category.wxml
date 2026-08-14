@@ -1,0 +1,19 @@
+<view class="cate">
+  <scroll-view class="cate-left" scroll-y>
+    <view wx:for="{{cats}}" wx:key="id" class="cate-left-item {{activeId === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}" bindtap="switchCat">
+      {{item.name}}
+    </view>
+  </scroll-view>
+
+  <scroll-view class="cate-right" scroll-y>
+    <view wx:if="{{children.length === 0}}" class="empty">该分类暂无子分类</view>
+    <view class="cate-right-title" wx:if="{{children.length > 0}}">选择子类</view>
+    <view class="cate-right-grid">
+      <view wx:for="{{children}}" wx:key="id" class="cate-right-item"
+        data-id="{{item.id}}" bindtap="goList">
+        <view class="cate-right-name">{{item.name}}</view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

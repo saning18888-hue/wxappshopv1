@@ -1,0 +1,21 @@
+.confirm { padding: 16rpx; }
+.addr-card, .goods-card, .amount-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; }
+.addr-title { font-size: 28rpx; font-weight: 600; margin-bottom: 12rpx; }
+.addr-input { height: 76rpx; font-size: 28rpx; border-bottom: 1rpx solid #f0f0f0; }
+
+.goods-line { display: flex; padding: 16rpx 0; }
+.goods-line-img { width: 120rpx; height: 120rpx; border-radius: 10rpx; background: #f5f5f5; }
+.goods-line-mid { flex: 1; padding-left: 20rpx; }
+.goods-line-title { font-size: 28rpx; color: #333; }
+.goods-line-spec { font-size: 22rpx; margin: 6rpx 0; }
+.goods-line-price { font-size: 30rpx; }
+
+.amount-line { display: flex; justify-content: space-between; font-size: 28rpx; color: #555; padding: 12rpx 0; }
+.amount-line.total { border-top: 1rpx solid #f0f0f0; margin-top: 8rpx; padding-top: 20rpx; font-size: 30rpx; }
+
+.confirm-bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: #fff; display: flex; align-items: center; padding: 16rpx 24rpx; border-top: 1rpx solid #eee;
+}
+.confirm-pay { flex: 1; font-size: 28rpx; }
+.confirm-submit { background: #FF6B35; color: #fff; border-radius: 999rpx; padding: 0 56rpx; line-height: 80rpx; font-size: 30rpx; }

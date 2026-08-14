@@ -1,0 +1,26 @@
+<view class="member">
+  <view class="member-header">
+    <view class="member-avatar">{{avatarChar}}</view>
+    <view class="member-name">{{user ? user.nickname : '游客'}}</view>
+  </view>
+
+  <view class="member-card">
+    <view class="member-card-title">我的订单</view>
+    <view wx:if="{{orders.length === 0}}" class="muted" style="padding:20rpx 0;">暂无订单</view>
+    <view wx:for="{{orders}}" wx:key="id" class="member-order">
+      <view class="member-order-no">订单号 {{item.order_no}}</view>
+      <view class="member-order-info">
+        <text class="price">¥{{item.pay_amount}}</text>
+        <text class="muted">{{item.status_text}}</text>
+      </view>
+    </view>
+    <view class="member-more" bindtap="goOrders">查看全部订单 ›</view>
+  </view>
+
+  <view class="member-menu">
+    <view class="member-menu-item"><text>收货地址</text><text class="muted">›</text></view>
+    <view class="member-menu-item"><text>优惠券</text><text class="muted">›</text></view>
+    <view class="member-menu-item"><text>客服中心</text><text class="muted">›</text></view>
+    <view class="member-menu-item"><text>关于我们</text><text class="muted">›</text></view>
+  </view>
+</view>

@@ -1,0 +1,35 @@
+<view class="confirm" wx:if="{{preview}}">
+  <view class="addr-card">
+    <view class="addr-title">收货信息</view>
+    <input class="addr-input" placeholder="收货人姓名" data-field="name" value="{{address.name}}" bindinput="onAddressInput" />
+    <input class="addr-input" placeholder="手机号" type="number" data-field="phone" value="{{address.phone}}" bindinput="onAddressInput" />
+    <input class="addr-input" placeholder="详细收货地址" data-field="address" value="{{address.address}}" bindinput="onAddressInput" />
+  </view>
+
+  <view class="goods-card">
+    <view wx:for="{{preview.items}}" wx:key="sku_id" class="goods-line">
+      <image class="goods-line-img" src="{{item.image}}" mode="aspectFill" />
+      <view class="goods-line-mid">
+        <view class="goods-line-title">{{item.title}}</view>
+        <view class="goods-line-spec muted" wx:if="{{item.spec_desc}}">{{item.spec_desc}}</view>
+        <view class="goods-line-price price">¥{{item.price}} <text class="muted">x{{item.quantity}}</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="amount-card">
+    <view class="amount-line"><text>商品金额</text><text>¥{{preview.goods_amount}}</text></view>
+    <view class="amount-line"><text>运费</text><text>¥{{preview.shipping_fee}}</text></view>
+    <view class="amount-line" wx:if="{{preview.discount > 0}}"><text>优惠</text><text>-¥{{preview.discount}}</text></view>
+    <view class="amount-line total"><text>实付金额</text><text class="price">¥{{preview.pay_amount}}</text></view>
+  </view>
+
+  <view style="height:120rpx"></view>
+
+  <view class="confirm-bar">
+    <view class="confirm-pay">应付 <text class="price">¥{{preview.pay_amount}}</text></view>
+    <view class="confirm-submit" bindtap="submit">提交订单</view>
+  </view>
+</view>
+
+<view wx:else class="empty">加载中...</view>

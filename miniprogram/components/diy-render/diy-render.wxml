@@ -1,0 +1,47 @@
+<view class="diy">
+  <block wx:for="{{viewList}}" wx:key="sort" wx:for-item="c">
+
+    <!-- 轮播图 -->
+    <swiper wx:if="{{c.type === 'banner'}}" class="diy-banner" indicator-dots autoplay circular
+      interval="{{c.props.interval * 1000}}" duration="400" indicator-active-color="#FF6B35">
+      <swiper-item wx:for="{{c.props.items}}" wx:for-item="b" wx:key="image">
+        <image class="diy-banner-img" src="{{b.image}}" mode="aspectFill" data-link="{{b.link}}" bindtap="onTapLink" />
+      </swiper-item>
+    </swiper>
+
+    <!-- 金刚区 / 图标导航 -->
+    <view wx:if="{{c.type === 'nav_grid'}}" class="diy-nav">
+      <view class="diy-nav-item" wx:for="{{c.props.items}}" wx:for-item="n" wx:key="text"
+        style="width:{{c.colWidth}}" data-link="{{n.link}}" bindtap="onTapLink">
+        <image class="diy-nav-icon" src="{{n.icon}}" mode="aspectFill" />
+        <text class="diy-nav-text">{{n.text}}</text>
+      </view>
+    </view>
+
+    <!-- 商品组 -->
+    <view wx:if="{{c.type === 'goods_group'}}" class="diy-goods">
+      <view class="diy-goods-title" wx:if="{{c.props.title}}">{{c.props.title}}</view>
+      <view class="diy-goods-grid">
+        <view class="diy-goods-item" wx:for="{{c.items}}" wx:for-item="g" wx:key="id"
+          data-id="{{g.id}}" bindtap="onTapGoods">
+          <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
+          <view class="diy-goods-name">{{g.title}}</view>
+          <view class="diy-goods-price price">¥{{g.price}}<text class="price-symbol"></text></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 商品分类入口 -->
+    <view wx:if="{{c.type === 'category_nav'}}" class="diy-cat">
+      <view class="diy-cat-title" wx:if="{{c.props.title}}">{{c.props.title}}</view>
+      <view class="diy-cat-grid">
+        <view class="diy-cat-item" wx:for="{{c.catList}}" wx:for-item="cat" wx:key="id"
+          style="width:{{c.colWidth}}" data-id="{{cat.id}}" bindtap="onTapCategory">
+          <image class="diy-cat-icon" src="{{cat.icon}}" mode="aspectFill" />
+          <text class="diy-cat-text">{{cat.name}}</text>
+        </view>
+      </view>
+    </view>
+
+  </block>
+</view>

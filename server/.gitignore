@@ -1,0 +1,5 @@
+/vendor/
+/runtime/
+.env
+database/*.sqlite
+composer.phar

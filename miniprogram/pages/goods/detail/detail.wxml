@@ -1,0 +1,53 @@
+<view class="detail" wx:if="{{goods}}">
+  <swiper class="detail-swiper" indicator-dots autoplay circular interval="4000" indicator-active-color="#FF6B35">
+    <swiper-item wx:for="{{goods.images}}" wx:key="*this">
+      <image class="detail-img" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <view class="detail-info">
+    <view class="detail-price">
+      <text class="price">¥{{currentSku ? currentSku.price : goods.price}}</text>
+      <text class="detail-market muted">¥{{goods.market_price}}</text>
+    </view>
+    <view class="detail-title">{{goods.title}}</view>
+    <view class="detail-sub muted">{{goods.subtitle}}</view>
+    <view class="detail-sales muted">已售 {{goods.sales}} 件</view>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="spec-block" wx:if="{{goods.spec_groups.length > 0}}">
+    <view class="spec-group" wx:for="{{goods.spec_groups}}" wx:key="id" wx:for-item="group">
+      <view class="spec-name">{{group.name}}</view>
+      <view class="spec-values">
+        <text wx:for="{{group.values}}" wx:for-item="v" wx:key="id"
+          class="spec-value {{selected[group.id] === v.id ? 'selected' : ''}}"
+          data-spec-id="{{group.id}}" data-value-id="{{v.id}}" bindtap="selectSpec">
+          {{v.value}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <view class="detail-html">
+    <view class="spec-name">图文详情</view>
+    <rich-text nodes="{{goods.detail_html}}"></rich-text>
+  </view>
+
+  <view style="height:120rpx"></view>
+
+  <!-- 底部操作栏 -->
+  <view class="detail-bar">
+    <view class="qty">
+      <text class="qty-btn" bindtap="decQty">-</text>
+      <text class="qty-num">{{quantity}}</text>
+      <text class="qty-btn" bindtap="incQty">+</text>
+    </view>
+    <view class="bar-btns">
+      <view class="bar-add" bindtap="addCart">加入购物车</view>
+      <view class="bar-buy" bindtap="buyNow">立即购买</view>
+    </view>
+  </view>
+</view>
+
+<view wx:else class="empty">加载中...</view>

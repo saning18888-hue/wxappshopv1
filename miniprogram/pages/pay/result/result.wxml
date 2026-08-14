@@ -1,0 +1,18 @@
+<view class="result">
+  <view class="result-icon">✓</view>
+  <view class="result-title">支付成功</view>
+  <view class="result-amount" wx:if="{{order}}">¥{{order.pay_amount}}</view>
+  <view class="result-tip muted">订单已进入履约流程，请耐心等待发货</view>
+
+  <view class="result-btns">
+    <view class="result-btn ghost" bindtap="goHome">返回首页</view>
+    <view class="result-btn solid" bindtap="goOrders">查看我的订单</view>
+  </view>
+
+  <view class="result-order" wx:if="{{order}}">
+    <view class="result-row"><text>订单号</text><text>{{order.order_no}}</text></view>
+    <view class="result-row"><text>收货人</text><text>{{order.receiver_name}} {{order.receiver_phone}}</text></view>
+    <view class="result-row"><text>收货地址</text><text>{{order.address}}</text></view>
+    <view class="result-row"><text>状态</text><text>{{order.status_text}}</text></view>
+  </view>
+</view>
