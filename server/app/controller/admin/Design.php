@@ -23,7 +23,7 @@ class Design extends AdminController
     public function home()
     {
         $page      = 'home';
-        $published = $this->svc->publishedConfig($page);
+        $published = $this->svc->publishedConfig($page) ?: $this->svc->defaultHome();
         $draft     = $this->svc->latestDraft($page);
         $versions  = $this->svc->versions($page);
         $p         = $this->svc->getPageRow($page);

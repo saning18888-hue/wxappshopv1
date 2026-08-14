@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商城运营后台</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap');
     :root{
       --primary:#FF6B35;
       --primary-50:#FFF5F0;
@@ -36,10 +37,13 @@
     .field label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px}
     .field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border .2s}
     .field input:focus{border-color:var(--primary)}
-    .btn{border:0;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;background:var(--primary);color:#fff;transition:opacity .2s,transform .1s}
+    .btn{border:0;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;background:var(--primary);color:#fff;transition:opacity .2s,transform .1s,background .2s}
     .btn:hover{opacity:.9}
     .btn:active{transform:translateY(1px)}
     .btn.gray{background:#f0f0f0;color:var(--text-secondary)}
+    .btn.gray:hover{background:#e5e5e5}
+    .btn.danger{background:#fff;color:#ff4d4f;border:1px solid #ffccc7}
+    .btn.danger:hover{background:#fff1f0}
     .btn.green{background:var(--green)}
     .btn.sm{padding:6px 12px;font-size:12px}
     .btn.outline{background:#fff;color:var(--primary);border:1px solid var(--primary-100)}
@@ -157,6 +161,8 @@
     .toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s}
     .toggle:checked{background:var(--primary)}
     .toggle:checked::after{transform:translateX(18px)}
+    .radio{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+    .radio input{margin:0}
     .upload-box{width:90px;height:90px;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fafafa;overflow:hidden}
     .upload-box svg{width:24px;height:24px;color:var(--text-secondary)}
     .upload-box img,.upload-preview img{width:100%;height:100%;object-fit:cover}
@@ -177,6 +183,149 @@
     .cat-level-5{padding-left:120px}
     .json-area{width:100%;min-height:300px;font-family:monospace;font-size:12px;line-height:1.5;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none}
     .json-area:focus{border-color:var(--primary)}
+
+    /* Section builder */
+    .sec-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+    .sec-toolbar h3{font-size:16px;font-weight:700;color:var(--text)}
+    .sec-toolbar .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .sec-hint{margin-top:12px;font-size:12px;color:var(--text-muted);background:#f7f8fa;padding:8px 12px;border-radius:var(--radius-sm)}
+    .sec-empty{text-align:center;padding:50px 20px;color:var(--text-muted)}
+    .sec-empty svg{width:48px;height:48px;margin-bottom:12px;stroke:var(--text-muted)}
+    .sec-row{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+    .sec-row .field{flex:1;margin-bottom:0}
+    .sec-row .field label{font-size:12px;margin-bottom:5px}
+    .sec-card{background:#fafbfc;border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;transition:border-color .15s,box-shadow .15s}
+    .sec-card:hover{border-color:var(--primary-100);box-shadow:var(--shadow)}
+    .sec-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .sec-card-title{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:8px}
+    .sec-card-title .num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--primary-50);color:var(--primary);font-size:11px}
+    .sec-media{display:flex;gap:16px;align-items:flex-start}
+    .sec-media-side{flex:0 0 120px}
+    .sec-media-main{flex:1;min-width:0}
+    .upload-zone{width:120px;height:120px;border:1px dashed #d9d9d9;border-radius:var(--radius-sm);background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:all .15s}
+    .upload-zone:hover{border-color:var(--primary);background:var(--primary-50)}
+    .upload-zone svg{width:24px;height:24px;color:var(--text-muted);margin-bottom:4px}
+    .upload-zone .txt{font-size:12px;color:var(--text-muted)}
+    .upload-zone img,.upload-zone video{width:100%;height:100%;object-fit:cover}
+    .upload-zone input{display:none}
+    .media-or{display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-muted);font-size:12px}
+    .media-or::before,.media-or::after{content:'';flex:1;height:1px;background:var(--border)}
+    .media-link input{width:100%}
+    .media-preview{width:120px;height:120px;border-radius:var(--radius-sm);overflow:hidden;background:#f0f0f0;margin-top:8px}
+    .media-preview img,.media-preview video{width:100%;height:100%;object-fit:cover}
+
+    /* Nav grid preview + modal */
+    .nav-grid-top{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+    .nav-grid-top .field{flex:1;margin-bottom:0}
+    .nav-grid-top .field label{font-size:12px}
+    .nav-grid-box{background:#f5f6f8;border-radius:var(--radius);padding:18px}
+    .nav-grid-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .nav-grid-head h4{font-size:13px;color:var(--text-secondary);font-weight:600}
+    .nav-grid-preview{display:grid;gap:12px;justify-content:start;grid-template-columns:repeat(auto-fill,minmax(82px,1fr))}
+    .nav-item-preview{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+    .nav-item-preview:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}
+    .nav-item-preview .icon-wrap{width:44px;height:44px;border-radius:12px;background:var(--primary-50);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;overflow:hidden}
+    .nav-item-preview .icon-wrap img{width:100%;height:100%;object-fit:cover}
+    .nav-item-preview .icon-wrap svg{width:22px;height:22px;color:var(--primary)}
+    .nav-item-preview .txt{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav-item-preview .del{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;background:#ff4d4f;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+    .nav-item-preview:hover .del{opacity:1}
+    .nav-item-preview.add{border-style:dashed;border-color:#d9d9d9;background:transparent;color:var(--text-muted)}
+    .nav-item-preview.add:hover{border-color:var(--primary);color:var(--primary)}
+    .nav-item-preview.add .icon-wrap{background:transparent}
+    .nav-item-preview.add .icon-wrap svg{width:24px;height:24px;color:currentColor}
+
+    /* Linear-style config row: segmented control */
+    .nav-cfg-row{display:flex;gap:32px;align-items:flex-end;margin-bottom:18px;flex-wrap:wrap}
+    .nav-cfg-field{display:flex;flex-direction:column}
+    .cfg-label{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:12px;font-weight:510;color:var(--text-muted);margin-bottom:8px;letter-spacing:.2px;font-feature-settings:'cv01','ss03'}
+    .seg{display:inline-flex;background:#f2f3f5;border:1px solid var(--border);border-radius:8px;padding:3px;gap:2px}
+    .seg-item{flex:1;min-width:44px;padding:7px 0;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:14px;font-weight:510;color:#8a8f98;border:0;background:transparent;border-radius:6px;cursor:pointer;transition:all .15s;font-feature-settings:'cv01','ss03';letter-spacing:-.1px}
+    .seg-item:hover{color:#5e6ad2}
+    .seg-item.active{background:#5e6ad2;color:#fff;box-shadow:0 1px 3px rgba(94,106,210,.4)}
+    .count-line{display:flex;align-items:baseline;gap:4px}
+    .cfg-count{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:22px;font-weight:590;color:var(--text);letter-spacing:-.6px;line-height:1.2;font-feature-settings:'cv01','ss03'}
+    .cfg-unit{font-size:13px;color:var(--text-muted)}
+
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
+    .modal-backdrop.show{opacity:1;pointer-events:auto}
+    .modal-panel{width:520px;max-width:calc(100vw - 32px);background:var(--surface);border-radius:var(--radius);box-shadow:0 12px 40px rgba(0,0,0,.12);transform:translateY(16px);transition:transform .2s;max-height:90vh;overflow:auto}
+    .modal-backdrop.show .modal-panel{transform:translateY(0)}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+    .modal-head h4{font-size:15px;font-weight:700}
+    .modal-head .close{width:28px;height:28px;border-radius:50%;border:0;background:#f5f6f8;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+    .modal-head .close:hover{background:#eee;color:var(--text)}
+    .modal-body{padding:20px}
+    .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:#fafbfc}
+    .modal-foot .btn.gray{background:#f2f3f5;color:#6b7280;border:1px solid #e6e8eb;transition:all .12s}
+    .modal-foot .btn.gray:hover{background:#e8eaed;color:#4b5563;border-color:#d0d6e0}
+    .modal-foot .btn:not(.gray){background:#5e6ad2;color:#fff;border:1px solid #5e6ad2}
+    .modal-foot .btn:not(.gray):hover{background:#4f5bb8;border-color:#4f5bb8}
+    .media-tabs{display:flex;gap:8px;margin-bottom:12px}
+    .media-tab{padding:6px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#fff;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:all .15s}
+    .media-tab.active{border-color:var(--primary);color:var(--primary);background:var(--primary-50)}
+    .media-tab:hover:not(.active){border-color:#d9d9d9;color:var(--text)}
+    .media-pane{display:none}
+    .media-pane.active{display:block}
+
+    /* Linear-style form controls */
+    .lin-label{display:block;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:12px;font-weight:510;color:var(--text-muted);margin-bottom:7px;letter-spacing:.2px;font-feature-settings:'cv01','ss03'}
+    .lin-input,.lin-select{width:100%;padding:9px 11px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px;outline:none;font-size:13px;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;transition:border-color .12s,background .12s,box-shadow .12s}
+    .lin-input:focus,.lin-select:focus{background:#fff;border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .lin-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+    .lin-input::placeholder{color:#adb3bc}
+    .lin-form-row{display:flex;gap:16px}
+    .lin-form-row>.field{flex:1;margin-bottom:0}
+
+    /* Linear-style media preview / upload */
+    .lin-media-preview{flex:0 0 140px;height:92px;border-radius:10px;overflow:hidden;background:#f2f3f5;border:1px solid #e6e8eb;display:flex;align-items:center;justify-content:center;position:relative}
+    .lin-media-preview img,.lin-media-preview video{width:100%;height:100%;object-fit:cover}
+    .lin-media-preview .placeholder{color:#9ca3af;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px}
+    .lin-media-preview .placeholder svg{width:22px;height:22px;stroke-width:1.6}
+    .lin-upload-overlay{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .15s;cursor:pointer}
+    .lin-upload-overlay:hover{background:rgba(0,0,0,.35)}
+    .lin-upload-overlay:hover::after{content:'更换';color:#fff;font-size:12px;font-weight:510;padding:5px 10px;background:rgba(0,0,0,.55);border-radius:6px}
+    .lin-upload-overlay input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+    /* Linear-style banner card */
+    .lin-card{background:#fff;border:1px solid #e6e8eb;border-radius:12px;padding:16px;margin-bottom:14px;transition:border-color .15s,box-shadow .15s}
+    .lin-card:hover{border-color:#d0d6e0;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+    .lin-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .lin-card-title{display:flex;align-items:center;gap:10px;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:13px;font-weight:590;color:var(--text)}
+    .lin-badge{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:6px;background:#f2f3f5;color:#6b7280;font-size:11px;font-weight:590;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+    .lin-type-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:var(--primary-50);color:var(--primary);font-size:11px;font-weight:600}
+    .lin-del{width:26px;height:26px;border-radius:6px;border:0;background:transparent;color:#9ca3af;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .lin-del:hover{background:#fff1f0;color:#ff4d4f}
+    .lin-card-body{display:flex;gap:18px;align-items:flex-start}
+    .lin-card-main{flex:1;min-width:0}
+    .lin-link-hint{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:12px;color:#8a8f98;margin-top:8px;display:flex;align-items:center;gap:8px}
+
+    /* Linear-style nav entry modal */
+    .entry-modal-body{display:flex;gap:20px;align-items:flex-start}
+    .entry-icon-col{flex:0 0 104px}
+    .entry-icon-box{width:104px;height:104px;border-radius:14px;background:#f7f8fa;border:1px dashed #d0d6e0;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:border-color .15s,background .15s;position:relative}
+    .entry-icon-box:hover{border-color:#5e6ad2;background:#f5f6ff}
+    .entry-icon-box img{width:100%;height:100%;object-fit:cover}
+    .entry-icon-box svg{width:30px;height:30px;color:#b0b6bf;stroke-width:1.5}
+    .entry-icon-box input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .entry-icon-tip{margin-top:8px;font-size:11px;color:#9ca3af;text-align:center;line-height:1.4}
+    .entry-form-col{flex:1;min-width:0}
+
+    /* Linear-style buttons */
+    .lin-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:510;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;cursor:pointer;transition:all .12s;border:1px solid transparent;outline:none;font-feature-settings:'cv01','ss03'}
+    .lin-btn:focus-visible{box-shadow:0 0 0 3px rgba(94,106,210,.18)}
+    .lin-btn-primary{background:#5e6ad2;color:#fff;border-color:#5e6ad2}
+    .lin-btn-primary:hover{background:#4f5bb8;border-color:#4f5bb8}
+    .lin-btn-ghost{background:#f2f3f5;color:#6b7280;border-color:#e6e8eb}
+    .lin-btn-ghost:hover{background:#e8eaed;color:#4b5563;border-color:#d0d6e0}
+
+    @media (max-width:1100px){
+      .nav-grid-preview{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}
+    }
+    @media (max-width:640px){
+      .lin-card-body,.entry-modal-body{flex-direction:column}
+      .lin-media-preview,.entry-icon-col{flex:none}
+    }
 
     /* Design builder */
     .builder{display:grid;grid-template-columns:260px 1fr;gap:16px}
@@ -365,57 +514,18 @@
           </div>
         </div>
 
-        <!-- 首页装修 -->
-        <div id="designPanel" class="panel hidden">
-          <div class="card" style="padding-bottom:12px">
-            <div class="toolbar" style="justify-content:space-between">
-              <h3>首页 DIY 装修</h3>
-              <div>
-                <button class="btn outline sm" onclick="loadDesign()">刷新</button>
-                <button class="btn green sm" onclick="saveDesign()">保存草稿</button>
-                <button class="btn sm" onclick="publishDesign()">发布上线</button>
-              </div>
-            </div>
-            <div class="designer">
-              <div>
-                <div class="builder">
-                  <div class="comp-list">
-                    <div class="comp-item" onclick="addComp('banner')">
-                      <div class="name">图片轮播</div>
-                      <div class="hint">添加顶部 Banner 广告位</div>
-                    </div>
-                    <div class="comp-item" onclick="addComp('icons')">
-                      <div class="name">金刚区</div>
-                      <div class="hint">快捷入口图标宫格</div>
-                    </div>
-                    <div class="comp-item" onclick="addComp('goods')">
-                      <div class="name">精选好物</div>
-                      <div class="hint">商品横向/瀑布流推荐</div>
-                    </div>
-                    <div class="comp-item" onclick="addComp('title')">
-                      <div class="name">标题栏</div>
-                      <div class="hint">带副标题的分区标题</div>
-                    </div>
-                    <div class="comp-item" onclick="addComp('notice')">
-                      <div class="name">公告</div>
-                      <div class="hint">滚动通知/活动提示</div>
-                    </div>
-                    <div class="comp-item" onclick="addComp('coupon')">
-                      <div class="name">优惠券</div>
-                      <div class="hint">领券入口（二期）</div>
-                    </div>
-                  </div>
-                  <div class="stage" id="designStage">
-                    <div class="stage-empty">点击左侧组件添加到首页<br>拖动可排序，点击编辑</div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <textarea id="designJson" class="json-area" spellcheck="false"></textarea>
-                <p class="muted" style="margin-top:8px">可直接编辑 JSON，修改后点「保存草稿」生效。</p>
-              </div>
+        <!-- 首页装修：按模块分设 -->
+        <div id="sectionPanel" class="panel hidden">
+          <div class="sec-toolbar">
+            <h3 id="secTitle">首页模块设置</h3>
+            <div class="actions">
+              <button class="btn outline sm" onclick="loadSection()">刷新</button>
+              <button class="btn green sm" onclick="saveSection()">保存草稿</button>
+              <button class="btn sm" onclick="publishSection()">发布上线</button>
             </div>
           </div>
+          <div id="secForm"></div>
+          <p class="sec-hint" id="secHint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
         <!-- 通用占位 -->
@@ -568,7 +678,12 @@
         {key:'dashboard',label:'运营概览',icon:ICONS.pieChart,panel:'overviewPanel',default:true}
       ]},
       {key:'shop',label:'店铺',icon:ICONS.shop,children:[
-        {key:'templates',label:'我的模板',icon:ICONS.layout,panel:'designPanel',default:true},
+        {key:'templates',label:'我的模板',icon:ICONS.layout,children:[
+          {key:'banner',label:'轮播设置',icon:ICONS.image,panel:'sectionPanel',default:true},
+          {key:'nav',label:'魔方导航',icon:ICONS.grid,panel:'sectionPanel'},
+          {key:'goods',label:'精选好物',icon:ICONS.package,panel:'sectionPanel'},
+          {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'}
+        ]},
         {key:'base',label:'基础设置',icon:ICONS.settings},
         {key:'info',label:'店铺设置',icon:ICONS.store},
         {key:'delivery',label:'配送设置',icon:ICONS.truck}
@@ -628,7 +743,7 @@
       ]}
     ];
 
-    let state={first:'overview',second:'dashboard'};
+    let state={first:'overview',second:'dashboard',section:'banner',navEditIdx:-1};
     let expanded=new Set();
 
     function findChild(parent,key){
@@ -657,7 +772,7 @@
         const isLeaf=!hasChildren;
         const tag=isLeaf && !c.panel?'<span class="tag">待上线</span>':'';
         const arrow=hasChildren?`<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m9 18 6-6-6-6"/></svg>`:'';
-        const click=hasChildren?`toggleExpand('${c.key}')`:`switchMenu('${parent.key}','${c.key}')`;
+        const click=`switchMenu('${parent.key}','${c.key}')`;
         let html=`<div class="l2-item ${activeClass} ${expandClass}" onclick="${click}">${c.icon||''}<span class="txt">${c.label}</span>${tag}${arrow}</div>`;
         if(hasChildren){
           const openClass=expanded.has(c.key)||isActive?'open':'';
@@ -681,23 +796,27 @@
         const def=parent.children.find(c=>c.default)||parent.children[0];
         second=def.key;
       }
-      parent.children.forEach(c=>{
-        if(c.children && c.children.some(s=>s.key===second)) expanded.add(c.key);
-      });
-      state={first,second};
+      let node=findChild(parent,second);
+      const path=[];
+      while(node.children && node.children.length){
+        path.push(node.key);
+        node=node.children.find(c=>c.panel)||node.children[0];
+      }
+      path.forEach(k=>expanded.add(k));
+      state={first,second:node.key};
+      if(node.panel==='sectionPanel') state.section=node.key;
       renderSidebar();
-      const child=findChild(parent,second);
-      document.getElementById('pageTitle').textContent=child.label;
+      document.getElementById('pageTitle').textContent=node.label;
 
       document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
-      const panelId=child.panel||'placeholderPanel';
+      const panelId=node.panel||'placeholderPanel';
       const panel=document.getElementById(panelId);
       if(panel) panel.classList.remove('hidden');
 
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='ordersPanel') loadOrders();
-      if(panelId==='designPanel') loadDesign();
+      if(panelId==='sectionPanel') loadSection();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
     }
@@ -1077,74 +1196,287 @@
       if(d.code===0){toast('状态更新成功');closeOrderModal();loadOrders();}else{toast(d.msg);}
     }
 
-    /* Design */
+    /* 首页装修：按模块分设设置 */
     let designConfig={page:'home',components:[]};
-    async function loadDesign(){
+    let catOptionsCache=[];
+
+    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav'};
+    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选好物',cat:'分类导航'};
+    const SECTION_DEFS={
+      banner:{type:'banner',props:{interval:4,items:[
+        {type:'image',image:'https://placehold.co/750x320/FF6B35/fff?text=Banner1',video:'',link:{type:'goods',id:1}},
+        {type:'image',image:'https://placehold.co/750x320/00B86B/fff?text=Banner2',video:'',link:{type:'goods',id:2}}
+      ]}},
+      nav:{type:'nav_grid',props:{columns:5,items:[
+        {icon:'https://placehold.co/96x96/FF6B35/fff?text=分',text:'分类',link:{type:'category',id:1}},
+        {icon:'https://placehold.co/96x96/00B86B/fff?text=秒',text:'秒杀',link:{type:'activity',id:2}},
+        {icon:'https://placehold.co/96x96/3867FF/fff?text=拼',text:'拼团',link:{type:'activity',id:3}}
+      ]}},
+      goods:{type:'goods_group',props:{title:'精选好物',source:'recommend',category_id:0,columns:2,show_count:4}},
+      cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}}
+    };
+
+    function getSection(sec){return designConfig.components.find(c=>c.type===SECTION_TYPE[sec])||null;}
+    function upsertSection(sec){
+      let c=getSection(sec);
+      if(!c){c=JSON.parse(JSON.stringify(SECTION_DEFS[sec]));designConfig.components.push(c);}
+      return c;
+    }
+    async function ensureCats(){
+      if(catOptionsCache.length) return;
+      try{const r=await fetchA(`${BASE}/categories?page=1&page_size=200`);if(r.code===0)catOptionsCache=r.data.list||[];}catch(e){}
+    }
+    async function loadSection(){
       const d=await fetchA(`${BASE}/design/home`);
       if(d.code!==0){toast(d.msg);return;}
-      const cfg=d.data.published_config||{page:'home',components:[]};
-      designConfig=JSON.parse(JSON.stringify(cfg));
-      document.getElementById('designJson').value=JSON.stringify(designConfig,null,2);
-      renderStage();
+      designConfig=JSON.parse(JSON.stringify(d.data.published_config||{page:'home',components:[]}));
+      await ensureCats();
+      renderSectionForm();
     }
-    function renderStage(){
-      const stage=document.getElementById('designStage');
-      if(!designConfig.components.length){stage.innerHTML='<div class="stage-empty">点击左侧组件添加到首页<br>拖动可排序，点击编辑</div>';return;}
-      stage.innerHTML=designConfig.components.map((c,i)=>`<div class="stage-component" draggable="true" ondragstart="dragStart(event,${i})" ondrop="drop(event,${i})" ondragover="allowDrop(event)">
-        <div class="actions">
-          <button onclick="moveComp(${i},-1)">↑</button>
-          <button onclick="moveComp(${i},1)">↓</button>
-          <button onclick="removeComp(${i})">删除</button>
+    function renderSectionForm(){
+      const sec=state.section;
+      const comp=getSection(sec);
+      document.getElementById('secTitle').textContent=SECTION_TITLE[sec]+' · 首页模块';
+      const form=document.getElementById('secForm');
+      const hint=document.getElementById('secHint');
+      hint.textContent=comp
+        ? '直接编辑后点「保存草稿」保存为草稿，点「发布上线」即时生效到小程序首页。'
+        : '该模块尚未添加：编辑下方内容并点「保存草稿」即可创建并生效。';
+      if(sec==='banner') form.innerHTML=renderBannerForm();
+      else if(sec==='nav') form.innerHTML=renderNavForm();
+      else if(sec==='goods') form.innerHTML=renderGoodsForm();
+      else if(sec==='cat') form.innerHTML=renderCatForm();
+    }
+    function linkOpts(link){
+      link=link||{type:'goods',id:0};
+      return ['goods','category','activity'].map(t=>`<option value="${t}" ${link.type===t?'selected':''}>${t==='goods'?'商品':t==='category'?'分类':'活动'}</option>`).join('');
+    }
+    function setItemLink(sec,i,field,val){
+      const c=upsertSection(sec);
+      if(!c.props.items[i].link)c.props.items[i].link={type:'goods',id:0};
+      c.props.items[i].link[field]=field==='id'?(parseInt(val)||0):val;
+    }
+    function delItem(sec,i){upsertSection(sec).props.items.splice(i,1);renderSectionForm();}
+    function addItem(sec){
+      const c=upsertSection(sec);
+      c.props.items.push(sec==='banner'
+        ? {type:'image',image:'https://placehold.co/750x320/FF6B35/fff?text=Banner',video:'',link:{type:'goods',id:1}}
+        : {icon:'https://placehold.co/96x96/FF6B35/fff?text=图标',text:'名称',link:{type:'category',id:1}});
+      renderSectionForm();
+    }
+    function renderBannerForm(){
+      const c=upsertSection('banner');
+      const items=c.props.items||(c.props.items=[]);
+      let h=`<div class="nav-cfg-row">
+        <div class="nav-cfg-field">
+          <label class="cfg-label">切换间隔</label>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px">
+            <input type="number" value="${c.props.interval||4}" oninput="upsertSection('banner').props.interval=parseInt(this.value)||4" style="width:56px;border:0;background:transparent;padding:0;font-size:14px;font-weight:590;color:var(--text);outline:none;font-family:Inter,-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif">
+            <span style="font-size:12px;color:#8a8f98">秒</span>
+          </div>
         </div>
-        <div style="font-weight:600">${compName(c.type)}</div>
-        <div class="muted" style="font-size:12px;margin-top:4px">${compSummary(c)}</div>
-      </div>`).join('');
-      document.getElementById('designJson').value=JSON.stringify(designConfig,null,2);
+        <div class="nav-cfg-field">
+          <label class="cfg-label">轮播数量</label>
+          <div class="count-line"><span class="cfg-count">${items.length}</span><span class="cfg-unit">张</span></div>
+        </div>
+      </div>`;
+      h+=`<p class="muted" style="margin:0 0 16px">每张幻灯片可设为「图片」或「视频」，支持本地上传，也可直接填写图片/视频地址。</p>`;
+      items.forEach((it,i)=>{
+        it.link=it.link||{type:'goods',id:0};
+        const isVid=(it.type==='video');
+        const previewUrl = isVid ? (it.video||'') : (it.image||'');
+        const preview = previewUrl
+          ? (isVid ? `<video src="${previewUrl}"></video>` : `<img src="${previewUrl}" onerror="this.style.display='none'">`)
+          : `<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg><span>${isVid?'视频':'图片'}</span></div>`;
+        h+=`<div class="lin-card">
+          <div class="lin-card-head">
+            <div class="lin-card-title">
+              <span class="lin-badge">${i+1}</span>
+              <span class="lin-type-pill"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>${isVid?'视频':'图片'}</span>
+            </div>
+            <button class="lin-del" title="删除" onclick="delItem('banner',${i})"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+          </div>
+          <div class="lin-card-body">
+            <div class="lin-media-preview">${preview}
+              <label class="lin-upload-overlay"><input type="file" accept="${isVid?'video/*':'image/*'}" onchange="uploadItemMedia(this,'banner',${i},'${isVid?'video':'image'}')"></label>
+            </div>
+            <div class="lin-card-main">
+              <label class="lin-label">媒体类型</label>
+              <div class="seg" style="margin-bottom:12px">
+                <button type="button" class="seg-item ${!isVid?'active':''}" onclick="setBannerMediaType(${i},'image')">图片</button>
+                <button type="button" class="seg-item ${isVid?'active':''}" onclick="setBannerMediaType(${i},'video')">视频</button>
+              </div>
+              <label class="lin-label">${isVid?'视频':'图片'}地址</label>
+              <input class="lin-input" value="${previewUrl}" placeholder="https://..." oninput="upsertSection('banner').props.items[${i}].${isVid?'video':'image'}=this.value">
+              <div class="lin-form-row" style="margin-top:14px">
+                <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setItemLink('banner',${i},'type',this.value)">${linkOpts(it.link)}</select></div>
+                <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(it.link&&it.link.id)||''}" oninput="setItemLink('banner',${i},'id',this.value)"></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      });
+      h+=`<button class="lin-btn lin-btn-ghost" onclick="addItem('banner')" style="margin-top:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>添加轮播图</button>`;
+      return h;
     }
-    function compName(t){return {banner:'图片轮播',icons:'金刚区',goods:'精选好物',title:'标题栏',notice:'公告',coupon:'优惠券'}[t]||t;}
-    function compSummary(c){
-      if(c.type==='banner') return (c.images||[]).map(x=>x.title||'图片').join(' / ')||'未配置图片';
-      if(c.type==='icons') return `${(c.items||[]).length} 个入口`;
-      if(c.type==='goods') return `样式：${c.style||'单列'} / ${(c.ids||[]).length} 个商品`;
-      if(c.type==='title') return c.title||'未填写标题';
-      if(c.type==='notice') return c.text||'未填写公告';
-      if(c.type==='coupon') return '优惠券组件';
-      return JSON.stringify(c).slice(0,60);
+    function setBannerMediaType(i,type){
+      const c=upsertSection('banner');
+      const it=c.props.items[i];
+      it.type=type;
+      if(it.image===undefined)it.image='';
+      if(it.video===undefined)it.video='';
+      renderSectionForm();
     }
-    function addComp(type){
-      const defaults={
-        banner:{type:'banner',images:[{image:'https://via.placeholder.com/750x300?text=Banner1',link:''},{image:'https://via.placeholder.com/750x300?text=Banner2',link:''}]},
-        icons:{type:'icons',items:[{name:'分类',icon:'',link:''},{name:'秒杀',icon:'',link:''},{name:'拼团',icon:'',link:''},{name:'领券',icon:'',link:''}]},
-        goods:{type:'goods',style:'单列',ids:[],title:'精选好物',subtitle:'为您推荐'},
-        title:{type:'title',title:'限时特惠',subtitle:'更多 >',align:'left'},
-        notice:{type:'notice',text:'重要公告：本商城全新上线，欢迎选购！',style:'marquee'},
-        coupon:{type:'coupon',title:'领券专区',style:'horizontal'}
-      };
-      designConfig.components.push(JSON.parse(JSON.stringify(defaults[type])));
-      renderStage();
+    async function uploadItemMedia(el,sec,i,field){
+      const file=el.files&&el.files[0];
+      if(!file){return;}
+      const url=field==='video'?`${BASE}/upload/video`:`${BASE}/upload/banner_image`;
+      const fd=new FormData();fd.append('file',file);
+      const btn=el.closest('.btn');
+      if(btn){btn.style.opacity='0.6';}
+      try{
+        const r=await fetch(url,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+        const d=await r.json();
+        if(d.code===0&&d.data&&d.data.url){
+          upsertSection(sec).props.items[i][field]=d.data.url;
+        }else{
+          alert((d&&d.msg)||'上传失败');
+        }
+      }catch(e){alert('上传出错：'+e);}
+      renderSectionForm();
     }
-    function removeComp(i){designConfig.components.splice(i,1);renderStage();}
-    function moveComp(i,dir){
-      const j=i+dir;if(j<0||j>=designConfig.components.length)return;
-      [designConfig.components[i],designConfig.components[j]]=[designConfig.components[j],designConfig.components[i]];
-      renderStage();
+    function renderNavForm(){
+      const c=upsertSection('nav');
+      const items=c.props.items||[];
+      const cols = c.props.columns||5;
+      let h=`<div class="nav-cfg-row">
+        <div class="nav-cfg-field">
+          <label class="cfg-label">每行列数</label>
+          <div class="seg">
+            <button type="button" class="seg-item ${cols==3?'active':''}" onclick="upsertSection('nav').props.columns=3;renderSectionForm()">3</button>
+            <button type="button" class="seg-item ${cols==4?'active':''}" onclick="upsertSection('nav').props.columns=4;renderSectionForm()">4</button>
+            <button type="button" class="seg-item ${cols==5?'active':''}" onclick="upsertSection('nav').props.columns=5;renderSectionForm()">5</button>
+            <button type="button" class="seg-item ${cols==6?'active':''}" onclick="upsertSection('nav').props.columns=6;renderSectionForm()">6</button>
+          </div>
+        </div>
+        <div class="nav-cfg-field">
+          <label class="cfg-label">入口数量</label>
+          <div class="count-line"><span class="cfg-count">${items.length}</span><span class="cfg-unit">个</span></div>
+        </div>
+      </div>`;
+      h+=`<div class="nav-grid-box">
+        <div class="nav-grid-head"><h4>图标预览（点击图标配置）</h4><span class="muted" style="font-size:12px">每行 ${cols} 个</span></div>
+        <div class="nav-grid-preview" style="grid-template-columns:repeat(${cols}, minmax(0, 1fr))">`;
+      items.forEach((it,i)=>{
+        const icon = it.icon
+          ? `<img src="${it.icon}" onerror="this.style.display='none'">`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>`;
+        h+=`<div class="nav-item-preview" onclick="openNavConfig(${i})">
+          <span class="del" onclick="event.stopPropagation();delItem('nav',${i})" title="删除">×</span>
+          <div class="icon-wrap">${icon}</div>
+          <div class="txt">${it.text||'入口'+(i+1)}</div>
+        </div>`;
+      });
+      h+=`<div class="nav-item-preview add" onclick="addItem('nav')">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+        <div class="txt">添加</div>
+      </div>`;
+      h+=`</div></div>`;
+      return h;
     }
-    let dragIdx=null;
-    function dragStart(e,i){dragIdx=i;e.dataTransfer.effectAllowed='move';}
-    function allowDrop(e){e.preventDefault();}
-    function drop(e,i){e.preventDefault();if(dragIdx===null||dragIdx===i)return;const arr=designConfig.components;const [m]=arr.splice(dragIdx,1);arr.splice(i,0,m);dragIdx=null;renderStage();}
-    document.getElementById('designJson')?.addEventListener('input',()=>{
-      try{designConfig=JSON.parse(document.getElementById('designJson').value);renderStage();}catch(e){}
-    });
-    async function saveDesign(){
-      try{designConfig=JSON.parse(document.getElementById('designJson').value);}catch(e){toast('JSON 格式错误');return;}
-      const d=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:designConfig,remark:'后台保存'}});
+
+    function openNavConfig(i){
+      const items = upsertSection('nav').props.items;
+      const it = items[i];
+      if(!it) return;
+      state.navEditIdx = i;
+      const m = document.getElementById('navModal');
+      m.classList.add('show');
+      m.dataset.idx = i;
+      renderNavModal(it);
+    }
+    function closeNavConfig(){
+      document.getElementById('navModal').classList.remove('show');
+      state.navEditIdx = -1;
+    }
+    function renderNavModal(it){
+      const icon = it.icon
+        ? `<img src="${it.icon}" onerror="this.style.display='none'">`
+        : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>`;
+      document.getElementById('navModalBody').innerHTML = `
+        <div class="entry-modal-body">
+          <div class="entry-icon-col">
+            <label class="entry-icon-box">${icon}<input type="file" accept="image/*" onchange="uploadItemMedia(this,'nav',${state.navEditIdx},'icon')"></label>
+            <div class="entry-icon-tip">点击上传图标<br>支持 jpg/png</div>
+          </div>
+          <div class="entry-form-col">
+            <div style="margin-bottom:14px"><label class="lin-label">入口名称</label><input class="lin-input" value="${it.text||''}" oninput="upsertSection('nav').props.items[${state.navEditIdx}].text=this.value;document.getElementById('navModalTitle').textContent='配置入口：'+(this.value||'未命名')" placeholder="如：新品"></div>
+            <div style="margin-bottom:14px"><label class="lin-label">图标地址</label><input class="lin-input" value="${it.icon||''}" placeholder="https://..." oninput="upsertSection('nav').props.items[${state.navEditIdx}].icon=this.value;renderNavModal(upsertSection('nav').props.items[${state.navEditIdx}])"></div>
+            <div class="lin-form-row">
+              <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setItemLink('nav',${state.navEditIdx},'type',this.value);renderNavModal(upsertSection('nav').props.items[${state.navEditIdx}]);">${linkOpts(it.link)}</select></div>
+              <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(it.link&&it.link.id)||''}" oninput="setItemLink('nav',${state.navEditIdx},'id',this.value)"></div>
+            </div>
+          </div>
+        </div>`;
+      document.getElementById('navModalTitle').textContent = '配置入口：' + (it.text || '未命名');
+    }
+    function saveNavConfig(){
+      closeNavConfig();
+      renderSectionForm();
+    }
+    function renderGoodsForm(){
+      const c=upsertSection('goods');
+      const catOpts=catOptionsCache.map(o=>`<option value="${o.id}" ${(c.props.category_id==o.id)?'selected':''}>${o.name}</option>`).join('');
+      let h=`<div class="form-row">
+        <div class="field"><label>标题</label><input value="${c.props.title||''}" oninput="upsertSection('goods').props.title=this.value"></div>
+        <div class="field"><label>来源</label><select onchange="updGoodsSource(this.value)">${['recommend','category'].map(s=>`<option value="${s}" ${c.props.source===s?'selected':''}>${s==='recommend'?'智能推荐':'指定分类'}</option>`).join('')}</select></div>
+      </div>`;
+      if(c.props.source==='category'){
+        h+=`<div class="form-row"><div class="field"><label>选择分类</label><select onchange="upsertSection('goods').props.category_id=parseInt(this.value)||0">${catOpts}</select></div></div>`;
+      }
+      h+=`<div class="form-row">
+        <div class="field"><label>每行数量</label><input type="number" value="${c.props.columns||2}" oninput="upsertSection('goods').props.columns=parseInt(this.value)||2"></div>
+        <div class="field"><label>展示数量</label><input type="number" value="${c.props.show_count||4}" oninput="upsertSection('goods').props.show_count=parseInt(this.value)||4"></div>
+      </div>`;
+      return h;
+    }
+    function updGoodsSource(v){
+      const c=upsertSection('goods');c.props.source=v;
+      if(v==='category'&&!c.props.category_id&&catOptionsCache[0])c.props.category_id=catOptionsCache[0].id;
+      renderSectionForm();
+    }
+    function renderCatForm(){
+      const c=upsertSection('cat');
+      const catOpts=catOptionsCache.map(o=>`<option value="${o.id}" ${(c.props.category_ids||[]).indexOf(o.id)>=0?'selected':''}>${o.name}</option>`).join('');
+      let h=`<div class="form-row">
+        <div class="field"><label>标题</label><input value="${c.props.title||''}" oninput="upsertSection('cat').props.title=this.value"></div>
+        <div class="field"><label>每行列数</label><input type="number" value="${c.props.columns||4}" oninput="upsertSection('cat').props.columns=parseInt(this.value)||4"></div>
+        <div class="field"><label>来源</label><select onchange="updCatSource(this.value)">${['all','ids'].map(s=>`<option value="${s}" ${c.props.source===s?'selected':''}>${s==='all'?'全部分类':'指定分类'}</option>`).join('')}</select></div>
+      </div>`;
+      if(c.props.source==='ids'){
+        h+=`<div class="field"><label>选择分类（可多选，Ctrl 多选）</label><select multiple style="height:140px" onchange="updCatIds(this)">${catOpts}</select></div>`;
+      }
+      return h;
+    }
+    function updCatSource(v){upsertSection('cat').props.source=v;renderSectionForm();}
+    function updCatIds(sel){upsertSection('cat').props.category_ids=Array.from(sel.selectedOptions).map(o=>parseInt(o.value));}
+    async function saveSection(){
+      upsertSection(state.section);
+      const cfg=JSON.parse(JSON.stringify(designConfig));
+      cfg.page='home';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const d=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:cfg,remark:SECTION_TITLE[state.section]+' 设置'}});
       toast(d.code===0?'草稿保存成功':(d.msg||'保存失败'));
     }
-    async function publishDesign(){
-      try{designConfig=JSON.parse(document.getElementById('designJson').value);}catch(e){toast('JSON 格式错误');return;}
-      const d=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
-      toast(d.code===0?'发布成功':(d.msg||'发布失败'));
+    async function publishSection(){
+      upsertSection(state.section);
+      const cfg=JSON.parse(JSON.stringify(designConfig));
+      cfg.page='home';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const r=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:cfg,remark:SECTION_TITLE[state.section]+' 设置'}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功':(p.msg||'发布失败'));
     }
 
     /* Init */
@@ -1162,5 +1494,19 @@
       }
     })();
   </script>
+
+  <div id="navModal" class="modal-backdrop" onclick="if(event.target===this) closeNavConfig()">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h4 id="navModalTitle">配置入口</h4>
+        <button class="close" onclick="closeNavConfig()">×</button>
+      </div>
+      <div class="modal-body" id="navModalBody"></div>
+      <div class="modal-foot">
+        <button class="btn gray" onclick="closeNavConfig()">取消</button>
+        <button class="btn" onclick="saveNavConfig()">确定</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

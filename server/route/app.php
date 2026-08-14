@@ -49,6 +49,8 @@ Route::group('admin', function () {
     Route::delete('categories/:id', 'admin.Category/remove');
     Route::put('categories/:id/status', 'admin.Category/toggleStatus');
     Route::post('upload/image', 'admin.Upload/image');
+    Route::post('upload/banner_image', 'admin.Upload/bannerImage');
+    Route::post('upload/video', 'admin.Upload/video');
     Route::get('orders', 'admin.Order/index');
     Route::get('orders/:id', 'admin.Order/detail');
     Route::post('orders/:id/status', 'admin.Order/changeStatus');
