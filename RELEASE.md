@@ -55,6 +55,26 @@ php think run -H 127.0.0.1 -p 8787                                       # 启�
 
 ## 版本记录（最新在上）
 
+### v0.1.5 · 2026-08-14 · 后台商品编辑弹窗重构（参考商城标准版）
+**范围**：运营后台 `server/public/admin.html` 商品管理模块按参考图全面重构编辑/新增弹窗，支持 6 个 Tab 与完整商品字段。
+
+**前端（`server/public/admin.html`）**
+- 商品弹窗改为 6 Tab 布局：**基本信息 / 商品规格 / 商品属性 / 详情介绍 / 其他设置 / 分享设置**。
+- 基本信息：商品名称/编码/条形码、商品类型（实物/电子卡券/询价）、分类、促销语、单位、市场价/成本价/销售价/利润联动、总库存/虚拟销量/排序、轮播图多图上传（首图主图）、MP4/腾讯视频、视频封面、自动播放、购买须知、备注。
+- 商品规格：支持添加规格名与规格值，自动生成 SKU 矩阵，可为每个 SKU 单独设置销售价/市场价/库存/图片。
+- 商品属性：属性管理弹窗 + 属性值编辑弹窗，支持勾选使用、上下排序。
+- 详情介绍：内置富文本编辑器（加粗/斜体/下划线/删除线/对齐/列表/图片/视频）。
+- 其他设置：配送方式（到店自提/同城配送）、重量、显示库存、虚拟销量、排序、最少购买、终身/周期限购、要求留言、订单协议、是否上架。
+- 分享设置：分享标题、分享封面（5:4）。
+- 交互与样式统一 Linear 浅色风格：Tab 下划线、上传区悬浮删除、单选高亮、开关复选、SKU 表格。
+
+**后端**
+- `goods` 表新增 `ext_json` TEXT 字段存扩展字段；规格/规格值表新增 `sort`/`created_at`；新增 `goods_attrs` 表存商品属性。
+- `database/install.sqlite.sql` 与迁移脚本 `database/migrate_goods_ext.php` 已同步。
+- `app/controller/admin/Goods.php` 新增 `detail` 方法；`save` 方法支持 `ext_json`/`specs`/`skus`/`attrs`。
+- `app/service/GoodsService.php` 新增 `adminDetail`、`saveSpecsAndSkus`、`saveAttrs` 完整规格/SKU/属性保存。
+- `route/app.php` 新增后台 `GET goods/:id` 路由。
+
 ### v0.1.4 · 2026-08-14 · 后台整体 Linear 风格设计
 **范围**：运营后台 `server/public/admin.html` 整体采用 Linear 浅色设计语言，与已上线的小程序端（轮播/魔方导航 Linear 风格）视觉统一。
 

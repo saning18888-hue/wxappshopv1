@@ -39,6 +39,7 @@ Route::group('api/v1', function () {
 Route::group('admin', function () {
     Route::post('login', 'admin.Auth/login');
     Route::get('goods', 'admin.Goods/index');
+    Route::get('goods/:id', 'admin.Goods/detail');
     Route::post('goods', 'admin.Goods/save');
     Route::put('goods/:id', 'admin.Goods/save');
     Route::delete('goods/:id', 'admin.Goods/remove');

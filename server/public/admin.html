@@ -168,6 +168,87 @@
     .toggle:checked{background:var(--primary)}
     .toggle:checked::after{transform:translateX(18px)}
     .radio{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+
+    /* ---------- 商品编辑弹窗扩展 ---------- ---------- */
+    .modal-card.lg{width:720px;max-width:96vw}
+    .modal-card.xl{width:900px;max-width:96vw}
+    .goods-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:-6px -4px 16px -4px;padding:0 4px}
+    .goods-tab{padding:9px 14px;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;margin-bottom:-1px}
+    .goods-tab:hover{color:var(--text)}
+    .goods-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+    .goods-panel{display:none}
+    .goods-panel.active{display:block}
+    .goods-form-row{display:flex;gap:16px;margin-bottom:14px;align-items:flex-start}
+    .goods-form-row .field{flex:1;margin-bottom:0}
+    .goods-form-row .field.half{flex:0 0 50%}
+    .goods-form-row .field.third{flex:0 0 33.333%}
+    .goods-form-row .field.quarter{flex:0 0 25%}
+    .goods-form-row .field textarea,.goods-panel .field textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;font-size:13px;background:#f7f8fa;min-height:80px;resize:vertical;font-family:inherit}
+    .goods-form-row .field textarea:focus,.goods-panel .field textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .field label .req{color:#ff4d4f;margin-right:3px}
+    .field-hint{font-size:12px;color:var(--text-muted);margin-top:6px}
+    .field-hint.warn{color:#ff4d4f}
+    .radio-group{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-top:6px}
+    .radio input{accent-color:var(--primary)}
+    .radio.checked{color:var(--primary);font-weight:500}
+    .upload-list{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+    .upload-thumb{position:relative;width:88px;height:88px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);background:#f7f8fa;flex-shrink:0}
+    .upload-thumb img,.upload-thumb video{width:100%;height:100%;object-fit:cover}
+    .upload-thumb .del{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;opacity:0;transition:opacity .15s}
+    .upload-thumb:hover .del{opacity:1}
+    .upload-add{width:88px;height:88px;border:1px dashed #d0d6e0;border-radius:var(--radius-sm);background:#f7f8fa;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+    .upload-add:hover{border-color:var(--primary);background:var(--primary-50)}
+    .upload-add svg{width:22px;height:22px;color:var(--text-muted)}
+    .upload-add input{display:none}
+    .upload-tip{font-size:12px;color:var(--text-muted);margin-top:8px}
+    .upload-single{width:120px;height:120px}
+    .upload-single .upload-thumb,.upload-single .upload-add{width:120px;height:120px}
+    .price-profit{display:flex;align-items:center;gap:10px}
+    .price-profit input{flex:1}
+    .price-profit .profit-box{flex:0 0 120px;background:#f2f3f5;border-radius:var(--radius-sm);padding:8px 10px;text-align:center;color:var(--text-secondary);font-size:13px}
+    .price-profit .profit-box b{display:block;color:var(--text);font-size:14px;font-weight:600}
+
+    /* 规格 / SKU */
+    .spec-card{border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;background:#fff}
+    .spec-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .spec-head input{flex:1;font-weight:600}
+    .spec-values{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .spec-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;background:#f2f3f5;border:1px solid var(--border);font-size:12px;color:var(--text-secondary)}
+    .spec-tag .remove{width:14px;height:14px;border-radius:50%;border:0;background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .spec-tag .remove:hover{color:#ff4d4f}
+    .spec-add-input{width:110px;padding:5px 10px;border:1px dashed #d0d6e0;border-radius:20px;background:transparent;font-size:12px;outline:none}
+    .spec-add-input:focus{border-color:var(--primary)}
+    .sku-table{width:100%;border-collapse:collapse;margin-top:8px}
+    .sku-table th,.sku-table td{padding:10px 8px;font-size:12px;border-bottom:1px solid var(--border);text-align:left}
+    .sku-table th{background:#f7f8fa;color:var(--text-secondary);font-weight:600}
+    .sku-table input{width:90px;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px}
+    .sku-empty{padding:30px;text-align:center;color:var(--text-muted);font-size:13px}
+
+    /* 属性 */
+    .attr-toolbar{display:flex;gap:10px;margin-bottom:14px}
+    .attr-list{display:flex;flex-direction:column;gap:10px}
+    .attr-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff}
+    .attr-row .name{font-weight:600;min-width:80px}
+    .attr-row .vals{color:var(--text-secondary);font-size:12px;flex:1}
+    .attr-row .sort-btns{display:flex;gap:4px}
+    .attr-row .sort-btns button{width:26px;height:26px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;padding:0}
+    .attr-row .sort-btns button:hover{border-color:var(--primary);color:var(--primary)}
+    .attr-empty{padding:24px;text-align:center;color:var(--text-muted)}
+
+    /* 富文本 */
+    .rte-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff}
+    .rte-toolbar{display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--border);background:#f7f8fa;flex-wrap:wrap}
+    .rte-toolbar button{width:28px;height:28px;border:0;background:transparent;border-radius:6px;cursor:pointer;color:var(--text-secondary);font-size:14px;display:flex;align-items:center;justify-content:center}
+    .rte-toolbar button:hover{background:#e8eaed;color:var(--text)}
+    .rte-toolbar button.active{background:var(--primary-50);color:var(--primary)}
+    .rte-editor{min-height:220px;padding:12px;outline:none;font-size:14px;line-height:1.6;overflow:auto}
+    .rte-editor p{margin:0 0 8px}
+    .rte-editor img{max-width:100%}
+
+    /* 开关复选 */
+    .check-group{display:flex;gap:16px;flex-wrap:wrap;padding-top:4px}
+    .check-item{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:var(--text-secondary)}
+    .check-item input{accent-color:var(--primary);width:15px;height:15px}
     .radio input{margin:0}
     .upload-box{width:90px;height:90px;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:#f7f8fa;overflow:hidden}
     .upload-box svg{width:24px;height:24px;color:var(--text-secondary)}
@@ -551,34 +632,226 @@
 
   <!-- 商品编辑弹窗 -->
   <div id="goodsModal" class="modal">
-    <div class="modal-card">
-      <div class="modal-header"><h3 id="goodsModalTitle">新增商品</h3><span class="close" onclick="closeGoodsModal()">&times;</span></div>
-      <div class="modal-body">
+    <div class="modal-card xl">
+      <div class="modal-header"><h3 id="goodsModalTitle">添加商品</h3><span class="close" onclick="closeGoodsModal()">&times;</span></div>
+      <div class="modal-body" style="padding:0">
         <input type="hidden" id="gId">
-        <div class="form-row">
-          <div class="field"><label>商品标题</label><input id="gTitle" placeholder="请输入标题"></div>
-          <div class="field"><label>副标题</label><input id="gSub" placeholder="简短卖点"></div>
+        <div class="goods-tabs" id="goodsTabs">
+          <div class="goods-tab active" data-tab="base" onclick="switchGoodsTab('base')">基本信息</div>
+          <div class="goods-tab" data-tab="spec" onclick="switchGoodsTab('spec')">商品规格</div>
+          <div class="goods-tab" data-tab="attr" onclick="switchGoodsTab('attr')">商品属性</div>
+          <div class="goods-tab" data-tab="detail" onclick="switchGoodsTab('detail')">详情介绍</div>
+          <div class="goods-tab" data-tab="other" onclick="switchGoodsTab('other')">其他设置</div>
+          <div class="goods-tab" data-tab="share" onclick="switchGoodsTab('share')">分享设置</div>
         </div>
-        <div class="form-row">
-          <div class="field"><label>分类</label><select id="gCat"></select></div>
-          <div class="field"><label>状态</label><select id="gStatus"><option value="1">上架</option><option value="0">下架</option></select></div>
+
+        <!-- 基本信息 -->
+        <div class="goods-panel active" id="tab-base" style="padding:0 20px 18px">
+          <div class="goods-form-row">
+            <div class="field" style="flex:2"><label><span class="req">*</span>商品名称</label><input id="gTitle" placeholder="请输入商品名称"></div>
+            <div class="field"><label>商品编码</label><input id="gCode" placeholder="商品编码"></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>条形码</label><input id="gBarcode" placeholder="条形码"></div>
+            <div class="field"><label><span class="req">*</span>商品分类</label><select id="gCat"></select></div>
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label><span class="req">*</span>商品类型</label>
+            <div class="radio-group" id="gType">
+              <label class="radio checked"><input type="radio" name="gType" value="physical" checked> 实物商品(物流发货)</label>
+              <label class="radio"><input type="radio" name="gType" value="virtual"> 电子卡券(无需物流)</label>
+              <label class="radio"><input type="radio" name="gType" value="inquiry"> 询价商品(无需物流)</label>
+            </div>
+            <div class="field-hint warn">商品保存后无法修改，请谨慎选择</div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>促销语</label><input id="gPromo" placeholder="促销语"></div>
+            <div class="field"><label>商品单位</label><input id="gUnit" placeholder="如件,台,双等"></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>市场价</label><input id="gMarket" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
+            <div class="field"><label>成本价</label><input id="gCost" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
+            <div class="field"><label><span class="req">*</span>销售价</label><input id="gPrice" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
+            <div class="field"><label>利润</label><div class="price-profit"><div class="profit-box">利润<b id="gProfit">0.00</b></div></div></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field third"><label><span class="req">*</span>总库存</label><input id="gStock" type="number" value="0"></div>
+            <div class="field third"><label>虚拟销量</label><input id="gVirtualSales" type="number" value="0"></div>
+            <div class="field third"><label>排序</label><input id="gSort" type="number" value="0"></div>
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label><span class="req">*</span>轮播图</label>
+            <div class="upload-list" id="gImagesWrap">
+              <div class="upload-add" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)"></div>
+            </div>
+            <div class="upload-tip">第一张图片将作为商品主图，推荐比例为1:1</div>
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label>视频类型</label>
+            <div class="radio-group">
+              <label class="radio checked"><input type="radio" name="gVideoType" value="mp4" checked onchange="toggleVideoType()"> MP4地址</label>
+              <label class="radio"><input type="radio" name="gVideoType" value="tencent" onchange="toggleVideoType()"> 腾讯视频</label>
+            </div>
+          </div>
+          <div class="goods-form-row" id="gVideoRow">
+            <div class="field" style="flex:1"><label>视频地址</label><input id="gVideoUrl" placeholder="视频地址"></div>
+            <div style="padding-top:24px"><button class="btn" onclick="document.getElementById('gVideoFile').click()">选择视频</button><input type="file" id="gVideoFile" accept="video/*" style="display:none" onchange="uploadGoodsVideo(this)"></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>视频封面</label>
+              <div class="upload-single">
+                <div class="upload-thumb hidden" id="gVideoCoverThumb"></div>
+                <div class="upload-add" id="gVideoCoverAdd" onclick="document.getElementById('gVideoCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gVideoCoverFile" accept="image/*" style="display:none" onchange="uploadGoodsVideoCover(this)"></div>
+              </div>
+              <div class="upload-tip">推荐比例为1:1</div>
+            </div>
+            <div class="field"><label>自动播放</label>
+              <div class="radio-group">
+                <label class="radio checked"><input type="radio" name="gAutoPlay" value="0" checked> 否</label>
+                <label class="radio"><input type="radio" name="gAutoPlay" value="1"> 是</label>
+              </div>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0"><label>购买须知</label><textarea id="gNotice" rows="3"></textarea></div>
+          <div class="field" style="margin-bottom:0;margin-top:14px"><label>备注</label><input id="gRemark" placeholder="备注"></div>
         </div>
-        <div class="form-row">
-          <div class="field"><label>售价（元）</label><input id="gPrice" type="number" step="0.01"></div>
-          <div class="field"><label>市场价（元）</label><input id="gMarket" type="number" step="0.01"></div>
-          <div class="field"><label>库存</label><input id="gStock" type="number"></div>
+
+        <!-- 商品规格 -->
+        <div class="goods-panel" id="tab-spec" style="padding:0 20px 18px">
+          <div id="specList"></div>
+          <button class="btn outline" onclick="addSpec()">+ 添加规格</button>
+          <div id="skuTableWrap" style="margin-top:16px"></div>
         </div>
-        <div class="field">
-          <label>商品图片 URL（每行一个，首张为封面）</label>
-          <textarea id="gImages" rows="3" placeholder="https://example.com/1.jpg"></textarea>
-          <div class="img-preview" id="gImgPreview"></div>
+
+        <!-- 商品属性 -->
+        <div class="goods-panel" id="tab-attr" style="padding:0 20px 18px">
+          <div class="attr-toolbar"><button class="btn" onclick="openAttrManager()">+ 管理属性</button><span class="muted" style="line-height:30px">勾选属性后将在商品详情页展示</span></div>
+          <div id="attrList" class="attr-list"></div>
         </div>
-        <div class="field"><label>详情 HTML</label><textarea id="gDetail" rows="4"></textarea></div>
+
+        <!-- 详情介绍 -->
+        <div class="goods-panel" id="tab-detail" style="padding:0 20px 18px">
+          <div class="rte-wrap">
+            <div class="rte-toolbar" id="rteToolbar">
+              <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
+              <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+              <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+              <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+              <button type="button" data-cmd="justifyLeft" title="左对齐">L</button>
+              <button type="button" data-cmd="justifyCenter" title="居中">C</button>
+              <button type="button" data-cmd="justifyRight" title="右对齐">R</button>
+              <button type="button" data-cmd="insertUnorderedList" title="无序列表">UL</button>
+              <button type="button" data-cmd="insertOrderedList" title="有序列表">OL</button>
+              <button type="button" onclick="insertDetailImage()" title="图片">IMG</button>
+              <button type="button" onclick="insertDetailVideo()" title="视频">VID</button>
+            </div>
+            <div class="rte-editor" id="gDetail" contenteditable="true" placeholder="请输入正文"></div>
+          </div>
+        </div>
+
+        <!-- 其他设置 -->
+        <div class="goods-panel" id="tab-other" style="padding:0 20px 18px">
+          <div class="field" style="margin-bottom:14px">
+            <label>配送方式</label>
+            <div class="check-group">
+              <label class="check-item"><input type="checkbox" id="gShipSelf" value="self"> 到店自提</label>
+              <label class="check-item"><input type="checkbox" id="gShipSame" value="same"> 同城配送</label>
+            </div>
+            <div class="field-hint">若不勾选，默认包邮，更多配送方式请在“店铺 -> 配送设置”中开启</div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field third"><label>重量(g)</label><input id="gWeight" type="number" value="0"></div>
+            <div class="field third"><label>最少购买</label><input id="gMinBuy" type="number" value="1"></div>
+            <div class="field third"><label>排序</label><input id="gSortOther" type="number" value="0"></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>显示库存</label>
+              <div class="radio-group">
+                <label class="radio checked"><input type="radio" name="gShowStock" value="1" checked> 显示</label>
+                <label class="radio"><input type="radio" name="gShowStock" value="0"> 隐藏</label>
+              </div>
+            </div>
+            <div class="field"><label>是否上架</label>
+              <div class="radio-group">
+                <label class="radio checked"><input type="radio" name="gStatus" value="1" checked> 立刻上架</label>
+                <label class="radio"><input type="radio" name="gStatus" value="0"> 暂不上架</label>
+              </div>
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:14px">
+            <label>限购</label>
+            <div class="radio-group">
+              <label class="radio checked"><input type="radio" name="gLimitType" value="none" checked onchange="toggleLimit()"> 不限购</label>
+              <label class="radio"><input type="radio" name="gLimitType" value="lifetime" onchange="toggleLimit()"> 终身限购</label>
+              <label class="radio"><input type="radio" name="gLimitType" value="period" onchange="toggleLimit()"> 周期限购</label>
+            </div>
+          </div>
+          <div class="goods-form-row hidden" id="gLimitLifetime">
+            <div class="field third"><label>终身限购数量</label><input id="gLimitLifetimeNum" type="number" value="0"></div>
+          </div>
+          <div class="goods-form-row hidden" id="gLimitPeriod">
+            <div class="field third"><label>每</label><input id="gLimitPeriodDay" type="number" value="1"></div>
+            <div class="field third"><label>天，可购买</label><input id="gLimitPeriodNum" type="number" value="0"></div>
+          </div>
+          <div class="goods-form-row">
+            <div class="field"><label>订单协议</label>
+              <div class="radio-group">
+                <label class="radio"><input type="radio" name="gAgreement" value="1"> 显示</label>
+                <label class="radio checked"><input type="radio" name="gAgreement" value="0" checked> 隐藏</label>
+              </div>
+            </div>
+            <div class="field"><label>要求留言</label>
+              <div style="display:flex;gap:10px;padding-top:6px"><button class="btn outline sm" onclick="addMessageField()">+ 选择表单</button><input id="gMessage" placeholder="留言字段名称"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 分享设置 -->
+        <div class="goods-panel" id="tab-share" style="padding:0 20px 18px">
+          <div class="goods-form-row">
+            <div class="field" style="flex:1"><label>分享标题</label><input id="gShareTitle" placeholder="分享标题"></div>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>分享封面</label>
+            <div class="upload-single">
+              <div class="upload-thumb hidden" id="gShareCoverThumb"></div>
+              <div class="upload-add" id="gShareCoverAdd" onclick="document.getElementById('gShareCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gShareCoverFile" accept="image/*" style="display:none" onchange="uploadShareCover(this)"></div>
+            </div>
+            <div class="upload-tip">推荐比例为5:4</div>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn gray" onclick="closeGoodsModal()">取消</button>
-        <button class="btn" onclick="saveGoods()">保存</button>
+        <button class="btn" onclick="saveGoods()">确定</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 属性管理弹窗 -->
+  <div id="attrModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>属性管理</h3><span class="close" onclick="closeAttrModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="toolbar"><button class="btn" onclick="addAttrItem()">+ 添加属性</button></div>
+        <div class="table-wrap"><table><thead><tr><th>属性名称</th><th>属性值</th><th>使用</th><th>排序</th><th>操作</th></tr></thead><tbody id="attrMgrBody"></tbody></table></div>
+      </div>
+      <div class="modal-footer"><button class="btn gray" onclick="closeAttrModal()">取消</button><button class="btn" onclick="confirmAttrManager()">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 属性值编辑弹窗 -->
+  <div id="attrValueModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="attrValueTitle">添加属性值</h3><span class="close" onclick="closeAttrValueModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="field"><label><span class="req">*</span>属性名称</label><input id="avName" placeholder="属性名称"></div>
+        <div class="field"><label>属性值</label>
+          <div style="display:flex;gap:8px;margin-bottom:10px"><input id="avInput" placeholder="输入属性值后回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addAttrValueTag()}"><button class="btn" onclick="addAttrValueTag()">添加属性值</button></div>
+          <div class="spec-values" id="avTags"></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn gray" onclick="closeAttrValueModal()">取消</button><button class="btn" onclick="saveAttrValueItem()">确定</button></div>
     </div>
   </div>
 
@@ -873,8 +1146,21 @@
       document.getElementById('loginWrap').classList.remove('hidden');
     }
 
+    /* Upload helper */
+    async function uploadToServer(file,type='image'){
+      const fd=new FormData();
+      fd.append('file',file);
+      const endpoint=type==='video'?'upload/video':'upload/image';
+      const r=await fetch(`${BASE}/${endpoint}`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+      const d=await r.json();
+      if(d.code===0)return d.data.url;
+      toast(d.msg||'上传失败');return '';
+    }
+
     /* Goods */
     let goodsPage=1;
+    let gState={images:[],videoCover:'',shareCover:'',specs:[],skus:[],attrs:[],editingAttrIdx:null,avValues:[]};
+
     async function loadCategories(){
       const d=await fetchA(`${BASE}/categories`);
       if(d.code!==0) return;
@@ -910,46 +1196,328 @@
         <span style="font-size:12px;color:#888">第 ${p.page||goodsPage} / ${p.last_page||1} 页</span>
         <button ${goodsPage>=(p.last_page||1)?'disabled':''} onclick="goodsPage++;loadGoods()">下一页</button>`;
     }
-    function openGoodsModal(){document.getElementById('goodsModal').classList.add('show');document.getElementById('goodsModalTitle').textContent='新增商品';clearGoodsForm();}
+
+    function switchGoodsTab(tab){
+      document.querySelectorAll('.goods-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+      document.querySelectorAll('.goods-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+    }
+
+    function openGoodsModal(){
+      document.getElementById('goodsModal').classList.add('show');
+      document.getElementById('goodsModalTitle').textContent='添加商品';
+      clearGoodsForm();
+    }
     function closeGoodsModal(){document.getElementById('goodsModal').classList.remove('show');}
-    function clearGoodsForm(){['gId','gTitle','gSub','gPrice','gMarket','gStock','gDetail','gImages'].forEach(id=>document.getElementById(id).value='');document.getElementById('gStatus').value='1';document.getElementById('gImgPreview').innerHTML='';}
-    document.getElementById('gImages')?.addEventListener('input',()=>{
-      const urls=document.getElementById('gImages').value.split('\n').filter(u=>u.trim());
-      document.getElementById('gImgPreview').innerHTML=urls.map(u=>`<img src="${u}" onerror="this.style.display='none'">`).join('');
-    });
+
+    function clearGoodsForm(){
+      gState={images:[],videoCover:'',shareCover:'',specs:[],skus:[],attrs:[],editingAttrIdx:null};
+      ['gId','gTitle','gCode','gBarcode','gPromo','gUnit','gPrice','gMarket','gCost','gStock','gVirtualSales','gSort','gVideoUrl','gNotice','gRemark','gWeight','gMinBuy','gSortOther','gLimitLifetimeNum','gLimitPeriodDay','gLimitPeriodNum','gMessage','gShareTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=id.startsWith('gSort')?'0':(id==='gMinBuy'?'1':'0');});
+      setRadio('gType','physical');setRadio('gVideoType','mp4');setRadio('gAutoPlay','0');
+      setRadio('gShowStock','1');setRadio('gStatus','1');setRadio('gLimitType','none');setRadio('gAgreement','0');
+      document.getElementById('gShipSelf').checked=false;document.getElementById('gShipSame').checked=false;
+      document.getElementById('gDetail').innerHTML='';
+      renderImages();renderVideoCover();renderShareCover();renderSpecs();renderAttrs();toggleLimit();toggleVideoType();calcProfit();
+      switchGoodsTab('base');
+    }
+    function setRadio(name,val){document.querySelectorAll(`input[name="${name}"]`).forEach(r=>{r.checked=r.value===val;updateRadioStyle(r);});}
+    function getRadio(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:null;}
+    function updateRadioStyle(r){r.closest('.radio').classList.toggle('checked',r.checked);}
+    document.querySelectorAll('.radio input[type=radio]').forEach(r=>r.addEventListener('change',()=>{document.querySelectorAll(`input[name="${r.name}"]`).forEach(x=>updateRadioStyle(x));}));
+
+    function calcProfit(){
+      const price=parseFloat(document.getElementById('gPrice').value)||0;
+      const cost=parseFloat(document.getElementById('gCost').value)||0;
+      document.getElementById('gProfit').textContent=(price-cost).toFixed(2);
+    }
+    function toggleVideoType(){
+      const type=getRadio('gVideoType');
+      document.getElementById('gVideoRow').classList.toggle('hidden',type!=='mp4');
+    }
+    function toggleLimit(){
+      const type=getRadio('gLimitType');
+      document.getElementById('gLimitLifetime').classList.toggle('hidden',type!=='lifetime');
+      document.getElementById('gLimitPeriod').classList.toggle('hidden',type!=='period');
+    }
+
+    async function uploadGoodsImages(input){
+      if(!input.files.length)return;
+      for(const file of input.files){
+        const url=await uploadToServer(file,'image');
+        if(url)gState.images.push(url);
+      }
+      input.value='';renderImages();
+    }
+    function removeGoodsImage(idx){gState.images.splice(idx,1);renderImages();}
+    function renderImages(){
+      const wrap=document.getElementById('gImagesWrap');
+      const add=`<div class="upload-add" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)"></div>`;
+      wrap.innerHTML=gState.images.map((u,i)=>`<div class="upload-thumb"><img src="${u}"><span class="del" onclick="removeGoodsImage(${i})">&times;</span></div>`).join('')+add;
+    }
+
+    async function uploadGoodsVideo(input){
+      if(!input.files[0])return;
+      const url=await uploadToServer(input.files[0],'video');
+      if(url)document.getElementById('gVideoUrl').value=url;
+      input.value='';
+    }
+    async function uploadGoodsVideoCover(input){
+      if(!input.files[0])return;
+      const url=await uploadToServer(input.files[0],'image');
+      if(url)gState.videoCover=url;
+      input.value='';renderVideoCover();
+    }
+    function renderVideoCover(){
+      const thumb=document.getElementById('gVideoCoverThumb');
+      const add=document.getElementById('gVideoCoverAdd');
+      if(gState.videoCover){thumb.innerHTML=`<img src="${gState.videoCover}"><span class="del" onclick="gState.videoCover='';renderVideoCover()">&times;</span>`;thumb.classList.remove('hidden');add.classList.add('hidden');}
+      else{thumb.innerHTML='';thumb.classList.add('hidden');add.classList.remove('hidden');}
+    }
+
+    async function uploadShareCover(input){
+      if(!input.files[0])return;
+      const url=await uploadToServer(input.files[0],'image');
+      if(url)gState.shareCover=url;
+      input.value='';renderShareCover();
+    }
+    function renderShareCover(){
+      const thumb=document.getElementById('gShareCoverThumb');
+      const add=document.getElementById('gShareCoverAdd');
+      if(gState.shareCover){thumb.innerHTML=`<img src="${gState.shareCover}"><span class="del" onclick="gState.shareCover='';renderShareCover()">&times;</span>`;thumb.classList.remove('hidden');add.classList.add('hidden');}
+      else{thumb.innerHTML='';thumb.classList.add('hidden');add.classList.remove('hidden');}
+    }
+
+    /* Spec / SKU */
+    function addSpec(){
+      gState.specs.push({id:'sp_'+Date.now(),name:'',values:[]});
+      renderSpecs();
+    }
+    function removeSpec(idx){gState.specs.splice(idx,1);syncSkus();renderSpecs();}
+    function updateSpecName(idx,val){gState.specs[idx].name=val;syncSkus();renderSpecs();}
+    function addSpecValue(idx,val){if(!val.trim())return;gState.specs[idx].values.push({id:'sv_'+Date.now()+Math.random(),value:val.trim()});syncSkus();renderSpecs();}
+    function removeSpecValue(sIdx,vIdx){gState.specs[sIdx].values.splice(vIdx,1);syncSkus();renderSpecs();}
+    function syncSkus(){
+      const specs=gState.specs.filter(s=>s.name&&s.values.length);
+      if(!specs.length){gState.skus=[];return;}
+      const combos=cartesian(specs.map(s=>s.values.map(v=>({specId:s.id,specName:s.name,specValueId:v.id,specValue:v.value}))));
+      const oldMap=new Map(gState.skus.map(s=>[s.spec_value_ids,s]));
+      gState.skus=combos.map(c=>{
+        const ids=c.map(x=>x.specValueId);
+        const key=ids.join(',');
+        const old=oldMap.get(key)||{price:0,market_price:0,stock:0,image:''};
+        return{spec_value_ids:ids,specNames:c.map(x=>x.specName).join('·'),specValues:c.map(x=>x.specValue).join('/'),price:old.price,market_price:old.market_price,stock:old.stock,image:old.image};
+      });
+    }
+    function cartesian(arr){return arr.reduce((a,b)=>a.flatMap(d=>b.map(e=>[...d,e])),[[]]);}
+    function updateSku(idx,key,val){gState.skus[idx][key]=val;}
+    async function uploadSkuImage(idx,input){
+      if(!input.files[0])return;
+      const url=await uploadToServer(input.files[0],'image');
+      if(url){gState.skus[idx].image=url;renderSpecs();}
+      input.value='';
+    }
+    function renderSpecs(){
+      const wrap=document.getElementById('specList');
+      wrap.innerHTML=gState.specs.map((s,i)=>`
+        <div class="spec-card">
+          <div class="spec-head">
+            <input value="${s.name}" placeholder="规格名（如颜色）" oninput="updateSpecName(${i},this.value)">
+            <button class="btn sm danger" onclick="removeSpec(${i})">删除规格</button>
+          </div>
+          <div class="spec-values">
+            ${s.values.map((v,vi)=>`<span class="spec-tag">${v.value}<span class="remove" onclick="removeSpecValue(${i},${vi})">&times;</span></span>`).join('')}
+            <input class="spec-add-input" placeholder="输入规格值回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addSpecValue(${i},this.value);this.value='';}">
+          </div>
+        </div>`).join('');
+      renderSkus();
+    }
+    function renderSkus(){
+      const wrap=document.getElementById('skuTableWrap');
+      if(!gState.skus.length){wrap.innerHTML='';return;}
+      wrap.innerHTML=`<table class="sku-table"><thead><tr><th>规格组合</th><th>销售价</th><th>市场价</th><th>库存</th><th>图片</th></tr></thead><tbody>
+        ${gState.skus.map((s,i)=>`<tr>
+          <td>${s.specValues}</td>
+          <td><input type="number" value="${s.price}" oninput="updateSku(${i},'price',this.value)"></td>
+          <td><input type="number" value="${s.market_price}" oninput="updateSku(${i},'market_price',this.value)"></td>
+          <td><input type="number" value="${s.stock}" oninput="updateSku(${i},'stock',this.value)"></td>
+          <td><div style="display:flex;align-items:center;gap:6px">${s.image?`<img src="${s.image}" style="width:36px;height:36px;object-fit:cover;border-radius:4px">`:''}<button class="btn sm outline" onclick="document.getElementById('skuImg_${i}').click()">上传</button><input type="file" id="skuImg_${i}" accept="image/*" style="display:none" onchange="uploadSkuImage(${i},this)"></div></td>
+        </tr>`).join('')}
+      </tbody></table>`;
+    }
+
+    /* Attrs */
+    function renderAttrs(){
+      const wrap=document.getElementById('attrList');
+      if(!gState.attrs.length){wrap.innerHTML='<div class="attr-empty">暂无属性，点击“管理属性”添加</div>';return;}
+      wrap.innerHTML=gState.attrs.map((a,i)=>`
+        <div class="attr-row">
+          <input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0;renderAttrs()">
+          <div class="name">${a.name}</div>
+          <div class="vals">${(a.values||[]).join('、')}</div>
+          <div class="sort-btns">
+            <button onclick="moveAttr(${i},-1)">↑</button>
+            <button onclick="moveAttr(${i},1)">↓</button>
+          </div>
+        </div>`).join('');
+    }
+    function moveAttr(idx,dir){
+      const n=idx+dir;if(n<0||n>=gState.attrs.length)return;
+      [gState.attrs[idx],gState.attrs[n]]=[gState.attrs[n],gState.attrs[idx]];
+      renderAttrs();
+    }
+    function openAttrManager(){renderAttrMgr();document.getElementById('attrModal').classList.add('show');}
+    function closeAttrModal(){document.getElementById('attrModal').classList.remove('show');}
+    function renderAttrMgr(){
+      document.getElementById('attrMgrBody').innerHTML=gState.attrs.map((a,i)=>`
+        <tr>
+          <td>${a.name}</td>
+          <td>${(a.values||[]).join('、')}</td>
+          <td><input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0;renderAttrMgr();renderAttrs();"></td>
+          <td><button class="btn sm gray" onclick="moveAttr(${i},-1);renderAttrMgr()">↑</button><button class="btn sm gray" onclick="moveAttr(${i},1);renderAttrMgr()">↓</button></td>
+          <td><button class="btn sm outline" onclick="editAttrItem(${i})">编辑</button><button class="btn sm danger" onclick="gState.attrs.splice(${i},1);renderAttrMgr();renderAttrs();">删除</button></td>
+        </tr>`).join('');
+    }
+    function addAttrItem(){gState.editingAttrIdx=null;document.getElementById('attrValueTitle').textContent='添加属性';document.getElementById('avName').value='';document.getElementById('avTags').innerHTML='';gState.avValues=[];document.getElementById('attrValueModal').classList.add('show');}
+    function editAttrItem(idx){
+      gState.editingAttrIdx=idx;const a=gState.attrs[idx];
+      document.getElementById('attrValueTitle').textContent='编辑属性值';document.getElementById('avName').value=a.name;gState.avValues=[...(a.values||[])];renderAvTags();
+      document.getElementById('attrValueModal').classList.add('show');
+    }
+    function closeAttrValueModal(){document.getElementById('attrValueModal').classList.remove('show');}
+    function addAttrValueTag(){const v=document.getElementById('avInput').value.trim();if(!v)return;gState.avValues.push(v);document.getElementById('avInput').value='';renderAvTags();}
+    function removeAvTag(idx){gState.avValues.splice(idx,1);renderAvTags();}
+    function renderAvTags(){document.getElementById('avTags').innerHTML=gState.avValues.map((v,i)=>`<span class="spec-tag">${v}<span class="remove" onclick="removeAvTag(${i})">&times;</span></span>`).join('');}
+    function saveAttrValueItem(){
+      const name=document.getElementById('avName').value.trim();if(!name){toast('请输入属性名称');return;}
+      const item={name,values:[...gState.avValues],used:0,sort:gState.editingAttrIdx===null?gState.attrs.length:gState.attrs[gState.editingAttrIdx].sort};
+      if(gState.editingAttrIdx===null)gState.attrs.push(item);else gState.attrs[gState.editingAttrIdx]={...gState.attrs[gState.editingAttrIdx],...item};
+      closeAttrValueModal();renderAttrMgr();renderAttrs();
+    }
+    function confirmAttrManager(){closeAttrModal();renderAttrs();}
+
+    /* Rich text editor */
+    document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
+      const cmd=b.dataset.cmd;document.execCommand(cmd,false,null);document.getElementById('gDetail').focus();
+      b.classList.toggle('active',document.queryCommandState(cmd));
+    }));
+    async function insertDetailImage(){
+      const input=document.createElement('input');input.type='file';input.accept='image/*';
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url)document.execCommand('insertImage',false,url);}};
+      input.click();
+    }
+    async function insertDetailVideo(){
+      const input=document.createElement('input');input.type='file';input.accept='video/*';
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url)document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}};
+      input.click();
+    }
+    function addMessageField(){const name=prompt('留言字段名称');if(name)document.getElementById('gMessage').value=name;}
+
     async function editGoods(id){
-      const d=await fetchA(`${BASE}/goods?keyword=&page=1&page_size=1000`);
+      const d=await fetchA(`${BASE}/goods/${id}`);
       if(d.code!==0){toast(d.msg);return;}
-      const g=d.data.list.find(x=>x.id==id);if(!g){toast('商品不存在');return;}
-      document.getElementById('gId').value=g.id;
-      document.getElementById('gTitle').value=g.title;
-      document.getElementById('gSub').value=g.subtitle||'';
-      document.getElementById('gCat').value=g.category_id||'';
-      document.getElementById('gPrice').value=(g.price/100).toFixed(2);
-      document.getElementById('gMarket').value=(g.market_price/100).toFixed(2);
-      document.getElementById('gStock').value=g.stock;
-      document.getElementById('gStatus').value=g.status;
-      document.getElementById('gDetail').value=g.detail||'';
-      const imgs=g.images||[];
-      document.getElementById('gImages').value=imgs.join('\n');
-      document.getElementById('gImgPreview').innerHTML=imgs.map(u=>`<img src="${u}" onerror="this.style.display='none'">`).join('');
+      const g=d.data;
+      clearGoodsForm();
       document.getElementById('goodsModalTitle').textContent='编辑商品';
+      document.getElementById('gId').value=g.id;
+      document.getElementById('gTitle').value=g.title||'';
+      document.getElementById('gCat').value=g.category_id||'';
+      document.getElementById('gPrice').value=(g.price||0).toFixed(2);
+      document.getElementById('gMarket').value=(g.market_price||0).toFixed(2);
+      document.getElementById('gStock').value=g.stock||0;
+      document.getElementById('gDetail').innerHTML=g.detail_html||'';
+      gState.images=g.images||[];renderImages();
+
+      const ext=g.ext_json||{};
+      document.getElementById('gCode').value=ext.code||'';
+      document.getElementById('gBarcode').value=ext.barcode||'';
+      setRadio('gType',ext.goods_type||'physical');
+      document.getElementById('gPromo').value=ext.promo||'';
+      document.getElementById('gUnit').value=ext.unit||'';
+      document.getElementById('gCost').value=(ext.cost_price||0).toFixed(2);
+      document.getElementById('gVirtualSales').value=ext.virtual_sales||0;
+      document.getElementById('gSort').value=ext.sort||0;
+      document.getElementById('gSortOther').value=ext.sort||0;
+      document.getElementById('gNotice').value=ext.notice||'';
+      document.getElementById('gRemark').value=ext.remark||'';
+      setRadio('gVideoType',ext.video_type||'mp4');
+      document.getElementById('gVideoUrl').value=(typeof g.video==='object'?g.video.url:g.video)||'';
+      gState.videoCover=ext.video_cover||'';renderVideoCover();
+      setRadio('gAutoPlay',ext.auto_play?'1':'0');
+      document.getElementById('gWeight').value=ext.weight||0;
+      document.getElementById('gMinBuy').value=ext.min_buy||1;
+      setRadio('gShowStock',ext.show_stock===0?'0':'1');
+      setRadio('gStatus',g.status==1?'1':'0');
+      setRadio('gLimitType',ext.limit_type||'none');
+      document.getElementById('gLimitLifetimeNum').value=ext.limit_lifetime_num||0;
+      document.getElementById('gLimitPeriodDay').value=ext.limit_period_day||1;
+      document.getElementById('gLimitPeriodNum').value=ext.limit_period_num||0;
+      document.getElementById('gShipSelf').checked=(ext.ship_ways||[]).includes('self');
+      document.getElementById('gShipSame').checked=(ext.ship_ways||[]).includes('same');
+      setRadio('gAgreement',ext.agreement?'1':'0');
+      document.getElementById('gMessage').value=ext.message||'';
+      document.getElementById('gShareTitle').value=ext.share_title||'';
+      gState.shareCover=ext.share_cover||'';renderShareCover();
+
+      gState.specs=(g.spec_groups||[]).map(s=>({id:'sp_'+s.id,name:s.name,values:s.values.map(v=>({id:'sv_'+v.id,value:v.value}))}));
+      gState.skus=(g.skus||[]).map(s=>({spec_value_ids:(s.spec_value_ids||'').split(','),price:s.price,market_price:s.market_price,stock:s.stock,image:s.image}));
+      syncSkus();
+      gState.attrs=(g.attrs||[]).map(a=>({...a,values:a.values||[]}));
+      renderSpecs();renderAttrs();calcProfit();toggleLimit();toggleVideoType();
       document.getElementById('goodsModal').classList.add('show');
     }
+
     async function saveGoods(){
       const id=document.getElementById('gId').value;
-      const images=document.getElementById('gImages').value.split('\n').map(s=>s.trim()).filter(Boolean);
+      const price=parseFloat(document.getElementById('gPrice').value)||0;
+      const market=parseFloat(document.getElementById('gMarket').value)||0;
+      const stock=parseInt(document.getElementById('gStock').value)||0;
+      const ext={
+        code:document.getElementById('gCode').value,
+        barcode:document.getElementById('gBarcode').value,
+        goods_type:getRadio('gType'),
+        promo:document.getElementById('gPromo').value,
+        unit:document.getElementById('gUnit').value,
+        cost_price:parseFloat(document.getElementById('gCost').value)||0,
+        virtual_sales:parseInt(document.getElementById('gVirtualSales').value)||0,
+        sort:parseInt(document.getElementById('gSort').value)||0,
+        notice:document.getElementById('gNotice').value,
+        remark:document.getElementById('gRemark').value,
+        video_type:getRadio('gVideoType'),
+        video_cover:gState.videoCover,
+        auto_play:getRadio('gAutoPlay')==='1',
+        weight:parseInt(document.getElementById('gWeight').value)||0,
+        min_buy:parseInt(document.getElementById('gMinBuy').value)||1,
+        show_stock:getRadio('gShowStock')==='1'?1:0,
+        limit_type:getRadio('gLimitType'),
+        limit_lifetime_num:parseInt(document.getElementById('gLimitLifetimeNum').value)||0,
+        limit_period_day:parseInt(document.getElementById('gLimitPeriodDay').value)||1,
+        limit_period_num:parseInt(document.getElementById('gLimitPeriodNum').value)||0,
+        ship_ways:[...(document.getElementById('gShipSelf').checked?['self']:[]),...(document.getElementById('gShipSame').checked?['same']:[])],
+
+        agreement:getRadio('gAgreement')==='1'?1:0,
+        message:document.getElementById('gMessage').value,
+        share_title:document.getElementById('gShareTitle').value,
+        share_cover:gState.shareCover
+      };
+      const videoUrl=document.getElementById('gVideoUrl').value;
+      const video=getRadio('gVideoType')==='mp4'?{type:'mp4',url:videoUrl}:videoUrl;
+      const specs=gState.specs.filter(s=>s.name&&s.values.length).map(s=>({name:s.name,values:s.values.map(v=>({id:v.id,value:v.value}))}));
+      const skus=gState.skus.map(s=>({spec_value_ids:s.spec_value_ids,price:parseFloat(s.price)||0,market_price:parseFloat(s.market_price)||0,stock:parseInt(s.stock)||0,image:s.image}));
       const body={
         id:id||0,
         title:document.getElementById('gTitle').value,
-        subtitle:document.getElementById('gSub').value,
+        subtitle:'',
         category_id:document.getElementById('gCat').value,
-        price:document.getElementById('gPrice').value,
-        market_price:document.getElementById('gMarket').value,
-        stock:document.getElementById('gStock').value,
-        status:document.getElementById('gStatus').value,
-        detail_html:document.getElementById('gDetail').value,
-        images
+        price:price,
+        market_price:market,
+        stock:stock,
+        status:getRadio('gStatus'),
+        detail_html:document.getElementById('gDetail').innerHTML,
+        images:gState.images,
+        video:video,
+        ext_json:ext,
+        specs:specs,
+        skus:skus,
+        attrs:gState.attrs.map((a,i)=>({name:a.name,values:a.values||[],used:a.used?1:0,sort:i}))
       };
       const url=id?`${BASE}/goods/${id}`:`${BASE}/goods`;
       const method=id?'PUT':'POST';

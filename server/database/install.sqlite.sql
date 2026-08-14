@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS goods (
   images       TEXT,
   video        TEXT NOT NULL DEFAULT '',
   detail       TEXT,
+  ext_json     TEXT NOT NULL DEFAULT '{}',
   status       INTEGER NOT NULL DEFAULT 1,
   created_at   TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -79,18 +80,22 @@ CREATE INDEX idx_goods_status ON goods(status);
 
 -- 规格
 CREATE TABLE IF NOT EXISTS goods_specs (
-  id       INTEGER PRIMARY KEY AUTOINCREMENT,
-  goods_id INTEGER NOT NULL,
-  name     TEXT NOT NULL
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  goods_id   INTEGER NOT NULL,
+  name       TEXT NOT NULL,
+  sort       INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_specs_goods ON goods_specs(goods_id);
 
 -- 规格值
 CREATE TABLE IF NOT EXISTS goods_spec_values (
-  id       INTEGER PRIMARY KEY AUTOINCREMENT,
-  spec_id  INTEGER NOT NULL,
-  goods_id INTEGER NOT NULL,
-  value    TEXT NOT NULL
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  spec_id    INTEGER NOT NULL,
+  goods_id   INTEGER NOT NULL,
+  value      TEXT NOT NULL,
+  sort       INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_spec_values_spec ON goods_spec_values(spec_id);
 
@@ -106,6 +111,18 @@ CREATE TABLE IF NOT EXISTS goods_skus (
   created_at     TEXT DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_skus_goods ON goods_skus(goods_id);
+
+-- 商品属性
+CREATE TABLE IF NOT EXISTS goods_attrs (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  goods_id   INTEGER NOT NULL,
+  name       TEXT NOT NULL DEFAULT '',
+  values     TEXT NOT NULL DEFAULT '[]',
+  used       INTEGER NOT NULL DEFAULT 0,
+  sort       INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_attrs_goods ON goods_attrs(goods_id);
 
 -- 购物车
 CREATE TABLE IF NOT EXISTS carts (
