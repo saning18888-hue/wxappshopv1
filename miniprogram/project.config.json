@@ -31,7 +31,7 @@
     }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.0.0",
+  "libVersion": "3.17.0",
   "appid": "wx984846baa19291a0",
   "projectname": "wxappb2c",
   "condition": {},

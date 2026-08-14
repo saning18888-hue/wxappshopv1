@@ -49,9 +49,11 @@ CREATE TABLE IF NOT EXISTS categories (
   parent_id INTEGER NOT NULL DEFAULT 0,
   name      TEXT NOT NULL,
   icon      TEXT NOT NULL DEFAULT '',
+  keywords  TEXT NOT NULL DEFAULT '',
   sort      INTEGER NOT NULL DEFAULT 0,
   is_show   INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_categories_parent ON categories(parent_id);
 

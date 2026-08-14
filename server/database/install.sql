@@ -56,9 +56,11 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `parent_id` INT UNSIGNED NOT NULL DEFAULT 0,
   `name`     VARCHAR(64)  NOT NULL,
   `icon`     VARCHAR(255) NOT NULL DEFAULT '',
+  `keywords` VARCHAR(255) NOT NULL DEFAULT '',
   `sort`     INT          NOT NULL DEFAULT 0,
   `is_show`  TINYINT      NOT NULL DEFAULT 1,
   `created_at` DATETIME   DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_parent` (`parent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

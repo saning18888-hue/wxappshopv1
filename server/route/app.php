@@ -43,6 +43,12 @@ Route::group('admin', function () {
     Route::put('goods/:id', 'admin.Goods/save');
     Route::delete('goods/:id', 'admin.Goods/remove');
     Route::get('categories', 'admin.Category/index');
+    Route::get('categories/tree', 'admin.Category/tree');
+    Route::post('categories', 'admin.Category/save');
+    Route::put('categories/:id', 'admin.Category/save');
+    Route::delete('categories/:id', 'admin.Category/remove');
+    Route::put('categories/:id/status', 'admin.Category/toggleStatus');
+    Route::post('upload/image', 'admin.Upload/image');
     Route::get('orders', 'admin.Order/index');
     Route::get('orders/:id', 'admin.Order/detail');
     Route::post('orders/:id/status', 'admin.Order/changeStatus');

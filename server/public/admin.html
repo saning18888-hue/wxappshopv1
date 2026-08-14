@@ -120,10 +120,20 @@
     .badge.red{background:#fff1f0;color:#ff4d4f}
 
     /* Pagination */
-    .pager{display:flex;gap:8px;justify-content:center;margin-top:16px;align-items:center}
-    .pager button{padding:5px 12px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:12px;color:var(--text-secondary)}
-    .pager button:disabled{opacity:.5;cursor:not-allowed}
-    .pager button:not(:disabled):hover{border-color:var(--primary);color:var(--primary)}
+    .pager{display:flex;gap:12px;justify-content:flex-end;align-items:center;margin-top:16px;font-size:13px;color:var(--text-secondary)}
+    .pager-info{display:flex;align-items:center;gap:8px}
+    .pager-info select{height:30px;padding:0 8px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#fff;color:var(--text)}
+    .pager-pages{display:flex;align-items:center;gap:6px}
+    .pager-pages button{min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);cursor:pointer;line-height:1}
+    .pager-pages button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+    .pager-pages button:disabled{opacity:.5;cursor:not-allowed;border-color:var(--border);color:var(--text-muted)}
+    .pager-pages button:not(:disabled):hover{border-color:var(--primary);color:var(--primary)}
+    .pager-pages button.active:not(:disabled):hover{color:#fff}
+    .pager-ellipsis{padding:0 4px;color:var(--text-muted);user-select:none}
+    .pager-goto{display:flex;align-items:center;gap:6px}
+    .pager-goto input{width:48px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;font-size:13px}
+    .pager-goto button{height:30px;padding:0 12px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);cursor:pointer}
+    .pager-goto button:hover{border-color:var(--primary);color:var(--primary)}
 
     /* Modal */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100}
@@ -143,6 +153,28 @@
     .form-row .field textarea{min-height:80px;resize:vertical;font-family:inherit}
     .img-preview{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
     .img-preview img{height:56px;width:56px;object-fit:cover;border-radius:var(--radius-sm);border:1px solid var(--border)}
+    .toggle{appearance:none;width:40px;height:22px;background:#d0d0d0;border-radius:11px;position:relative;cursor:pointer;outline:none;transition:background .2s}
+    .toggle::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .2s}
+    .toggle:checked{background:var(--primary)}
+    .toggle:checked::after{transform:translateX(18px)}
+    .upload-box{width:90px;height:90px;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fafafa;overflow:hidden}
+    .upload-box svg{width:24px;height:24px;color:var(--text-secondary)}
+    .upload-box img,.upload-preview img{width:100%;height:100%;object-fit:cover}
+    .link{color:var(--primary);font-size:13px;cursor:pointer;margin-right:10px}
+    .link:hover{text-decoration:underline}
+    .link.danger{color:#e74c3c}
+    .cat-row{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+    .cat-toggle{width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;color:#999;cursor:pointer;font-size:12px;transition:transform .15s ease}
+    .cat-toggle.open{transform:rotate(90deg);color:#666}
+    .cat-leaf{width:6px;height:6px;border-radius:50%;background:#ccc}
+    .cat-name{cursor:pointer}
+    .cat-name:hover{color:var(--primary)}
+    .cat-level-0{padding-left:0}
+    .cat-level-1{padding-left:24px}
+    .cat-level-2{padding-left:48px}
+    .cat-level-3{padding-left:72px}
+    .cat-level-4{padding-left:96px}
+    .cat-level-5{padding-left:120px}
     .json-area{width:100%;min-height:300px;font-family:monospace;font-size:12px;line-height:1.5;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none}
     .json-area:focus{border-color:var(--primary)}
 
@@ -291,6 +323,24 @@
           </div>
         </div>
 
+        <!-- 商品分类 -->
+        <div id="categoryPanel" class="panel hidden">
+          <div class="card">
+            <div class="toolbar">
+              <input id="catKw" placeholder="关键词筛选">
+              <button class="btn" onclick="loadCategoriesAdmin()">查询</button>
+              <button class="btn outline" onclick="openCategoryDialog()">+ 添加</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>分类名称</th><th>ID编号</th><th>添加时间</th><th>是否启用</th><th>操作</th></tr></thead>
+                <tbody id="categoryBody"></tbody>
+              </table>
+            </div>
+            <div class="pager" id="categoryPager"></div>
+          </div>
+        </div>
+
         <!-- 订单列表 -->
         <div id="ordersPanel" class="panel hidden">
           <div class="card">
@@ -425,6 +475,39 @@
     </div>
   </div>
 
+  <!-- 分类编辑弹窗 -->
+  <div id="categoryModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="categoryModalTitle">添加商品分类</h3><span class="close" onclick="closeCategoryDialog()">&times;</span></div>
+      <div class="modal-body">
+        <input type="hidden" id="cId">
+        <div class="form-row">
+          <div class="field"><label>分类简称</label><input id="cName" placeholder="请输入分类名称"></div>
+          <div class="field"><label>上级分类</label><select id="cParent"></select></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>关键字</label><input id="cKeywords" placeholder="搜索关键字"></div>
+          <div class="field"><label>排序</label><input id="cSort" type="number" value="0"></div>
+        </div>
+        <div class="field">
+          <label>图片</label>
+          <div class="upload-box" onclick="document.getElementById('cIconFile').click()">
+            <input type="file" id="cIconFile" accept="image/*" style="display:none" onchange="uploadCategoryIcon(this)">
+            <div id="cIconPreview" class="upload-preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+          </div>
+          <input type="hidden" id="cIcon">
+          <p class="muted" style="margin-top:6px;font-size:12px">建议尺寸：70像素 * 70像素</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeCategoryDialog()">取消</button>
+        <button class="btn" onclick="saveCategory()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -496,7 +579,7 @@
       ]},
       {key:'goods',label:'商品',icon:ICONS.goods,children:[
         {key:'list',label:'商品列表',icon:ICONS.package,panel:'goodsPanel',default:true},
-        {key:'category',label:'商品分类',icon:ICONS.layers},
+        {key:'category',label:'商品分类',icon:ICONS.layers,panel:'categoryPanel'},
         {key:'sku',label:'商品规格',icon:ICONS.ruler},
         {key:'attr',label:'商品属性',icon:ICONS.listCheck}
       ]},
@@ -612,6 +695,7 @@
       if(panel) panel.classList.remove('hidden');
 
       if(panelId==='goodsPanel') loadGoods();
+      if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='designPanel') loadDesign();
       if(panelId==='overviewPanel') loadOverviewStats();
@@ -751,6 +835,186 @@
       if(!confirm('确认删除该商品？'))return;
       const d=await fetchA(`${BASE}/goods/${id}`,{method:'DELETE'});
       if(d.code===0){toast('删除成功');loadGoods();}else{toast(d.msg);}
+    }
+
+    /* Category */
+    let categoryPage=1,categoryPageSize=10;
+    let categoryTreeCache=[];
+    let catExpanded={};
+    async function loadCategoriesAdmin(){
+      const kw=document.getElementById('catKw').value;
+      const q=`?keyword=${encodeURIComponent(kw)}&page=${categoryPage}&page_size=${categoryPageSize}`;
+      const d=await fetchA(`${BASE}/categories${q}`);
+      if(d.code!==0){toast(d.msg);return;}
+      // 默认展开所有节点
+      d.data.list.forEach(c=>{ if(c.has_children && !(c.id in catExpanded)) catExpanded[c.id]=true; });
+      const tb=document.getElementById('categoryBody');
+      let hideLevel=-1;
+      tb.innerHTML=d.data.list.map(c=>{
+        if(c.level<=hideLevel) hideLevel=-1;
+        if(c.has_children && !catExpanded[c.id]) hideLevel=c.level;
+        if(hideLevel!==-1) return '';
+        const level=c.level||0;
+        const expanded=!!catExpanded[c.id];
+        const icon=c.has_children
+          ? `<span class="cat-toggle ${expanded?'open':''}" onclick="event.stopPropagation();toggleCategoryRow(${c.id})">▶</span>`
+          : '<span class="cat-leaf"></span>';
+        return `<tr>
+          <td><div class="cat-row cat-level-${level}">${icon}<span class="cat-name" onclick="editCategory(${c.id})">${c.name}</span></div></td>
+          <td>${c.id}</td>
+          <td>${c.created_at||'-'}</td>
+          <td><input type="checkbox" class="toggle" ${c.is_show==1?'checked':''} onchange="toggleCategoryShow(${c.id},this.checked)"></td>
+          <td>
+            ${level<2?`<span class="link" onclick="openCategoryDialog(${c.id},0)">添加子分类</span>`:''}
+            <span class="link" onclick="editCategory(${c.id})">编辑</span>
+            <span class="link danger" onclick="removeCategory(${c.id})">删除</span>
+          </td>
+        </tr>`;
+      }).join('');
+      renderCategoryPager(d.data.pagination||{});
+    }
+    function toggleCategoryRow(id){
+      catExpanded[id]=!catExpanded[id];
+      loadCategoriesAdmin();
+    }
+    function renderCategoryPager(p){
+      const total=p.total||0,pages=p.last_page||1,cur=p.page||1,size=p.page_size||categoryPageSize;
+      const wrap=document.getElementById('categoryPager');wrap.innerHTML='';
+      // 左侧：共 X 条 + 每页条数
+      const info=document.createElement('div');info.className='pager-info';
+      info.innerHTML=`<span>共 ${total} 条</span>
+        <select onchange="changeCategoryPageSize(this.value)">
+          <option value="10" ${size==10?'selected':''}>10条/页</option>
+          <option value="20" ${size==20?'selected':''}>20条/页</option>
+          <option value="50" ${size==50?'selected':''}>50条/页</option>
+          <option value="100" ${size==100?'selected':''}>100条/页</option>
+        </select>`;
+      wrap.appendChild(info);
+      // 中部页码
+      const pagesWrap=document.createElement('div');pagesWrap.className='pager-pages';
+      const prev=document.createElement('button');prev.innerHTML='&lt;';prev.title='上一页';prev.disabled=cur<=1;prev.onclick=()=>{categoryPage=cur-1;loadCategoriesAdmin();};pagesWrap.appendChild(prev);
+      const maxVisible=5;
+      let start=Math.max(1,cur-Math.floor(maxVisible/2)),end=Math.min(pages,start+maxVisible-1);
+      if(end-start+1<maxVisible) start=Math.max(1,end-maxVisible+1);
+      if(start>1){const b=document.createElement('button');b.textContent='1';b.onclick=()=>{categoryPage=1;loadCategoriesAdmin();};pagesWrap.appendChild(b);if(start>2){const d=document.createElement('span');d.textContent='...';d.className='pager-ellipsis';pagesWrap.appendChild(d);}}
+      for(let i=start;i<=end;i++){const b=document.createElement('button');b.textContent=i;b.className=i===cur?'active':'';b.onclick=()=>{categoryPage=i;loadCategoriesAdmin();};pagesWrap.appendChild(b);}
+      if(end<pages){if(end<pages-1){const d=document.createElement('span');d.textContent='...';d.className='pager-ellipsis';pagesWrap.appendChild(d);}const b=document.createElement('button');b.textContent=pages;b.onclick=()=>{categoryPage=pages;loadCategoriesAdmin();};pagesWrap.appendChild(b);}
+      const next=document.createElement('button');next.innerHTML='&gt;';next.title='下一页';next.disabled=cur>=pages;next.onclick=()=>{categoryPage=cur+1;loadCategoriesAdmin();};pagesWrap.appendChild(next);
+      wrap.appendChild(pagesWrap);
+      // 右侧：前往 X 页
+      const goto=document.createElement('div');goto.className='pager-goto';
+      const input=document.createElement('input');input.type='number';input.min=1;input.max=pages;input.value=cur;input.onkeydown=(e)=>{if(e.key==='Enter')categoryGotoPage(input.value,pages);};
+      const btn=document.createElement('button');btn.textContent='确定';btn.onclick=()=>categoryGotoPage(input.value,pages);
+      goto.appendChild(document.createTextNode('前往'));
+      goto.appendChild(input);
+      goto.appendChild(document.createTextNode('页'));
+      goto.appendChild(btn);
+      wrap.appendChild(goto);
+    }
+    function changeCategoryPageSize(size){categoryPageSize=parseInt(size,10)||10;categoryPage=1;loadCategoriesAdmin();}
+    function categoryGotoPage(val,pages){
+      const page=parseInt(val,10);
+      if(!page||page<1||page>pages)return;
+      categoryPage=page;loadCategoriesAdmin();
+    }
+    async function loadCategoryTree(editId=0){
+      const d=await fetchA(`${BASE}/categories/tree`);
+      if(d.code!==0) return;
+      let tree=d.data||[];
+      if(editId) tree=excludeSelfAndDescendants(tree,editId);
+      categoryTreeCache=tree;
+      // 最多三级：新建/编辑时只能选择 顶级(level=-1) 或 一级(level=0) 作为上级
+      const opts=flattenTree(tree,0).filter(o=>o.level<=0);
+      document.getElementById('cParent').innerHTML=opts.map(o=>`<option value="${o.id}">${'　'.repeat(Math.max(o.level+1,0))}${o.name}</option>`).join('');
+    }
+    function flattenTree(nodes,level){
+      let arr=[];
+      for(const n of nodes){
+        arr.push({id:n.id,name:n.name,level});
+        if(n.children && n.children.length) arr=arr.concat(flattenTree(n.children,level+1));
+      }
+      return arr;
+    }
+    function excludeSelfAndDescendants(nodes,id){
+      let arr=[];
+      for(const n of nodes){
+        if(n.id==id) continue;
+        if(n.children && n.children.length){
+          n.children=excludeSelfAndDescendants(n.children,id);
+        }
+        arr.push(n);
+      }
+      return arr;
+    }
+    function openCategoryDialog(parentId=0,id=0){
+      document.getElementById('cId').value=id||'';
+      document.getElementById('cName').value='';
+      document.getElementById('cKeywords').value='';
+      document.getElementById('cSort').value='0';
+      document.getElementById('cIcon').value='';
+      document.getElementById('cIconFile').value='';
+      document.getElementById('cIconPreview').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>';
+      document.getElementById('categoryModalTitle').textContent=id?'编辑商品分类':'添加商品分类';
+      loadCategoryTree(id).then(()=>{
+        document.getElementById('cParent').value=parentId||0;
+        if(id) editCategoryFill(id);
+      });
+      document.getElementById('categoryModal').classList.add('show');
+    }
+    async function editCategoryFill(id){
+      const d=await fetchA(`${BASE}/categories?keyword=&page=1&page_size=1000`);
+      if(d.code!==0) return;
+      const c=d.data.list.find(x=>x.id==id);
+      if(!c) return;
+      document.getElementById('cName').value=c.name||'';
+      document.getElementById('cKeywords').value=c.keywords||'';
+      document.getElementById('cSort').value=c.sort||0;
+      document.getElementById('cParent').value=c.parent_id||0;
+      document.getElementById('cIcon').value=c.icon||'';
+      if(c.icon){
+        document.getElementById('cIconPreview').innerHTML=`<img src="${c.icon}" onerror="this.style.display='none'">`;
+      }
+    }
+    async function editCategory(id){openCategoryDialog(0,id);}
+    function closeCategoryDialog(){document.getElementById('categoryModal').classList.remove('show');}
+    async function saveCategory(){
+      const id=document.getElementById('cId').value;
+      const body={
+        id:id||0,
+        name:document.getElementById('cName').value,
+        parent_id:document.getElementById('cParent').value,
+        keywords:document.getElementById('cKeywords').value,
+        sort:document.getElementById('cSort').value,
+        icon:document.getElementById('cIcon').value,
+        is_show:1
+      };
+      const url=id?`${BASE}/categories/${id}`:`${BASE}/categories`;
+      const method=id?'PUT':'POST';
+      const d=await fetchA(url,{method,body});
+      if(d.code===0){toast('保存成功');closeCategoryDialog();loadCategoriesAdmin();loadCategories();}else{toast(d.msg);}
+    }
+    async function removeCategory(id){
+      if(!confirm('确认删除该分类？'))return;
+      const d=await fetchA(`${BASE}/categories/${id}`,{method:'DELETE'});
+      if(d.code===0){toast('删除成功');loadCategoriesAdmin();loadCategories();}else{toast(d.msg);}
+    }
+    async function toggleCategoryShow(id,checked){
+      const d=await fetchA(`${BASE}/categories/${id}/status`,{method:'PUT',body:{is_show:checked?1:0}});
+      if(d.code!==0){toast(d.msg);}
+    }
+    async function uploadCategoryIcon(input){
+      const file=input.files[0];
+      if(!file) return;
+      const fd=new FormData();
+      fd.append('file',file);
+      const r=await fetch(`${BASE}/upload/image`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+      const d=await r.json();
+      if(d.code===0){
+        document.getElementById('cIcon').value=d.data.url;
+        document.getElementById('cIconPreview').innerHTML=`<img src="${d.data.url}" onerror="this.style.display='none'">`;
+      }else{
+        toast(d.msg||'上传失败');
+      }
     }
 
     /* Orders */

@@ -55,6 +55,47 @@ php think run -H 127.0.0.1 -p 8787                                       # 启�
 
 ## 版本记录（最新在上）
 
+### v0.1.3 · 2026-08-13 · 小程序分类树形展示
+**范围**：小程序端子分类由横排网格改为树形排列（多级缩进、可展开折叠）。
+
+**后端**
+- `app/controller/api/v1/Category.php::index()`：分类列表改为递归构建完整多级树（`buildTree`），返回含 `children` 的多级嵌套结构（不再仅两级）。
+
+**前端（`miniprogram/pages/category/*`）**
+- `category.js`：右侧改为把多级 `children` 按展开状态扁平化为带 `level`/`hasChildren`/`expanded` 的有序数组；左侧切换一级分类或点击箭头时重建；默认全展开。
+- `category.wxml`：右侧子分类改为 `.tree-row` 树形缩进列表，有子节点显示可旋转箭头（点箭头展开/折叠），点行跳转商品列表。
+- `category.wxss`：移除 `.cate-right-grid` 横排网格样式，新增树形行、箭头、圆点缩进样式。
+
+### v0.1.2 · 2026-08-13 · 商品分类树形折叠与三级限制
+**范围**：后台分类列表改为可折叠树形，并限制分类最多三级。
+
+**后端**
+- `app/controller/admin/Category.php::index()`：列表返回按根节点分页的深度优先树形数据，每行携带 `level` 与 `has_children`，搜索时保留匹配节点、祖先及后代上下文。
+- `Category.php::save()`：新增三级深度校验（根 level=0/一级 level=1/二级 level=2），保存时若 `parentDepth + 1 + subtreeHeight > 2` 则拒绝，确保不超过三级。
+- `Category.php::tree()`：返回的分类树节点携带 `level`，便于前端限制可选上级。
+
+**前端（`server/public/admin.html`）**
+- 分类列表支持折叠：每行显示展开/收起箭头，默认全部展开；收起时隐藏其下所有子孙节点。
+- 分类名称按 `.cat-level-*` 逐级缩进，呈现「一级带着二级、二级带着三级」的阶梯结构。
+- 二级分类不再显示「添加子分类」按钮；编辑弹窗中的上级分类下拉只列出顶级和一级分类，编辑时排除当前节点及其子树防止循环选择。
+- 分页组件保留：以一级分类数量为基准分页。
+
+### v0.1.1 · 2026-08-13 · 后台商品分类管理
+**范围**：补齐「商品 > 商品分类」后台管理，按用户提供的 UI 样式实现列表与表单弹窗。
+
+**后端**
+- 扩展 `app/controller/admin/Category.php`：分页列表（关键词筛选）、树形选择 `/categories/tree`、新增/编辑 `/categories`、删除、启用开关 `/categories/:id/status`；编辑时禁止将当前分类及其子分类设为上级。
+- 新增 `app/controller/admin/Upload.php`：通用图片上传 `POST /admin/upload/image`，保存到 `public/uploads/categories/`，返回可访问 URL。
+- 修复 `app/common/controller/AdminController.php::body()`：改用 `Request::post()` / `Request::getInput()` 解析 JSON body，解决 ThinkPHP 内置服务器下 `file_get_contents('php://input')` 为空导致后台接口读不到参数的问题；同步修复 `app/controller/admin/Auth.php` 登录。
+- 数据库：`categories` 表新增 `keywords`、`updated_at` 字段；`database/apply_alter.php` 提供本地 SQLite 幂等迁移脚本。
+- 路由：`server/route/app.php` 注册上述后台接口。
+
+**前端（`server/public/admin.html`）**
+- 新增「商品 > 商品分类」页面：表格列「分类名称 / ID编号 / 添加时间 / 是否启用 / 操作」，支持关键词筛选、分页、启用开关、添加子分类/编辑/删除。
+- 新增分类表单弹窗：分类简称、上级分类树形下拉（含顶级分类）、关键字、排序、图片上传（70*70 建议）。
+
+**已验证**：`admin/login`、`admin/categories`、`admin/categories/tree`、`admin/categories/:id`（PUT/DELETE）、`admin/categories/:id/status`、`admin/upload/image` 均返回 `code:0`；后端开发服务器 `http://127.0.0.1:8787`，后台 `http://127.0.0.1:8787/admin.html`。
+
 ### v0.1 · 2026-08-12 · 初版（MVP 垂直切片）
 **范围**：B2C 微信小程序商城初版，跑通「登录 → 商品 → 详情 → 购物车 → 下单 → 模拟支付」闭环。
 

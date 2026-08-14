@@ -10,8 +10,11 @@ class Auth extends ApiController
 {
     public function login()
     {
-        $raw  = file_get_contents('php://input');
-        $data = json_decode($raw, true) ?: [];
+        $data = $this->request->post();
+        if (empty($data)) {
+            $raw  = $this->request->getInput();
+            $data = json_decode($raw, true) ?: [];
+        }
         $user = trim($data['username'] ?? '');
         $pass = (string) ($data['password'] ?? '');
 

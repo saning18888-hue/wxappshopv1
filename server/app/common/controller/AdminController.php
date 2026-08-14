@@ -37,11 +37,19 @@ class AdminController
         }
     }
 
-    /** 解析 JSON 请求体（不依赖框架输入过滤，最稳妥） */
+    /** 解析 JSON/表单请求体 */
     protected function body(): array
     {
-        $raw = file_get_contents('php://input');
-        $d   = json_decode($raw, true);
+        $method = $this->request->method();
+        if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+            $d = $this->request->post();
+            if (empty($d)) {
+                $raw = $this->request->getInput();
+                $d   = json_decode($raw, true);
+            }
+        } else {
+            $d = $this->request->get();
+        }
         return is_array($d) ? $d : [];
     }
 }
