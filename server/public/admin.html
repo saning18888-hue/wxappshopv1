@@ -50,6 +50,14 @@
     .btn.sm{padding:6px 12px;font-size:12px}
     .btn.outline{background:#fff;color:var(--primary);border:1px solid var(--primary-100)}
     .btn.outline:hover{background:var(--primary-50)}
+
+    /* Goods modal primary accent matches reference (blue) */
+    #goodsModal .btn,#specMgmtModal .btn,#attrMgmtModal .btn,#specValueModal .btn,#attrValueModal .btn{background:#409eff;color:#fff}
+    #goodsModal .btn:hover,#specMgmtModal .btn:hover,#attrMgmtModal .btn:hover,#specValueModal .btn:hover,#attrValueModal .btn:hover{background:#66b1ff}
+    #goodsModal .btn.gray,#specMgmtModal .btn.gray,#attrMgmtModal .btn.gray,#specValueModal .btn.gray,#attrValueModal .btn.gray{background:#fff;color:#606266;border:1px solid #dcdfe6}
+    #goodsModal .btn.gray:hover,#specMgmtModal .btn.gray:hover,#attrMgmtModal .btn.gray:hover,#specValueModal .btn.gray:hover,#attrValueModal .btn.gray:hover{color:#409eff;border-color:#409eff;background:#ecf5ff}
+    #goodsModal .btn.outline,#specMgmtModal .btn.outline,#attrMgmtModal .btn.outline,#specValueModal .btn.outline,#attrValueModal .btn.outline{color:#409eff;border:1px solid #409eff;background:#fff}
+    #goodsModal .btn.outline:hover,#specMgmtModal .btn.outline:hover,#attrMgmtModal .btn.outline:hover,#specValueModal .btn.outline:hover,#attrValueModal .btn.outline:hover{background:#ecf5ff}
     .hidden{display:none!important}
 
     /* Layout */
@@ -237,14 +245,36 @@
     .attr-empty{padding:24px;text-align:center;color:var(--text-muted)}
 
     /* 富文本 */
-    .rte-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff}
-    .rte-toolbar{display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--border);background:#f7f8fa;flex-wrap:wrap}
-    .rte-toolbar button{width:28px;height:28px;border:0;background:transparent;border-radius:6px;cursor:pointer;color:var(--text-secondary);font-size:14px;display:flex;align-items:center;justify-content:center}
-    .rte-toolbar button:hover{background:#e8eaed;color:var(--text)}
-    .rte-toolbar button.active{background:var(--primary-50);color:var(--primary)}
-    .rte-editor{min-height:220px;padding:12px;outline:none;font-size:13px;line-height:1.6;overflow:auto}
+    .rte-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;position:relative}
+    .rte-wrap.fullscreen{position:fixed;inset:0;z-index:200;border-radius:0;display:flex;flex-direction:column}
+    .rte-wrap.fullscreen .rte-editor{flex:1;min-height:0}
+    .rte-toolbar{display:flex;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);background:#f7f8fa;flex-wrap:wrap;align-items:center}
+    .rte-toolbar .rte-group{display:flex;align-items:center;gap:2px;padding-right:6px;margin-right:4px;border-right:1px solid #e0e0e0}
+    .rte-toolbar .rte-group:last-child{border-right:0;margin-right:0;padding-right:0}
+    .rte-toolbar button,.rte-toolbar .rte-btn{width:28px;height:26px;border:0;background:transparent;border-radius:3px;cursor:pointer;color:#606266;font-size:13px;display:flex;align-items:center;justify-content:center;position:relative}
+    .rte-toolbar button:hover,.rte-toolbar .rte-btn:hover{color:#409eff;background:#eef5ff}
+    .rte-toolbar button.active,.rte-toolbar .rte-btn.active{color:#409eff;background:#e6f2ff}
+    .rte-toolbar .rte-select{height:26px;padding:0 18px 0 6px;border:0;background:transparent;border-radius:3px;color:#606266;font-size:13px;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23606266' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px center;background-size:10px}
+    .rte-toolbar .rte-select:hover{color:#409eff;background-color:#eef5ff}
+    .rte-toolbar .rte-color{position:relative;overflow:hidden}
+    .rte-toolbar .rte-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .rte-toolbar .rte-picker{position:absolute;top:28px;left:0;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.12);padding:8px;z-index:20;display:none;min-width:180px}
+    .rte-toolbar .rte-picker.show{display:block}
+    .rte-emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
+    .rte-emoji-grid button{width:24px;height:24px;font-size:16px;padding:0;border:0;background:transparent;border-radius:4px;cursor:pointer}
+    .rte-emoji-grid button:hover{background:#f2f3f5}
+    .rte-editor{min-height:220px;padding:14px;outline:none;font-size:14px;line-height:1.75;overflow:auto;color:#303133}
     .rte-editor p{margin:0 0 8px}
     .rte-editor img{max-width:100%}
+    .rte-editor blockquote{margin:8px 0;padding:8px 14px;border-left:4px solid #409eff;background:#f5f7fa;color:#606266}
+    .rte-editor pre{margin:8px 0;padding:10px 12px;background:#f5f7fa;border-radius:4px;font-family:monospace;font-size:13px;overflow:auto}
+    .rte-editor code{padding:2px 4px;background:#f5f7fa;border-radius:3px;font-family:monospace;font-size:13px}
+    .rte-editor table{width:100%;border-collapse:collapse;margin:8px 0}
+    .rte-editor td,.rte-editor th{border:1px solid #dcdfe6;padding:8px 10px;min-width:60px}
+    .rte-editor hr{border:0;border-top:1px solid #dcdfe6;margin:12px 0}
+    .rte-source{width:100%;flex:1;min-height:220px;padding:14px;border:0;outline:none;font-family:monospace;font-size:13px;line-height:1.6;resize:none;color:#303133;display:none}
+    .rte-wrap.source-mode .rte-editor{display:none}
+    .rte-wrap.source-mode .rte-source{display:block}
 
     /* 开关复选 */
     .check-group{display:flex;gap:16px;flex-wrap:wrap;padding-top:4px}
@@ -271,6 +301,57 @@
     .cat-level-5{padding-left:120px}
     .json-area{width:100%;min-height:300px;font-family:monospace;font-size:12px;line-height:1.5;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none}
     .json-area:focus{border-color:var(--primary)}
+
+    /* Reference-style goods form (Element-like) */
+    .goods-form-item{display:flex;align-items:flex-start;margin-bottom:18px}
+    .goods-form-label{width:92px;padding-right:12px;padding-top:8px;text-align:right;font-size:14px;color:#303133;flex-shrink:0;line-height:1.4}
+    .goods-form-label .req{color:#ff4d4f;margin-right:4px;font-weight:500}
+    .goods-form-control{flex:1;min-width:0}
+    .goods-form-control input,.goods-form-control select,.goods-form-control textarea{width:100%;padding:8px 12px;border:1px solid #dcdfe6;border-radius:4px;outline:none;font-size:14px;color:#303133;background:#fff;transition:border-color .12s,box-shadow .12s;font-family:inherit}
+    .goods-form-control input:focus,.goods-form-control select:focus,.goods-form-control textarea:focus{border-color:#409eff;box-shadow:0 0 0 2px rgba(64,158,255,.15)}
+    .goods-form-control input::placeholder,.goods-form-control textarea::placeholder{color:#c0c4cc}
+    .goods-form-control .radio-group{padding-top:8px}
+    .goods-form-control .check-group{padding-top:8px}
+    .goods-form-hint{font-size:12px;color:#909399;margin-top:6px}
+    .goods-form-inline{display:flex;align-items:center;gap:10px}
+    .goods-form-inline input{flex:1}
+    .goods-form-warning{color:#ff4d4f;font-size:12px;margin-top:6px}
+    .goods-form-control .radio-item input,.goods-form-control .check-item input{accent-color:#409eff}
+    .goods-form-control .radio-item.active,.goods-form-control .check-item.active{color:#409eff}
+    .goods-form-control input[type="radio"],.goods-form-control input[type="checkbox"]{width:auto;padding:0;border:0;box-shadow:none}
+
+    /* Reference-style goods tabs */
+    .goods-tabs{display:flex;border-bottom:1px solid #e4e7ed;margin-bottom:20px}
+    .goods-tab{padding:12px 20px;font-size:14px;color:#606266;cursor:pointer;position:relative;transition:all .15s;border:0;background:transparent}
+    .goods-tab:hover{color:#409eff}
+    .goods-tab.active{color:#409eff;font-weight:500}
+    .goods-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:#409eff;border-radius:1px}
+
+    /* Reference-style upload box */
+    .upload-box-ref{width:88px;height:88px;border:1px dashed #d9d9d9;border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;overflow:hidden;transition:all .15s;position:relative}
+    .upload-box-ref:hover{border-color:#409eff;color:#409eff}
+    .upload-box-ref svg{width:24px;height:24px;color:#c0c4cc}
+    .upload-box-ref img{width:100%;height:100%;object-fit:cover}
+    .upload-list{display:flex;gap:8px;flex-wrap:wrap}
+    .upload-list .upload-box-ref .del{position:absolute;top:-7px;right:-7px;width:18px;height:18px;border-radius:50%;background:#ff4d4f;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;opacity:0;transition:opacity .15s;z-index:2}
+    .upload-list .upload-box-ref:hover .del{opacity:1}
+    .upload-tip{font-size:12px;color:#909399;margin-top:8px;line-height:1.5}
+
+    /* Spec/attr management reference style */
+    .mgmt-empty{text-align:center;padding:40px 20px;color:#909399;font-size:13px}
+    .mgmt-table{width:100%;border-collapse:collapse;font-size:13px}
+    .mgmt-table th{background:#f5f7fa;color:#606266;font-weight:500;text-align:left;padding:10px 12px;border-bottom:1px solid #ebeef5}
+    .mgmt-table td{padding:10px 12px;border-bottom:1px solid #ebeef5;color:#606266;vertical-align:middle}
+    .mgmt-table tr:hover td{background:#f5f7fa}
+    .mgmt-table .op{display:flex;gap:12px}
+    .mgmt-table .op a{color:#409eff;cursor:pointer;font-size:13px}
+    .mgmt-table .op a:hover{color:#66b1ff}
+    .mgmt-table .op a.danger{color:#ff4d4f}
+    .mgmt-table .op a.danger:hover{color:#f78989}
+    .mgmt-table input[type="checkbox"]{width:16px;height:16px;accent-color:#409eff;cursor:pointer}
+    .mgmt-row-input{width:100%;padding:6px 10px;border:1px solid #dcdfe6;border-radius:4px;font-size:13px;outline:none}
+    .mgmt-row-input:focus{border-color:#409eff}
+    .mgmt-prompt{display:flex;align-items:center;gap:8px;font-size:13px;color:#606266;margin-bottom:16px;flex-wrap:wrap}
 
     /* Section builder */
     .sec-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
@@ -676,184 +757,401 @@
 
         <!-- 基本信息 -->
         <div class="goods-panel active" id="tab-base" style="padding:0 20px 18px">
-          <div class="goods-form-row">
-            <div class="field" style="flex:2"><label><span class="req">*</span>商品名称</label><input id="gTitle" placeholder="请输入商品名称"></div>
-            <div class="field"><label>商品编码</label><input id="gCode" placeholder="商品编码"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>商品名称</label>
+            <div class="goods-form-control"><input id="gTitle" placeholder="商品名称"></div>
           </div>
-          <div class="goods-form-row">
-            <div class="field"><label>条形码</label><input id="gBarcode" placeholder="条形码"></div>
-            <div class="field"><label><span class="req">*</span>商品分类</label><select id="gCat"></select></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">商品编码</label>
+            <div class="goods-form-control"><input id="gCode" placeholder="商品编码"></div>
           </div>
-          <div class="field" style="margin-bottom:14px">
-            <label><span class="req">*</span>商品类型</label>
-            <div class="radio-group" id="gType">
-              <label class="radio checked"><input type="radio" name="gType" value="physical" checked> 实物商品(物流发货)</label>
-              <label class="radio"><input type="radio" name="gType" value="virtual"> 电子卡券(无需物流)</label>
-              <label class="radio"><input type="radio" name="gType" value="inquiry"> 询价商品(无需物流)</label>
-            </div>
-            <div class="field-hint warn">商品保存后无法修改，请谨慎选择</div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">条形码</label>
+            <div class="goods-form-control"><input id="gBarcode" placeholder="条形码"></div>
           </div>
-          <div class="goods-form-row">
-            <div class="field"><label>促销语</label><input id="gPromo" placeholder="促销语"></div>
-            <div class="field"><label>商品单位</label><input id="gUnit" placeholder="如件,台,双等"></div>
-          </div>
-          <div class="goods-form-row">
-            <div class="field"><label>市场价</label><input id="gMarket" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
-            <div class="field"><label>成本价</label><input id="gCost" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
-            <div class="field"><label><span class="req">*</span>销售价</label><input id="gPrice" type="number" step="0.01" value="0" oninput="calcProfit()"></div>
-            <div class="field"><label>利润</label><div class="price-profit"><div class="profit-box">利润<b id="gProfit">0.00</b></div></div></div>
-          </div>
-          <div class="goods-form-row">
-            <div class="field third"><label><span class="req">*</span>总库存</label><input id="gStock" type="number" value="0"></div>
-            <div class="field third"><label>虚拟销量</label><input id="gVirtualSales" type="number" value="0"></div>
-            <div class="field third"><label>排序</label><input id="gSort" type="number" value="0"></div>
-          </div>
-          <div class="field" style="margin-bottom:14px">
-            <label><span class="req">*</span>轮播图</label>
-            <div class="upload-list" id="gImagesWrap">
-              <div class="upload-add" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)"></div>
-            </div>
-            <div class="upload-tip">第一张图片将作为商品主图，推荐比例为1:1</div>
-          </div>
-          <div class="field" style="margin-bottom:14px">
-            <label>视频类型</label>
-            <div class="radio-group">
-              <label class="radio checked"><input type="radio" name="gVideoType" value="mp4" checked onchange="toggleVideoType()"> MP4地址</label>
-              <label class="radio"><input type="radio" name="gVideoType" value="tencent" onchange="toggleVideoType()"> 腾讯视频</label>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>商品类型</label>
+            <div class="goods-form-control">
+              <div class="radio-group" id="gType">
+                <label class="radio-item checked"><input type="radio" name="gType" value="physical" checked> 实物商品(物流发货)</label>
+                <label class="radio-item"><input type="radio" name="gType" value="virtual"> 电子卡券(无需物流)</label>
+                <label class="radio-item"><input type="radio" name="gType" value="inquiry"> 询价商品(无需物流)</label>
+              </div>
+              <div class="goods-form-warning">商品保存后无法修改，请谨慎选择</div>
             </div>
           </div>
-          <div class="goods-form-row" id="gVideoRow">
-            <div class="field" style="flex:1"><label>视频地址</label><input id="gVideoUrl" placeholder="视频地址"></div>
-            <div style="padding-top:24px"><button class="btn" onclick="document.getElementById('gVideoFile').click()">选择视频</button><input type="file" id="gVideoFile" accept="video/*" style="display:none" onchange="uploadGoodsVideo(this)"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>商品分类</label>
+            <div class="goods-form-control"><select id="gCat"><option value="">请选择</option></select></div>
           </div>
-          <div class="goods-form-row">
-            <div class="field"><label>视频封面</label>
-              <div class="upload-single">
-                <div class="upload-thumb hidden" id="gVideoCoverThumb"></div>
-                <div class="upload-add" id="gVideoCoverAdd" onclick="document.getElementById('gVideoCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gVideoCoverFile" accept="image/*" style="display:none" onchange="uploadGoodsVideoCover(this)"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">促销语</label>
+            <div class="goods-form-control"><input id="gPromo" placeholder="促销语"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">备注</label>
+            <div class="goods-form-control"><input id="gRemark" placeholder="备注"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">购买须知</label>
+            <div class="goods-form-control"><textarea id="gNotice" rows="3" placeholder="购买须知"></textarea></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">商品单位</label>
+            <div class="goods-form-control"><input id="gUnit" placeholder="如件,台,双等" style="max-width:200px"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">市场价</label>
+            <div class="goods-form-control" style="max-width:220px"><input id="gMarket" type="number" step="0.01" placeholder="请输入市场价" oninput="calcProfit()"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">成本价</label>
+            <div class="goods-form-control goods-form-inline" style="max-width:520px">
+              <input id="gCost" type="number" step="0.01" placeholder="请输入成本价" oninput="calcProfit()">
+              <span class="goods-form-hint" style="margin-top:0;white-space:nowrap">若选择商品规格，以商品规格为准</span>
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>销售价</label>
+            <div class="goods-form-control goods-form-inline" style="max-width:520px">
+              <input id="gPrice" type="number" step="0.01" placeholder="请输入销售价" oninput="calcProfit()">
+              <span class="goods-form-hint" style="margin-top:0;white-space:nowrap">若选择商品规格，以商品规格为准</span>
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">利润</label>
+            <div class="goods-form-control" style="max-width:220px"><input id="gProfit" type="number" step="0.01" placeholder="利润" readonly style="background:#f5f7fa;color:#909399"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>总库存</label>
+            <div class="goods-form-control goods-form-inline" style="max-width:520px">
+              <input id="gStock" type="number" placeholder="请输入总库存">
+              <span class="goods-form-hint" style="margin-top:0;white-space:nowrap">若选择商品规格，以商品规格为准</span>
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label"><span class="req">*</span>轮播图</label>
+            <div class="goods-form-control">
+              <div class="upload-list" id="gImagesWrap">
+                <div class="upload-box-ref" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)" style="display:none"></div>
+              </div>
+              <div class="upload-tip">第一张图片将作为商品主图，推荐比例为1:1</div>
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">视频类型</label>
+            <div class="goods-form-control">
+              <div class="radio-group">
+                <label class="radio-item checked"><input type="radio" name="gVideoType" value="mp4" checked onchange="toggleVideoType()"> MP4地址</label>
+                <label class="radio-item"><input type="radio" name="gVideoType" value="tencent" onchange="toggleVideoType()"> 腾讯视频</label>
+              </div>
+            </div>
+          </div>
+          <div class="goods-form-item" id="gVideoRow">
+            <label class="goods-form-label">视频地址</label>
+            <div class="goods-form-control goods-form-inline">
+              <input id="gVideoUrl" placeholder="视频地址">
+              <button class="btn" onclick="document.getElementById('gVideoFile').click()">选择视频</button>
+              <input type="file" id="gVideoFile" accept="video/*" style="display:none" onchange="uploadGoodsVideo(this)">
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">视频封面</label>
+            <div class="goods-form-control">
+              <div class="upload-list" id="gVideoCoverWrap">
+                <div class="upload-box-ref" id="gVideoCoverAdd" onclick="document.getElementById('gVideoCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gVideoCoverFile" accept="image/*" style="display:none" onchange="uploadGoodsVideoCover(this)"></div>
               </div>
               <div class="upload-tip">推荐比例为1:1</div>
             </div>
-            <div class="field"><label>自动播放</label>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">自动播放</label>
+            <div class="goods-form-control">
               <div class="radio-group">
-                <label class="radio checked"><input type="radio" name="gAutoPlay" value="0" checked> 否</label>
-                <label class="radio"><input type="radio" name="gAutoPlay" value="1"> 是</label>
+                <label class="radio-item checked"><input type="radio" name="gAutoPlay" value="0" checked> 否</label>
+                <label class="radio-item"><input type="radio" name="gAutoPlay" value="1"> 是</label>
               </div>
             </div>
           </div>
-          <div class="field" style="margin-bottom:0"><label>购买须知</label><textarea id="gNotice" rows="3"></textarea></div>
-          <div class="field" style="margin-bottom:0;margin-top:14px"><label>备注</label><input id="gRemark" placeholder="备注"></div>
         </div>
 
         <!-- 商品规格 -->
         <div class="goods-panel" id="tab-spec" style="padding:0 20px 18px">
-          <div id="specList"></div>
-          <button class="btn outline" onclick="addSpec()">+ 添加规格</button>
+          <div class="mgmt-prompt">点击<button class="btn" style="margin:0 4px" onclick="openSpecMgmtModal()">商品规格</button>勾选商品规格，如果没有规格可不选。</div>
+          <div id="selectedSpecPreview" style="margin-bottom:16px"></div>
           <div id="skuTableWrap" style="margin-top:16px"></div>
         </div>
 
         <!-- 商品属性 -->
         <div class="goods-panel" id="tab-attr" style="padding:0 20px 18px">
-          <div class="attr-toolbar"><span class="muted">为商品设置参数属性，勾选“展示”后将在商品详情页呈现（与规格维护方式一致）</span></div>
-          <div id="attrList"></div>
-          <button class="btn outline" onclick="addAttr()">+ 添加属性</button>
+          <div class="mgmt-prompt">点击<button class="btn" style="margin:0 4px" onclick="openAttrMgmtModal()">商品属性</button>勾选商品属性，如果没有属性可不选。</div>
+          <div id="selectedAttrPreview" style="margin-bottom:16px"></div>
         </div>
 
         <!-- 详情介绍 -->
         <div class="goods-panel" id="tab-detail" style="padding:0 20px 18px">
           <div class="rte-wrap">
-            <div class="rte-toolbar" id="rteToolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
-              <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
-              <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
-              <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
-              <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
-              <button type="button" data-cmd="justifyLeft" title="左对齐">L</button>
-              <button type="button" data-cmd="justifyCenter" title="居中">C</button>
-              <button type="button" data-cmd="justifyRight" title="右对齐">R</button>
-              <button type="button" data-cmd="insertUnorderedList" title="无序列表">UL</button>
-              <button type="button" data-cmd="insertOrderedList" title="有序列表">OL</button>
-              <button type="button" onclick="insertDetailImage()" title="图片">IMG</button>
-              <button type="button" onclick="insertDetailVideo()" title="视频">VID</button>
+            <div class="rte-toolbar" id="rteToolbar" onmousedown="if(event.target.closest('button,.rte-btn,.rte-select'))event.preventDefault()">
+              <div class="rte-group">
+                <select class="rte-select" id="rteHeading" onchange="rteFormatBlock(this.value);this.value=''" title="标题">
+                  <option value="" disabled selected>H</option>
+                  <option value="H1">H1</option>
+                  <option value="H2">H2</option>
+                  <option value="H3">H3</option>
+                  <option value="H4">H4</option>
+                  <option value="P">正文</option>
+                </select>
+              </div>
+              <div class="rte-group">
+                <button type="button" data-cmd="bold" title="加粗 (Ctrl+B)"><b>B</b></button>
+                <button type="button" data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
+                <button type="button" data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
+                <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+              </div>
+              <div class="rte-group">
+                <button type="button" data-cmd="justifyLeft" title="左对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                <button type="button" data-cmd="justifyCenter" title="居中对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                <button type="button" data-cmd="justifyRight" title="右对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+              </div>
+              <div class="rte-group">
+                <button type="button" data-cmd="insertUnorderedList" title="无序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+                <button type="button" data-cmd="insertOrderedList" title="有序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h2M4 12h2M4 18h2"/></svg></button>
+                <button type="button" onclick="rteFormatBlock('blockquote')" title="引用"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h4v8H6zM14 8h4v8h-4z"/></svg></button>
+              </div>
+              <div class="rte-group">
+                <button type="button" onclick="rteInsertLink()" title="插入链接"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                <button type="button" onclick="insertDetailImage()" title="插入图片"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                <button type="button" onclick="insertDetailVideo()" title="插入视频"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></button>
+                <button type="button" onclick="rteInsertTable()" title="插入表格"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+                <button type="button" onclick="rteInsertHr()" title="插入分割线"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                <button type="button" onclick="rteInsertEmoji(this)" title="表情"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/></svg></button>
+              </div>
+              <div class="rte-group">
+                <button type="button" data-cmd="removeFormat" title="清除格式"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M7 7l2 10M14 7l-2 10M16 7l2 10"/></svg></button>
+                <button type="button" onclick="rteWrapCode()" title="代码块"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                <div class="rte-btn rte-color" title="文字颜色"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12M8 14h8"/></svg><input type="color" onchange="rteForeColor(this.value)" value="#333333"></div>
+              </div>
+              <div class="rte-group">
+                <button type="button" data-cmd="undo" title="撤销 (Ctrl+Z)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                <button type="button" data-cmd="redo" title="重做 (Ctrl+Y)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+              </div>
+              <div class="rte-group">
+                <button type="button" id="rteSourceBtn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                <button type="button" onclick="rteToggleFullscreen()" title="全屏"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+              </div>
+              <div class="rte-picker" id="rteEmojiPicker">
+                <div class="rte-emoji-grid">
+                  <button onclick="rtePickEmoji('😀')">😀</button><button onclick="rtePickEmoji('😃')">😃</button><button onclick="rtePickEmoji('😄')">😄</button><button onclick="rtePickEmoji('😁')">😁</button>
+                  <button onclick="rtePickEmoji('😆')">😆</button><button onclick="rtePickEmoji('😅')">😅</button><button onclick="rtePickEmoji('🤣')">🤣</button><button onclick="rtePickEmoji('😂')">😂</button>
+                  <button onclick="rtePickEmoji('🙂')">🙂</button><button onclick="rtePickEmoji('🙃')">🙃</button><button onclick="rtePickEmoji('😉')">😉</button><button onclick="rtePickEmoji('😊')">😊</button>
+                  <button onclick="rtePickEmoji('😇')">😇</button><button onclick="rtePickEmoji('🥰')">🥰</button><button onclick="rtePickEmoji('😍')">😍</button><button onclick="rtePickEmoji('🤩')">🤩</button>
+                  <button onclick="rtePickEmoji('😘')">😘</button><button onclick="rtePickEmoji('😗')">😗</button><button onclick="rtePickEmoji('😙')">😙</button><button onclick="rtePickEmoji('😚')">😚</button>
+                  <button onclick="rtePickEmoji('😋')">😋</button><button onclick="rtePickEmoji('😛')">😛</button><button onclick="rtePickEmoji('😝')">😝</button><button onclick="rtePickEmoji('😜')">😜</button>
+                  <button onclick="rtePickEmoji('🤪')">🤪</button><button onclick="rtePickEmoji('🤔')">🤔</button><button onclick="rtePickEmoji('🤨')">🤨</button><button onclick="rtePickEmoji('😐')">😐</button>
+                  <button onclick="rtePickEmoji('😑')">😑</button><button onclick="rtePickEmoji('😶')">😶</button><button onclick="rtePickEmoji('🙄')">🙄</button><button onclick="rtePickEmoji('😏')">😏</button>
+                  <button onclick="rtePickEmoji('😴')">😴</button><button onclick="rtePickEmoji('😷')">😷</button><button onclick="rtePickEmoji('🤒')">🤒</button><button onclick="rtePickEmoji('🤕')">🤕</button>
+                  <button onclick="rtePickEmoji('🤑')">🤑</button><button onclick="rtePickEmoji('😤')">😤</button><button onclick="rtePickEmoji('😭')">😭</button><button onclick="rtePickEmoji('😡')">😡</button>
+                </div>
+              </div>
             </div>
             <div class="rte-editor" id="gDetail" contenteditable="true" placeholder="请输入正文"></div>
+            <textarea class="rte-source" id="gDetailSource" placeholder="HTML源码"></textarea>
           </div>
         </div>
 
         <!-- 其他设置 -->
         <div class="goods-panel" id="tab-other" style="padding:0 20px 18px">
-          <div class="field" style="margin-bottom:14px">
-            <label>配送方式</label>
-            <div class="check-group">
-              <label class="check-item"><input type="checkbox" id="gShipSelf" value="self"> 到店自提</label>
-              <label class="check-item"><input type="checkbox" id="gShipSame" value="same"> 同城配送</label>
-            </div>
-            <div class="field-hint">若不勾选，默认包邮，更多配送方式请在“店铺 -> 配送设置”中开启</div>
-          </div>
-          <div class="goods-form-row">
-            <div class="field third"><label>重量(g)</label><input id="gWeight" type="number" value="0"></div>
-            <div class="field third"><label>最少购买</label><input id="gMinBuy" type="number" value="1"></div>
-            <div class="field third"><label>排序</label><input id="gSortOther" type="number" value="0"></div>
-          </div>
-          <div class="goods-form-row">
-            <div class="field"><label>显示库存</label>
-              <div class="radio-group">
-                <label class="radio checked"><input type="radio" name="gShowStock" value="1" checked> 显示</label>
-                <label class="radio"><input type="radio" name="gShowStock" value="0"> 隐藏</label>
+          <div class="goods-form-item">
+            <label class="goods-form-label">配送方式</label>
+            <div class="goods-form-control">
+              <div class="check-group">
+                <label class="check-item"><input type="checkbox" id="gShipSelf" value="self"> 到店自提</label>
+                <label class="check-item"><input type="checkbox" id="gShipSame" value="same"> 同城配送</label>
               </div>
+              <div class="goods-form-hint">若不勾选，默认包邮，更多配送方式请在“店铺 -> 配送设置”中开启</div>
             </div>
-            <div class="field"><label>是否上架</label>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">重量(g)</label>
+            <div class="goods-form-control" style="max-width:220px"><input id="gWeight" type="number" placeholder="请输入重量"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">显示库存</label>
+            <div class="goods-form-control">
               <div class="radio-group">
-                <label class="radio checked"><input type="radio" name="gStatus" value="1" checked> 立刻上架</label>
-                <label class="radio"><input type="radio" name="gStatus" value="0"> 暂不上架</label>
+                <label class="radio-item checked"><input type="radio" name="gShowStock" value="1" checked> 显示</label>
+                <label class="radio-item"><input type="radio" name="gShowStock" value="0"> 隐藏</label>
               </div>
             </div>
           </div>
-          <div class="field" style="margin-bottom:14px">
-            <label>限购</label>
-            <div class="radio-group">
-              <label class="radio checked"><input type="radio" name="gLimitType" value="none" checked onchange="toggleLimit()"> 不限购</label>
-              <label class="radio"><input type="radio" name="gLimitType" value="lifetime" onchange="toggleLimit()"> 终身限购</label>
-              <label class="radio"><input type="radio" name="gLimitType" value="period" onchange="toggleLimit()"> 周期限购</label>
+          <div class="goods-form-item">
+            <label class="goods-form-label">虚拟销量</label>
+            <div class="goods-form-control" style="max-width:220px"><input id="gVirtualSales" type="number" placeholder="请输入虚拟销量"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">排序</label>
+            <div class="goods-form-control goods-form-inline" style="max-width:320px">
+              <input id="gSort" type="number" placeholder="请输入排序">
+              <span class="goods-form-hint" style="margin-top:0;white-space:nowrap">值越大，越靠前</span>
             </div>
           </div>
-          <div class="goods-form-row hidden" id="gLimitLifetime">
-            <div class="field third"><label>终身限购数量</label><input id="gLimitLifetimeNum" type="number" value="0"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">最少购买</label>
+            <div class="goods-form-control" style="max-width:220px"><input id="gMinBuy" type="number" placeholder="请输入最少购买数量"></div>
           </div>
-          <div class="goods-form-row hidden" id="gLimitPeriod">
-            <div class="field third"><label>每</label><input id="gLimitPeriodDay" type="number" value="1"></div>
-            <div class="field third"><label>天，可购买</label><input id="gLimitPeriodNum" type="number" value="0"></div>
-          </div>
-          <div class="goods-form-row">
-            <div class="field"><label>订单协议</label>
+          <div class="goods-form-item">
+            <label class="goods-form-label">限购</label>
+            <div class="goods-form-control">
               <div class="radio-group">
-                <label class="radio"><input type="radio" name="gAgreement" value="1"> 显示</label>
-                <label class="radio checked"><input type="radio" name="gAgreement" value="0" checked> 隐藏</label>
+                <label class="radio-item checked"><input type="radio" name="gLimitType" value="none" checked onchange="toggleLimit()"> 不限购</label>
+                <label class="radio-item"><input type="radio" name="gLimitType" value="lifetime" onchange="toggleLimit()"> 终身限购</label>
+                <label class="radio-item"><input type="radio" name="gLimitType" value="period" onchange="toggleLimit()"> 周期限购</label>
+              </div>
+              <div class="hidden" id="gLimitLifetime" style="margin-top:10px;max-width:220px"><input id="gLimitLifetimeNum" type="number" placeholder="请输入限购数量"></div>
+              <div class="hidden" id="gLimitPeriod" style="margin-top:10px;display:flex;align-items:center;gap:8px;max-width:420px">
+                <span style="color:#606266;font-size:14px">每</span>
+                <input id="gLimitPeriodDay" type="number" placeholder="天数" style="flex:1">
+                <span style="color:#606266;font-size:14px">天，可购买</span>
+                <input id="gLimitPeriodNum" type="number" placeholder="数量" style="flex:1">
               </div>
             </div>
-            <div class="field"><label>要求留言</label>
-              <div style="display:flex;gap:10px;padding-top:6px"><button class="btn outline sm" onclick="addMessageField()">+ 选择表单</button><input id="gMessage" placeholder="留言字段名称"></div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">要求留言</label>
+            <div class="goods-form-control goods-form-inline" style="max-width:420px">
+              <button class="btn outline" style="flex-shrink:0" onclick="addMessageField()">+ 选择表单</button>
+              <input id="gMessage" placeholder="留言字段名称">
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">订单协议</label>
+            <div class="goods-form-control">
+              <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="gAgreement" value="1"> 显示</label>
+                <label class="radio-item checked"><input type="radio" name="gAgreement" value="0" checked> 隐藏</label>
+              </div>
+              <div class="goods-form-hint">控制下单页面是否显示相关协议</div>
+            </div>
+          </div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">是否上架</label>
+            <div class="goods-form-control">
+              <div class="radio-group">
+                <label class="radio-item checked"><input type="radio" name="gStatus" value="1" checked> 立刻上架</label>
+                <label class="radio-item"><input type="radio" name="gStatus" value="0"> 暂不上架</label>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- 分享设置 -->
         <div class="goods-panel" id="tab-share" style="padding:0 20px 18px">
-          <div class="goods-form-row">
-            <div class="field" style="flex:1"><label>分享标题</label><input id="gShareTitle" placeholder="分享标题"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">分享标题</label>
+            <div class="goods-form-control"><input id="gShareTitle" placeholder="分享标题"></div>
           </div>
-          <div class="field" style="margin-bottom:0">
-            <label>分享封面</label>
-            <div class="upload-single">
-              <div class="upload-thumb hidden" id="gShareCoverThumb"></div>
-              <div class="upload-add" id="gShareCoverAdd" onclick="document.getElementById('gShareCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gShareCoverFile" accept="image/*" style="display:none" onchange="uploadShareCover(this)"></div>
+          <div class="goods-form-item">
+            <label class="goods-form-label">分享封面</label>
+            <div class="goods-form-control">
+              <div class="upload-list" id="gShareCoverWrap">
+                <div class="upload-box-ref" id="gShareCoverAdd" onclick="document.getElementById('gShareCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gShareCoverFile" accept="image/*" style="display:none" onchange="uploadShareCover(this)"></div>
+              </div>
+              <div class="upload-tip">推荐比例为5:4</div>
             </div>
-            <div class="upload-tip">推荐比例为5:4</div>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn gray" onclick="closeGoodsModal()">取消</button>
         <button class="btn" onclick="saveGoods()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 规格管理弹窗 -->
+  <div id="specMgmtModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>规格管理</h3><span class="close" onclick="closeSpecMgmtModal()">&times;</span></div>
+      <div class="modal-body">
+        <button class="btn" style="margin-bottom:12px" onclick="openSpecValueModal()">+ 添加规格</button>
+        <table class="mgmt-table">
+          <thead><tr><th>规格名称</th><th>规格值</th><th>使用</th><th>排序</th><th>操作</th></tr></thead>
+          <tbody id="specMgmtTable"></tbody>
+        </table>
+        <div class="mgmt-empty" id="specMgmtEmpty" style="display:none">暂无规格，点击上方按钮添加</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeSpecMgmtModal()">取消</button>
+        <button class="btn" onclick="closeSpecMgmtModal()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 规格值编辑弹窗 -->
+  <div id="specValueModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="specValueModalTitle">添加规格</h3><span class="close" onclick="closeSpecValueModal()">&times;</span></div>
+      <div class="modal-body">
+        <input type="hidden" id="svEditIndex" value="-1">
+        <div class="goods-form-item">
+          <label class="goods-form-label"><span class="req">*</span>规格名称</label>
+          <div class="goods-form-control"><input id="svName" placeholder="规格名称（如：颜色）"></div>
+        </div>
+        <div class="goods-form-item">
+          <label class="goods-form-label">规格值</label>
+          <div class="goods-form-control">
+            <div style="display:flex;gap:8px;margin-bottom:10px"><input id="svValueInput" placeholder="输入规格值后按回车添加" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addSpecValueChip()}"><button class="btn" onclick="addSpecValueChip()">添加规格值</button></div>
+            <div id="svValueList" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeSpecValueModal()">取消</button>
+        <button class="btn" onclick="saveSpecValueModal()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 属性管理弹窗 -->
+  <div id="attrMgmtModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>属性管理</h3><span class="close" onclick="closeAttrMgmtModal()">&times;</span></div>
+      <div class="modal-body">
+        <button class="btn" style="margin-bottom:12px" onclick="openAttrValueModal()">+ 添加属性</button>
+        <table class="mgmt-table">
+          <thead><tr><th>属性名称</th><th>属性值</th><th>使用</th><th>排序</th><th>操作</th></tr></thead>
+          <tbody id="attrMgmtTable"></tbody>
+        </table>
+        <div class="mgmt-empty" id="attrMgmtEmpty" style="display:none">暂无属性，点击上方按钮添加</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAttrMgmtModal()">取消</button>
+        <button class="btn" onclick="closeAttrMgmtModal()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 属性值编辑弹窗 -->
+  <div id="attrValueModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="attrValueModalTitle">添加属性</h3><span class="close" onclick="closeAttrValueModal()">&times;</span></div>
+      <div class="modal-body">
+        <input type="hidden" id="avEditIndex" value="-1">
+        <div class="goods-form-item">
+          <label class="goods-form-label"><span class="req">*</span>属性名称</label>
+          <div class="goods-form-control"><input id="avName" placeholder="属性名称（如：品牌）"></div>
+        </div>
+        <div class="goods-form-item">
+          <label class="goods-form-label">属性值</label>
+          <div class="goods-form-control">
+            <div style="display:flex;gap:8px;margin-bottom:10px"><input id="avValueInput" placeholder="输入属性值后按回车添加" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addAttrValueChip()}"><button class="btn" onclick="addAttrValueChip()">添加属性值</button></div>
+            <div id="avValueList" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAttrValueModal()">取消</button>
+        <button class="btn" onclick="saveAttrValueModal()">确定</button>
       </div>
     </div>
   </div>
@@ -1213,24 +1511,30 @@
     function closeGoodsModal(){document.getElementById('goodsModal').classList.remove('show');}
 
     function clearGoodsForm(){
-      gState={images:[],videoCover:'',shareCover:'',specs:[],skus:[],attrs:[],editingAttrIdx:null};
-      ['gId','gTitle','gCode','gBarcode','gPromo','gUnit','gPrice','gMarket','gCost','gStock','gVirtualSales','gSort','gVideoUrl','gNotice','gRemark','gWeight','gMinBuy','gSortOther','gLimitLifetimeNum','gLimitPeriodDay','gLimitPeriodNum','gMessage','gShareTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=id.startsWith('gSort')?'0':(id==='gMinBuy'?'1':'0');});
+      gState={images:[],videoCover:'',shareCover:'',specs:[],skus:[],attrs:[],editingSpecIdx:-1,editingAttrIdx:-1,svValues:[],avValues:[]};
+      ['gId','gTitle','gCode','gBarcode','gPromo','gUnit','gPrice','gMarket','gCost','gStock','gVirtualSales','gSort','gVideoUrl','gNotice','gRemark','gWeight','gMinBuy','gLimitLifetimeNum','gLimitPeriodDay','gLimitPeriodNum','gMessage','gShareTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
       setRadio('gType','physical');setRadio('gVideoType','mp4');setRadio('gAutoPlay','0');
       setRadio('gShowStock','1');setRadio('gStatus','1');setRadio('gLimitType','none');setRadio('gAgreement','0');
       document.getElementById('gShipSelf').checked=false;document.getElementById('gShipSame').checked=false;
       document.getElementById('gDetail').innerHTML='';
-      renderImages();renderVideoCover();renderShareCover();renderSpecs();renderAttrs();toggleLimit();toggleVideoType();calcProfit();
+      renderImages();renderVideoCover();renderShareCover();renderSelectedSpecs();renderSelectedAttrs();renderSkus();toggleLimit();toggleVideoType();calcProfit();
       switchGoodsTab('base');
     }
     function setRadio(name,val){document.querySelectorAll(`input[name="${name}"]`).forEach(r=>{r.checked=r.value===val;updateRadioStyle(r);});}
     function getRadio(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:null;}
-    function updateRadioStyle(r){r.closest('.radio').classList.toggle('checked',r.checked);}
-    document.querySelectorAll('.radio input[type=radio]').forEach(r=>r.addEventListener('change',()=>{document.querySelectorAll(`input[name="${r.name}"]`).forEach(x=>updateRadioStyle(x));}));
+    function updateRadioStyle(r){
+      const item=r.closest('.radio-item');
+      if(item){item.classList.toggle('active',r.checked);return;}
+      const legacy=r.closest('.radio');
+      if(legacy) legacy.classList.toggle('checked',r.checked);
+    }
+    document.querySelectorAll('.radio-item input[type=radio], .radio input[type=radio]').forEach(r=>r.addEventListener('change',()=>{document.querySelectorAll(`input[name="${r.name}"]`).forEach(x=>updateRadioStyle(x));}));
 
     function calcProfit(){
       const price=parseFloat(document.getElementById('gPrice').value)||0;
       const cost=parseFloat(document.getElementById('gCost').value)||0;
-      document.getElementById('gProfit').textContent=(price-cost).toFixed(2);
+      const el=document.getElementById('gProfit');
+      if(el) el.value=(price-cost).toFixed(2);
     }
     function toggleVideoType(){
       const type=getRadio('gVideoType');
@@ -1253,8 +1557,8 @@
     function removeGoodsImage(idx){gState.images.splice(idx,1);renderImages();}
     function renderImages(){
       const wrap=document.getElementById('gImagesWrap');
-      const add=`<div class="upload-add" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)"></div>`;
-      wrap.innerHTML=gState.images.map((u,i)=>`<div class="upload-thumb"><img src="${u}"><span class="del" onclick="removeGoodsImage(${i})">&times;</span></div>`).join('')+add;
+      const add=`<div class="upload-box-ref" onclick="document.getElementById('gImagesFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gImagesFile" accept="image/*" multiple onchange="uploadGoodsImages(this)" style="display:none"></div>`;
+      wrap.innerHTML=gState.images.map((u,i)=>`<div class="upload-box-ref"><img src="${u}"><span class="del" onclick="removeGoodsImage(${i})">&times;</span></div>`).join('')+add;
     }
 
     async function uploadGoodsVideo(input){
@@ -1270,10 +1574,10 @@
       input.value='';renderVideoCover();
     }
     function renderVideoCover(){
-      const thumb=document.getElementById('gVideoCoverThumb');
-      const add=document.getElementById('gVideoCoverAdd');
-      if(gState.videoCover){thumb.innerHTML=`<img src="${gState.videoCover}"><span class="del" onclick="gState.videoCover='';renderVideoCover()">&times;</span>`;thumb.classList.remove('hidden');add.classList.add('hidden');}
-      else{thumb.innerHTML='';thumb.classList.add('hidden');add.classList.remove('hidden');}
+      const wrap=document.getElementById('gVideoCoverWrap');
+      const add=`<div class="upload-box-ref" id="gVideoCoverAdd" onclick="document.getElementById('gVideoCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gVideoCoverFile" accept="image/*" style="display:none" onchange="uploadGoodsVideoCover(this)"></div>`;
+      if(gState.videoCover){wrap.innerHTML=`<div class="upload-box-ref"><img src="${gState.videoCover}"><span class="del" onclick="gState.videoCover='';renderVideoCover()">&times;</span></div>`;}
+      else{wrap.innerHTML=add;}
     }
 
     async function uploadShareCover(input){
@@ -1283,55 +1587,91 @@
       input.value='';renderShareCover();
     }
     function renderShareCover(){
-      const thumb=document.getElementById('gShareCoverThumb');
-      const add=document.getElementById('gShareCoverAdd');
-      if(gState.shareCover){thumb.innerHTML=`<img src="${gState.shareCover}"><span class="del" onclick="gState.shareCover='';renderShareCover()">&times;</span>`;thumb.classList.remove('hidden');add.classList.add('hidden');}
-      else{thumb.innerHTML='';thumb.classList.add('hidden');add.classList.remove('hidden');}
+      const wrap=document.getElementById('gShareCoverWrap');
+      const add=`<div class="upload-box-ref" id="gShareCoverAdd" onclick="document.getElementById('gShareCoverFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><input type="file" id="gShareCoverFile" accept="image/*" style="display:none" onchange="uploadShareCover(this)"></div>`;
+      if(gState.shareCover){wrap.innerHTML=`<div class="upload-box-ref"><img src="${gState.shareCover}"><span class="del" onclick="gState.shareCover='';renderShareCover()">&times;</span></div>`;}
+      else{wrap.innerHTML=add;}
     }
 
     /* Spec / SKU */
-    function addSpec(){
-      gState.specs.push({id:'sp_'+Date.now(),name:'',values:[]});
-      renderSpecs();
+    function openSpecMgmtModal(){document.getElementById('specMgmtModal').classList.add('show');renderSpecMgmtTable();}
+    function closeSpecMgmtModal(){document.getElementById('specMgmtModal').classList.remove('show');renderSelectedSpecs();renderSkus();}
+    function renderSpecMgmtTable(){
+      const tb=document.getElementById('specMgmtTable');
+      const empty=document.getElementById('specMgmtEmpty');
+      if(!gState.specs.length){tb.innerHTML='';empty.style.display='block';return;}
+      empty.style.display='none';
+      tb.innerHTML=gState.specs.map((s,i)=>`
+        <tr>
+          <td>${escapeHtml(s.name||'-')}</td>
+          <td>${(s.values||[]).map(v=>escapeHtml(v.value)).join(', ')}</td>
+          <td><input type="checkbox" ${s.selected!==false?'checked':''} onchange="toggleSpecSelected(${i})"></td>
+          <td><span class="op"><a onclick="moveSpecMgmtRow(${i},-1)">↑</a><a onclick="moveSpecMgmtRow(${i},1)">↓</a></span></td>
+          <td><span class="op"><a onclick="openSpecValueModal(${i})">编辑</a><a class="danger" onclick="deleteSpecMgmtRow(${i})">删除</a></span></td>
+        </tr>`).join('');
     }
-    function removeSpec(idx){gState.specs.splice(idx,1);syncSkus();renderSpecs();}
-    function updateSpecName(idx,val){gState.specs[idx].name=val;syncSkus();renderSpecs();}
-    function addSpecValue(idx,val){if(!val.trim())return;gState.specs[idx].values.push({id:'sv_'+Date.now()+Math.random(),value:val.trim()});syncSkus();renderSpecs();}
-    function removeSpecValue(sIdx,vIdx){gState.specs[sIdx].values.splice(vIdx,1);syncSkus();renderSpecs();}
+    function toggleSpecSelected(idx){gState.specs[idx].selected=!gState.specs[idx].selected;renderSpecMgmtTable();syncSkus();}
+    function moveSpecMgmtRow(idx,dir){const n=idx+dir;if(n<0||n>=gState.specs.length)return;[gState.specs[idx],gState.specs[n]]=[gState.specs[n],gState.specs[idx]];renderSpecMgmtTable();syncSkus();}
+    function deleteSpecMgmtRow(idx){if(!confirm('确定删除该规格？'))return;gState.specs.splice(idx,1);renderSpecMgmtTable();syncSkus();}
+
+    function openSpecValueModal(idx){
+      gState.editingSpecIdx=(typeof idx==='number')?idx:-1;
+      const s=gState.editingSpecIdx>=0?gState.specs[gState.editingSpecIdx]:null;
+      document.getElementById('specValueModalTitle').textContent=s?'编辑规格':'添加规格';
+      document.getElementById('svName').value=s?s.name:'';
+      gState.svValues=s?[...s.values]:[];
+      document.getElementById('svValueInput').value='';
+      renderSpecValueChips();
+      document.getElementById('specValueModal').classList.add('show');
+    }
+    function closeSpecValueModal(){document.getElementById('specValueModal').classList.remove('show');}
+    function renderSpecValueChips(){
+      const wrap=document.getElementById('svValueList');
+      wrap.innerHTML=gState.svValues.map((v,i)=>`<span class="spec-tag">${escapeHtml(v.value)}<span class="remove" onclick="removeSpecValueChip(${i})">&times;</span></span>`).join('');
+    }
+    function addSpecValueChip(){
+      const input=document.getElementById('svValueInput');
+      const val=input.value.trim();if(!val)return;
+      gState.svValues.push({id:'sv_'+Date.now()+Math.random(),value:val});
+      input.value='';renderSpecValueChips();
+    }
+    function removeSpecValueChip(i){gState.svValues.splice(i,1);renderSpecValueChips();}
+    function saveSpecValueModal(){
+      const name=document.getElementById('svName').value.trim();
+      if(!name){toast('请输入规格名称');return;}
+      const item={id:'sp_'+Date.now(),name:name,values:[...gState.svValues],selected:true};
+      if(gState.editingSpecIdx>=0){item.id=gState.specs[gState.editingSpecIdx].id;item.selected=gState.specs[gState.editingSpecIdx].selected!==false;gState.specs[gState.editingSpecIdx]=item;}
+      else{gState.specs.push(item);}
+      closeSpecValueModal();renderSpecMgmtTable();syncSkus();
+    }
+
+    function renderSelectedSpecs(){
+      const wrap=document.getElementById('selectedSpecPreview');
+      const selected=gState.specs.filter(s=>s.selected!==false&&s.name&&s.values.length);
+      if(!selected.length){wrap.innerHTML='';return;}
+      wrap.innerHTML=selected.map(s=>`<div style="margin-bottom:8px"><span style="color:#606266;font-size:13px">${escapeHtml(s.name)}：</span>${s.values.map(v=>`<span class="spec-tag">${escapeHtml(v.value)}</span>`).join('')}</div>`).join('');
+    }
+
     function syncSkus(){
-      const specs=gState.specs.filter(s=>s.name&&s.values.length);
-      if(!specs.length){gState.skus=[];return;}
+      const specs=gState.specs.filter(s=>s.selected!==false&&s.name&&s.values.length);
+      if(!specs.length){gState.skus=[];renderSkus();return;}
       const combos=cartesian(specs.map(s=>s.values.map(v=>({specId:s.id,specName:s.name,specValueId:v.id,specValue:v.value}))));
-      const oldMap=new Map(gState.skus.map(s=>[s.spec_value_ids,s]));
+      const oldMap=new Map(gState.skus.map(s=>[s.spec_value_ids.join(','),s]));
       gState.skus=combos.map(c=>{
         const ids=c.map(x=>x.specValueId);
         const key=ids.join(',');
         const old=oldMap.get(key)||{price:0,market_price:0,stock:0,image:''};
         return{spec_value_ids:ids,specNames:c.map(x=>x.specName).join('·'),specValues:c.map(x=>x.specValue).join('/'),price:old.price,market_price:old.market_price,stock:old.stock,image:old.image};
       });
+      renderSkus();
     }
     function cartesian(arr){return arr.reduce((a,b)=>a.flatMap(d=>b.map(e=>[...d,e])),[[]]);}
     function updateSku(idx,key,val){gState.skus[idx][key]=val;}
     async function uploadSkuImage(idx,input){
       if(!input.files[0])return;
       const url=await uploadToServer(input.files[0],'image');
-      if(url){gState.skus[idx].image=url;renderSpecs();}
+      if(url){gState.skus[idx].image=url;renderSkus();}
       input.value='';
-    }
-    function renderSpecs(){
-      const wrap=document.getElementById('specList');
-      wrap.innerHTML=gState.specs.map((s,i)=>`
-        <div class="spec-card">
-          <div class="spec-head">
-            <input value="${s.name}" placeholder="规格名（如颜色）" oninput="updateSpecName(${i},this.value)">
-            <button class="btn sm danger" onclick="removeSpec(${i})">删除规格</button>
-          </div>
-          <div class="spec-values">
-            ${s.values.map((v,vi)=>`<span class="spec-tag">${v.value}<span class="remove" onclick="removeSpecValue(${i},${vi})">&times;</span></span>`).join('')}
-            <input class="spec-add-input" placeholder="输入规格值回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addSpecValue(${i},this.value);this.value='';}">
-          </div>
-        </div>`).join('');
-      renderSkus();
     }
     function renderSkus(){
       const wrap=document.getElementById('skuTableWrap');
@@ -1339,49 +1679,78 @@
       wrap.innerHTML=`<table class="sku-table"><thead><tr><th>规格组合</th><th>销售价</th><th>市场价</th><th>库存</th><th>图片</th></tr></thead><tbody>
         ${gState.skus.map((s,i)=>`<tr>
           <td>${s.specValues}</td>
-          <td><input type="number" value="${s.price}" oninput="updateSku(${i},'price',this.value)"></td>
-          <td><input type="number" value="${s.market_price}" oninput="updateSku(${i},'market_price',this.value)"></td>
-          <td><input type="number" value="${s.stock}" oninput="updateSku(${i},'stock',this.value)"></td>
+          <td><input type="number" placeholder="销售价" value="${s.price||''}" oninput="updateSku(${i},'price',this.value)"></td>
+          <td><input type="number" placeholder="市场价" value="${s.market_price||''}" oninput="updateSku(${i},'market_price',this.value)"></td>
+          <td><input type="number" placeholder="库存" value="${s.stock||''}" oninput="updateSku(${i},'stock',this.value)"></td>
           <td><div style="display:flex;align-items:center;gap:6px">${s.image?`<img src="${s.image}" style="width:36px;height:36px;object-fit:cover;border-radius:4px">`:''}<button class="btn sm outline" onclick="document.getElementById('skuImg_${i}').click()">上传</button><input type="file" id="skuImg_${i}" accept="image/*" style="display:none" onchange="uploadSkuImage(${i},this)"></div></td>
         </tr>`).join('')}
       </tbody></table>`;
     }
 
-    /* Attrs（与规格一致的卡片式维护） */
-    function addAttr(){
-      gState.attrs.push({id:'at_'+Date.now(),name:'',values:[],used:0,sort:gState.attrs.length});
-      renderAttrs();
+    /* Attrs */
+    function openAttrMgmtModal(){document.getElementById('attrMgmtModal').classList.add('show');renderAttrMgmtTable();}
+    function closeAttrMgmtModal(){document.getElementById('attrMgmtModal').classList.remove('show');renderSelectedAttrs();}
+    function renderAttrMgmtTable(){
+      const tb=document.getElementById('attrMgmtTable');
+      const empty=document.getElementById('attrMgmtEmpty');
+      if(!gState.attrs.length){tb.innerHTML='';empty.style.display='block';return;}
+      empty.style.display='none';
+      tb.innerHTML=gState.attrs.map((a,i)=>`
+        <tr>
+          <td>${escapeHtml(a.name||'-')}</td>
+          <td>${(a.values||[]).map(v=>escapeHtml(v)).join(', ')}</td>
+          <td><input type="checkbox" ${a.selected!==false?'checked':''} onchange="toggleAttrSelected(${i})"></td>
+          <td><span class="op"><a onclick="moveAttrMgmtRow(${i},-1)">↑</a><a onclick="moveAttrMgmtRow(${i},1)">↓</a></span></td>
+          <td><span class="op"><a onclick="openAttrValueModal(${i})">编辑</a><a class="danger" onclick="deleteAttrMgmtRow(${i})">删除</a></span></td>
+        </tr>`).join('');
     }
-    function removeAttr(idx){gState.attrs.splice(idx,1);renderAttrs();}
-    function updateAttrName(idx,val){gState.attrs[idx].name=val;}
-    function addAttrValue(idx,val){if(!val.trim())return;gState.attrs[idx].values.push(val.trim());renderAttrs();}
-    function removeAttrValue(aIdx,vIdx){gState.attrs[aIdx].values.splice(vIdx,1);renderAttrs();}
-    function moveAttr(idx,dir){
-      const n=idx+dir;if(n<0||n>=gState.attrs.length)return;
-      [gState.attrs[idx],gState.attrs[n]]=[gState.attrs[n],gState.attrs[idx]];
-      renderAttrs();
+    function toggleAttrSelected(idx){gState.attrs[idx].selected=!gState.attrs[idx].selected;renderAttrMgmtTable();}
+    function moveAttrMgmtRow(idx,dir){const n=idx+dir;if(n<0||n>=gState.attrs.length)return;[gState.attrs[idx],gState.attrs[n]]=[gState.attrs[n],gState.attrs[idx]];renderAttrMgmtTable();}
+    function deleteAttrMgmtRow(idx){if(!confirm('确定删除该属性？'))return;gState.attrs.splice(idx,1);renderAttrMgmtTable();}
+
+    function openAttrValueModal(idx){
+      gState.editingAttrIdx=(typeof idx==='number')?idx:-1;
+      const a=gState.editingAttrIdx>=0?gState.attrs[gState.editingAttrIdx]:null;
+      document.getElementById('attrValueModalTitle').textContent=a?'编辑属性':'添加属性';
+      document.getElementById('avName').value=a?a.name:'';
+      gState.avValues=a?[...(a.values||[])]:[];
+      document.getElementById('avValueInput').value='';
+      renderAttrValueChips();
+      document.getElementById('attrValueModal').classList.add('show');
     }
-    function renderAttrs(){
-      const wrap=document.getElementById('attrList');
-      if(!gState.attrs.length){wrap.innerHTML='<div class="attr-empty">暂无属性，点击“+ 添加属性”添加</div>';return;}
-      wrap.innerHTML=gState.attrs.map((a,i)=>`
-        <div class="spec-card">
-          <div class="spec-head">
-            <input value="${escapeAttr(a.name)}" placeholder="属性名（如材质、产地）" oninput="updateAttrName(${i},this.value)">
-            <label class="check-item" style="white-space:nowrap"><input type="checkbox" ${a.used?'checked':''} onchange="gState.attrs[${i}].used=this.checked?1:0"> 详情页展示</label>
-            <button class="btn sm danger" onclick="removeAttr(${i})">删除属性</button>
-          </div>
-          <div class="spec-values">
-            ${(a.values||[]).map((v,vi)=>`<span class="spec-tag">${escapeAttr(v)}<span class="remove" onclick="removeAttrValue(${i},${vi})">&times;</span></span>`).join('')}
-            <input class="spec-add-input" placeholder="输入属性值回车" onkeydown="if(event.key==='Enter'){event.preventDefault();addAttrValue(${i},this.value);this.value='';}">
-          </div>
-        </div>`).join('');
+    function closeAttrValueModal(){document.getElementById('attrValueModal').classList.remove('show');}
+    function renderAttrValueChips(){
+      const wrap=document.getElementById('avValueList');
+      wrap.innerHTML=gState.avValues.map((v,i)=>`<span class="spec-tag">${escapeHtml(v)}<span class="remove" onclick="removeAttrValueChip(${i})">&times;</span></span>`).join('');
     }
-    function escapeAttr(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function addAttrValueChip(){
+      const input=document.getElementById('avValueInput');
+      const val=input.value.trim();if(!val)return;
+      gState.avValues.push(val);
+      input.value='';renderAttrValueChips();
+    }
+    function removeAttrValueChip(i){gState.avValues.splice(i,1);renderAttrValueChips();}
+    function saveAttrValueModal(){
+      const name=document.getElementById('avName').value.trim();
+      if(!name){toast('请输入属性名称');return;}
+      const item={id:'at_'+Date.now(),name:name,values:[...gState.avValues],selected:true};
+      if(gState.editingAttrIdx>=0){item.id=gState.attrs[gState.editingAttrIdx].id;item.selected=gState.attrs[gState.editingAttrIdx].selected!==false;gState.attrs[gState.editingAttrIdx]=item;}
+      else{gState.attrs.push(item);}
+      closeAttrValueModal();renderAttrMgmtTable();
+    }
+    function renderSelectedAttrs(){
+      const wrap=document.getElementById('selectedAttrPreview');
+      const selected=gState.attrs.filter(a=>a.selected!==false&&a.name);
+      if(!selected.length){wrap.innerHTML='';return;}
+      wrap.innerHTML=selected.map(a=>`<div style="margin-bottom:8px"><span style="color:#606266;font-size:13px">${escapeHtml(a.name)}：</span><span style="color:#303133;font-size:13px">${(a.values||[]).map(v=>escapeHtml(v)).join(', ')}</span></div>`).join('');
+    }
+    function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
     /* Rich text editor（保存选区，工具栏/插入资源时不会丢失光标） */
     let gDetailRange=null;
     const gDetailEl=document.getElementById('gDetail');
+    const gDetailSource=document.getElementById('gDetailSource');
+    const rteWrap=gDetailEl.closest('.rte-wrap');
     document.addEventListener('selectionchange',()=>{
       const s=window.getSelection();
       if(s&&s.rangeCount&&gDetailEl.contains(s.anchorNode)){gDetailRange=s.getRangeAt(0).cloneRange();}
@@ -1391,10 +1760,67 @@
       gDetailEl.focus();
       const s=window.getSelection();s.removeAllRanges();s.addRange(gDetailRange);
     }
+    function rteExec(cmd,val=null){
+      restoreDetailRange();
+      if(cmd==='hiliteColor'||cmd==='backColor')try{document.execCommand('styleWithCSS',false,true);}catch(e){}
+      document.execCommand(cmd,false,val);
+      rteUpdateActive();
+    }
+    function rteFormatBlock(tag){
+      if(!tag)return;
+      restoreDetailRange();
+      if(tag==='blockquote'){
+        const s=window.getSelection();
+        if(s.rangeCount){const r=s.getRangeAt(0);const q=document.createElement('blockquote');r.surroundContents(q);}
+      }else{
+        document.execCommand('formatBlock',false,tag);
+      }
+      rteUpdateActive();
+    }
+    function rteInsertLink(){
+      restoreDetailRange();
+      const url=prompt('请输入链接地址：','https://');
+      if(url)rteExec('createLink',url);
+    }
+    function rteInsertTable(){
+      const cols=parseInt(prompt('列数',3),10)||3;
+      const rows=parseInt(prompt('行数',3),10)||3;
+      let html='<table><tbody>';
+      for(let i=0;i<rows;i++){html+='<tr>';for(let j=0;j<cols;j++){html+='<td> </td>';}html+='</tr>';}
+      html+='</tbody></table><p><br></p>';
+      restoreDetailRange();document.execCommand('insertHTML',false,html);
+    }
+    function rteInsertHr(){restoreDetailRange();document.execCommand('insertHTML',false,'<hr>');}
+    function rteWrapCode(){
+      restoreDetailRange();
+      const s=window.getSelection();
+      if(s.rangeCount){const r=s.getRangeAt(0);const pre=document.createElement('pre');const code=document.createElement('code');pre.appendChild(code);r.surroundContents(pre);}
+    }
+    function rteForeColor(color){restoreDetailRange();rteExec('foreColor',color);}
+    function rteInsertEmoji(btn){const picker=document.getElementById('rteEmojiPicker');const rect=btn.getBoundingClientRect();picker.style.left=Math.min(rect.left-4,document.documentElement.clientWidth-196)+'px';picker.style.top=(rect.bottom+4)+'px';picker.classList.toggle('show');}
+    function rtePickEmoji(emoji){restoreDetailRange();document.execCommand('insertText',false,emoji);document.getElementById('rteEmojiPicker').classList.remove('show');}
+    document.addEventListener('click',e=>{if(!e.target.closest('#rteEmojiPicker')&&!e.target.closest('[title="表情"]'))document.getElementById('rteEmojiPicker').classList.remove('show');});
+    function rteToggleSource(){
+      const isSrc=rteWrap.classList.toggle('source-mode');
+      if(isSrc){gDetailSource.value=gDetailEl.innerHTML;}else{gDetailEl.innerHTML=gDetailSource.value;}
+      document.getElementById('rteSourceBtn').classList.toggle('active',isSrc);
+    }
+    gDetailSource.addEventListener('input',()=>{if(rteWrap.classList.contains('source-mode'))gDetailEl.innerHTML=gDetailSource.value;});
+    function rteToggleFullscreen(){rteWrap.classList.toggle('fullscreen');}
+    function rteUpdateActive(){
+      document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>{
+        const cmd=b.dataset.cmd;if(!cmd)return;
+        try{b.classList.toggle('active',document.queryCommandState(cmd));}catch(e){}
+      });
+    }
     document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
-      const cmd=b.dataset.cmd;restoreDetailRange();document.execCommand(cmd,false,null);
-      b.classList.toggle('active',document.queryCommandState(cmd));
+      const cmd=b.dataset.cmd;rteExec(cmd);
     }));
+    gDetailEl.addEventListener('keyup',rteUpdateActive);
+    gDetailEl.addEventListener('mouseup',rteUpdateActive);
+    gDetailEl.addEventListener('keydown',e=>{
+      if(e.ctrlKey&&(e.key==='b'||e.key==='i'||e.key==='u')){e.preventDefault();const cmd=e.key==='b'?'bold':e.key==='i'?'italic':'underline';rteExec(cmd);}
+    });
     async function insertDetailImage(){
       const input=document.createElement('input');input.type='file';input.accept='image/*';
       input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){restoreDetailRange();document.execCommand('insertImage',false,url);}}};
@@ -1416,9 +1842,9 @@
       document.getElementById('gId').value=g.id;
       document.getElementById('gTitle').value=g.title||'';
       document.getElementById('gCat').value=g.category_id||'';
-      document.getElementById('gPrice').value=(g.price||0).toFixed(2);
-      document.getElementById('gMarket').value=(g.market_price||0).toFixed(2);
-      document.getElementById('gStock').value=g.stock||0;
+      document.getElementById('gPrice').value=g.price?g.price.toFixed(2):'';
+      document.getElementById('gMarket').value=g.market_price?g.market_price.toFixed(2):'';
+      document.getElementById('gStock').value=g.stock||'';
       document.getElementById('gDetail').innerHTML=g.detail_html||'';
       gState.images=g.images||[];renderImages();
 
@@ -1428,24 +1854,23 @@
       setRadio('gType',ext.goods_type||'physical');
       document.getElementById('gPromo').value=ext.promo||'';
       document.getElementById('gUnit').value=ext.unit||'';
-      document.getElementById('gCost').value=(ext.cost_price||0).toFixed(2);
-      document.getElementById('gVirtualSales').value=ext.virtual_sales||0;
-      document.getElementById('gSort').value=ext.sort||0;
-      document.getElementById('gSortOther').value=ext.sort||0;
+      document.getElementById('gCost').value=ext.cost_price?ext.cost_price.toFixed(2):'';
+      document.getElementById('gVirtualSales').value=ext.virtual_sales||'';
+      document.getElementById('gSort').value=ext.sort||'';
       document.getElementById('gNotice').value=ext.notice||'';
       document.getElementById('gRemark').value=ext.remark||'';
       setRadio('gVideoType',ext.video_type||'mp4');
       document.getElementById('gVideoUrl').value=(typeof g.video==='object'?g.video.url:g.video)||'';
       gState.videoCover=ext.video_cover||'';renderVideoCover();
       setRadio('gAutoPlay',ext.auto_play?'1':'0');
-      document.getElementById('gWeight').value=ext.weight||0;
-      document.getElementById('gMinBuy').value=ext.min_buy||1;
+      document.getElementById('gWeight').value=ext.weight||'';
+      document.getElementById('gMinBuy').value=ext.min_buy||'';
       setRadio('gShowStock',ext.show_stock===0?'0':'1');
       setRadio('gStatus',g.status==1?'1':'0');
       setRadio('gLimitType',ext.limit_type||'none');
-      document.getElementById('gLimitLifetimeNum').value=ext.limit_lifetime_num||0;
-      document.getElementById('gLimitPeriodDay').value=ext.limit_period_day||1;
-      document.getElementById('gLimitPeriodNum').value=ext.limit_period_num||0;
+      document.getElementById('gLimitLifetimeNum').value=ext.limit_lifetime_num||'';
+      document.getElementById('gLimitPeriodDay').value=ext.limit_period_day||'';
+      document.getElementById('gLimitPeriodNum').value=ext.limit_period_num||'';
       document.getElementById('gShipSelf').checked=(ext.ship_ways||[]).includes('self');
       document.getElementById('gShipSame').checked=(ext.ship_ways||[]).includes('same');
       setRadio('gAgreement',ext.agreement?'1':'0');
@@ -1453,11 +1878,11 @@
       document.getElementById('gShareTitle').value=ext.share_title||'';
       gState.shareCover=ext.share_cover||'';renderShareCover();
 
-      gState.specs=(g.spec_groups||[]).map(s=>({id:'sp_'+s.id,name:s.name,values:s.values.map(v=>({id:String(v.id),value:v.value}))}));
+      gState.specs=(g.spec_groups||[]).map(s=>({id:'sp_'+s.id,name:s.name,values:s.values.map(v=>({id:String(v.id),value:v.value})),selected:true}));
       gState.skus=(g.skus||[]).map(s=>({spec_value_ids:(s.spec_value_ids||'').split(','),price:s.price,market_price:s.market_price,stock:s.stock,image:s.image}));
       syncSkus();
-      gState.attrs=(g.attrs||[]).map(a=>({...a,values:a.values||[]}));
-      renderSpecs();renderAttrs();calcProfit();toggleLimit();toggleVideoType();
+      gState.attrs=(g.attrs||[]).map(a=>({...a,values:a.values||[],selected:a.used!==0}));
+      renderSelectedSpecs();renderSelectedAttrs();calcProfit();toggleLimit();toggleVideoType();
       document.getElementById('goodsModal').classList.add('show');
     }
 
@@ -1466,37 +1891,40 @@
       const price=parseFloat(document.getElementById('gPrice').value)||0;
       const market=parseFloat(document.getElementById('gMarket').value)||0;
       const stock=parseInt(document.getElementById('gStock').value)||0;
+      const safeCheck=function(id){const el=document.getElementById(id);return el&&el.checked?1:0;};
+      const safeInt=function(id,def){const el=document.getElementById(id);return el?parseInt(el.value)||def:def;};
+      const safeFloat=function(id,def){const el=document.getElementById(id);return el?parseFloat(el.value)||def:def;};
       const ext={
         code:document.getElementById('gCode').value,
         barcode:document.getElementById('gBarcode').value,
         goods_type:getRadio('gType'),
         promo:document.getElementById('gPromo').value,
         unit:document.getElementById('gUnit').value,
-        cost_price:parseFloat(document.getElementById('gCost').value)||0,
-        virtual_sales:parseInt(document.getElementById('gVirtualSales').value)||0,
-        sort:parseInt(document.getElementById('gSort').value)||0,
+        cost_price:safeFloat('gCost',0),
+        virtual_sales:safeInt('gVirtualSales',0),
+        sort:safeInt('gSort',0),
         notice:document.getElementById('gNotice').value,
         remark:document.getElementById('gRemark').value,
         video_type:getRadio('gVideoType'),
         video_cover:gState.videoCover,
         auto_play:getRadio('gAutoPlay')==='1',
-        weight:parseInt(document.getElementById('gWeight').value)||0,
-        min_buy:parseInt(document.getElementById('gMinBuy').value)||1,
+        weight:safeInt('gWeight',0),
+        min_buy:safeInt('gMinBuy',1),
         show_stock:getRadio('gShowStock')==='1'?1:0,
         limit_type:getRadio('gLimitType'),
-        limit_lifetime_num:parseInt(document.getElementById('gLimitLifetimeNum').value)||0,
-        limit_period_day:parseInt(document.getElementById('gLimitPeriodDay').value)||1,
-        limit_period_num:parseInt(document.getElementById('gLimitPeriodNum').value)||0,
+        limit_lifetime_num:safeInt('gLimitLifetimeNum',0),
+        limit_period_day:safeInt('gLimitPeriodDay',1),
+        limit_period_num:safeInt('gLimitPeriodNum',0),
         ship_ways:[...(document.getElementById('gShipSelf').checked?['self']:[]),...(document.getElementById('gShipSame').checked?['same']:[])],
-
         agreement:getRadio('gAgreement')==='1'?1:0,
         message:document.getElementById('gMessage').value,
         share_title:document.getElementById('gShareTitle').value,
-        share_cover:gState.shareCover
+        share_cover:gState.shareCover,
+        require_name:0,require_phone:0,require_address:0,delivery_mode:1
       };
       const videoUrl=document.getElementById('gVideoUrl').value;
       const video=getRadio('gVideoType')==='mp4'?{type:'mp4',url:videoUrl}:videoUrl;
-      const specs=gState.specs.filter(s=>s.name&&s.values.length).map(s=>({name:s.name,values:s.values.map(v=>({id:v.id,value:v.value}))}));
+      const specs=gState.specs.filter(s=>s.selected!==false&&s.name&&s.values.length).map(s=>({name:s.name,values:s.values.map(v=>({id:v.id,value:v.value}))}));
       const skus=gState.skus.map(s=>({spec_value_ids:s.spec_value_ids,price:parseFloat(s.price)||0,market_price:parseFloat(s.market_price)||0,stock:parseInt(s.stock)||0,image:s.image}));
       const body={
         id:id||0,
@@ -1513,7 +1941,7 @@
         ext_json:ext,
         specs:specs,
         skus:skus,
-        attrs:gState.attrs.map((a,i)=>({name:a.name,values:a.values||[],used:a.used?1:0,sort:i}))
+        attrs:gState.attrs.filter(a=>a.selected!==false&&a.name).map((a,i)=>({name:a.name,values:a.values||[],used:1,sort:i}))
       };
       const url=id?`${BASE}/goods/${id}`:`${BASE}/goods`;
       const method=id?'PUT':'POST';
