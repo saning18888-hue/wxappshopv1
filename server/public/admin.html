@@ -325,15 +325,19 @@
 
     /* Linear-style config row: segmented control */
     .nav-cfg-row{display:flex;gap:32px;align-items:flex-end;margin-bottom:18px;flex-wrap:wrap}
-    .nav-cfg-field{display:flex;flex-direction:column}
-    .cfg-label{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:12px;font-weight:510;color:var(--text-muted);margin-bottom:8px;letter-spacing:.2px;font-feature-settings:'cv01','ss03'}
+    .nav-cfg-field{display:flex;flex-direction:column;min-width:120px}
+    .cfg-label{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:9px;letter-spacing:.2px;font-feature-settings:'cv01','ss03'}
     .seg{display:inline-flex;background:#f2f3f5;border:1px solid var(--border);border-radius:8px;padding:3px;gap:2px}
     .seg-item{flex:1;min-width:44px;padding:7px 0;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:14px;font-weight:510;color:#8a8f98;border:0;background:transparent;border-radius:6px;cursor:pointer;transition:all .15s;font-feature-settings:'cv01','ss03';letter-spacing:-.1px}
     .seg-item:hover{color:#5e6ad2}
     .seg-item.active{background:#5e6ad2;color:#fff;box-shadow:0 1px 3px rgba(94,106,210,.4)}
-    .count-line{display:flex;align-items:baseline;gap:4px}
-    .cfg-count{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:22px;font-weight:590;color:var(--text);letter-spacing:-.6px;line-height:1.2;font-feature-settings:'cv01','ss03'}
-    .cfg-unit{font-size:13px;color:var(--text-muted)}
+    .count-line{display:flex;align-items:baseline;gap:4px;height:42px}
+    .cfg-count{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:24px;font-weight:590;color:var(--text);letter-spacing:-.6px;line-height:1.2;font-feature-settings:'cv01','ss03'}
+    .cfg-unit{font-size:14px;color:var(--text-muted)}
+
+    /* Uniform config value line-height for alignment */
+    .cfg-value{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:24px;font-weight:590;color:var(--text);letter-spacing:-.6px;line-height:42px;font-feature-settings:'cv01','ss03'}
+    .cfg-value-small{font-size:14px;color:var(--text-muted);font-weight:400;line-height:42px;margin-left:4px}
 
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s}
     .modal-backdrop.show{opacity:1;pointer-events:auto}
@@ -387,6 +391,30 @@
     .lin-card-body{display:flex;gap:18px;align-items:flex-start}
     .lin-card-main{flex:1;min-width:0}
     .lin-link-hint{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:12px;color:#8a8f98;margin-top:8px;display:flex;align-items:center;gap:8px}
+
+    /* Banner grid: 3 per row, design-driven cards (Brand Design Expert token) */
+    .banner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+    .banner-grid .lin-card{border-radius:16px;padding:14px;margin-bottom:0;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(0,0,0,.03),0 4px 12px rgba(0,0,0,.04),0 8px 16px rgba(0,0,0,.06);border-color:rgba(0,0,0,.04)}
+    .banner-grid .lin-card:hover{box-shadow:0 4px 8px rgba(0,0,0,.06),0 8px 24px rgba(0,0,0,.08);border-color:#d0d6e0}
+    .banner-grid .lin-card-head{margin-bottom:10px;flex-shrink:0}
+    .banner-grid .lin-card-body{flex-direction:column;gap:12px;flex:1}
+    .banner-grid .lin-media-preview{flex:none;width:100%;aspect-ratio:16/10;height:auto;border-radius:12px;background:#f7f8fa}
+    .banner-grid .lin-card-main{width:100%}
+    .banner-grid .lin-form-row{flex-direction:column;gap:10px}
+    .banner-grid .lin-form-row>.field{width:100%}
+    .banner-grid .seg{display:flex;background:#f2f3f5;border-radius:8px;padding:3px}
+    .banner-grid .seg-item{flex:1;text-align:center;padding:6px 0;font-size:12px;border-radius:6px}
+    .banner-grid .lin-input,.banner-grid .lin-select{padding:8px 10px;font-size:13px}
+    @media(max-width:1100px){.banner-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:720px){.banner-grid{grid-template-columns:1fr}}
+
+    /* Number stepper for editable interval */
+    .stepper{display:inline-flex;align-items:center;height:42px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px;overflow:hidden}
+    .stepper .step-btn{width:36px;height:100%;border:0;background:transparent;font-size:20px;font-weight:500;color:#6b7280;cursor:pointer;transition:all .12s;font-family:Inter,-apple-system,sans-serif}
+    .stepper .step-btn:hover{background:#eef0f3;color:#5e6ad2}
+    .stepper .step-btn:active{background:#e4e7ec}
+    .stepper .step-input{width:50px;height:100%;border:0;background:transparent;text-align:center;font-size:22px;font-weight:590;color:var(--text);outline:none;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-feature-settings:'cv01','ss03';-moz-appearance:textfield}
+    .stepper .step-input::-webkit-outer-spin-button,.stepper .step-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
     /* Linear-style nav entry modal */
     .entry-modal-body{display:flex;gap:20px;align-items:flex-start}
@@ -1809,20 +1837,25 @@
     function renderBannerForm(){
       const c=upsertSection('banner');
       const items=c.props.items||(c.props.items=[]);
-      let h=`<div class="nav-cfg-row">
-        <div class="nav-cfg-field">
-          <label class="cfg-label">切换间隔</label>
-          <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px">
-            <input type="number" value="${c.props.interval||4}" oninput="upsertSection('banner').props.interval=parseInt(this.value)||4" style="width:56px;border:0;background:transparent;padding:0;font-size:14px;font-weight:590;color:var(--text);outline:none;font-family:Inter,-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif">
-            <span style="font-size:12px;color:#8a8f98">秒</span>
+      let h=`<div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="cfg-label" style="margin-bottom:0">切换间隔</label>
+          <div class="stepper">
+            <button type="button" class="step-btn" onclick="stepInterval(-1)">−</button>
+            <input class="step-input" type="number" value="${c.props.interval||4}" oninput="upsertSection('banner').props.interval=parseInt(this.value)||1">
+            <button type="button" class="step-btn" onclick="stepInterval(1)">+</button>
           </div>
+          <span class="cfg-unit">秒</span>
         </div>
-        <div class="nav-cfg-field">
-          <label class="cfg-label">轮播数量</label>
-          <div class="count-line"><span class="cfg-count">${items.length}</span><span class="cfg-unit">张</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="cfg-label" style="margin-bottom:0">轮播数量</label>
+          <span class="cfg-count">${items.length}</span>
+          <span class="cfg-unit">张</span>
         </div>
+        <button class="lin-btn lin-btn-ghost" onclick="addItem('banner')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>添加轮播图</button>
       </div>`;
       h+=`<p class="muted" style="margin:0 0 16px">每张幻灯片可设为「图片」或「视频」，支持本地上传，也可直接填写图片/视频地址。</p>`;
+      h+=`<div class="banner-grid">`;
       items.forEach((it,i)=>{
         it.link=it.link||{type:'goods',id:0};
         const isVid=(it.type==='video');
@@ -1844,13 +1877,13 @@
             </div>
             <div class="lin-card-main">
               <label class="lin-label">媒体类型</label>
-              <div class="seg" style="margin-bottom:12px">
+              <div class="seg" style="margin-bottom:10px">
                 <button type="button" class="seg-item ${!isVid?'active':''}" onclick="setBannerMediaType(${i},'image')">图片</button>
                 <button type="button" class="seg-item ${isVid?'active':''}" onclick="setBannerMediaType(${i},'video')">视频</button>
               </div>
               <label class="lin-label">${isVid?'视频':'图片'}地址</label>
               <input class="lin-input" value="${previewUrl}" placeholder="https://..." oninput="upsertSection('banner').props.items[${i}].${isVid?'video':'image'}=this.value">
-              <div class="lin-form-row" style="margin-top:14px">
+              <div class="lin-form-row" style="margin-top:12px">
                 <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setItemLink('banner',${i},'type',this.value)">${linkOpts(it.link)}</select></div>
                 <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(it.link&&it.link.id)||''}" oninput="setItemLink('banner',${i},'id',this.value)"></div>
               </div>
@@ -1858,7 +1891,7 @@
           </div>
         </div>`;
       });
-      h+=`<button class="lin-btn lin-btn-ghost" onclick="addItem('banner')" style="margin-top:4px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>添加轮播图</button>`;
+      h+=`</div>`;
       return h;
     }
     function setBannerMediaType(i,type){
@@ -1867,6 +1900,11 @@
       it.type=type;
       if(it.image===undefined)it.image='';
       if(it.video===undefined)it.video='';
+      renderSectionForm();
+    }
+    function stepInterval(delta){
+      const c=upsertSection('banner');
+      c.props.interval=Math.max(1,(parseInt(c.props.interval,10)||4)+delta);
       renderSectionForm();
     }
     async function uploadItemMedia(el,sec,i,field){
@@ -1891,9 +1929,9 @@
       const c=upsertSection('nav');
       const items=c.props.items||[];
       const cols = c.props.columns||5;
-      let h=`<div class="nav-cfg-row">
-        <div class="nav-cfg-field">
-          <label class="cfg-label">每行列数</label>
+      let h=`<div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-bottom:18px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="cfg-label" style="margin-bottom:0">每行列数</label>
           <div class="seg">
             <button type="button" class="seg-item ${cols==3?'active':''}" onclick="upsertSection('nav').props.columns=3;renderSectionForm()">3</button>
             <button type="button" class="seg-item ${cols==4?'active':''}" onclick="upsertSection('nav').props.columns=4;renderSectionForm()">4</button>
@@ -1901,13 +1939,14 @@
             <button type="button" class="seg-item ${cols==6?'active':''}" onclick="upsertSection('nav').props.columns=6;renderSectionForm()">6</button>
           </div>
         </div>
-        <div class="nav-cfg-field">
-          <label class="cfg-label">入口数量</label>
-          <div class="count-line"><span class="cfg-count">${items.length}</span><span class="cfg-unit">个</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="cfg-label" style="margin-bottom:0">入口数量</label>
+          <span class="cfg-count">${items.length}</span>
+          <span class="cfg-unit">个</span>
         </div>
       </div>`;
       h+=`<div class="nav-grid-box">
-        <div class="nav-grid-head"><h4>图标预览（点击图标配置）</h4><span class="muted" style="font-size:12px">每行 ${cols} 个</span></div>
+        <div class="nav-grid-head"><h4>图标预览（点击图标配置）</h4><span class="muted" style="font-size:13px">每行 ${cols} 个</span></div>
         <div class="nav-grid-preview" style="grid-template-columns:repeat(${cols}, minmax(0, 1fr))">`;
       items.forEach((it,i)=>{
         const icon = it.icon
