@@ -6,6 +6,15 @@
 .detail-title { font-size: 32rpx; font-weight: 600; margin-top: 12rpx; }
 .detail-sub { font-size: 26rpx; margin-top: 8rpx; }
 .detail-sales { font-size: 24rpx; margin-top: 8rpx; }
+.detail-meta { display: flex; gap: 24rpx; margin-top: 10rpx; }
+.detail-actions { display: flex; gap: 20rpx; margin-top: 20rpx; }
+.detail-act {
+  flex: 1; text-align: center; line-height: 64rpx; font-size: 26rpx;
+  background: #f5f5f5; border-radius: 999rpx; color: #555;
+}
+.comment-block { background: #fff; margin-top: 16rpx; padding: 24rpx; }
+.comment-empty { font-size: 24rpx; padding: 16rpx 0; }
+.bar-buy.disabled { background: #bbb; }
 
 .spec-block, .detail-html { background: #fff; margin-top: 16rpx; padding: 24rpx; }
 .spec-name { font-size: 28rpx; color: #333; margin-bottom: 16rpx; }

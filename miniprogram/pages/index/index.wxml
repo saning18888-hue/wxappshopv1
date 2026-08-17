@@ -8,4 +8,13 @@
 
   <view wx:if="{{loading}}" class="empty">加载中...</view>
   <diy-render wx:else components="{{components}}" goodsList="{{goodsList}}" cats="{{cats}}" />
+
+  <!-- 站点状态：打烊时全页拦截 -->
+  <view wx:if="{{siteClosed}}" class="site-closed">
+    <view class="site-closed-box">
+      <view class="site-closed-ico">🚫</view>
+      <view class="site-closed-title">商城已打烊</view>
+      <view class="site-closed-reason">{{closeReason}}</view>
+    </view>
+  </view>
 </view>

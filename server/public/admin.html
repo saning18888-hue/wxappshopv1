@@ -871,8 +871,9 @@
               <button class="btn sm" onclick="publishLayout()">发布上线</button>
             </div>
           </div>
-          <p class="muted" style="margin:2px 0 14px">拖拽模块可调整首页从上到下的顺序；通过开关可让指定模块（含「精选推荐」内的各子模块）上架或下架首页。点击子模块「编辑」可单独配置商品与标题。</p>
+          <p class="muted" style="margin:2px 0 14px">拖拽模块可调整首页从上到下的顺序；「精选推荐」的每个模块都是独立区块，可单独拖到任意位置、上/下架首页，或点「编辑」配置商品与标题。新增模块请点下方按钮。</p>
           <div id="layoutList" class="layout-list"></div>
+          <div style="margin-top:14px"><button class="btn outline sm" onclick="addRecommendMod()">＋ 添加推荐模块</button></div>
           <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
@@ -904,6 +905,174 @@
               </div>
             </div>
             <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+          </div>
+        </div>
+
+        <!-- 基础设置 -->
+        <div id="basePanel" class="panel hidden">
+          <style>
+            #basePanel .bs-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+            #basePanel .bs-tab{padding:8px 18px;border-radius:8px;background:#f1f2f4;color:#4b5563;cursor:pointer;font-size:14px;border:1px solid transparent;transition:.15s}
+            #basePanel .bs-tab.active{background:#5e6ad2;color:#fff;border-color:#5e6ad2}
+            #basePanel .bs-pane .row{margin-bottom:16px}
+            #basePanel .bs-pane label.lbl{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
+            #basePanel .seg label{cursor:pointer}
+            #basePanel .hint{font-size:12px;color:#8a8f98;margin-top:6px}
+            #basePanel .opt-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#4b5563}
+          </style>
+          <div class="sec-toolbar">
+            <div class="sec-title"><span class="ic">⚙</span> 基础设置</div>
+            <div class="sec-actions">
+              <button class="btn primary" onclick="saveSettings()">保存设置</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="bs-tabs">
+              <div class="bs-tab active" data-tab="basic" onclick="switchBaseTab('basic')">基础设置</div>
+              <div class="bs-tab" data-tab="goods" onclick="switchBaseTab('goods')">商品设置</div>
+              <div class="bs-tab" data-tab="trade" onclick="switchBaseTab('trade')">交易设置</div>
+              <div class="bs-tab" data-tab="security" onclick="switchBaseTab('security')">安全设置</div>
+            </div>
+
+            <!-- 基础设置 -->
+            <div class="bs-pane" data-pane="basic">
+              <div class="row">
+                <label class="lbl">站点状态</label>
+                <div class="seg">
+                  <label class="seg-item"><input type="radio" name="site_status" value="open" data-setting="site_status" onchange="syncSeg(this)"> 开启（营业中）</label>
+                  <label class="seg-item"><input type="radio" name="site_status" value="close" data-setting="site_status" onchange="syncSeg(this)"> 关闭（打烊）</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="lbl">站点打烊说明</label>
+                <textarea class="lin-input" rows="2" data-setting="close_reason" placeholder="店铺休息时给用户看的文案"></textarea>
+              </div>
+              <div class="row">
+                <label class="lbl">站点名称</label>
+                <input class="lin-input" data-setting="store_name" placeholder="商城名称">
+              </div>
+              <div class="row">
+                <label class="lbl">站点 Logo（图片 URL）</label>
+                <input class="lin-input" data-setting="store_logo" placeholder="https://...">
+              </div>
+              <div class="row">
+                <label class="lbl">客服类型</label>
+                <div class="seg">
+                  <label class="seg-item"><input type="radio" name="service_type" value="online" data-setting="service_type" onchange="syncSeg(this)"> 在线客服</label>
+                  <label class="seg-item"><input type="radio" name="service_type" value="phone" data-setting="service_type" onchange="syncSeg(this)"> 电话客服</label>
+                  <label class="seg-item"><input type="radio" name="service_type" value="wechat" data-setting="service_type" onchange="syncSeg(this)"> 微信客服</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="lbl">客服电话</label>
+                <input class="lin-input" data-setting="service_phone" placeholder="如 400-000-0000">
+              </div>
+              <div class="row">
+                <label class="lbl">客服微信号</label>
+                <input class="lin-input" data-setting="service_wechat" placeholder="微信号">
+              </div>
+              <div class="row">
+                <label class="lbl">首页悬浮按钮</label>
+                <label class="switch"><input type="checkbox" data-setting="show_float_button"><span class="slider"></span></label>
+                <div class="hint">关闭后隐藏首页右下角的悬浮「客服/回到顶部」按钮。</div>
+              </div>
+              <div class="row">
+                <label class="lbl">门店地图（用于「查看门店」定位）</label>
+                <div class="lin-form-row" style="gap:10px">
+                  <input class="lin-input" style="flex:1" data-setting="map_name" placeholder="门店名称">
+                  <input class="lin-input" style="flex:1" data-setting="map_address" placeholder="门店地址">
+                </div>
+                <div class="lin-form-row" style="gap:10px;margin-top:10px">
+                  <input class="lin-input" style="flex:1" data-setting="map_lng" data-type="number" placeholder="经度 lng">
+                  <input class="lin-input" style="flex:1" data-setting="map_lat" data-type="number" placeholder="纬度 lat">
+                </div>
+              </div>
+            </div>
+
+            <!-- 商品设置 -->
+            <div class="bs-pane hidden" data-pane="goods">
+              <div class="row">
+                <label class="lbl">购买权限</label>
+                <div class="seg">
+                  <label class="seg-item"><input type="radio" name="buy_permission" value="all" data-setting="buy_permission" onchange="syncSeg(this)"> 所有人可买</label>
+                  <label class="seg-item"><input type="radio" name="buy_permission" value="login" data-setting="buy_permission" onchange="syncSeg(this)"> 登录用户</label>
+                  <label class="seg-item"><input type="radio" name="buy_permission" value="member" data-setting="buy_permission" onchange="syncSeg(this)"> 有会员卡</label>
+                </div>
+                <div class="hint">选择「有会员卡」时，未绑定会员卡的用户下单将被拦截。</div>
+              </div>
+              <div class="row">
+                <label class="lbl">商品详情页展示项</label>
+                <div class="opt-row">
+                  <label><input type="checkbox" data-setting="show_sales"> 显示销量</label>
+                  <label><input type="checkbox" data-setting="show_stock"> 显示库存</label>
+                  <label><input type="checkbox" data-setting="show_original_price"> 显示划线原价</label>
+                  <label><input type="checkbox" data-setting="show_comment"> 显示评价</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="lbl">商品详情页按钮</label>
+                <div class="opt-row">
+                  <label><input type="checkbox" data-setting="cart_button"> 加入购物车</label>
+                  <label><input type="checkbox" data-setting="buy_button"> 立即购买</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 交易设置 -->
+            <div class="bs-pane hidden" data-pane="trade">
+              <div class="row">
+                <label class="lbl">未支付订单自动取消（分钟）</label>
+                <input class="lin-input" style="max-width:200px" data-setting="auto_cancel_minutes" data-type="number" placeholder="30">
+              </div>
+              <div class="row">
+                <label class="lbl">下单需绑定手机号</label>
+                <label class="switch"><input type="checkbox" data-setting="require_mobile"><span class="slider"></span></label>
+              </div>
+              <div class="row">
+                <label class="lbl">允许评价订单</label>
+                <label class="switch"><input type="checkbox" data-setting="allow_comment"><span class="slider"></span></label>
+              </div>
+              <div class="row">
+                <label class="lbl">可用支付方式</label>
+                <div class="opt-row">
+                  <label><input type="checkbox" id="payWechat"> 微信支付</label>
+                  <label><input type="checkbox" id="payAlipay"> 支付宝</label>
+                </div>
+              </div>
+              <div class="row">
+                <label class="lbl">支付后动作</label>
+                <div class="seg">
+                  <label class="seg-item"><input type="radio" name="pay_after_action" value="none" data-setting="pay_after_action" onchange="syncSeg(this)"> 无</label>
+                  <label class="seg-item"><input type="radio" name="pay_after_action" value="coupon" data-setting="pay_after_action" onchange="syncSeg(this)"> 发券</label>
+                  <label class="seg-item"><input type="radio" name="pay_after_action" value="points" data-setting="pay_after_action" onchange="syncSeg(this)"> 送积分</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 安全设置 -->
+            <div class="bs-pane hidden" data-pane="security">
+              <div class="row">
+                <label class="lbl">登录图形验证码</label>
+                <label class="switch"><input type="checkbox" data-setting="captcha_login"><span class="slider"></span></label>
+              </div>
+              <div class="row">
+                <label class="lbl">下单图形验证码</label>
+                <label class="switch"><input type="checkbox" data-setting="captcha_order"><span class="slider"></span></label>
+              </div>
+              <div class="row">
+                <label class="lbl">滑块验证</label>
+                <label class="switch"><input type="checkbox" data-setting="slider_verify"><span class="slider"></span></label>
+              </div>
+              <div class="row">
+                <label class="lbl">风控等级</label>
+                <div class="seg">
+                  <label class="seg-item"><input type="radio" name="risk_control" value="low" data-setting="risk_control" onchange="syncSeg(this)"> 低</label>
+                  <label class="seg-item"><input type="radio" name="risk_control" value="middle" data-setting="risk_control" onchange="syncSeg(this)"> 中</label>
+                  <label class="seg-item"><input type="radio" name="risk_control" value="high" data-setting="risk_control" onchange="syncSeg(this)"> 高</label>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1467,8 +1636,8 @@
       <div class="modal-header"><h3>编辑推荐模块</h3><span class="close" onclick="closeModEditor()">&times;</span></div>
       <div class="modal-body">
         <div class="form-row">
-          <div class="field"><label>模块名称（后台标识）</label><input id="modEditName" placeholder="如：新人专享"></div>
-          <div class="field"><label>展示标题（用户可见）</label><input id="modEditTitle" placeholder="如：新人 1 元购"></div>
+          <div class="field"><label>区块标题（首页展示）</label><input id="modEditName" placeholder="如：新人专享"></div>
+          <div class="field"><label>副标题（可选）</label><input id="modEditTitle" placeholder="如：新人 1 元购"></div>
         </div>
         <p class="muted" style="margin:6px 0 12px">该模块下的商品将依次展示在首页此区块中。</p>
         <div id="modEditGoods" class="mod-goods-wrap"></div>
@@ -1551,7 +1720,7 @@
           {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
-        {key:'base',label:'基础设置',icon:ICONS.settings},
+        {key:'base',label:'基础设置',icon:ICONS.settings,panel:'basePanel'},
         {key:'info',label:'店铺设置',icon:ICONS.store},
         {key:'delivery',label:'配送设置',icon:ICONS.truck}
       ]},
@@ -1686,6 +1855,7 @@
       if(panelId==='sectionPanel') loadSection();
       if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
+      if(panelId==='basePanel') loadSettings();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
     }
@@ -2506,7 +2676,7 @@
         {icon:'https://placehold.co/96x96/00B86B/fff?text=秒',text:'秒杀',link:{type:'activity',id:2}},
         {icon:'https://placehold.co/96x96/3867FF/fff?text=拼',text:'拼团',link:{type:'activity',id:3}}
       ]}},
-      goods:{type:'goods_group',props:{title:'精选推荐',columns:2,modules:defaultRecommendModules()}},
+      goods:{type:'goods_group',props:{title:'精选推荐',columns:2,modules:[{id:1,name:'精选推荐',title:'精选推荐',goods:[]}]}},
       cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}}
     };
 
@@ -2516,6 +2686,18 @@
       if(!c){c=JSON.parse(JSON.stringify(SECTION_DEFS[sec]));designConfig.components.push(c);}
       return c;
     }
+    // 归一化：把含多个子模块的 goods_group 拆成多个独立的一级组件，使每个推荐模块可在首页任意排序
+    function normalizeHomeComponents(){
+      const arr=designConfig.components; const out=[];
+      arr.forEach(c=>{
+        if(c&&c.type==='goods_group'&&c.props&&Array.isArray(c.props.modules)&&c.props.modules.length>1){
+          c.props.modules.forEach(m=>{
+            out.push({type:'goods_group',props:{title:(m.title||m.name||'精选推荐'),columns:(c.props.columns||2),hidden:!!m.hidden,modules:[m]}});
+          });
+        } else out.push(c);
+      });
+      designConfig.components=out;
+    }
     async function ensureCats(){
       if(catOptionsCache.length) return;
       try{const r=await fetchA(`${BASE}/categories?page=1&page_size=200`);if(r.code===0)catOptionsCache=r.data.list||[];}catch(e){}
@@ -2524,6 +2706,7 @@
       const d=await fetchA(`${BASE}/design/home`);
       if(d.code!==0){toast(d.msg);return false;}
       designConfig=JSON.parse(JSON.stringify(d.data.published_config||{page:'home',components:[]}));
+      normalizeHomeComponents();
       await ensureCats();
       return true;
     }
@@ -2548,44 +2731,30 @@
       const wrap=document.getElementById('layoutList'); if(!wrap)return;
       const types=Object.values(SECTION_TYPE);
       const rows=designConfig.components.filter(c=>types.indexOf(c.type)>=0);
-      wrap.innerHTML=rows.map((c,i)=>{
+      wrap.innerHTML=rows.map((c)=>{
         const sec=Object.keys(SECTION_TYPE).find(k=>SECTION_TYPE[k]===c.type);
         const ai=designConfig.components.indexOf(c);
         const hidden=c.props&&c.props.hidden;
-        const sub=sec==='goods'?((c.props.modules||[]).filter(m=>!m.hidden&&(m.goods||[]).length).length+' 个模块展示中'):'';
+        let sub='';
+        if(sec==='goods'){
+          const m=(c.props.modules||[])[0]||{};
+          sub=(m.goods||[]).length+' 件商品';
+        }
+        const name=sec==='goods'?(c.props.title||'精选推荐'):SECTION_TITLE[sec];
         return `<div class="lay-row" draggable="true" data-idx="${ai}" ondragstart="layDragStart(event,${ai})" ondragover="layDragOver(event,this)" ondrop="layDrop(event,${ai})">
           <div class="lay-grip">⋮⋮</div>
           <div class="lay-icon">${SECTION_ICON[sec]}</div>
           <div class="lay-main">
-            <div class="lay-name">${SECTION_TITLE[sec]}</div>
+            <div class="lay-name">${name}</div>
             <div class="lay-sub">${sub}</div>
           </div>
           <div class="lay-actions">
+            ${sec==='goods'?`<button class="btn sm outline" onclick="openModEditor(${ai})">编辑</button>`:''}
             <span class="lay-status ${hidden?'off':''}">${hidden?'已下架':'在首页'}</span>
-            <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleHomeSection('${sec}',this.checked)"><span class="slider"></span></label>
+            <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleHomeComp(${ai},this.checked)"><span class="slider"></span></label>
           </div>
-        </div>` + (sec==='goods'?renderLayoutMods(c):'');
+        </div>`;
       }).join('');
-    }
-    function renderLayoutMods(c){
-      const ci=designConfig.components.indexOf(c);
-      const mods=c.props.modules||[];
-      if(!mods.length) return '';
-      return `<div class="lay-mods">
-        <p class="lay-mods-hint">「精选推荐」子模块（拖拽排序，可单独上/下架首页）：</p>
-        ${mods.map((m,j)=>`
-          <div class="lay-mod" draggable="true" data-ci="${ci}" data-mj="${j}" ondragstart="layModDragStart(event,${ci},${j})" ondragover="layModDragOver(event,this)" ondrop="layModDrop(event,${ci},${j})">
-            <div class="lay-grip">⋮⋮</div>
-            <div class="lay-mod-main">
-              <div class="lay-mod-name">${m.name||('模块'+(j+1))} ${m.hidden?'<span class="lay-tag-off">已下架</span>':''}</div>
-              <div class="lay-mod-sub">${m.title?('展示：'+m.title+' · '):''}${(m.goods||[]).length} 件商品</div>
-            </div>
-            <div class="lay-mod-actions">
-              <label class="switch sm"><input type="checkbox" ${m.hidden?'':'checked'} onchange="toggleHomeMod(${ci},${j},this.checked)"><span class="slider"></span></label>
-              <button class="btn sm outline" onclick="openModEditor(${j})">编辑</button>
-            </div>
-          </div>`).join('')}
-      </div>`;
     }
     let layDragIdx=null;
     function layDragStart(e,i){layDragIdx=i;e.dataTransfer.effectAllowed='move';}
@@ -2600,20 +2769,7 @@
       arr.splice(layDragIdx,1); arr.splice(i,0,dragComp);
       layDragIdx=null; renderLayout();
     }
-    let layModDrag={ci:null,mj:null};
-    function layModDragStart(e,ci,mj){layModDrag={ci,mj};e.dataTransfer.effectAllowed='move';e.stopPropagation();}
-    function layModDragOver(e,el){e.preventDefault();e.stopPropagation();el.classList.add('drag-over');}
-    function layModDrop(e,ci,mj){
-      e.preventDefault();e.stopPropagation();
-      document.querySelectorAll('#layoutList .lay-mod').forEach(r=>r.classList.remove('drag-over'));
-      if(layModDrag.ci===null)return;
-      const mods=designConfig.components[ci].props.modules;
-      const m=mods[layModDrag.mj]; if(!m)return;
-      mods.splice(layModDrag.mj,1); mods.splice(mj,0,m);
-      layModDrag={ci:null,mj:null}; renderLayout();
-    }
-    function toggleHomeSection(sec,on){const c=getSection(sec);if(c)c.props.hidden=!on;renderLayout();}
-    function toggleHomeMod(ci,mj,on){const m=designConfig.components[ci]&&designConfig.components[ci].props.modules[mj];if(m)m.hidden=!on;renderLayout();}
+    function toggleHomeComp(idx,on){const c=designConfig.components[idx];if(c)c.props.hidden=!on;renderLayout();}
     async function saveLayout(){
       ensureHomeSections();
       const cfg=JSON.parse(JSON.stringify(designConfig));
@@ -2835,12 +2991,7 @@
       renderSectionForm();
     }
     function renderGoodsForm(){
-      const c=upsertSection('goods');
-      if(!c.props.modules||!Array.isArray(c.props.modules)) c.props.modules=defaultRecommendModules();
-      let h=`<div class="form-row">
-        <div class="field"><label>区域标题</label><input value="${c.props.title||''}" oninput="upsertSection('goods').props.title=this.value"></div>
-      </div>`;
-      h+=`<p class="muted" style="margin:2px 0 14px">推荐模块可自由添加、删除、拖拽排序，单独设置名称/标题与商品，方便后期调整首页顺序。</p>`;
+      let h=`<p class="muted" style="margin:2px 0 14px">「精选推荐」下的每个模块都是首页上的独立区块，可在此添加 / 删除 / 拖拽排序，点「编辑」单独设置名称与商品；要调整它们在整个首页中的上下位置，请前往「首页布局」。</p>`;
       h+=`<div id="goodsMods" class="mod-list"></div>`;
       h+=`<button class="btn outline sm" style="margin-top:12px" onclick="addRecommendMod()">+ 添加模块</button>`;
       return h;
@@ -2848,57 +2999,70 @@
     let modDragIdx=null;
     function renderGoodsMods(){
       const wrap=document.getElementById('goodsMods'); if(!wrap)return;
-      const mods=upsertSection('goods').props.modules||[];
-      wrap.innerHTML=mods.map((m,i)=>`
-        <div class="mod-row" draggable="true" data-idx="${i}"
-          ondragstart="modDragStart(event,${i})" ondragover="modDragOver(event)" ondrop="modDrop(event,${i})">
+      const comps=designConfig.components.map((c,i)=>({c,i})).filter(o=>o.c.type==='goods_group');
+      if(!comps.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">暂无推荐模块，点击下方「+ 添加模块」</p>'; return; }
+      wrap.innerHTML=comps.map((o,k)=>{
+        const c=o.c; const idx=o.i; const m=(c.props.modules||[])[0]||{};
+        return `<div class="mod-row" draggable="true" data-idx="${idx}"
+          ondragstart="modDragStart(event,${idx})" ondragover="modDragOver(event)" ondrop="modDrop(event,${idx})">
           <div class="mod-grip">⋮⋮</div>
-          <div class="mod-num">${i+1}</div>
-          <div class="mod-main" onclick="openModEditor(${i})">
-            <div class="mod-name">${m.name||('模块'+(i+1))}</div>
+          <div class="mod-num">${k+1}</div>
+          <div class="mod-main" onclick="openModEditor(${idx})">
+            <div class="mod-name">${c.props.title||('模块'+(k+1))}</div>
             <div class="mod-sub">${m.title?('展示标题：'+m.title+' · '):''}${(m.goods||[]).length} 件商品</div>
           </div>
           <div class="mod-actions">
-            <button class="btn sm outline" onclick="event.stopPropagation();openModEditor(${i})">编辑</button>
-            <button class="btn sm danger" onclick="event.stopPropagation();delRecommendMod(${i})">删除</button>
+            <button class="btn sm outline" onclick="event.stopPropagation();openModEditor(${idx})">编辑</button>
+            <button class="btn sm danger" onclick="event.stopPropagation();delRecommendMod(${idx})">删除</button>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
     }
     function addRecommendMod(){
-      const mods=upsertSection('goods').props.modules;
-      const newId=(mods.length?Math.max(...mods.map(m=>m.id||0)):0)+1;
-      mods.push({id:newId,name:'推荐模块 '+newId,title:'推荐模块 '+newId,goods:[]});
+      const idxs=designConfig.components.map((c,i)=>c.type==='goods_group'?i:-1).filter(i=>i>=0);
+      const lastIdx=idxs.length?idxs[idxs.length-1]:-1;
+      const allIds=designConfig.components.filter(c=>c.type==='goods_group')
+        .reduce((s,c)=>s.concat((c.props.modules||[]).map(m=>m.id||0)),[]);
+      const newId=(allIds.length?Math.max(...allIds):0)+1;
+      const comp={type:'goods_group',props:{title:'推荐模块 '+newId,columns:2,hidden:false,modules:[{id:newId,name:'推荐模块 '+newId,title:'推荐模块 '+newId,goods:[]}]}};
+      if(lastIdx>=0) designConfig.components.splice(lastIdx+1,0,comp);
+      else designConfig.components.push(comp);
       renderGoodsMods();
+      const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
-    function delRecommendMod(i){
-      const mods=upsertSection('goods').props.modules;
-      if(!mods[i])return;
-      if(!confirm('确定删除「'+(mods[i].name||('模块'+(i+1)))+'」吗？'))return;
-      mods.splice(i,1);
+    function delRecommendMod(idx){
+      const c=designConfig.components[idx];
+      if(!c||c.type!=='goods_group')return;
+      if(!confirm('确定删除「'+(c.props.title||'精选推荐')+'」吗？'))return;
+      designConfig.components.splice(idx,1);
       renderGoodsMods();
+      const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
     function modDragStart(e,i){ modDragIdx=i; e.dataTransfer.effectAllowed='move'; }
     function modDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
     function modDrop(e,to){
       e.preventDefault();
       if(modDragIdx===null||modDragIdx===to)return;
-      const mods=upsertSection('goods').props.modules;
-      const t=mods[modDragIdx]; mods.splice(modDragIdx,1); mods.splice(to,0,t); modDragIdx=null;
+      const arr=designConfig.components;
+      const t=arr[modDragIdx]; if(!t)return;
+      arr.splice(modDragIdx,1); arr.splice(to,0,t); modDragIdx=null;
       renderGoodsMods();
     }
 
     let modEditingIdx=0;
     function openModEditor(idx){
-      modEditingIdx=idx||0;
-      const m=(upsertSection('goods').props.modules||[])[modEditingIdx]||{name:'',title:'',goods:[]};
-      document.getElementById('modEditName').value=m.name||'';
+      modEditingIdx=idx;
+      const c=designConfig.components[idx];
+      const m=(c&&c.props&&c.props.modules&&c.props.modules[0])||{name:'',title:'',goods:[]};
+      document.getElementById('modEditName').value=c?c.props.title||'':'';
       document.getElementById('modEditTitle').value=m.title||'';
       document.getElementById('modEditModal').classList.add('show');
       renderModGoods();
     }
+    function curMod(){const c=designConfig.components[modEditingIdx];return c&&c.props&&c.props.modules&&c.props.modules[0];}
     function closeModEditor(){ document.getElementById('modEditModal').classList.remove('show'); }
     function renderModGoods(){
-      const m=(upsertSection('goods').props.modules||[])[modEditingIdx]||{goods:[]};
+      const m=curMod()||{goods:[]};
       const wrap=document.getElementById('modEditGoods');
       const goods=m.goods||[];
       if(!goods.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">尚未选择商品，点击下方「添加商品」</p>'; return; }
@@ -2911,16 +3075,18 @@
         </div>`).join('')+`</div>`;
     }
     function delModGood(i){
-      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      const m=curMod();
       if(!m)return;
       m.goods.splice(i,1);
       renderModGoods(); renderGoodsMods();
     }
     function saveModEdit(){
-      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      const c=designConfig.components[modEditingIdx];
+      const m=curMod();
       if(!m)return;
       m.name=document.getElementById('modEditName').value;
       m.title=document.getElementById('modEditTitle').value;
+      if(c) c.props.title=m.name;
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel');
       if(lp && !lp.classList.contains('hidden')) renderLayout();
@@ -2977,7 +3143,7 @@
       gsPickerPage=1; loadGoodsPicker();
     }
     function confirmGoodsPicker(){
-      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      const m=curMod();
       if(m){
         const exist=new Set((m.goods||[]).map(g=>g.id));
         pickBuffer.forEach(g=>{ if(!exist.has(g.id)){ m.goods=m.goods||[]; m.goods.push(g); } });
@@ -3059,6 +3225,61 @@
       }
       switchBottomNavTab('common');
       renderBottomNavList();
+    }
+
+    /* ===== 基础设置 ===== */
+    let settingsData={};
+    async function loadSettings(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      settingsData=d.data||{};
+      bindSettingsForm();
+    }
+    function syncSeg(radio){
+      const name=radio.name;
+      document.querySelectorAll(`#basePanel input[name="${name}"]`).forEach(r=>{
+        const item=r.closest('.seg-item');
+        if(item) item.classList.toggle('active',r.checked);
+      });
+    }
+    function bindSettingsForm(){
+      const form=document.getElementById('basePanel');
+      if(!form)return;
+      form.querySelectorAll('[data-setting]').forEach(el=>{
+        const k=el.dataset.setting; const v=settingsData[k];
+        if(el.type==='checkbox') el.checked=!!v;
+        else if(el.type==='radio') el.checked=(el.value===String(v));
+        else el.value=(v===undefined||v===null)?'':v;
+      });
+      form.querySelectorAll('input[type=radio]').forEach(r=>{ if(r.checked) syncSeg(r); });
+      const pm=settingsData.pay_methods||['wechat'];
+      document.getElementById('payWechat').checked=pm.indexOf('wechat')>=0;
+      document.getElementById('payAlipay').checked=pm.indexOf('alipay')>=0;
+      switchBaseTab('basic');
+    }
+    async function saveSettings(){
+      const payload={};
+      const form=document.getElementById('basePanel');
+      form.querySelectorAll('[data-setting]').forEach(el=>{
+        const k=el.dataset.setting; let v;
+        if(el.type==='checkbox') v=el.checked;
+        else if(el.type==='radio'){ if(el.checked) v=el.value; else return; }
+        else v=el.value;
+        if(el.dataset.type==='number') v=(v===''?'':Number(v));
+        payload[k]=v;
+      });
+      const pm=[];
+      if(document.getElementById('payWechat').checked) pm.push('wechat');
+      if(document.getElementById('payAlipay').checked) pm.push('alipay');
+      payload.pay_methods=pm;
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      settingsData=d.data||settingsData;
+      toast('已保存');
+    }
+    function switchBaseTab(tab){
+      document.querySelectorAll('.bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
+      document.querySelectorAll('.bs-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==tab));
     }
 
     function switchBottomNavTab(tab){

@@ -257,3 +257,10 @@ CREATE TABLE IF NOT EXISTS page_versions (
   published_at TEXT DEFAULT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_pv_page ON page_versions(page_id);
+
+-- 基础设置（站点/商品/交易/安全）：整份配置以 JSON 存于 config
+CREATE TABLE IF NOT EXISTS store_settings (
+  id          INTEGER PRIMARY KEY,
+  config      TEXT NOT NULL,
+  updated_at  INTEGER NOT NULL DEFAULT 0
+);

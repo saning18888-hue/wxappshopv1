@@ -16,3 +16,17 @@
 }
 .search-ico { font-size: 28rpx; margin-right: 12rpx; color: #999; }
 .search-input { flex: 1; font-size: 28rpx; }
+
+/* 站点打烊全页拦截 */
+.site-closed {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+}
+.site-closed-box {
+  width: 560rpx; background: #fff; border-radius: 20rpx;
+  padding: 56rpx 40rpx; text-align: center;
+}
+.site-closed-ico { font-size: 72rpx; }
+.site-closed-title { font-size: 36rpx; font-weight: 700; margin: 20rpx 0 12rpx; }
+.site-closed-reason { font-size: 26rpx; color: #888; line-height: 1.6; }

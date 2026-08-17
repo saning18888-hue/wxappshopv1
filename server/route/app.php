@@ -33,6 +33,9 @@ Route::group('api/v1', function () {
 
     // 支付（Mock 回调，用于无真实商户号时跑通闭环）
     Route::post('payment/mock_notify', 'api/v1.Payment/mockNotify');
+
+    // 基础设置（小程序端读取）
+    Route::get('settings', 'api/v1.Settings/get');
 });
 
 // 运营后台（本地管理用，简单口令登录，前缀 /admin）
@@ -60,4 +63,8 @@ Route::group('admin', function () {
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');
     Route::post('design/:page/publish', 'admin.Design/publish');
+
+    // 基础设置
+    Route::get('settings', 'admin.Settings/get');
+    Route::post('settings', 'admin.Settings/save');
 });

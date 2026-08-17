@@ -8,11 +8,18 @@
   <view class="detail-info">
     <view class="detail-price">
       <text class="price">¥{{currentSku ? currentSku.price : goods.price}}</text>
-      <text class="detail-market muted">¥{{goods.market_price}}</text>
+      <text wx:if="{{showOriginalPrice}}" class="detail-market muted">¥{{goods.market_price}}</text>
     </view>
     <view class="detail-title">{{goods.title}}</view>
     <view class="detail-sub muted">{{goods.subtitle}}</view>
-    <view class="detail-sales muted">已售 {{goods.sales}} 件</view>
+    <view class="detail-meta">
+      <text wx:if="{{showSales}}" class="muted">已售 {{goods.sales}} 件</text>
+      <text wx:if="{{showStock && currentSku}}" class="muted">库存 {{currentSku.stock}}</text>
+    </view>
+    <view class="detail-actions">
+      <view class="detail-act" bindtap="onService">客服</view>
+      <view class="detail-act" bindtap="onOpenMap">门店</view>
+    </view>
   </view>
 
   <!-- 规格选择 -->
@@ -34,6 +41,11 @@
     <rich-text nodes="{{goods.detail_html}}"></rich-text>
   </view>
 
+  <view wx:if="{{showComment}}" class="comment-block">
+    <view class="spec-name">用户评价</view>
+    <view class="comment-empty muted">暂无评价</view>
+  </view>
+
   <view style="height:120rpx"></view>
 
   <!-- 底部操作栏 -->
@@ -44,8 +56,9 @@
       <text class="qty-btn" bindtap="incQty">+</text>
     </view>
     <view class="bar-btns">
-      <view class="bar-add" bindtap="addCart">加入购物车</view>
-      <view class="bar-buy" bindtap="buyNow">立即购买</view>
+      <view wx:if="{{cartButton}}" class="bar-add" bindtap="addCart">加入购物车</view>
+      <view wx:if="{{buyButton}}" class="bar-buy" bindtap="buyNow">立即购买</view>
+      <view wx:if="{{!cartButton && !buyButton}}" class="bar-buy disabled">暂不可购</view>
     </view>
   </view>
 </view>

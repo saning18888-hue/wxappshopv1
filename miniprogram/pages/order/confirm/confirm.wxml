@@ -1,4 +1,6 @@
 <view class="confirm" wx:if="{{preview}}">
+  <view wx:if="{{buyDenied}}" class="deny-banner">⚠️ {{buyDenied}}</view>
+
   <view class="addr-card">
     <view class="addr-title">收货信息</view>
     <input class="addr-input" placeholder="收货人姓名" data-field="name" value="{{address.name}}" bindinput="onAddressInput" />
@@ -25,6 +27,14 @@
   </view>
 
   <view style="height:120rpx"></view>
+
+  <view wx:if="{{needCaptcha}}" class="captcha-card">
+    <view class="captcha-title">图形验证码（下单验证）</view>
+    <view class="captcha-row">
+      <view class="captcha-code" bindtap="refreshCaptcha">{{captchaCode}}</view>
+      <input class="captcha-input" placeholder="请输入右侧验证码" value="{{captchaInput}}" bindinput="onCaptchaInput" />
+    </view>
+  </view>
 
   <view class="confirm-bar">
     <view class="confirm-pay">应付 <text class="price">¥{{preview.pay_amount}}</text></view>

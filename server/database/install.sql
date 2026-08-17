@@ -257,3 +257,11 @@ CREATE TABLE IF NOT EXISTS `page_versions` (
   PRIMARY KEY (`id`),
   KEY `idx_page` (`page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 基础设置（站点/商品/交易/安全）：整份配置以 JSON 存于 config
+CREATE TABLE IF NOT EXISTS `store_settings` (
+  `id`         INT UNSIGNED NOT NULL DEFAULT 1,
+  `config`     TEXT         NOT NULL,
+  `updated_at` INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
