@@ -911,15 +911,39 @@
         <!-- 基础设置 -->
         <div id="basePanel" class="panel hidden">
           <style>
-            #basePanel .bs-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
-            #basePanel .bs-tab{padding:8px 18px;border-radius:8px;background:#f1f2f4;color:#4b5563;cursor:pointer;font-size:14px;border:1px solid transparent;transition:.15s}
-            #basePanel .bs-tab.active{background:#5e6ad2;color:#fff;border-color:#5e6ad2}
-            #basePanel .bs-pane .row{margin-bottom:16px}
-            #basePanel .bs-pane label.lbl{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:7px}
-            #basePanel .seg label{cursor:pointer}
-            #basePanel .hint{font-size:12px;color:#8a8f98;margin-top:6px}
-            #basePanel .opt-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:#4b5563}
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..600&display=swap');
+            /* ===== Linear 浅色模式设计令牌 ===== */
+            #basePanel{
+              font-family:'Inter Variable',Inter,'SF Pro Display',-apple-system,system-ui,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
+              font-feature-settings:'cv01','ss03';
+              color:#1c1c1f;
+            }
+            #basePanel .sec-title{font-size:20px;font-weight:590;letter-spacing:-0.24px;color:#0f1011}
+            #basePanel .card{background:#ffffff;border:1px solid #e6e6e6;border-radius:12px;padding:24px;box-shadow:rgba(0,0,0,0.03) 0 1px 2px}
+            /* 4 个 Tab：Linear pill 分段导航 */
+            #basePanel .bs-tabs{display:flex;gap:4px;margin-bottom:22px;flex-wrap:wrap;border:1px solid #e6e6e6;border-radius:8px;padding:4px;background:#f7f8f8}
+            #basePanel .bs-tab{padding:7px 16px;border-radius:6px;background:transparent;color:#62666d;cursor:pointer;font-size:14px;font-weight:510;letter-spacing:-0.165px;border:1px solid transparent;transition:.15s}
+            #basePanel .bs-tab:hover{color:#0f1011}
+            #basePanel .bs-tab.active{background:#5e6ad2;color:#ffffff;border-color:#5e6ad2}
+            #basePanel .bs-pane .row{margin-bottom:20px}
+            #basePanel .bs-pane label.lbl{display:block;font-size:13px;font-weight:510;color:#3b3b40;margin-bottom:8px;letter-spacing:-0.13px}
+            /* 输入框：极淡背景 + 聚焦紫环 */
+            #basePanel .lin-input,#basePanel textarea.lin-input{width:100%;box-sizing:border-box;background:#f3f4f5;border:1px solid #e6e6e6;border-radius:6px;padding:10px 12px;font-size:14px;color:#0f1011;font-family:inherit;outline:none;transition:.15s;line-height:1.5}
+            #basePanel .lin-input:focus,#basePanel textarea.lin-input:focus{border-color:#5e6ad2;box-shadow:rgba(94,106,210,0.25) 0 0 0 3px;background:#ffffff}
+            #basePanel .lin-form-row{display:flex;gap:10px}
+            /* 单选分段控件：唯一彩色用于选中态 */
+            #basePanel .seg{display:inline-flex;border:1px solid #e6e6e6;border-radius:8px;overflow:hidden}
+            #basePanel .seg-item{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;font-size:14px;color:#3b3b40;cursor:pointer;background:#ffffff;border-right:1px solid #e6e6e6;transition:.15s;user-select:none}
+            #basePanel .seg-item:last-child{border-right:none}
+            #basePanel .seg-item.active{background:#5e6ad2;color:#ffffff}
+            #basePanel .seg-item input{position:absolute;opacity:0;pointer-events:none}
+            #basePanel .hint{font-size:12px;color:#8a8f98;margin-top:7px;letter-spacing:-0.13px;line-height:1.5}
+            #basePanel .opt-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:4px}
+            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:#3b3b40;cursor:pointer}
+            #basePanel .opt-row input{accent-color:#5e6ad2;width:16px;height:16px}
+            /* 主操作按钮：品牌靛蓝 */
+            #basePanel .btn.primary{background:#5e6ad2;border-color:#5e6ad2;color:#fff}
+            #basePanel .btn.primary:hover{background:#7170ff;border-color:#7170ff}
           </style>
           <div class="sec-toolbar">
             <div class="sec-title"><span class="ic">⚙</span> 基础设置</div>
