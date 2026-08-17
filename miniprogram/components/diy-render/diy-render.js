@@ -9,7 +9,9 @@ Component({
   data: { viewList: [] },
   observers: {
     'components, goodsList, cats'(comps, goods, cats) {
-      const list = (comps || []).map((c) => {
+      const list = (comps || [])
+        .filter((c) => !(c.props && c.props.hidden))
+        .map((c) => {
         if (c.type === 'nav_grid') {
           const cols = (c.props && c.props.columns) || 5;
           return Object.assign({}, c, { colWidth: 100 / cols + '%' });
@@ -17,16 +19,17 @@ Component({
         if (c.type === 'goods_group') {
           const props = c.props || {};
           const columns = props.columns || 2;
-          // 新数据结构：modules 为 9 个推荐模块，每个模块含商品列表
+          // 新数据结构：modules 为推荐模块，每个模块含商品列表
           if (Array.isArray(props.modules)) {
             const modules = props.modules
+              .filter((m) => !m.hidden)
               .map((m) => {
                 const moduleGoods = (m.goods || [])
                   .map((slot) => {
                     const live = (goods || []).find((g) => g.id === slot.id);
                     return Object.assign({}, slot, live || {});
                   })
-                  .filter((g) => g && g.id);
+                  .filter((x) => x && x.id);
                 return Object.assign({}, m, { goods: moduleGoods });
               })
               .filter((m) => (m.goods || []).length);

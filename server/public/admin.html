@@ -426,6 +426,45 @@
     .picker-filter .picker-search-line input{flex:1}
     .picker-filter .picker-search-line .btn{white-space:nowrap}
 
+    /* 首页布局 */
+    .layout-list{display:flex;flex-direction:column;gap:10px}
+    .lay-row{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1px solid #e6e8eb;border-radius:12px;cursor:grab;transition:border-color .12s,box-shadow .12s,background .12s}
+    .lay-row:hover{border-color:#c9ccd4}
+    .lay-row.drag-over{border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12);background:#fafbff}
+    .lay-row:active{cursor:grabbing}
+    .lay-grip{color:#b9bcc4;font-size:16px;line-height:1;letter-spacing:-2px;user-select:none}
+    .lay-icon{width:34px;height:34px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;border-radius:9px;background:#eef0ff;color:#5e6ad2}
+    .lay-icon svg{width:18px;height:18px}
+    .lay-main{flex:1;min-width:0}
+    .lay-name{font-size:14px;font-weight:600;color:var(--text)}
+    .lay-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .lay-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+    .lay-status{font-size:12px;color:#0a8554;font-weight:500}
+    .lay-status.off{color:#9aa0aa}
+    .lay-mods{margin:4px 0 2px 48px;padding:10px 12px;background:#f7f8fa;border:1px dashed #e0e2e8;border-radius:10px}
+    .lay-mods-hint{font-size:12px;color:var(--text-muted);margin:0 0 8px}
+    .lay-mod{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#fff;border:1px solid #e6e8eb;border-radius:9px;margin-bottom:8px;cursor:grab;transition:border-color .12s,box-shadow .12s,background .12s}
+    .lay-mod:last-child{margin-bottom:0}
+    .lay-mod:hover{border-color:#c9ccd4}
+    .lay-mod.drag-over{border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12);background:#fafbff}
+    .lay-mod:active{cursor:grabbing}
+    .lay-mod-main{flex:1;min-width:0}
+    .lay-mod-name{font-size:13px;font-weight:600;color:var(--text)}
+    .lay-mod-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .lay-tag-off{font-size:11px;font-weight:500;color:#9aa0aa;background:#eef0f2;border-radius:5px;padding:1px 6px;margin-left:6px}
+    .lay-mod-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+
+    /* 开关 toggle */
+    .switch{position:relative;display:inline-block;width:40px;height:22px;flex:0 0 auto}
+    .switch.sm{width:34px;height:19px}
+    .switch input{opacity:0;width:0;height:0}
+    .switch .slider{position:absolute;inset:0;background:#cdcfd6;border-radius:999px;transition:background .15s}
+    .switch .slider:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+    .switch.sm .slider:before{width:15px;height:15px}
+    .switch input:checked + .slider{background:#5e6ad2}
+    .switch input:checked + .slider:before{transform:translateX(18px)}
+    .switch.sm input:checked + .slider:before{transform:translateX(15px)}
+
     /* 模块编辑弹窗 */
     .mod-goods-wrap{background:#f7f8fa;border-radius:var(--radius);padding:14px;min-height:80px}
     .mod-goods-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -820,6 +859,21 @@
           </div>
           <div id="secForm"></div>
           <p class="sec-hint" id="secHint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+        </div>
+
+        <!-- 首页布局：拖拽排序 + 显隐 -->
+        <div id="layoutPanel" class="panel hidden">
+          <div class="sec-toolbar">
+            <h3>首页布局</h3>
+            <div class="actions">
+              <button class="btn outline sm" onclick="loadLayout()">刷新</button>
+              <button class="btn green sm" onclick="saveLayout()">保存草稿</button>
+              <button class="btn sm" onclick="publishLayout()">发布上线</button>
+            </div>
+          </div>
+          <p class="muted" style="margin:2px 0 14px">拖拽模块可调整首页从上到下的顺序；通过开关可让指定模块（含「精选推荐」内的各子模块）上架或下架首页。点击子模块「编辑」可单独配置商品与标题。</p>
+          <div id="layoutList" class="layout-list"></div>
+          <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
         <!-- 底部导航设置 -->
@@ -1444,6 +1498,7 @@
       system:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12.22 2h-.44a2 2 0 0 0-2 1.72l-.28 2.1a9.99 9.99 0 0 0-1.93.56l-1.8-1.4a2 2 0 0 0-2.5 0L2.55 5.73a2 2 0 0 0 0 2.5l1.4 1.8a10 10 0 0 0-.56 1.93l-2.1.28A2 2 0 0 0 0 13.78v.44a2 2 0 0 0 1.72 2l2.1.28c.14.66.33 1.3.56 1.93l-1.4 1.8a2 2 0 0 0 0 2.5l1.01 1.01a2 2 0 0 0 2.5 0l1.8-1.4a10 10 0 0 0 1.93.56l.28 2.1a2 2 0 0 0 2 1.72h.44a2 2 0 0 0 2-1.72l.28-2.1a10 10 0 0 0 1.93-.56l1.8 1.4a2 2 0 0 0 2.5 0l1.01-1.01a2 2 0 0 0 0-2.5l-1.4-1.8a10 10 0 0 0 .56-1.93l2.1-.28A2 2 0 0 0 24 14.22v-.44a2 2 0 0 0-1.72-2l-2.1-.28a10 10 0 0 0-.56-1.93l1.4-1.8a2 2 0 0 0 0-2.5l-1.01-1.01a2 2 0 0 0-2.5 0l-1.8 1.4a10 10 0 0 0-1.93-.56l-.28-2.1A2 2 0 0 0 12.22 2Z"/><circle cx="12" cy="12" r="3"/></svg>',
       plugins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
       layout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>',
+      layoutRows:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>',
       store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M9 10h6"/><path d="M9 14h6"/></svg>',
       settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09A1.65 1.65 0 0 0 9 4.6V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>',
       truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
@@ -1493,6 +1548,7 @@
           {key:'nav',label:'魔方导航',icon:ICONS.grid,panel:'sectionPanel'},
           {key:'goods',label:'精选推荐',icon:ICONS.package,panel:'sectionPanel'},
           {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'},
+          {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings},
@@ -1628,6 +1684,7 @@
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='sectionPanel') loadSection();
+      if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
@@ -2463,12 +2520,117 @@
       if(catOptionsCache.length) return;
       try{const r=await fetchA(`${BASE}/categories?page=1&page_size=200`);if(r.code===0)catOptionsCache=r.data.list||[];}catch(e){}
     }
-    async function loadSection(){
+    async function loadDesign(){
       const d=await fetchA(`${BASE}/design/home`);
-      if(d.code!==0){toast(d.msg);return;}
+      if(d.code!==0){toast(d.msg);return false;}
       designConfig=JSON.parse(JSON.stringify(d.data.published_config||{page:'home',components:[]}));
       await ensureCats();
+      return true;
+    }
+    async function loadSection(){
+      if(!(await loadDesign()))return;
       renderSectionForm();
+    }
+    async function loadLayout(){
+      if(!(await loadDesign()))return;
+      renderLayout();
+    }
+    function ensureHomeSections(){
+      ['banner','nav','goods','cat'].forEach(sec=>{
+        if(!getSection(sec)){
+          designConfig.components.push(JSON.parse(JSON.stringify(SECTION_DEFS[sec])));
+        }
+      });
+    }
+    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers};
+    function renderLayout(){
+      ensureHomeSections();
+      const wrap=document.getElementById('layoutList'); if(!wrap)return;
+      const types=Object.values(SECTION_TYPE);
+      const rows=designConfig.components.filter(c=>types.indexOf(c.type)>=0);
+      wrap.innerHTML=rows.map((c,i)=>{
+        const sec=Object.keys(SECTION_TYPE).find(k=>SECTION_TYPE[k]===c.type);
+        const ai=designConfig.components.indexOf(c);
+        const hidden=c.props&&c.props.hidden;
+        const sub=sec==='goods'?((c.props.modules||[]).filter(m=>!m.hidden&&(m.goods||[]).length).length+' 个模块展示中'):'';
+        return `<div class="lay-row" draggable="true" data-idx="${ai}" ondragstart="layDragStart(event,${ai})" ondragover="layDragOver(event,this)" ondrop="layDrop(event,${ai})">
+          <div class="lay-grip">⋮⋮</div>
+          <div class="lay-icon">${SECTION_ICON[sec]}</div>
+          <div class="lay-main">
+            <div class="lay-name">${SECTION_TITLE[sec]}</div>
+            <div class="lay-sub">${sub}</div>
+          </div>
+          <div class="lay-actions">
+            <span class="lay-status ${hidden?'off':''}">${hidden?'已下架':'在首页'}</span>
+            <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleHomeSection('${sec}',this.checked)"><span class="slider"></span></label>
+          </div>
+        </div>` + (sec==='goods'?renderLayoutMods(c):'');
+      }).join('');
+    }
+    function renderLayoutMods(c){
+      const ci=designConfig.components.indexOf(c);
+      const mods=c.props.modules||[];
+      if(!mods.length) return '';
+      return `<div class="lay-mods">
+        <p class="lay-mods-hint">「精选推荐」子模块（拖拽排序，可单独上/下架首页）：</p>
+        ${mods.map((m,j)=>`
+          <div class="lay-mod" draggable="true" data-ci="${ci}" data-mj="${j}" ondragstart="layModDragStart(event,${ci},${j})" ondragover="layModDragOver(event,this)" ondrop="layModDrop(event,${ci},${j})">
+            <div class="lay-grip">⋮⋮</div>
+            <div class="lay-mod-main">
+              <div class="lay-mod-name">${m.name||('模块'+(j+1))} ${m.hidden?'<span class="lay-tag-off">已下架</span>':''}</div>
+              <div class="lay-mod-sub">${m.title?('展示：'+m.title+' · '):''}${(m.goods||[]).length} 件商品</div>
+            </div>
+            <div class="lay-mod-actions">
+              <label class="switch sm"><input type="checkbox" ${m.hidden?'':'checked'} onchange="toggleHomeMod(${ci},${j},this.checked)"><span class="slider"></span></label>
+              <button class="btn sm outline" onclick="openModEditor(${j})">编辑</button>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    }
+    let layDragIdx=null;
+    function layDragStart(e,i){layDragIdx=i;e.dataTransfer.effectAllowed='move';}
+    function layDragOver(e,el){e.preventDefault();el.classList.add('drag-over');}
+    function layDrop(e,i){
+      e.preventDefault();
+      const rows=document.querySelectorAll('#layoutList .lay-row');
+      rows.forEach(r=>r.classList.remove('drag-over'));
+      if(layDragIdx===null||layDragIdx===i)return;
+      const arr=designConfig.components;
+      const dragComp=arr[layDragIdx]; if(!dragComp)return;
+      arr.splice(layDragIdx,1); arr.splice(i,0,dragComp);
+      layDragIdx=null; renderLayout();
+    }
+    let layModDrag={ci:null,mj:null};
+    function layModDragStart(e,ci,mj){layModDrag={ci,mj};e.dataTransfer.effectAllowed='move';e.stopPropagation();}
+    function layModDragOver(e,el){e.preventDefault();e.stopPropagation();el.classList.add('drag-over');}
+    function layModDrop(e,ci,mj){
+      e.preventDefault();e.stopPropagation();
+      document.querySelectorAll('#layoutList .lay-mod').forEach(r=>r.classList.remove('drag-over'));
+      if(layModDrag.ci===null)return;
+      const mods=designConfig.components[ci].props.modules;
+      const m=mods[layModDrag.mj]; if(!m)return;
+      mods.splice(layModDrag.mj,1); mods.splice(mj,0,m);
+      layModDrag={ci:null,mj:null}; renderLayout();
+    }
+    function toggleHomeSection(sec,on){const c=getSection(sec);if(c)c.props.hidden=!on;renderLayout();}
+    function toggleHomeMod(ci,mj,on){const m=designConfig.components[ci]&&designConfig.components[ci].props.modules[mj];if(m)m.hidden=!on;renderLayout();}
+    async function saveLayout(){
+      ensureHomeSections();
+      const cfg=JSON.parse(JSON.stringify(designConfig));
+      cfg.page='home';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const d=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:cfg,remark:'首页布局调整'}});
+      toast(d.code===0?'草稿保存成功':(d.msg||'保存失败'));
+    }
+    async function publishLayout(){
+      ensureHomeSections();
+      const cfg=JSON.parse(JSON.stringify(designConfig));
+      cfg.page='home';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const r=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:cfg,remark:'首页布局调整'}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功':(p.msg||'发布失败'));
     }
     function renderSectionForm(){
       const sec=state.section;
@@ -2760,6 +2922,8 @@
       m.name=document.getElementById('modEditName').value;
       m.title=document.getElementById('modEditTitle').value;
       renderGoodsMods();
+      const lp=document.getElementById('layoutPanel');
+      if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
     function addModGoods(){ openGoodsPicker(); }
 
