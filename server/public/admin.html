@@ -156,6 +156,7 @@
     /* Modal */
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100}
     .modal.show{display:flex}
+    #goodsPickerModal{z-index:110}
     .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md);font-size:14px;line-height:1.5}
     .modal-card.lg{width:860px}
     .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
@@ -404,6 +405,49 @@
     .nav-item-preview.add .icon-wrap{background:transparent}
     .nav-item-preview.add .icon-wrap svg{width:24px;height:24px;color:currentColor}
 
+    /* 精选推荐 · 推荐模块列表 */
+    .mod-list{display:flex;flex-direction:column;gap:10px}
+    .mod-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;cursor:default;transition:all .15s}
+    .mod-row:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+    .mod-row.dragging{opacity:.5}
+    .mod-grip{color:#c5c9d0;font-size:18px;cursor:grab;letter-spacing:-2px;user-select:none}
+    .mod-num{width:22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+    .mod-main{flex:1;min-width:0;cursor:pointer}
+    .mod-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mod-sub{font-size:12px;color:var(--text-secondary);margin-top:2px}
+    .mod-actions{flex:0 0 auto;display:flex;gap:8px;align-items:center}
+
+    .picker-filter{display:flex;gap:16px;align-items:flex-end;margin-bottom:14px}
+    .picker-filter .field{flex:1;margin-bottom:0}
+    .picker-filter .field select,.picker-filter .field input,.picker-filter .field .btn{height:36px;box-sizing:border-box}
+    .picker-filter .picker-search-field{flex:1.4;display:flex;align-items:center;gap:10px}
+    .picker-filter .picker-search-field label{margin-bottom:0;white-space:nowrap}
+    .picker-filter .picker-search-line{flex:1;display:flex;gap:8px}
+    .picker-filter .picker-search-line input{flex:1}
+    .picker-filter .picker-search-line .btn{white-space:nowrap}
+
+    /* 模块编辑弹窗 */
+    .mod-goods-wrap{background:#f7f8fa;border-radius:var(--radius);padding:14px;min-height:80px}
+    .mod-goods-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .mod-good{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px;overflow:hidden}
+    .mod-good img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;background:#f2f3f5}
+    .mod-good .mg-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:#ff4d4f;color:#fff;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;line-height:1}
+    .mod-good .mg-title{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;margin-top:6px}
+    .mod-good .mg-price{font-size:12px;color:var(--primary);font-weight:600;margin-top:2px}
+
+    /* 商品选择弹窗（多选） */
+    .goods-picker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .goods-picker-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;cursor:pointer;transition:all .15s;text-align:center}
+    .goods-picker-card:hover{border-color:var(--primary);box-shadow:var(--shadow);transform:translateY(-2px)}
+    .goods-picker-card.picked{border-color:var(--primary);box-shadow:0 0 0 2px rgba(94,106,210,.25)}
+    .goods-picker-card.picked::after{content:'✓';position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--primary);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+    .goods-picker-card .gpc-img{width:100%;aspect-ratio:1/1;border-radius:8px;background:#f7f8fa;overflow:hidden;margin-bottom:8px;display:flex;align-items:center;justify-content:center}
+    .goods-picker-card .gpc-img img{width:100%;height:100%;object-fit:cover}
+    .goods-picker-card .gpc-title{font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+    .goods-picker-card .gpc-price{font-size:12px;color:var(--primary);font-weight:600;margin-top:4px}
+    @media(max-width:900px){.goods-picker-grid{grid-template-columns:repeat(3,1fr)}.mod-goods-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:600px){.goods-picker-grid{grid-template-columns:repeat(2,1fr)}.mod-goods-grid{grid-template-columns:repeat(2,1fr)}}
+
     /* Linear-style config row: segmented control */
     .nav-cfg-row{display:flex;gap:32px;align-items:flex-end;margin-bottom:18px;flex-wrap:wrap}
     .nav-cfg-field{display:flex;flex-direction:column;min-width:120px}
@@ -449,6 +493,18 @@
     .lin-input::placeholder{color:#adb3bc}
     .lin-form-row{display:flex;gap:16px}
     .lin-form-row>.field{flex:1;margin-bottom:0}
+
+    .cat-form-row{align-items:flex-end;margin-bottom:14px}
+    .cat-form-row .lin-input,.cat-form-row .seg{height:38px;box-sizing:border-box}
+    .cat-form-row .seg{display:flex;align-items:stretch;width:100%}
+    .cat-form-row .seg-item{padding-left:12px;padding-right:12px;display:flex;align-items:center;justify-content:center}
+    .cat-source-field{flex:0 0 220px}
+    .cat-ids-field{margin-top:6px}
+    .lin-multi-select{width:100%;min-height:140px;padding:8px 10px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px;outline:none;font-size:13px;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;transition:border-color .12s,background .12s,box-shadow .12s}
+    .lin-multi-select:focus{background:#fff;border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .lin-multi-select option{padding:7px 6px;border-radius:5px;margin-bottom:1px}
+    .lin-multi-select option:checked{background:#5e6ad2;color:#fff}
+    .lin-multi-select option:hover{background:#eef0ff}
 
     /* Linear-style media preview / upload */
     .lin-media-preview{flex:0 0 140px;height:92px;border-radius:10px;overflow:hidden;background:#f2f3f5;border:1px solid #e6e8eb;display:flex;align-items:center;justify-content:center;position:relative}
@@ -1323,6 +1379,54 @@
     </div>
   </div>
 
+  <!-- 精选推荐 · 商品多选弹窗 -->
+  <div id="goodsPickerModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>选择商品（可多选）</h3><span class="close" onclick="closeGoodsPicker()">&times;</span></div>
+      <div class="modal-body">
+        <div class="picker-filter">
+          <div class="field">
+            <label>商品分类</label>
+            <select id="goodsPickerCat" onchange="onGoodsPickerCat()"></select>
+          </div>
+          <div class="field picker-search-field">
+            <label>搜索</label>
+            <div class="picker-search-line">
+              <input id="goodsPickerKw" placeholder="商品名称" onkeydown="if(event.key==='Enter')onGoodsPickerSearch()">
+              <button class="btn sm" onclick="onGoodsPickerSearch()">搜索</button>
+            </div>
+          </div>
+        </div>
+        <div id="goodsPickerList"></div>
+        <div id="goodsPickerPager" style="display:flex;justify-content:center;align-items:center;gap:10px;margin-top:16px"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeGoodsPicker()">取消</button>
+        <button class="btn" onclick="confirmGoodsPicker()">确定添加（<span id="pickCount">0</span>）</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 精选推荐 · 模块编辑弹窗 -->
+  <div id="modEditModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>编辑推荐模块</h3><span class="close" onclick="closeModEditor()">&times;</span></div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field"><label>模块名称（后台标识）</label><input id="modEditName" placeholder="如：新人专享"></div>
+          <div class="field"><label>展示标题（用户可见）</label><input id="modEditTitle" placeholder="如：新人 1 元购"></div>
+        </div>
+        <p class="muted" style="margin:6px 0 12px">该模块下的商品将依次展示在首页此区块中。</p>
+        <div id="modEditGoods" class="mod-goods-wrap"></div>
+        <button class="btn outline sm" style="margin-top:12px" onclick="addModGoods()">+ 添加商品</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeModEditor()">取消</button>
+        <button class="btn" onclick="saveModEdit();closeModEditor()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -1387,7 +1491,7 @@
         {key:'templates',label:'我的模板',icon:ICONS.layout,children:[
           {key:'banner',label:'轮播设置',icon:ICONS.image,panel:'sectionPanel',default:true},
           {key:'nav',label:'魔方导航',icon:ICONS.grid,panel:'sectionPanel'},
-          {key:'goods',label:'精选好物',icon:ICONS.package,panel:'sectionPanel'},
+          {key:'goods',label:'精选推荐',icon:ICONS.package,panel:'sectionPanel'},
           {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
@@ -2327,7 +2431,14 @@
     let catOptionsCache=[];
 
     const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav'};
-    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选好物',cat:'分类导航'};
+    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航'};
+    function defaultRecommendModules(){
+      const arr=[];
+      for(let i=1;i<=4;i++){
+        arr.push({id:i,name:'推荐模块 '+i,title:'推荐模块 '+i,goods:[]});
+      }
+      return arr;
+    }
     const SECTION_DEFS={
       banner:{type:'banner',props:{interval:4,items:[
         {type:'image',image:'https://placehold.co/750x320/5e6ad2/fff?text=Banner1',video:'',link:{type:'goods',id:1}},
@@ -2338,7 +2449,7 @@
         {icon:'https://placehold.co/96x96/00B86B/fff?text=秒',text:'秒杀',link:{type:'activity',id:2}},
         {icon:'https://placehold.co/96x96/3867FF/fff?text=拼',text:'拼团',link:{type:'activity',id:3}}
       ]}},
-      goods:{type:'goods_group',props:{title:'精选好物',source:'recommend',category_id:0,columns:2,show_count:4}},
+      goods:{type:'goods_group',props:{title:'精选推荐',columns:2,modules:defaultRecommendModules()}},
       cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}}
     };
 
@@ -2370,7 +2481,7 @@
         : '该模块尚未添加：编辑下方内容并点「保存草稿」即可创建并生效。';
       if(sec==='banner') form.innerHTML=renderBannerForm();
       else if(sec==='nav') form.innerHTML=renderNavForm();
-      else if(sec==='goods') form.innerHTML=renderGoodsForm();
+      else if(sec==='goods'){ form.innerHTML=renderGoodsForm(); renderGoodsMods(); }
       else if(sec==='cat') form.innerHTML=renderCatForm();
     }
     function linkOpts(link){
@@ -2563,35 +2674,172 @@
     }
     function renderGoodsForm(){
       const c=upsertSection('goods');
-      const catOpts=catOptionsCache.map(o=>`<option value="${o.id}" ${(c.props.category_id==o.id)?'selected':''}>${o.name}</option>`).join('');
+      if(!c.props.modules||!Array.isArray(c.props.modules)) c.props.modules=defaultRecommendModules();
       let h=`<div class="form-row">
-        <div class="field"><label>标题</label><input value="${c.props.title||''}" oninput="upsertSection('goods').props.title=this.value"></div>
-        <div class="field"><label>来源</label><select onchange="updGoodsSource(this.value)">${['recommend','category'].map(s=>`<option value="${s}" ${c.props.source===s?'selected':''}>${s==='recommend'?'智能推荐':'指定分类'}</option>`).join('')}</select></div>
+        <div class="field"><label>区域标题</label><input value="${c.props.title||''}" oninput="upsertSection('goods').props.title=this.value"></div>
       </div>`;
-      if(c.props.source==='category'){
-        h+=`<div class="form-row"><div class="field"><label>选择分类</label><select onchange="upsertSection('goods').props.category_id=parseInt(this.value)||0">${catOpts}</select></div></div>`;
-      }
-      h+=`<div class="form-row">
-        <div class="field"><label>每行数量</label><input type="number" value="${c.props.columns||2}" oninput="upsertSection('goods').props.columns=parseInt(this.value)||2"></div>
-        <div class="field"><label>展示数量</label><input type="number" value="${c.props.show_count||4}" oninput="upsertSection('goods').props.show_count=parseInt(this.value)||4"></div>
-      </div>`;
+      h+=`<p class="muted" style="margin:2px 0 14px">推荐模块可自由添加、删除、拖拽排序，单独设置名称/标题与商品，方便后期调整首页顺序。</p>`;
+      h+=`<div id="goodsMods" class="mod-list"></div>`;
+      h+=`<button class="btn outline sm" style="margin-top:12px" onclick="addRecommendMod()">+ 添加模块</button>`;
       return h;
     }
-    function updGoodsSource(v){
-      const c=upsertSection('goods');c.props.source=v;
-      if(v==='category'&&!c.props.category_id&&catOptionsCache[0])c.props.category_id=catOptionsCache[0].id;
-      renderSectionForm();
+    let modDragIdx=null;
+    function renderGoodsMods(){
+      const wrap=document.getElementById('goodsMods'); if(!wrap)return;
+      const mods=upsertSection('goods').props.modules||[];
+      wrap.innerHTML=mods.map((m,i)=>`
+        <div class="mod-row" draggable="true" data-idx="${i}"
+          ondragstart="modDragStart(event,${i})" ondragover="modDragOver(event)" ondrop="modDrop(event,${i})">
+          <div class="mod-grip">⋮⋮</div>
+          <div class="mod-num">${i+1}</div>
+          <div class="mod-main" onclick="openModEditor(${i})">
+            <div class="mod-name">${m.name||('模块'+(i+1))}</div>
+            <div class="mod-sub">${m.title?('展示标题：'+m.title+' · '):''}${(m.goods||[]).length} 件商品</div>
+          </div>
+          <div class="mod-actions">
+            <button class="btn sm outline" onclick="event.stopPropagation();openModEditor(${i})">编辑</button>
+            <button class="btn sm danger" onclick="event.stopPropagation();delRecommendMod(${i})">删除</button>
+          </div>
+        </div>`).join('');
+    }
+    function addRecommendMod(){
+      const mods=upsertSection('goods').props.modules;
+      const newId=(mods.length?Math.max(...mods.map(m=>m.id||0)):0)+1;
+      mods.push({id:newId,name:'推荐模块 '+newId,title:'推荐模块 '+newId,goods:[]});
+      renderGoodsMods();
+    }
+    function delRecommendMod(i){
+      const mods=upsertSection('goods').props.modules;
+      if(!mods[i])return;
+      if(!confirm('确定删除「'+(mods[i].name||('模块'+(i+1)))+'」吗？'))return;
+      mods.splice(i,1);
+      renderGoodsMods();
+    }
+    function modDragStart(e,i){ modDragIdx=i; e.dataTransfer.effectAllowed='move'; }
+    function modDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; }
+    function modDrop(e,to){
+      e.preventDefault();
+      if(modDragIdx===null||modDragIdx===to)return;
+      const mods=upsertSection('goods').props.modules;
+      const t=mods[modDragIdx]; mods.splice(modDragIdx,1); mods.splice(to,0,t); modDragIdx=null;
+      renderGoodsMods();
+    }
+
+    let modEditingIdx=0;
+    function openModEditor(idx){
+      modEditingIdx=idx||0;
+      const m=(upsertSection('goods').props.modules||[])[modEditingIdx]||{name:'',title:'',goods:[]};
+      document.getElementById('modEditName').value=m.name||'';
+      document.getElementById('modEditTitle').value=m.title||'';
+      document.getElementById('modEditModal').classList.add('show');
+      renderModGoods();
+    }
+    function closeModEditor(){ document.getElementById('modEditModal').classList.remove('show'); }
+    function renderModGoods(){
+      const m=(upsertSection('goods').props.modules||[])[modEditingIdx]||{goods:[]};
+      const wrap=document.getElementById('modEditGoods');
+      const goods=m.goods||[];
+      if(!goods.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">尚未选择商品，点击下方「添加商品」</p>'; return; }
+      wrap.innerHTML=`<div class="mod-goods-grid">`+goods.map((g,i)=>`
+        <div class="mod-good">
+          <img src="${g.cover||''}" onerror="this.style.display='none'" alt="">
+          <span class="mg-del" onclick="delModGood(${i})" title="移除">&times;</span>
+          <div class="mg-title">${g.title||'未命名'}</div>
+          <div class="mg-price">${fmtMoney(g.price||0)}</div>
+        </div>`).join('')+`</div>`;
+    }
+    function delModGood(i){
+      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      if(!m)return;
+      m.goods.splice(i,1);
+      renderModGoods(); renderGoodsMods();
+    }
+    function saveModEdit(){
+      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      if(!m)return;
+      m.name=document.getElementById('modEditName').value;
+      m.title=document.getElementById('modEditTitle').value;
+      renderGoodsMods();
+    }
+    function addModGoods(){ openGoodsPicker(); }
+
+    /* 商品多选弹窗 */
+    let gsPickerPage=1, gsPickerKw='', gsPickerCat=0, pickBuffer=[];
+    function openGoodsPicker(){
+      pickBuffer=[];
+      document.getElementById('goodsPickerModal').classList.add('show');
+      document.getElementById('goodsPickerKw').value='';
+      const catSel=document.getElementById('goodsPickerCat');
+      catSel.innerHTML='<option value="0">全部分类</option>'+catOptionsCache.map(o=>`<option value="${o.id}">${o.name}</option>`).join('');
+      catSel.value='0';
+      gsPickerPage=1; gsPickerKw=''; gsPickerCat=0;
+      loadGoodsPicker();
+    }
+    function closeGoodsPicker(){ document.getElementById('goodsPickerModal').classList.remove('show'); }
+    function loadGoodsPicker(){
+      const q=`?category_id=${gsPickerCat}&keyword=${encodeURIComponent(gsPickerKw)}&page=${gsPickerPage}&page_size=8`;
+      fetchA(`${BASE}/goods${q}`).then(d=>{
+        if(d.code!==0){toast(d.msg);return;}
+        const list=d.data.list||[];
+        const wrap=document.getElementById('goodsPickerList');
+        if(!list.length){wrap.innerHTML='<p class="muted" style="padding:20px 0;text-align:center">暂无商品</p>';}
+        else{
+          wrap.innerHTML=`<div class="goods-picker-grid">`+list.map(g=>`
+            <div class="goods-picker-card ${(pickBuffer.find(x=>x.id===g.id)?'picked':'')}" onclick="togglePickGoods(${g.id},'${(g.title||'').replace(/'/g,'\\\'')}','${(g.cover||'').replace(/'/g,'\\\'')}',${g.price||0})">
+              <div class="gpc-img"><img src="${g.cover||''}" onerror="this.style.display='none'" alt=""></div>
+              <div class="gpc-title">${g.title||'未命名'}</div>
+              <div class="gpc-price">${fmtMoney(g.price||0)}</div>
+            </div>`).join('')+`</div>`;
+        }
+        const p=d.data.pagination||{};
+        document.getElementById('goodsPickerPager').innerHTML=`
+          <button class="btn sm" ${gsPickerPage<=1?'disabled':''} onclick="gsPickerPage--;loadGoodsPicker()">上一页</button>
+          <span style="font-size:12px;color:#888">第 ${p.page||gsPickerPage} / ${p.last_page||1} 页 · 已选 ${pickBuffer.length}</span>
+          <button class="btn sm" ${gsPickerPage>=(p.last_page||1)?'disabled':''} onclick="gsPickerPage++;loadGoodsPicker()">下一页</button>`;
+        const pc=document.getElementById('pickCount'); if(pc)pc.textContent=pickBuffer.length;
+      });
+    }
+    function togglePickGoods(id,title,cover,price){
+      const i=pickBuffer.findIndex(x=>x.id===id);
+      if(i>=0)pickBuffer.splice(i,1); else pickBuffer.push({id,title,cover,price});
+      loadGoodsPicker();
+    }
+    function onGoodsPickerSearch(){
+      gsPickerKw=document.getElementById('goodsPickerKw').value.trim();
+      gsPickerPage=1; loadGoodsPicker();
+    }
+    function onGoodsPickerCat(){
+      gsPickerCat=document.getElementById('goodsPickerCat').value;
+      gsPickerPage=1; loadGoodsPicker();
+    }
+    function confirmGoodsPicker(){
+      const m=(upsertSection('goods').props.modules||[])[modEditingIdx];
+      if(m){
+        const exist=new Set((m.goods||[]).map(g=>g.id));
+        pickBuffer.forEach(g=>{ if(!exist.has(g.id)){ m.goods=m.goods||[]; m.goods.push(g); } });
+      }
+      renderModGoods(); renderGoodsMods(); closeGoodsPicker();
     }
     function renderCatForm(){
       const c=upsertSection('cat');
       const catOpts=catOptionsCache.map(o=>`<option value="${o.id}" ${(c.props.category_ids||[]).indexOf(o.id)>=0?'selected':''}>${o.name}</option>`).join('');
-      let h=`<div class="form-row">
-        <div class="field"><label>标题</label><input value="${c.props.title||''}" oninput="upsertSection('cat').props.title=this.value"></div>
-        <div class="field"><label>每行列数</label><input type="number" value="${c.props.columns||4}" oninput="upsertSection('cat').props.columns=parseInt(this.value)||4"></div>
-        <div class="field"><label>来源</label><select onchange="updCatSource(this.value)">${['all','ids'].map(s=>`<option value="${s}" ${c.props.source===s?'selected':''}>${s==='all'?'全部分类':'指定分类'}</option>`).join('')}</select></div>
+      const src=c.props.source||'all';
+      let h=`<div class="lin-form-row cat-form-row">
+        <div class="field"><label class="lin-label">标题</label><input class="lin-input" value="${c.props.title||''}" oninput="upsertSection('cat').props.title=this.value" placeholder="商品分类"></div>
+        <div class="field"><label class="lin-label">每行列数</label><input class="lin-input" type="number" min="1" max="8" value="${c.props.columns||4}" oninput="upsertSection('cat').props.columns=parseInt(this.value)||4"></div>
+        <div class="field cat-source-field">
+          <label class="lin-label">来源</label>
+          <div class="seg">
+            <button type="button" class="seg-item ${src==='all'?'active':''}" onclick="updCatSource('all')">全部分类</button>
+            <button type="button" class="seg-item ${src==='ids'?'active':''}" onclick="updCatSource('ids')">指定分类</button>
+          </div>
+        </div>
       </div>`;
-      if(c.props.source==='ids'){
-        h+=`<div class="field"><label>选择分类（可多选，Ctrl 多选）</label><select multiple style="height:140px" onchange="updCatIds(this)">${catOpts}</select></div>`;
+      if(src==='ids'){
+        h+=`<div class="cat-ids-field">
+          <label class="lin-label">选择分类（可多选，Ctrl / ⌘ 多选）</label>
+          <select class="lin-multi-select" multiple onchange="updCatIds(this)">${catOpts}</select>
+        </div>`;
       }
       return h;
     }

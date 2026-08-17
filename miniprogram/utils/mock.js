@@ -74,7 +74,7 @@ const defaultHome = {
       { icon: 'https://placehold.co/96x96/4A90E2/fff?text=秒', text: '秒杀', link: { type: 'activity', id: 2 } },
       { icon: 'https://placehold.co/96x96/9B59B6/fff?text=更', text: '更多', link: { type: 'category', id: 3 } },
     ] } },
-    { type: 'goods_group', sort: 3, props: { title: '精选好物', source: 'recommend', columns: 2, show_count: 4 } },
+    { type: 'goods_group', sort: 3, props: { title: '精选推荐', columns: 2, modules: Array.from({ length: 4 }, (_, i) => ({ id: i + 1, name: '推荐模块 ' + (i + 1), title: '推荐模块 ' + (i + 1), goods: [1, 2, 3, 4].map(g => ({ id: g, title: '商品 ' + g, cover: 'https://placehold.co/200x200/5e6ad2/fff?text=P' + g, price: 99 + g })) })) } },
     { type: 'category_nav', sort: 4, props: { title: '商品分类', columns: 4, source: 'all', category_ids: [] } },
   ],
 };

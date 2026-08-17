@@ -19,15 +19,18 @@
       </view>
     </view>
 
-    <!-- 商品组 -->
+    <!-- 精选推荐 / 推荐模块 -->
     <view wx:if="{{c.type === 'goods_group'}}" class="diy-goods">
       <view class="diy-goods-title" wx:if="{{c.props.title}}">{{c.props.title}}</view>
-      <view class="diy-goods-grid">
-        <view class="diy-goods-item" wx:for="{{c.items}}" wx:for-item="g" wx:key="id"
-          data-id="{{g.id}}" bindtap="onTapGoods">
-          <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
-          <view class="diy-goods-name">{{g.title}}</view>
-          <view class="diy-goods-price price">¥{{g.price}}<text class="price-symbol"></text></view>
+      <view class="diy-mod" wx:for="{{c.modules}}" wx:for-item="m" wx:key="id">
+        <view class="diy-mod-title" wx:if="{{m.title}}">{{m.title}}</view>
+        <view class="diy-goods-grid">
+          <view class="diy-goods-item" wx:for="{{m.goods}}" wx:for-item="g" wx:key="id"
+            style="width:{{c.colWidth}}" data-id="{{g.id}}" bindtap="onTapGoods">
+            <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
+            <view class="diy-goods-name">{{g.title}}</view>
+            <view class="diy-goods-price">¥{{g.price}}</view>
+          </view>
         </view>
       </view>
     </view>

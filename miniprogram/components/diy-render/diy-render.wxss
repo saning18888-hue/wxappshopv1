@@ -69,18 +69,42 @@
   padding: 8rpx 6rpx 18rpx;
   letter-spacing: -0.4rpx;
 }
+.diy-mod {
+  padding: 14rpx 0;
+  border-top: 1rpx solid #f0f1f3;
+}
+.diy-mod:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.diy-mod-title {
+  font-size: 27rpx;
+  font-weight: 600;
+  color: #374151;
+  padding: 4rpx 6rpx 12rpx;
+  position: relative;
+}
+.diy-mod-title::before {
+  content: '';
+  display: inline-block;
+  width: 6rpx;
+  height: 24rpx;
+  background: #5e6ad2;
+  border-radius: 4rpx;
+  margin-right: 12rpx;
+  vertical-align: -4rpx;
+}
 .diy-goods-grid {
   display: flex;
   flex-wrap: wrap;
 }
 .diy-goods-item {
-  width: 50%;
   padding: 10rpx;
   box-sizing: border-box;
 }
 .diy-goods-cover {
   width: 100%;
-  height: 300rpx;
+  height: 220rpx;
   border-radius: 16rpx;
   background: #f2f3f5;
   box-shadow: inset 0 0 0 1rpx rgba(17, 24, 39, 0.03);

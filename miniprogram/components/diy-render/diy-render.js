@@ -15,12 +15,30 @@ Component({
           return Object.assign({}, c, { colWidth: 100 / cols + '%' });
         }
         if (c.type === 'goods_group') {
-          const show = (c.props && c.props.show_count) || 4;
-          let items = (goods || []).slice(0, show);
-          if (c.props && c.props.source === 'category' && c.props.category_id) {
-            items = (goods || []).filter((g) => g.category_id === Number(c.props.category_id)).slice(0, show);
+          const props = c.props || {};
+          const columns = props.columns || 2;
+          // 新数据结构：modules 为 9 个推荐模块，每个模块含商品列表
+          if (Array.isArray(props.modules)) {
+            const modules = props.modules
+              .map((m) => {
+                const moduleGoods = (m.goods || [])
+                  .map((slot) => {
+                    const live = (goods || []).find((g) => g.id === slot.id);
+                    return Object.assign({}, slot, live || {});
+                  })
+                  .filter((g) => g && g.id);
+                return Object.assign({}, m, { goods: moduleGoods });
+              })
+              .filter((m) => (m.goods || []).length);
+            return Object.assign({}, c, { modules, colWidth: 100 / columns + '%' });
           }
-          return Object.assign({}, c, { items });
+          // 兼容旧数据
+          const show = props.show_count || 4;
+          let items = (goods || []).slice(0, show);
+          if (props.source === 'category' && props.category_id) {
+            items = (goods || []).filter((g) => g.category_id === Number(props.category_id)).slice(0, show);
+          }
+          return Object.assign({}, c, { items, colWidth: 100 / columns + '%' });
         }
         if (c.type === 'category_nav') {
           let catList = cats || [];

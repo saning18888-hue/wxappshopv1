@@ -55,6 +55,40 @@ php think run -H 127.0.0.1 -p 8787                                       # 启�
 
 ## 版本记录（最新在上）
 
+### v0.1.13 · 2026-08-17 · 「分类导航」配置表单设计统一为 Linear 风格
+**范围**：运营后台 `server/public/admin.html`。
+
+**改动**
+- 分类导航的「标题 / 每行列数 / 来源」改为 Linear 风格行内表单控件，三个字段底部对齐、等高。
+- 来源由原生下拉改为分段控制器（Segmented Control）：「全部分类 / 指定分类」，与 Banner、入口图标等区域的风格统一。
+- 标题和每行列数使用 `.lin-input`，指定分类多选使用统一样式的 `.lin-multi-select`。
+
+### v0.1.12 · 2026-08-17 · 精选推荐弹窗层级修复 + 模块可自由增删
+**范围**：运营后台 `server/public/admin.html`、后端 `server/app/service/PageService.php`、种子 `server/database/migrate_design.php`、小程序 `miniprogram/utils/mock.js`。
+
+**改动**
+- 修复「精选推荐」内点「添加商品」时，商品选择弹窗被模块编辑弹窗遮挡的问题（`#goodsPickerModal` 层级提升至 110，置于所有模块弹窗之上）。
+- 商品选择弹窗筛选区重排：分类下拉、搜索输入框、搜索按钮等高（36px），「搜索」标签与输入框/按钮同一行不再换行。
+- 推荐模块取消固定 9 个限制：默认改为 4 个，模块列表每项新增「删除」按钮；底部新增「+ 添加模块」按钮（自动递增 `id`），拖拽排序/编辑/保存逻辑保持不变。
+
+### v0.1.11 · 2026-08-17 · 「精选推荐」重构为「9 个推荐模块」（每模块独立名称/标题/商品）
+**范围**：运营后台 `server/public/admin.html`、后端 `server/app/service/PageService.php`、种子 `server/database/migrate_design.php`、小程序 `miniprogram/utils/mock.js`、`miniprogram/components/diy-render/*`。
+
+**改动**
+- 数据结构由「9 个商品卡位」改为「9 个推荐模块」：`props.modules = [{id,name,title,goods:[{id,title,cover,price}]}]`。
+- 后台「精选推荐」表单变为 9 个模块行，可拖拽排序、点击「编辑」弹出模块编辑窗：设置模块名称（后台标识）、展示标题（用户可见）、从该模块内多次「添加商品」多选加入；已选商品可单独移除。
+- 小程序端：`goods_group` 渲染为「区域大标题 + N 个模块（每个带展示标题的小卡片块 + 商品网格）」，空模块自动不展示，方便后期按首页顺序整体排序各模块。
+- 兼容旧数据：无 `modules` 字段时仍按原 `source/category_id/show_count` 逻辑展示。
+
+### v0.1.10 · 2026-08-17 · 「精选好物」升级为卡片式「精选推荐」（9 商品卡位）
+**范围**：运营后台 `server/public/admin.html`、后端 `server/app/service/PageService.php`、种子 `server/database/migrate_design.php`、小程序 `miniprogram/utils/mock.js`、`miniprogram/components/diy-render/*`。
+
+**改动**
+- 板块「精选好物」更名为「精选推荐」，组件类型保持 `goods_group`（兼容旧数据），数据结构由「来源/分类/展示数量」改为 **9 个固定商品卡位**。
+- 后台编辑：改为 3×3 商品卡片网格，每个卡位可点击选择商品、拖拽调整顺序、一键清空；每行数量 2/3/4/5 可选。
+- 小程序渲染层：若配置存在 `props.items` 则按卡位渲染指定商品，否则回退到旧的智能推荐/指定分类逻辑；商品卡片使用 `colWidth` 动态列宽。
+- 设计：延续 Linear 浅色风格（圆角 12–16rpx、轻阴影、主色 #5e6ad2）。
+
 ### v0.1.9 · 2026-08-17 · 模板菜单新增「底部导航」二级菜单
 **范围**：运营后台 `server/public/admin.html` + 后端 `server/app/service/PageService.php`、`server/app/controller/admin/Design.php`、`server/route/app.php`。
 

@@ -61,7 +61,10 @@ if (!$row) {
                 ],
             ]],
             ['type' => 'goods_group', 'sort' => 3, 'props' => [
-                'title' => '精选好物', 'source' => 'recommend', 'columns' => 2, 'show_count' => 4,
+                'title' => '精选推荐', 'columns' => 2,
+                'modules' => array_map(function ($n) {
+                    return ['id' => $n, 'name' => '推荐模块 ' . $n, 'title' => '推荐模块 ' . $n, 'goods' => []];
+                }, range(1, 4)),
             ]],
             ['type' => 'category_nav', 'sort' => 4, 'props' => [
                 'title' => '商品分类', 'columns' => 4, 'source' => 'all', 'category_ids' => [],
