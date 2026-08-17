@@ -56,8 +56,8 @@ Route::group('admin', function () {
     Route::get('orders/:id', 'admin.Order/detail');
     Route::post('orders/:id/status', 'admin.Order/changeStatus');
 
-    // 首页装修（DIY）：轮播 / 金刚区 / 精选好物 / 商品分类
-    Route::get('design/home', 'admin.Design/home');
-    Route::post('design/home/save', 'admin.Design/save');
-    Route::post('design/home/publish', 'admin.Design/publish');
+    // 页面装修（DIY）：首页 / 底部导航
+    Route::get('design/:page', 'admin.Design/page');
+    Route::post('design/:page/save', 'admin.Design/save');
+    Route::post('design/:page/publish', 'admin.Design/publish');
 });

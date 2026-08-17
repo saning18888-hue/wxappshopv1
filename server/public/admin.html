@@ -553,11 +553,52 @@
     .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none}
     .toast.show{opacity:1}
 
+    /* Bottom navigation editor */
+    .bn-editor{max-width:880px}
+    .bn-tabs{display:flex;gap:28px;border-bottom:1px solid var(--border);margin-bottom:16px}
+    .bn-tab{padding:10px 2px;font-size:13px;color:var(--text-secondary);cursor:pointer;position:relative}
+    .bn-tab.active{color:var(--primary);font-weight:600}
+    .bn-tab.active::after{content:"";position:absolute;bottom:-1px;left:0;right:0;height:2px;background:var(--primary);border-radius:2px}
+    .bn-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
+    .bn-toolbar .hint{font-size:12px;color:var(--text-muted)}
+    .bn-list{display:flex;flex-direction:column;gap:10px}
+    .bn-item{display:grid;grid-template-columns:36px 80px 1fr auto;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;cursor:grab;transition:box-shadow .15s,border-color .15s}
+    .bn-item:hover{border-color:var(--primary-100);box-shadow:var(--shadow)}
+    .bn-item.dragging{opacity:.6;border-color:var(--primary);box-shadow:var(--shadow-md)}
+    .bn-drag{display:flex;align-items:center;justify-content:center;color:var(--text-muted)}
+    .bn-icons{display:flex;gap:8px}
+    .bn-icons img{width:34px;height:34px;object-fit:cover;border-radius:var(--radius-sm);background:#f5f5f5;border:1px solid var(--border)}
+    .bn-name{font-size:14px;font-weight:600;color:var(--text)}
+    .bn-empty{text-align:center;padding:50px 20px;color:var(--text-muted)}
+
+    .bn-modal-card{width:900px;max-width:92vw}
+    .bn-modal-body{display:grid;grid-template-columns:1fr 300px;gap:18px}
+    .bn-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;align-content:start}
+    .bn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;cursor:grab;position:relative;transition:box-shadow .15s,border-color .15s}
+    .bn-card:hover{border-color:var(--primary-100)}
+    .bn-card.active{border-color:var(--primary);box-shadow:var(--shadow)}
+    .bn-card.dragging{opacity:.6}
+    .bn-card .num{position:absolute;left:8px;top:8px;font-size:11px;font-weight:700;color:var(--primary);background:var(--primary-50);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+    .bn-card .icons{display:flex;justify-content:center;gap:10px;margin-top:4px}
+    .bn-card .icons img{width:40px;height:40px;object-fit:cover;border-radius:var(--radius-sm);background:#f5f5f5}
+    .bn-form{background:#f9fafb;border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border)}
+    .bn-form h4{font-size:13px;font-weight:600;margin:0 0 12px;color:var(--text)}
+    .bn-form .field+.field{margin-top:12px}
+    .bn-form label{font-size:12px;color:var(--text-secondary);margin-bottom:5px;display:block}
+    .bn-icon-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .bn-icon-box{aspect-ratio:1/1;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;position:relative;overflow:hidden}
+    .bn-icon-box:hover{border-color:var(--primary)}
+    .bn-icon-box img{width:100%;height:100%;object-fit:cover}
+    .bn-icon-box svg{width:24px;height:24px;color:var(--text-muted)}
+    .bn-link{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end}
+
     @media (max-width:900px){
       .sidebar-l1{width:76px}
       .sidebar-l1 .brand{display:none}
       .sidebar-l2{width:150px}
-      .designer,.builder{grid-template-columns:1fr}
+      .designer,.builder,.bn-modal-body{grid-template-columns:1fr}
+      .bn-item{grid-template-columns:30px 64px 1fr auto}
+      .bn-icons img{width:28px;height:28px}
     }
   </style>
 </head>
@@ -723,6 +764,37 @@
           </div>
           <div id="secForm"></div>
           <p class="sec-hint" id="secHint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+        </div>
+
+        <!-- 底部导航设置 -->
+        <div id="bottomNavPanel" class="panel hidden">
+          <div class="bn-editor">
+            <div class="sec-toolbar">
+              <h3>底部导航</h3>
+              <div class="actions">
+                <button class="btn outline sm" onclick="loadBottomNav()">刷新</button>
+                <button class="btn green sm" onclick="saveBottomNav()">保存草稿</button>
+                <button class="btn sm" onclick="publishBottomNav()">发布上线</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="bn-tabs">
+                <div class="bn-tab active" data-tab="common" onclick="switchBottomNavTab('common')">常用</div>
+                <div class="bn-tab" data-tab="style" onclick="switchBottomNavTab('style')">样式</div>
+              </div>
+              <div id="bottomNavCommon">
+                <div class="bn-toolbar">
+                  <p class="hint">拖拽可调整菜单顺序，最少保留 2 个，最多 5 个。</p>
+                  <button class="btn sm" id="bnAddBtn" onclick="addBottomNavItem()">+ 添加菜单项</button>
+                </div>
+                <div id="bottomNavList" class="bn-list"></div>
+              </div>
+              <div id="bottomNavStyle" class="hidden">
+                <p class="muted">样式配置后续开放，当前仅支持图标/名称/链接。</p>
+              </div>
+            </div>
+            <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+          </div>
         </div>
 
         <!-- 通用占位 -->
@@ -1198,6 +1270,59 @@
     </div>
   </div>
 
+  <!-- 底部导航编辑弹窗 -->
+  <div id="bottomNavModal" class="modal">
+    <div class="modal-card bn-modal-card">
+      <div class="modal-header"><h3>底部导航编辑</h3><span class="close" onclick="closeBottomNavModal()">&times;</span></div>
+      <div class="modal-body bn-modal-body">
+        <div>
+          <div class="bn-toolbar">
+            <p class="hint">拖拽菜单可排序，菜单数量最少 2 个，最多 5 个。</p>
+            <button class="btn sm" id="bnModalAddBtn" onclick="addBottomNavCard()">+ 添加菜单</button>
+          </div>
+          <div id="bnModalCards" class="bn-cards"></div>
+        </div>
+        <div class="bn-form" id="bnEditForm">
+          <h4 id="bnEditTitle">编辑菜单</h4>
+          <input type="hidden" id="bnEditIdx" value="-1">
+          <div class="field">
+            <label>图片</label>
+            <div class="bn-icon-row">
+              <div class="bn-icon-box" onclick="document.getElementById('bnIconFile').click()" title="未选中图标">
+                <input type="file" id="bnIconFile" accept="image/*" style="display:none" onchange="uploadBottomNavIcon(this,false)">
+                <div id="bnIconPreview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></div>
+              </div>
+              <div class="bn-icon-box" onclick="document.getElementById('bnActiveIconFile').click()" title="选中图标">
+                <input type="file" id="bnActiveIconFile" accept="image/*" style="display:none" onchange="uploadBottomNavIcon(this,true)">
+                <div id="bnActiveIconPreview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg></div>
+              </div>
+            </div>
+            <input type="hidden" id="bnIcon">
+            <input type="hidden" id="bnActiveIcon">
+            <p class="muted" style="margin-top:6px;font-size:12px">建议尺寸 48×48，透明背景 PNG</p>
+          </div>
+          <div class="field">
+            <label>名称</label>
+            <input id="bnName" placeholder="如：首页">
+          </div>
+          <div class="field">
+            <label>链接</label>
+            <div class="bn-link">
+              <input id="bnLinkText" placeholder="选择跳转目标" readonly>
+              <button class="btn outline sm" onclick="pickBottomNavLink()">设置链接</button>
+            </div>
+            <input type="hidden" id="bnLinkType">
+            <input type="hidden" id="bnLinkId">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeBottomNavModal()">取消</button>
+        <button class="btn" onclick="confirmBottomNavModal()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -1238,6 +1363,7 @@
       fileText:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>',
       image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>',
       grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+      menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="16" rx="2"/><path d="M2 18h20"/></svg>',
       images:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/><path d="M18 3v18"/></svg>',
       link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
       externalLink:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>',
@@ -1262,7 +1388,8 @@
           {key:'banner',label:'轮播设置',icon:ICONS.image,panel:'sectionPanel',default:true},
           {key:'nav',label:'魔方导航',icon:ICONS.grid,panel:'sectionPanel'},
           {key:'goods',label:'精选好物',icon:ICONS.package,panel:'sectionPanel'},
-          {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'}
+          {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'},
+          {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings},
         {key:'info',label:'店铺设置',icon:ICONS.store},
@@ -1397,6 +1524,7 @@
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='sectionPanel') loadSection();
+      if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
     }
@@ -2485,6 +2613,258 @@
       const r=await fetchA(`${BASE}/design/home/save`,{method:'POST',body:{config:cfg,remark:SECTION_TITLE[state.section]+' 设置'}});
       if(r.code!==0){toast(r.msg||'保存失败');return;}
       const p=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功':(p.msg||'发布失败'));
+    }
+
+    /* 底部导航 */
+    let bottomNavConfig={page:'bottom_nav',components:[]};
+    let bottomNavEditItems=[];
+    let bnSelectedIdx=-1;
+    let bnDragIdx=null;
+
+    function ensureBottomNavComponent(){
+      let comp=bottomNavConfig.components.find(c=>c.type==='bottom_nav');
+      if(!comp){
+        comp={type:'bottom_nav',sort:1,props:{items:[]}};
+        bottomNavConfig.components.push(comp);
+      }
+      return comp;
+    }
+    function getBottomNavItems(){return ensureBottomNavComponent().props.items||[];}
+    function setBottomNavItems(items){ensureBottomNavComponent().props.items=items;}
+
+    async function loadBottomNav(){
+      const d=await fetchA(`${BASE}/design/bottom_nav`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      bottomNavConfig=JSON.parse(JSON.stringify(d.data.published_config||{page:'bottom_nav',components:[]}));
+      if(!getBottomNavItems().length){
+        setBottomNavItems([
+          {name:'首页',icon:'https://placehold.co/96x96/8a8f98/fff?text=首页',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=首页',link:{type:'page',id:'home'}},
+          {name:'分类',icon:'https://placehold.co/96x96/8a8f98/fff?text=分类',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=分类',link:{type:'page',id:'category'}},
+          {name:'购物车',icon:'https://placehold.co/96x96/8a8f98/fff?text=车',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=车',link:{type:'page',id:'cart'}},
+          {name:'我的',icon:'https://placehold.co/96x96/8a8f98/fff?text=我',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=我',link:{type:'page',id:'user'}}
+        ]);
+      }
+      switchBottomNavTab('common');
+      renderBottomNavList();
+    }
+
+    function switchBottomNavTab(tab){
+      document.querySelectorAll('.bn-tab').forEach(el=>{
+        el.classList.toggle('active',el.dataset.tab===tab);
+      });
+      document.getElementById('bottomNavCommon').classList.toggle('hidden',tab!=='common');
+      document.getElementById('bottomNavStyle').classList.toggle('hidden',tab!=='style');
+    }
+
+    function renderBottomNavList(){
+      const items=getBottomNavItems();
+      const list=document.getElementById('bottomNavList');
+      const maxed=items.length>=5;
+      const addBtn=document.getElementById('bnAddBtn');
+      addBtn.disabled=maxed;
+      addBtn.style.opacity=maxed?0.5:1;
+      if(!items.length){
+        list.innerHTML='<div class="bn-empty">暂无菜单项，点击上方按钮添加。</div>';
+        return;
+      }
+      const plusSvg='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>';
+      list.innerHTML=items.map((it,i)=>`
+        <div class="bn-item" draggable="true" data-idx="${i}" ondragstart="bnListDragStart(event,${i})" ondragover="bnListDragOver(event)" ondrop="bnListDrop(event,${i})">
+          <div class="bn-drag"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></svg></div>
+          <div class="bn-icons"><img src="${it.icon||''}" alt=""><img src="${it.active_icon||it.icon||''}" alt=""></div>
+          <div class="bn-name">${it.name||'未命名'}</div>
+          <div class="actions">
+            <button class="btn outline sm" onclick="openBottomNavModal(${i})">编辑</button>
+            <button class="btn red sm" onclick="removeBottomNavItem(${i})" ${items.length<=2?'disabled':''}>删除</button>
+          </div>
+        </div>
+      `).join('');
+      addBtn.innerHTML=plusSvg+' 添加菜单项';
+    }
+
+    function bnListDragStart(e,i){bnDragIdx=i;e.dataTransfer.effectAllowed='move';e.target.classList.add('dragging');}
+    function bnListDragOver(e){e.preventDefault();}
+    function bnListDrop(e,to){
+      e.preventDefault();
+      const from=bnDragIdx;
+      bnDragIdx=null;
+      document.querySelectorAll('.bn-item.dragging').forEach(el=>el.classList.remove('dragging'));
+      if(from===null||from===to)return;
+      const items=getBottomNavItems();
+      const [moved]=items.splice(from,1);
+      items.splice(to,0,moved);
+      setBottomNavItems(items);
+      renderBottomNavList();
+    }
+
+    function addBottomNavItem(){
+      const items=getBottomNavItems();
+      if(items.length>=5){toast('最多只能添加 5 个菜单');return;}
+      items.push({name:'新菜单',icon:'https://placehold.co/96x96/8a8f98/fff?text=新',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=新',link:{type:'page',id:'home'}});
+      setBottomNavItems(items);
+      renderBottomNavList();
+      openBottomNavModal(items.length-1);
+    }
+    function removeBottomNavItem(idx){
+      const items=getBottomNavItems();
+      if(items.length<=2){toast('至少需要保留 2 个菜单');return;}
+      items.splice(idx,1);
+      setBottomNavItems(items);
+      renderBottomNavList();
+    }
+
+    function openBottomNavModal(startIdx){
+      bottomNavEditItems=JSON.parse(JSON.stringify(getBottomNavItems()));
+      bnSelectedIdx=(startIdx>=0&&startIdx<bottomNavEditItems.length)?startIdx:0;
+      if(!bottomNavEditItems.length){
+        bottomNavEditItems.push({name:'新菜单',icon:'https://placehold.co/96x96/8a8f98/fff?text=新',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=新',link:{type:'page',id:'home'}});
+        bnSelectedIdx=0;
+      }
+      renderBottomNavCards();
+      fillBottomNavForm(bnSelectedIdx);
+      document.getElementById('bottomNavModal').classList.add('show');
+    }
+    function closeBottomNavModal(){
+      document.getElementById('bottomNavModal').classList.remove('show');
+    }
+
+    function renderBottomNavCards(){
+      const cards=document.getElementById('bnModalCards');
+      const maxed=bottomNavEditItems.length>=5;
+      const addBtn=document.getElementById('bnModalAddBtn');
+      addBtn.disabled=maxed;
+      addBtn.style.opacity=maxed?0.5:1;
+      cards.innerHTML=bottomNavEditItems.map((it,i)=>`
+        <div class="bn-card ${i===bnSelectedIdx?'active':''}" draggable="true" data-idx="${i}" onclick="selectBottomNavCard(${i})" ondragstart="bnCardDragStart(event,${i})" ondragover="bnCardDragOver(event)" ondrop="bnCardDrop(event,${i})">
+          <div class="num">${i+1}</div>
+          <div class="icons"><img src="${it.icon||''}" alt=""><img src="${it.active_icon||it.icon||''}" alt=""></div>
+          <div style="margin-top:8px;font-size:12px;color:var(--text);">${it.name||'未命名'}</div>
+        </div>
+      `).join('');
+    }
+    function bnCardDragStart(e,i){bnDragIdx=i;e.dataTransfer.effectAllowed='move';e.target.classList.add('dragging');}
+    function bnCardDragOver(e){e.preventDefault();}
+    function bnCardDrop(e,to){
+      e.preventDefault();
+      saveBottomNavFormToItem();
+      const from=bnDragIdx;
+      bnDragIdx=null;
+      document.querySelectorAll('.bn-card.dragging').forEach(el=>el.classList.remove('dragging'));
+      if(from===null||from===to)return;
+      const [moved]=bottomNavEditItems.splice(from,1);
+      bottomNavEditItems.splice(to,0,moved);
+      bnSelectedIdx=to;
+      renderBottomNavCards();
+      fillBottomNavForm(bnSelectedIdx);
+    }
+
+    function selectBottomNavCard(idx){
+      saveBottomNavFormToItem();
+      bnSelectedIdx=idx;
+      renderBottomNavCards();
+      fillBottomNavForm(idx);
+    }
+    function addBottomNavCard(){
+      if(bottomNavEditItems.length>=5){toast('最多只能添加 5 个菜单');return;}
+      saveBottomNavFormToItem();
+      bottomNavEditItems.push({name:'新菜单',icon:'https://placehold.co/96x96/8a8f98/fff?text=新',active_icon:'https://placehold.co/96x96/5e6ad2/fff?text=新',link:{type:'page',id:'home'}});
+      bnSelectedIdx=bottomNavEditItems.length-1;
+      renderBottomNavCards();
+      fillBottomNavForm(bnSelectedIdx);
+    }
+
+    function fillBottomNavForm(idx){
+      const it=bottomNavEditItems[idx];
+      if(!it)return;
+      document.getElementById('bnEditIdx').value=idx;
+      document.getElementById('bnEditTitle').textContent='编辑：'+(it.name||'未命名');
+      document.getElementById('bnName').value=it.name||'';
+      document.getElementById('bnIcon').value=it.icon||'';
+      document.getElementById('bnActiveIcon').value=it.active_icon||'';
+      renderBottomNavIconPreview('bnIconPreview',it.icon);
+      renderBottomNavIconPreview('bnActiveIconPreview',it.active_icon);
+      const link=it.link||{};
+      document.getElementById('bnLinkType').value=link.type||'';
+      document.getElementById('bnLinkId').value=link.id!==undefined?link.id:'';
+      document.getElementById('bnLinkText').value=link.type?`${link.type}/${link.id!==undefined?link.id:''}`:'';
+    }
+    function renderBottomNavIconPreview(elId,url){
+      const el=document.getElementById(elId);
+      if(url){el.innerHTML='<img src="'+url+'" alt="">';}
+      else{el.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 5v14M5 12h14"/></svg>';}
+    }
+    function saveBottomNavFormToItem(){
+      const idx=parseInt(document.getElementById('bnEditIdx').value,10);
+      if(idx<0||idx>=bottomNavEditItems.length)return;
+      const it=bottomNavEditItems[idx];
+      it.name=document.getElementById('bnName').value.trim()||'未命名';
+      it.icon=document.getElementById('bnIcon').value.trim();
+      it.active_icon=document.getElementById('bnActiveIcon').value.trim();
+      const type=document.getElementById('bnLinkType').value.trim();
+      const idRaw=document.getElementById('bnLinkId').value;
+      it.link=type?{type:type,id:type==='page'?idRaw:(parseInt(idRaw,10)||0)}:{};
+    }
+
+    async function uploadBottomNavIcon(input,isActive){
+      const file=input.files[0];
+      if(!file)return;
+      const url=await uploadToServer(file,'image');
+      if(!url){toast('上传失败');return;}
+      input.value='';
+      const idx=parseInt(document.getElementById('bnEditIdx').value,10);
+      if(idx<0||idx>=bottomNavEditItems.length)return;
+      const it=bottomNavEditItems[idx];
+      if(isActive){it.active_icon=url;}else{it.icon=url;}
+      renderBottomNavCards();
+      fillBottomNavForm(idx);
+    }
+
+    function pickBottomNavLink(){
+      const type=prompt('链接类型：page / goods / category / activity','page');
+      if(!type)return;
+      const id=prompt('链接目标 ID：','home');
+      if(id===null)return;
+      document.getElementById('bnLinkType').value=type;
+      document.getElementById('bnLinkId').value=id;
+      document.getElementById('bnLinkText').value=type+'/'+id;
+    }
+
+    function confirmBottomNavModal(){
+      saveBottomNavFormToItem();
+      if(bottomNavEditItems.length<2){toast('至少需要 2 个菜单');return;}
+      if(bottomNavEditItems.length>5){toast('最多只能 5 个菜单');return;}
+      setBottomNavItems(bottomNavEditItems);
+      renderBottomNavList();
+      closeBottomNavModal();
+    }
+
+    function validateBottomNav(){
+      const items=getBottomNavItems();
+      if(items.length<2){toast('底部导航至少需要 2 个菜单');return false;}
+      if(items.length>5){toast('底部导航最多只能 5 个菜单');return false;}
+      for(const it of items){
+        if(!it.name||!it.icon){toast('请完善每个菜单的名称和图标');return false;}
+      }
+      return true;
+    }
+
+    async function saveBottomNav(){
+      if(!validateBottomNav())return;
+      const cfg=JSON.parse(JSON.stringify(bottomNavConfig));
+      cfg.page='bottom_nav';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const d=await fetchA(`${BASE}/design/bottom_nav/save`,{method:'POST',body:{config:cfg,remark:'底部导航设置'}});
+      toast(d.code===0?'草稿保存成功':(d.msg||'保存失败'));
+    }
+    async function publishBottomNav(){
+      if(!validateBottomNav())return;
+      const cfg=JSON.parse(JSON.stringify(bottomNavConfig));
+      cfg.page='bottom_nav';
+      cfg.components=cfg.components.map(c=>({type:c.type,props:c.props}));
+      const r=await fetchA(`${BASE}/design/bottom_nav/save`,{method:'POST',body:{config:cfg,remark:'底部导航设置'}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/bottom_nav/publish`,{method:'POST',body:{}});
       toast(p.code===0?'发布成功':(p.msg||'发布失败'));
     }
 

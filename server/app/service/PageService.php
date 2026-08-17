@@ -72,6 +72,33 @@ class PageService
         ];
     }
 
+    /** 兜底默认底部导航配置 */
+    public function defaultBottomNav(): array
+    {
+        $placeholder = function ($label, $active = false) {
+            $bg = $active ? '5e6ad2' : '8a8f98';
+            return "https://placehold.co/96x96/{$bg}/fff?text=" . urlencode($label);
+        };
+        return [
+            'page'       => 'bottom_nav',
+            'version'    => 1,
+            'components' => [
+                [
+                    'type'  => 'bottom_nav',
+                    'sort'  => 1,
+                    'props' => [
+                        'items' => [
+                            ['name' => '首页', 'icon' => $placeholder('首页'), 'active_icon' => $placeholder('首页', true), 'link' => ['type' => 'page', 'id' => 'home']],
+                            ['name' => '分类', 'icon' => $placeholder('分类'), 'active_icon' => $placeholder('分类', true), 'link' => ['type' => 'page', 'id' => 'category']],
+                            ['name' => '购物车', 'icon' => $placeholder('车'), 'active_icon' => $placeholder('车', true), 'link' => ['type' => 'page', 'id' => 'cart']],
+                            ['name' => '我的', 'icon' => $placeholder('我'), 'active_icon' => $placeholder('我', true), 'link' => ['type' => 'page', 'id' => 'user']],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /** 当前已发布配置（数组），无则返回 null */
     public function publishedConfig(string $page): ?array
     {

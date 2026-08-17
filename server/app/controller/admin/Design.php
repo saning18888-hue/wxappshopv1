@@ -5,10 +5,10 @@ use app\common\controller\AdminController;
 use app\service\PageService;
 
 /**
- * 首页装修（DIY）后台接口
- * GET  /admin/design/home        当前配置 + 草稿 + 版本历史
- * POST /admin/design/home/save   保存草稿 {config, remark?}
- * POST /admin/design/home/publish 发布/回滚 {version_id?}
+ * 页面装修（DIY）后台接口：首页 / 底部导航
+ * GET  /admin/design/:page        当前配置 + 草稿 + 版本历史  (home|bottom_nav)
+ * POST /admin/design/:page/save   保存草稿 {config, remark?}
+ * POST /admin/design/:page/publish 发布/回滚 {version_id?}
  */
 class Design extends AdminController
 {
@@ -20,21 +20,26 @@ class Design extends AdminController
         $this->svc = new PageService();
     }
 
-    public function home()
+    public function page()
     {
-        $page      = 'home';
-        $published = $this->svc->publishedConfig($page) ?: $this->svc->defaultHome();
-        $draft     = $this->svc->latestDraft($page);
-        $versions  = $this->svc->versions($page);
-        $p         = $this->svc->getPageRow($page);
-        $versions  = array_map(function ($v) use ($p) {
+        $page = $this->request->param('page', 'home');
+        $published = $this->svc->publishedConfig($page);
+        if (!$published) {
+            $published = $page === 'bottom_nav' ? $this->svc->defaultBottomNav() : $this->svc->defaultHome();
+        }
+        $draft    = $this->svc->latestDraft($page);
+        $versions = $this->svc->versions($page);
+        $p        = $this->svc->getPageRow($page);
+        $versions = array_map(function ($v) use ($p) {
             $v['is_current'] = $p && intval($p['current_version']) === intval($v['id']);
             return $v;
         }, $versions);
 
+        $titleMap = ['home' => '首页', 'bottom_nav' => '底部导航'];
+
         return $this->ok([
             'page'             => $page,
-            'title'            => $p ? $p['title'] : '首页',
+            'title'            => $p ? $p['title'] : ($titleMap[$page] ?? $page),
             'published_config' => $published,
             'draft'            => $draft,
             'versions'         => $versions,
@@ -43,22 +48,24 @@ class Design extends AdminController
 
     public function save()
     {
-        $b = $this->body();
+        $b    = $this->body();
+        $page = $this->request->param('page', 'home');
         $config = $b['config'] ?? [];
         if (!is_array($config) || !isset($config['components']) || !is_array($config['components'])) {
             return $this->fail('配置格式不正确：需包含 components 数组');
         }
-        $config['page'] = 'home';
+        $config['page'] = $page;
         $config['components'] = array_values($config['components']);
-        $id = $this->svc->saveDraft('home', $config, $b['remark'] ?? '草稿', $this->adminName());
+        $id = $this->svc->saveDraft($page, $config, $b['remark'] ?? '草稿', $this->adminName());
         return $this->ok(['version_id' => $id], '已保存草稿');
     }
 
     public function publish()
     {
         $b   = $this->body();
+        $page = $this->request->param('page', 'home');
         $vid = isset($b['version_id']) ? intval($b['version_id']) : null;
-        $r   = $this->svc->publish('home', $vid);
+        $r   = $this->svc->publish($page, $vid);
         if (!$r['ok']) {
             return $this->fail($r['msg']);
         }

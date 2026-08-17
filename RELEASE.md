@@ -55,6 +55,23 @@ php think run -H 127.0.0.1 -p 8787                                       # 启�
 
 ## 版本记录（最新在上）
 
+### v0.1.9 · 2026-08-17 · 模板菜单新增「底部导航」二级菜单
+**范围**：运营后台 `server/public/admin.html` + 后端 `server/app/service/PageService.php`、`server/app/controller/admin/Design.php`、`server/route/app.php`。
+
+**新增功能**
+- 后台左侧菜单「店铺 > 我的模板」下新增「底部导航」二级菜单。
+- 底部导航配置页：
+  - 支持「常用 / 样式」Tab 切换。
+  - 菜单项列表展示未选中/选中两套图标、名称，支持拖拽排序。
+  - 菜单数量限制：最少 2 个，最多 5 个；少于 2 个时禁止保存/发布，达到 5 个时隐藏添加按钮。
+- 底部导航编辑弹窗：
+  - 左侧卡片展示所有菜单项（带序号、两套图标），支持拖拽排序、点击选中。
+  - 右侧表单可编辑名称、上传未选中/选中图标、设置链接（page/goods/category/activity）。
+- 后端支持 `/admin/design/bottom_nav` 查询、`/admin/design/bottom_nav/save` 保存草稿、`/admin/design/bottom_nav/publish` 发布上线，默认返回首页/分类/购物车/我的 4 项兜底配置。
+
+**设计**
+- 遵循项目已有的 Linear 浅色设计系统（圆角、阴影、主色 #5e6ad2、12px/13px/14px 字号层级）。
+
 ### v0.1.8 · 2026-08-15 · 补充 B2C 商城 PRD（设计驱动版）
 **范围**：仓库文档，无代码改动。
 
