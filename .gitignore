@@ -1,7 +1,17 @@
-﻿# IDE / OS
+﻿# 临时 / 调试脚本
+_*.php
+_*.py
+_*.js
+_*.txt
+_*.json
+server/reset_tmp.php
+server/e2e_tmp.php
+server/nav_test.php
+
+# 大媒体（保留本地，不入库）
+public/uploads/**/*.mp4
+
+# 依赖与运行时
+vendor/
 .idea/
 .vscode/
-.DS_Store
-
-# AI workspace (local memory)
-.codebuddy/
