@@ -86,6 +86,11 @@ Route::group('admin', function () {
     Route::post('orders_aftersale/soft_delete', 'admin.Order/softDelete');
     Route::post('orders_aftersale/restore', 'admin.Order/restore');
 
+    // 电子卡券
+    Route::get('cards', 'admin.Card/index');
+    Route::get('cards/transfers', 'admin.Card/transfers');
+    Route::post('cards/:id/void', 'admin.Card/void');
+
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');

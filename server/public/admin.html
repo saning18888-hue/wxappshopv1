@@ -1217,6 +1217,45 @@
           </div>
         </div>
 
+        <!-- 电子卡券 -->
+        <div id="cardsPanel" class="panel hidden">
+          <div class="card">
+            <h3>电子卡券</h3>
+            <div class="order-tabs" id="cardTabs">
+              <a class="active" data-tab="cards" onclick="switchCardTab('cards')">电子卡券列表</a>
+              <a data-tab="transfers" onclick="switchCardTab('transfers')">转赠记录</a>
+            </div>
+            <div class="toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn sm" onclick="exportCards()">导出</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="cardKeyword" placeholder="关键词搜索" onkeydown="if(event.key==='Enter')loadCards()">
+                <button class="btn sm" onclick="loadCards()">查询</button>
+              </div>
+            </div>
+            <div class="table-wrap" id="cardTableWrap">
+              <table class="order-table" id="cardTable">
+                <thead>
+                  <tr>
+                    <th>商品名称</th>
+                    <th style="width:160px">订单编号</th>
+                    <th style="width:120px">券码</th>
+                    <th style="width:70px">状态</th>
+                    <th style="width:140px">有效期</th>
+                    <th style="width:80px">联系人</th>
+                    <th style="width:110px">联系方式</th>
+                    <th style="width:120px">创建时间</th>
+                    <th style="width:90px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="cardBody"><tr><td colspan="9" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="pager" id="cardPager"></div>
+          </div>
+        </div>
+
         <!-- 首页装修：按模块分设 -->
         <div id="sectionPanel" class="panel hidden">
           <div class="sec-toolbar">
@@ -3767,9 +3806,9 @@
       {key:'orders',label:'订单',icon:ICONS.orders,children:[
         {key:'list',label:'订单列表',icon:ICONS.clipboard,panel:'ordersPanel',default:true},
         {key:'refund',label:'订单售后',icon:ICONS.rotateCcw,panel:'aftersalePanel'},
-        {key:'cards',label:'电子卡券',icon:ICONS.creditCard},
-        {key:'review',label:'评论管理',icon:ICONS.message},
-        {key:'verify',label:'核销管理',icon:ICONS.checkCircle}
+        {key:'cards',label:'电子卡券',icon:ICONS.creditCard,panel:'cardsPanel'},
+        {key:'review',label:'评论管理',icon:ICONS.message,panel:'reviewPanel'},
+        {key:'verify',label:'核销管理',icon:ICONS.checkCircle,panel:'verifyPanel'}
       ]},
       {key:'data',label:'数据',icon:ICONS.data,children:[
         {key:'overview',label:'商城概况',icon:ICONS.pieChart,default:true},
@@ -3885,6 +3924,9 @@
       if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='aftersalePanel') loadAftersales();
+      if(panelId==='cardsPanel') loadCards();
+      if(panelId==='reviewPanel') loadReviews();
+      if(panelId==='verifyPanel') loadVerify();
       if(panelId==='sectionPanel') loadSection();
       if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
@@ -5613,6 +5655,86 @@
       toast('退款成功');closeRefundModal();loadAftersales();
     }
     function exportAftersales(){toast('导出功能开发中');}
+
+    /* 电子卡券 */
+    let cardPage=1;
+    let currentCardTab='cards';
+    function switchCardTab(tab){
+      currentCardTab=tab; cardPage=1;
+      document.querySelectorAll('#cardTabs a').forEach(a=>a.classList.toggle('active',a.dataset.tab===tab));
+      if(tab==='cards') loadCardList();
+      else loadCardTransfers();
+    }
+    async function loadCardList(){
+      const kw=document.getElementById('cardKeyword').value.trim();
+      const q=`?page=${cardPage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}`;
+      const d=await fetchA(`${BASE}/cards${q}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      renderCardList(d.data);
+    }
+    function renderCardList(data){
+      const tb=document.getElementById('cardBody');
+      if(!data.list.length){tb.innerHTML='<tr><td colspan="9" class="empty-row">暂无数据</td></tr>';document.getElementById('cardPager').innerHTML='';return;}
+      tb.innerHTML=data.list.map(c=>`<tr>
+        <td>${escapeHtml(c.goods_title)}</td>
+        <td>${c.order_no}</td>
+        <td>${c.code}</td>
+        <td><span class="badge ${c.status_class}">${c.status_text}</span></td>
+        <td>${c.valid_start||'-'}<br>${c.valid_end||'-'}</td>
+        <td>${escapeHtml(c.contact_name)}</td>
+        <td>${escapeHtml(c.contact_phone)}</td>
+        <td>${c.created_at}</td>
+        <td class="ops">
+          ${c.status==0?`<a href="javascript:" class="danger" onclick="voidCard(${c.id})">作废</a>`:''}
+        </td>
+      </tr>`).join('');
+      document.getElementById('cardPager').innerHTML=renderPagerHtml(cardPage,data.last_page,'cardPage');
+    }
+    async function loadCardTransfers(){
+      const kw=document.getElementById('cardKeyword').value.trim();
+      const q=`?page=${cardPage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}`;
+      const d=await fetchA(`${BASE}/cards/transfers${q}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const tb=document.getElementById('cardBody');
+      const head=`
+        <tr>
+          <th>发起会员</th>
+          <th>接收会员</th>
+          <th style="width:160px">订单编号</th>
+          <th>商品名称</th>
+          <th style="width:70px">状态</th>
+          <th style="width:120px">领取时间</th>
+          <th style="width:120px">创建时间</th>
+        </tr>`;
+      if(!d.data.list.length){tb.innerHTML=head+'<tr><td colspan="7" class="empty-row">暂无数据</td></tr>';document.getElementById('cardPager').innerHTML='';return;}
+      document.querySelector('#cardTable thead').innerHTML=head;
+      tb.innerHTML=d.data.list.map(t=>`<tr>
+        <td>${escapeHtml(t.from_name||t.from_user_id)}</td>
+        <td>${escapeHtml(t.to_name||t.to_user_id)}</td>
+        <td>${t.order_no}</td>
+        <td>${escapeHtml(t.goods_title)}</td>
+        <td><span class="badge gray">${t.status_text}</span></td>
+        <td>${t.received_at||'-'}</td>
+        <td>${t.created_at}</td>
+      </tr>`).join('');
+      document.getElementById('cardPager').innerHTML=renderPagerHtml(cardPage,d.data.last_page,'cardPage');
+    }
+    function renderPagerHtml(page,last,pageVar){
+      return `
+        <button ${page<=1?'disabled':''} onclick="${pageVar}--;loadCards()">上一页</button>
+        <span style="font-size:12px;color:#888">第 ${page} / ${last||1} 页</span>
+        <button ${page>=(last||1)?'disabled':''} onclick="${pageVar}++;loadCards()">下一页</button>`;
+    }
+    async function voidCard(id){
+      if(!confirm('确定作废该卡券吗？'))return;
+      const d=await fetchA(`${BASE}/cards/${id}/void`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'作废失败');return;}
+      toast('作废成功');loadCardList();
+    }
+    function exportCards(){toast('导出功能开发中');}
+    function loadCards(){
+      if(currentCardTab==='cards') loadCardList(); else loadCardTransfers();
+    }
 
     /* 订单编辑弹窗 */
     let currentOrder=null;

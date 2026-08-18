@@ -255,6 +255,48 @@ CREATE TABLE IF NOT EXISTS order_payments (
 CREATE INDEX idx_payments_order ON order_payments(order_id);
 
 -- =====================================================================
+-- 电子卡券
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS order_cards (
+  id             INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id       INTEGER NOT NULL DEFAULT 0,
+  order_no       TEXT NOT NULL DEFAULT '',
+  user_id        INTEGER NOT NULL DEFAULT 0,
+  goods_id       INTEGER NOT NULL DEFAULT 0,
+  goods_title    TEXT NOT NULL DEFAULT '',
+  code           TEXT NOT NULL DEFAULT '',
+  status         INTEGER NOT NULL DEFAULT 0,  -- 0 未使用，1 已使用，2 已转赠，3 已作废
+  valid_start    TEXT DEFAULT NULL,
+  valid_end      TEXT DEFAULT NULL,
+  contact_name   TEXT NOT NULL DEFAULT '',
+  contact_phone  TEXT NOT NULL DEFAULT '',
+  used_at        TEXT DEFAULT NULL,
+  verifier_id    INTEGER NOT NULL DEFAULT 0,
+  created_at     TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at     TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (code)
+);
+CREATE INDEX idx_cards_order ON order_cards(order_id);
+CREATE INDEX idx_cards_user  ON order_cards(user_id);
+CREATE INDEX idx_cards_code  ON order_cards(code);
+
+CREATE TABLE IF NOT EXISTS card_transfers (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  card_id      INTEGER NOT NULL DEFAULT 0,
+  from_user_id INTEGER NOT NULL DEFAULT 0,
+  to_user_id   INTEGER NOT NULL DEFAULT 0,
+  order_no     TEXT NOT NULL DEFAULT '',
+  goods_title  TEXT NOT NULL DEFAULT '',
+  status       INTEGER NOT NULL DEFAULT 0,  -- 0 待领取，1 已领取，2 已拒绝/过期
+  received_at  TEXT DEFAULT NULL,
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_transfers_card ON card_transfers(card_id);
+CREATE INDEX idx_transfers_from ON card_transfers(from_user_id);
+CREATE INDEX idx_transfers_to   ON card_transfers(to_user_id);
+
+-- =====================================================================
 -- 演示种子数据
 -- =====================================================================
 INSERT INTO users (id, openid, nickname, avatar, phone, level, growth, points, balance, group_id, status)
