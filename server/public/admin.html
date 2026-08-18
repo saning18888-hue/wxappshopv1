@@ -909,62 +909,88 @@
         </div>
 
         <!-- 基础设置 -->
-        <div id="basePanel" class="panel hidden">
+        <div id="basePanel" class="panel hidden setting-panel">
           <style>
-            #basePanel{background:var(--bg);min-height:100%}
-            #basePanel .setting-wrap{max-width:none}
-            #basePanel .bs-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0}
-            #basePanel .bs-tab{padding:14px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative;transition:.15s;user-select:none}
-            #basePanel .bs-tab:hover{color:var(--primary)}
-            #basePanel .bs-tab.active{color:var(--primary);font-weight:600}
-            #basePanel .bs-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
-            #basePanel .setting-card{background:var(--surface);padding:24px 32px 32px;border:1px solid var(--border);border-top:0;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
-            #basePanel .section-title{font-size:16px;font-weight:600;color:var(--text);padding-left:10px;border-left:4px solid var(--primary);margin-bottom:24px;line-height:1}
-            #basePanel .form-row{display:flex;align-items:flex-start;margin-bottom:22px}
-            #basePanel .form-label{width:120px;color:var(--text);font-size:14px;padding-top:5px;flex-shrink:0;text-align:left;line-height:1.5}
-            #basePanel .form-control{flex:1;min-width:0}
-            #basePanel .radio-group,#basePanel .checkbox-group{display:flex;flex-wrap:wrap;gap:20px;align-items:center}
-            #basePanel .radio-group label,#basePanel .checkbox-group label{display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:14px;cursor:pointer;line-height:1.5}
-            #basePanel input[type="radio"],#basePanel input[type="checkbox"]{accent-color:var(--primary);width:16px;height:16px;margin:0;cursor:pointer;flex-shrink:0}
-            #basePanel .form-hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6}
-            #basePanel .form-input{width:100%;max-width:520px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);outline:none;transition:.15s;box-sizing:border-box;background:#f7f8fa}
-            #basePanel .form-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
-            #basePanel .form-select{height:36px;padding:0 28px 0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px}
-            #basePanel .form-select:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
-            #basePanel .form-inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-            #basePanel .inline-text{font-size:14px;color:var(--text-secondary)}
-            #basePanel .inline-num{width:100px;max-width:none;text-align:center}
-            #basePanel .form-actions{padding:8px 0 0 120px}
-            #basePanel .btn-submit{background:var(--primary);color:#fff;border:none;height:36px;padding:0 32px;border-radius:var(--radius-sm);font-size:14px;cursor:pointer;transition:.15s}
-            #basePanel .btn-submit:hover{background:var(--primary-700)}
-            #basePanel .cart-icon-group{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
-            #basePanel .cart-icon-group label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
-            #basePanel .cart-icon-group svg{width:20px;height:20px;fill:none;stroke:var(--text-secondary);stroke-width:1.6}
-            #basePanel .cart-icon-group input:checked+svg{stroke:var(--primary)}
-            #basePanel .link{color:var(--primary);text-decoration:none}
-            #basePanel .link:hover{color:var(--primary-700)}
-            #basePanel .editor-wrap{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;max-width:680px;background:var(--surface)}
-            #basePanel .editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;border-bottom:1px solid var(--border);background:#f7f8fa}
-            #basePanel .editor-toolbar button{width:28px;height:26px;border:1px solid transparent;border-radius:3px;background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-            #basePanel .editor-toolbar button:hover{border-color:var(--border);background:var(--surface)}
-            #basePanel .editor-content{width:100%;min-height:140px;padding:12px;border:none;resize:vertical;font-size:14px;line-height:1.6;color:var(--text);outline:none;font-family:inherit;box-sizing:border-box}
-            #basePanel .editor-content::placeholder{color:var(--text-muted)}
-            #basePanel .switch .slider{background:#cdcfd6}
-            #basePanel .switch input:checked+.slider{background:var(--primary)}
+            .setting-panel{background:var(--bg);min-height:100%}
+            .setting-panel .setting-wrap{max-width:none}
+            .setting-panel .bs-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0}
+            .setting-panel .bs-tab{padding:14px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative;transition:.15s;user-select:none}
+            .setting-panel .bs-tab:hover{color:var(--primary)}
+            .setting-panel .bs-tab.active{color:var(--primary);font-weight:600}
+            .setting-panel .bs-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
+            .setting-panel .shop-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0}
+            .setting-panel .shop-tab{padding:14px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative;transition:.15s;user-select:none}
+            .setting-panel .shop-tab:hover{color:var(--primary)}
+            .setting-panel .shop-tab.active{color:var(--primary);font-weight:600}
+            .setting-panel .shop-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
+            .setting-panel .setting-card{background:var(--surface);padding:24px 32px 32px;border:1px solid var(--border);border-top:0;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+            .setting-panel .section-title{font-size:16px;font-weight:600;color:var(--text);padding-left:10px;border-left:4px solid var(--primary);margin-bottom:24px;line-height:1}
+            .setting-panel .form-row{display:flex;align-items:flex-start;margin-bottom:22px}
+            .setting-panel .form-label{width:120px;color:var(--text);font-size:14px;padding-top:5px;flex-shrink:0;text-align:left;line-height:1.5}
+            .setting-panel .form-control{flex:1;min-width:0}
+            .setting-panel .radio-group,.setting-panel .checkbox-group{display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+            .setting-panel .radio-group label,.setting-panel .checkbox-group label{display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:14px;cursor:pointer;line-height:1.5}
+            .setting-panel input[type="radio"],.setting-panel input[type="checkbox"]{accent-color:var(--primary);width:16px;height:16px;margin:0;cursor:pointer;flex-shrink:0}
+            .setting-panel .form-hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6}
+            .setting-panel .form-input{width:100%;max-width:520px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);outline:none;transition:.15s;box-sizing:border-box;background:#f7f8fa}
+            .setting-panel .form-input.wide{max-width:none}
+            .setting-panel .form-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            .setting-panel .form-select{height:36px;padding:0 28px 0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px}
+            .setting-panel .form-select:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            .setting-panel .form-inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+            .setting-panel .inline-text{font-size:14px;color:var(--text-secondary)}
+            .setting-panel .inline-num{width:100px;max-width:none;text-align:center}
+            .setting-panel .form-actions{padding:8px 0 0 120px}
+            .setting-panel .btn-submit{background:var(--primary);color:#fff;border:none;height:36px;padding:0 32px;border-radius:var(--radius-sm);font-size:14px;cursor:pointer;transition:.15s}
+            .setting-panel .btn-submit:hover{background:var(--primary-700)}
+            .setting-panel .cart-icon-group{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+            .setting-panel .cart-icon-group label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+            .setting-panel .cart-icon-group svg{width:20px;height:20px;fill:none;stroke:var(--text-secondary);stroke-width:1.6}
+            .setting-panel .cart-icon-group input:checked+svg{stroke:var(--primary)}
+            .setting-panel .link{color:var(--primary);text-decoration:none}
+            .setting-panel .link:hover{color:var(--primary-700)}
+            .setting-panel .editor-wrap{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;max-width:680px;background:var(--surface)}
+            .setting-panel .editor-wrap.wide{max-width:none}
+            .setting-panel .editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;border-bottom:1px solid var(--border);background:#f7f8fa}
+            .setting-panel .editor-toolbar button{width:28px;height:26px;border:1px solid transparent;border-radius:3px;background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+            .setting-panel .editor-toolbar button:hover{border-color:var(--border);background:var(--surface)}
+            .setting-panel .editor-toolbar button svg{width:14px;height:14px;stroke:currentColor;fill:none}
+            .setting-panel .editor-toolbar .split{width:1px;height:18px;background:var(--border);margin:0 4px}
+            .setting-panel .editor-content{width:100%;min-height:140px;padding:12px;border:none;resize:vertical;font-size:14px;line-height:1.6;color:var(--text);outline:none;font-family:inherit;box-sizing:border-box}
+            .setting-panel .editor-content::placeholder{color:var(--text-muted)}
+            .setting-panel .switch .slider{background:#cdcfd6}
+            .setting-panel .switch input:checked+.slider{background:var(--primary)}
+            .setting-panel .upload-preview{width:120px;height:120px;border:1px dashed var(--border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;background:#f7f8fa;overflow:hidden;transition:all .15s}
+            .setting-panel .upload-preview:hover{border-color:var(--primary-100);background:var(--primary-50)}
+            .setting-panel .upload-preview img{max-width:100%;max-height:100%;object-fit:contain}
+            .setting-panel .upload-preview .plus{font-size:28px;color:var(--text-muted);font-weight:300}
+            .setting-panel .map-row{display:flex;gap:10px;align-items:center}
+            .setting-panel .map-row .form-input{flex:1;max-width:none}
+            .setting-panel .map-row .btn-map{height:36px;padding:0 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#f7f8fa;color:var(--text-secondary);font-size:14px;cursor:pointer;transition:.15s}
+            .setting-panel .map-row .btn-map:hover{border-color:var(--primary);color:var(--primary);background:#fff}
+            /* 地图位置选择弹窗 */
+            #mapPickerModal .modal-card{width:760px;max-width:96vw}
+            #mapPickerModal .map-search{display:flex;gap:10px;margin-bottom:14px}
+            #mapPickerModal .map-search input{flex:1;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;background:#f7f8fa;outline:none}
+            #mapPickerModal .map-search input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            #mapPickerModal .map-search button{white-space:nowrap}
+            #mapPickerContainer{height:420px;border-radius:var(--radius-sm);border:1px solid var(--border);background:#f7f8fa;overflow:hidden}
+            #mapPickerContainer .map-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:14px;text-align:center;padding:20px;line-height:1.7}
+            #mapPickerModal .map-coords{display:grid;grid-template-columns:1fr 1fr;gap:12px}
             /* 兼容其它 pane 旧结构 */
-            #basePanel .bs-pane .row{margin-bottom:20px}
-            #basePanel .bs-pane label.lbl{display:block;font-size:14px;color:var(--text);margin-bottom:8px}
-            #basePanel .lin-input,#basePanel textarea.lin-input{width:100%;max-width:520px;box-sizing:border-box;background:#f7f8fa;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;color:var(--text);outline:none;transition:.15s}
-            #basePanel .lin-input:focus,#basePanel textarea.lin-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
-            #basePanel .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
-            #basePanel .seg-item{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:14px;color:var(--text-secondary);cursor:pointer;background:var(--surface);border-right:1px solid var(--border);transition:.15s;user-select:none}
-            #basePanel .seg-item:last-child{border-right:none}
-            #basePanel .seg-item.active{background:var(--primary);color:#fff}
-            #basePanel .seg-item input{position:absolute;opacity:0;pointer-events:none}
-            #basePanel .hint{font-size:12px;color:var(--text-muted);margin-top:7px;line-height:1.6}
-            #basePanel .opt-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
-            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--text-secondary);cursor:pointer}
-            #basePanel .opt-row input{accent-color:var(--primary);width:16px;height:16px}
+            .setting-panel .bs-pane .row{margin-bottom:20px}
+            .setting-panel .bs-pane label.lbl{display:block;font-size:14px;color:var(--text);margin-bottom:8px}
+            .setting-panel .lin-input,.setting-panel textarea.lin-input{width:100%;max-width:520px;box-sizing:border-box;background:#f7f8fa;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;color:var(--text);outline:none;transition:.15s}
+            .setting-panel .lin-input:focus,.setting-panel textarea.lin-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            .setting-panel .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+            .setting-panel .seg-item{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:14px;color:var(--text-secondary);cursor:pointer;background:var(--surface);border-right:1px solid var(--border);transition:.15s;user-select:none}
+            .setting-panel .seg-item:last-child{border-right:none}
+            .setting-panel .seg-item.active{background:var(--primary);color:#fff}
+            .setting-panel .seg-item input{position:absolute;opacity:0;pointer-events:none}
+            .setting-panel .hint{font-size:12px;color:var(--text-muted);margin-top:7px;line-height:1.6}
+            .setting-panel .opt-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+            .setting-panel .opt-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--text-secondary);cursor:pointer}
+            .setting-panel .opt-row input{accent-color:var(--primary);width:16px;height:16px}
           </style>
           <div class="setting-wrap">
             <div class="bs-tabs">
@@ -1547,6 +1573,179 @@
           </div>
         </div>
 
+        <!-- 店铺设置 -->
+        <div id="shopPanel" class="panel hidden setting-panel">
+          <div class="setting-wrap">
+            <div class="shop-tabs">
+              <div class="shop-tab active" data-tab="merchant" onclick="switchShopTab('merchant')">商家信息</div>
+              <div class="shop-tab" data-tab="logistics" onclick="switchShopTab('logistics')">物流配置</div>
+            </div>
+            <div class="setting-card">
+              <!-- 商家信息 -->
+              <div class="shop-pane" data-pane="merchant">
+                <div class="form-row">
+                  <label class="form-label">公司名称</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="company_name" placeholder="公司名称">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">公司英文名称</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="company_name_en" placeholder="公司英文名称">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">联系人电话</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="contact_phone" placeholder="联系人电话">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">QQ</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="contact_qq" placeholder="QQ">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">公司地址</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="company_address" placeholder="公司地址">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">营业时间</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="business_hours" placeholder="营业时间">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">销售价货币符号</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="currency_symbol" value="¥" placeholder="销售价货币符号">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">划线价货币符号</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="original_currency_symbol" value="¥" placeholder="划线价货币符号">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">Logo图片</label>
+                  <div class="form-control">
+                    <div class="upload-preview" onclick="triggerUpload('shop_logo')" id="shopLogoPreview">
+                      <span class="plus">+</span>
+                    </div>
+                    <input type="hidden" data-setting="shop_logo" id="shopLogoInput">
+                    <div class="form-hint">建议尺寸 200x200 像素</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">内容</label>
+                  <div class="form-control">
+                    <div class="editor-wrap wide">
+                      <div class="editor-toolbar">
+                        <button type="button" title="标题">H</button>
+                        <button type="button" title="加粗"><svg viewBox="0 0 24 24"><path d="M6 12h9a4 4 0 0 0 0-8H6v8zm0 0v8h10a4 4 0 0 0 0-8H6z"/></svg></button>
+                        <button type="button" title="斜体"><svg viewBox="0 0 24 24"><path d="M19 4h-9M10 20h9M14 4l-4 16"/></svg></button>
+                        <button type="button" title="下划线"><svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 12 0V3M4 21h16"/></svg></button>
+                        <button type="button" title="删除线"><svg viewBox="0 0 24 24"><path d="M17.3 19c-1.4 1.4-3.3 2-5.3 2-4.4 0-8-3.1-8-7h18M6.7 5C8.1 3.6 10 3 12 3c4.4 0 8 3.1 8 7H2M4 12h16"/></svg></button>
+                        <span class="split"></span>
+                        <button type="button" title="左对齐"><svg viewBox="0 0 24 24"><path d="M17 10H7M21 6H3M21 14H3M17 18H7"/></svg></button>
+                        <button type="button" title="居中"><svg viewBox="0 0 24 24"><path d="M21 10H3M21 6H3M21 14H3M21 18H3"/></svg></button>
+                        <button type="button" title="链接"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                        <button type="button" title="有序列表"><svg viewBox="0 0 24 24"><path d="M10 6h11M10 12h11M10 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg></button>
+                        <button type="button" title="任务列表"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></button>
+                        <button type="button" title="引用"><svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3"/></svg></button>
+                        <button type="button" title="代码"><svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></button>
+                        <button type="button" title="表情"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></button>
+                        <span class="split"></span>
+                        <button type="button" title="撤销"><svg viewBox="0 0 24 24"><path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                        <button type="button" title="重做"><svg viewBox="0 0 24 24"><path d="M21 7v6h-6M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+                        <button type="button" title="全屏"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+                        <span class="split"></span>
+                        <button type="button" title="图片"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                        <button type="button" title="附件"><svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></button>
+                        <button type="button" title="源码">&lt;/&gt;</button>
+                      </div>
+                      <div class="editor-toolbar">
+                        <button type="button" title="图片"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                        <button type="button" title="链接"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                        <button type="button" title="涂鸦"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5zM2 2l7.586 7.586"/></svg></button>
+                        <button type="button" title="颜色"><svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M8 12h8M12 8v8"/></svg></button>
+                        <button type="button" title="源码">源码</button>
+                        <button type="button" title="全屏"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+                      </div>
+                      <textarea class="editor-content" rows="12" data-setting="merchant_content" placeholder="请输入内容"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">地图位置</label>
+                  <div class="form-control">
+                    <div class="map-row">
+                      <input type="text" class="form-input" data-setting="map_location" placeholder="地图位置">
+                      <button type="button" class="btn-map" onclick="openMapPicker()">选择位置</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">分享标题</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="share_title" placeholder="分享标题">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">分享描述</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input wide" data-setting="share_desc" placeholder="分享描述">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">分享封面图</label>
+                  <div class="form-control">
+                    <div class="upload-preview" onclick="triggerUpload('share_cover')" id="shareCoverPreview">
+                      <span class="plus">+</span>
+                    </div>
+                    <input type="hidden" data-setting="share_cover" id="shareCoverInput">
+                    <div class="form-hint">建议尺寸 500x400 像素</div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveShopSettings()">确定</button>
+                </div>
+              </div>
+
+              <!-- 物流配置 -->
+              <div class="shop-pane hidden" data-pane="logistics">
+                <div class="form-row">
+                  <label class="form-label">对接类型</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="logistics_type" value="kdniao" data-setting="logistics_type" checked> 快递鸟</label>
+                      <label><input type="radio" name="logistics_type" value="kuaidi100" data-setting="logistics_type"> 快递100</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">缓存时间</label>
+                  <div class="form-control">
+                    <div class="form-inline">
+                      <input type="number" class="form-input inline-num" data-setting="logistics_cache_minutes" data-type="number" value="20">
+                      <span class="inline-text">分钟</span>
+                    </div>
+                    <div class="form-hint">正式接口可能存在次数限制问题，设置缓存时间后在指定的时间内只读取缓存并不调用接口（数据可能会延迟）</div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveShopSettings()">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 通用占位 -->
         <div id="placeholderPanel" class="panel hidden">
           <div class="card">
@@ -2020,6 +2219,38 @@
     </div>
   </div>
 
+  <!-- 地图位置选择弹窗 -->
+  <div id="mapPickerModal" class="modal" onclick="if(event.target===this) closeMapPicker()">
+    <div class="modal-card">
+      <div class="modal-header"><h3>选择位置</h3><span class="close" onclick="closeMapPicker()">&times;</span></div>
+      <div class="modal-body">
+        <div class="map-search">
+          <input type="text" id="mapSearchInput" class="form-input" placeholder="搜索地址（如：北京市朝阳区）" onkeydown="if(event.key==='Enter')searchMapLocation()">
+          <button type="button" class="btn" onclick="searchMapLocation()">搜索</button>
+        </div>
+        <div id="mapPickerContainer"></div>
+        <div class="map-coords">
+          <div class="field">
+            <label>经度</label>
+            <input type="text" id="mapLng" placeholder="经度">
+          </div>
+          <div class="field">
+            <label>纬度</label>
+            <input type="text" id="mapLat" placeholder="纬度">
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px">
+          <label>地址</label>
+          <input type="text" id="mapAddress" placeholder="位置名称 / 详细地址">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeMapPicker()">取消</button>
+        <button class="btn" onclick="confirmMapLocation()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 底部导航编辑弹窗 -->
   <div id="bottomNavModal" class="modal">
     <div class="modal-card bn-modal-card">
@@ -2192,7 +2423,7 @@
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings,panel:'basePanel'},
-        {key:'info',label:'店铺设置',icon:ICONS.store},
+        {key:'info',label:'店铺设置',icon:ICONS.store,panel:'shopPanel'},
         {key:'delivery',label:'配送设置',icon:ICONS.truck}
       ]},
       {key:'member',label:'会员',icon:ICONS.users,children:[
@@ -2327,6 +2558,7 @@
       if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='basePanel') loadSettings();
+      if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
     }
@@ -3778,6 +4010,180 @@
     function switchBaseTab(tab){
       document.querySelectorAll('.bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
       document.querySelectorAll('.bs-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==tab));
+    }
+
+    /* ===== 店铺设置 ===== */
+    const shopDefaults={
+      company_name:'',company_name_en:'',contact_phone:'',contact_qq:'',
+      company_address:'',business_hours:'',currency_symbol:'¥',original_currency_symbol:'¥',
+      shop_logo:'',merchant_content:'',map_location:'',share_title:'',share_desc:'',share_cover:'',
+      logistics_type:'kdniao',logistics_cache_minutes:20
+    };
+    let shopData={};
+    async function loadShopSettings(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      shopData=Object.assign({},shopDefaults,d.data||{});
+      bindShopSettingsForm();
+      switchShopTab('merchant');
+    }
+    function bindShopSettingsForm(){
+      const form=document.getElementById('shopPanel');
+      if(!form)return;
+      form.querySelectorAll('[data-setting]').forEach(el=>{
+        const k=el.dataset.setting; const v=shopData[k];
+        if(el.type==='radio'){ if(String(v)===el.value) el.checked=true; }
+        else if(el.type==='checkbox'){ if(v!==undefined&&v!==null) el.checked=!!v; }
+        else if(v!==undefined&&v!==null) el.value=v;
+      });
+      updateShopPreview('shopLogoPreview','shopLogoInput','shop_logo');
+      updateShopPreview('shareCoverPreview','shareCoverInput','share_cover');
+    }
+    async function saveShopSettings(){
+      const payload={};
+      const form=document.getElementById('shopPanel');
+      form.querySelectorAll('[data-setting]').forEach(el=>{
+        const k=el.dataset.setting; let v;
+        if(el.type==='checkbox') v=el.checked;
+        else if(el.type==='radio'){ if(el.checked) v=el.value; else return; }
+        else v=el.value;
+        if(el.dataset.type==='number') v=(v===''?'':Number(v));
+        payload[k]=v;
+      });
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      shopData=d.data||shopData;
+      toast('已保存');
+    }
+    function switchShopTab(tab){
+      document.querySelectorAll('.shop-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
+      document.querySelectorAll('.shop-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==tab));
+    }
+    function updateShopPreview(previewId,inputId,key){
+      const imgUrl=shopData[key];
+      const box=document.getElementById(previewId);
+      if(!box)return;
+      if(imgUrl) box.innerHTML=`<img src="${imgUrl}" alt="">`;
+      else box.innerHTML='<span class="plus">+</span>';
+      const input=document.getElementById(inputId);
+      if(input) input.value=imgUrl||'';
+    }
+    function triggerUpload(key){
+      let input=document.getElementById('_shopUpload_'+key);
+      if(!input){
+        input=document.createElement('input');
+        input.type='file';
+        input.id='_shopUpload_'+key;
+        input.accept='image/*';
+        input.style.display='none';
+        input.onchange=e=>{
+          const file=e.target.files[0];
+          if(!file)return;
+          const reader=new FileReader();
+          reader.onload=evt=>{
+            shopData[key]=evt.target.result;
+            if(key==='shop_logo') updateShopPreview('shopLogoPreview','shopLogoInput','shop_logo');
+            if(key==='share_cover') updateShopPreview('shareCoverPreview','shareCoverInput','share_cover');
+          };
+          reader.readAsDataURL(file);
+        };
+        document.body.appendChild(input);
+      }
+      input.click();
+    }
+
+    /* ===== 地图位置选择器（腾讯地图）===== */
+    let mapPickerMap=null,mapPickerMarker=null;
+    function getTencentMapKey(){
+      const k=(typeof shopData==='object'&&shopData&&shopData.map_key)||'';
+      if(k)return k;
+      const inp=document.querySelector('[data-setting="map_key"]');
+      return inp?inp.value.trim():'';
+    }
+    function loadTencentMap(key){
+      return new Promise((resolve,reject)=>{
+        if(window.TMap)return resolve();
+        const s=document.createElement('script');
+        s.src=`https://map.qq.com/api/js?v=2.exp&key=${encodeURIComponent(key)}&libraries=service`;
+        s.onload=()=>resolve();
+        s.onerror=()=>reject(new Error('加载失败'));
+        document.head.appendChild(s);
+      });
+    }
+    function openMapPicker(){
+      const modal=document.getElementById('mapPickerModal');
+      modal.classList.add('show');
+      setTimeout(async ()=>{
+        const input=document.querySelector('#shopPanel [data-setting="map_location"]');
+        const val=input?input.value:'';
+        const m=val.match(/(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)/);
+        let lat=39.9042,lng=116.4074;
+        if(m){lng=parseFloat(m[1]);lat=parseFloat(m[2]);}
+        document.getElementById('mapAddress').value=val||'';
+        const key=getTencentMapKey();
+        if(!key){
+          document.getElementById('mapPickerContainer').innerHTML='<div class="map-empty">未配置腾讯地图密钥<br>请先在「基础设置」填写地图密钥 key，之后即可使用地图选点；<br>当前也可直接手动填写经度、纬度与地址。</div>';
+          return;
+        }
+        try{
+          await loadTencentMap(key);
+        }catch(e){
+          document.getElementById('mapPickerContainer').innerHTML='<div class="map-empty">腾讯地图加载失败，请检查密钥或网络后重试</div>';
+          return;
+        }
+        if(!mapPickerMap){
+          document.getElementById('mapPickerContainer').innerHTML='';
+          mapPickerMap=new TMap.Map(document.getElementById('mapPickerContainer'),{center:new TMap.LatLng(lat,lng),zoom:13});
+          mapPickerMap.on('click',evt=>{
+            const ll=evt.latLng;
+            setMapPickerMarker(ll.getLat(),ll.getLng());
+          });
+        }else{
+          mapPickerMap.setCenter(new TMap.LatLng(lat,lng));
+        }
+        setTimeout(()=>{if(mapPickerMap&&mapPickerMap.resize)mapPickerMap.resize();},120);
+        setMapPickerMarker(lat,lng);
+      },50);
+    }
+    function setMapPickerMarker(lat,lng){
+      document.getElementById('mapLat').value=Number(lat).toFixed(6);
+      document.getElementById('mapLng').value=Number(lng).toFixed(6);
+      if(!mapPickerMap)return;
+      if(mapPickerMarker)mapPickerMarker.setMap(null);
+      mapPickerMarker=new TMap.MultiMarker({
+        map:mapPickerMap,
+        geometries:[{id:'picker',position:new TMap.LatLng(lat,lng)}]
+      });
+      mapPickerMap.setCenter(new TMap.LatLng(lat,lng));
+    }
+    function closeMapPicker(){document.getElementById('mapPickerModal').classList.remove('show');}
+    function confirmMapLocation(){
+      const lat=document.getElementById('mapLat').value.trim();
+      const lng=document.getElementById('mapLng').value.trim();
+      const address=document.getElementById('mapAddress').value.trim();
+      let result=address||'';
+      if(lat&&lng){
+        if(result) result+=` (${lng},${lat})`;
+        else result=`${lng},${lat}`;
+      }
+      const input=document.querySelector('#shopPanel [data-setting="map_location"]');
+      if(input) input.value=result;
+      closeMapPicker();
+    }
+    async function searchMapLocation(){
+      const q=document.getElementById('mapSearchInput').value.trim();
+      if(!q){toast('请输入搜索地址');return;}
+      if(!window.TMap||!TMap.service){toast('地图未加载，无法搜索');return;}
+      try{
+        const search=new TMap.service.Search({});
+        const res=await search.search({keyword:q});
+        const list=(res&&res.data)||[];
+        if(!list.length){toast('未找到该地址');return;}
+        const item=list[0];
+        const loc=item.location||{};
+        setMapPickerMarker(loc.lat,loc.lng);
+        document.getElementById('mapAddress').value=(item.title||item.address||'')+'';
+      }catch(e){toast('搜索失败，请直接在地图上点击选择');}
     }
 
     function switchBottomNavTab(tab){
