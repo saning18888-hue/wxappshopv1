@@ -6,15 +6,59 @@
 
 -- 会员
 CREATE TABLE IF NOT EXISTS users (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  openid     TEXT NOT NULL DEFAULT '',
-  unionid    TEXT NOT NULL DEFAULT '',
-  nickname   TEXT NOT NULL DEFAULT '',
-  avatar     TEXT NOT NULL DEFAULT '',
-  status     INTEGER NOT NULL DEFAULT 1,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  openid           TEXT NOT NULL DEFAULT '',
+  unionid          TEXT NOT NULL DEFAULT '',
+  nickname         TEXT NOT NULL DEFAULT '',
+  avatar           TEXT NOT NULL DEFAULT '',
+  phone            TEXT NOT NULL DEFAULT '',
+  gender           INTEGER NOT NULL DEFAULT 0,
+  level            INTEGER NOT NULL DEFAULT 0,
+  growth           INTEGER NOT NULL DEFAULT 0,
+  points           INTEGER NOT NULL DEFAULT 0,
+  balance          INTEGER NOT NULL DEFAULT 0,
+  group_id         INTEGER NOT NULL DEFAULT 0,
+  source           TEXT NOT NULL DEFAULT '',
+  auth_status      INTEGER NOT NULL DEFAULT 1,
+  staff_id         INTEGER NOT NULL DEFAULT 0,
+  distributor_id   INTEGER NOT NULL DEFAULT 0,
+  delete_status    INTEGER NOT NULL DEFAULT 0,
+  delete_reason    TEXT NOT NULL DEFAULT '',
+  delete_apply_time TEXT DEFAULT '',
+  tags             TEXT NOT NULL DEFAULT '',
+  status           INTEGER NOT NULL DEFAULT 1,
+  created_at       TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at       TEXT DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (openid)
+);
+
+-- 会员分组
+CREATE TABLE IF NOT EXISTS member_groups (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,
+  level      INTEGER NOT NULL DEFAULT 0,
+  discount   INTEGER NOT NULL DEFAULT 100,
+  remark     TEXT NOT NULL DEFAULT '',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_member_groups_level ON member_groups(level);
+
+-- 员工
+CREATE TABLE IF NOT EXISTS staff (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,
+  phone      TEXT NOT NULL DEFAULT '',
+  remark     TEXT NOT NULL DEFAULT '',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 分销商
+CREATE TABLE IF NOT EXISTS distributors (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  name       TEXT NOT NULL,
+  phone      TEXT NOT NULL DEFAULT '',
+  remark     TEXT NOT NULL DEFAULT '',
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 登录令牌
@@ -189,8 +233,21 @@ CREATE INDEX idx_payments_order ON order_payments(order_id);
 -- =====================================================================
 -- 演示种子数据
 -- =====================================================================
-INSERT INTO users (id, openid, nickname, avatar, status)
-VALUES (1, 'mock_demo', '演示会员', '', 1);
+INSERT INTO users (id, openid, nickname, avatar, phone, level, growth, points, balance, group_id, status)
+VALUES (1, 'mock_demo', '演示会员', '', '13800000000', 2, 520, 1280, 0, 2, 1);
+
+INSERT INTO member_groups (id, name, level, discount, remark) VALUES
+(1, '普通会员', 1, 100, '默认分组'),
+(2, 'VIP会员', 2, 95, '消费满1000升级'),
+(3, 'SVIP会员', 3, 90, '消费满5000升级');
+
+INSERT INTO staff (id, name, phone, remark) VALUES
+(1, '客服-小美', '13900000001', '售前售后'),
+(2, '客服-小帅', '13900000002', '大客户');
+
+INSERT INTO distributors (id, name, phone, remark) VALUES
+(1, '分销商-A', '13700000001', '区域代理'),
+(2, '分销商-B', '13700000002', '社群团长');
 
 INSERT INTO categories (id, parent_id, name, icon, sort) VALUES
 (1, 0, '生鲜果蔬', 'https://placehold.co/96x96/FF6B35/fff?text=果', 1),

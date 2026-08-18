@@ -48,6 +48,7 @@ class SettingsService
             'captcha_order'      => false,       // 下单图形验证码
             'slider_verify'      => true,        // 滑块验证
             'risk_control'       => 'low',       // 风控等级 low / middle / high
+            'member_agreement'   => '',          // 会员协议（富文本）
         ];
     }
 

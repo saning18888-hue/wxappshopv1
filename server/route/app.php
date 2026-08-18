@@ -67,4 +67,18 @@ Route::group('admin', function () {
     // 基础设置
     Route::get('settings', 'admin.Settings/get');
     Route::post('settings', 'admin.Settings/save');
+
+    // 会员管理
+    Route::get('members', 'admin.Member/index');
+    Route::get('members/:id', 'admin.Member/detail');
+    Route::post('members/:id/save', 'admin.Member/save');
+    Route::post('members/:id/adjust', 'admin.Member/adjust');
+    Route::post('members/:id/assign_staff', 'admin.Member/assignStaff');
+    Route::post('members/:id/assign_distributor', 'admin.Member/assignDistributor');
+    Route::post('members/:id/logout', 'admin.Member/logout');
+    Route::get('member_groups', 'admin.Member/groups');
+    Route::get('member_staff', 'admin.Member/staffList');
+    Route::get('member_distributors', 'admin.Member/distributorList');
+    Route::get('member_agreement', 'admin.Member/agreement');
+    Route::post('member_agreement', 'admin.Member/saveAgreement');
 });
