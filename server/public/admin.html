@@ -1256,6 +1256,50 @@
           </div>
         </div>
 
+        <!-- 评论管理 -->
+        <div id="reviewPanel" class="panel hidden">
+          <div class="card">
+            <h3>评论管理</h3>
+            <div class="toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn sm" onclick="exportReviews()">导出</button>
+                <button class="btn sm" onclick="batchToggleReviewHidden()">隐藏/显示评论</button>
+                <button class="btn sm danger" onclick="batchDeleteReviews()">批量删除</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="reviewKeyword" placeholder="关键词搜索" onkeydown="if(event.key==='Enter')loadReviews()">
+                <button class="btn sm" onclick="loadReviews()">查询</button>
+              </div>
+            </div>
+            <div class="bulk-bar" id="reviewBulkBar" style="display:none">
+              <span>已选择 <b id="reviewCheckedCount">0</b> 项</span>
+              <button class="btn sm" onclick="batchToggleReviewHidden()">隐藏/显示</button>
+              <button class="btn sm danger" onclick="batchDeleteReviews()">删除</button>
+              <button class="btn sm gray" onclick="clearReviewCheck()">取消选择</button>
+            </div>
+            <div class="table-wrap" id="reviewTableWrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="col-check" style="width:40px"><input type="checkbox" id="reviewCheckAll" onchange="toggleReviewCheckAll()"></th>
+                    <th style="width:70px">用户头像</th>
+                    <th>商品名称</th>
+                    <th style="width:160px">评论内容</th>
+                    <th style="width:120px">评论图片</th>
+                    <th style="width:90px">星级</th>
+                    <th style="width:70px">隐藏/显示</th>
+                    <th style="width:130px">评论时间</th>
+                    <th style="width:140px">回复内容</th>
+                    <th style="width:90px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="reviewBody"><tr><td colspan="10" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="pager" id="reviewPager"></div>
+          </div>
+        </div>
+
         <!-- 首页装修：按模块分设 -->
         <div id="sectionPanel" class="panel hidden">
           <div class="sec-toolbar">
@@ -3087,6 +3131,20 @@
       <div class="modal-footer">
         <button class="btn gray" onclick="closeRefundModal()">取消</button>
         <button class="btn" onclick="saveRefund()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 评论回复弹窗 -->
+  <div id="reviewReplyModal" class="modal" onclick="if(event.target===this)closeReviewReplyModal()">
+    <div class="modal-card" style="width:480px">
+      <div class="modal-header"><h3>回复评论</h3><span class="close" onclick="closeReviewReplyModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="field"><label>回复内容</label><textarea class="form-input" id="reviewReplyText" rows="4" placeholder="请输入回复内容"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeReviewReplyModal()">取消</button>
+        <button class="btn" onclick="saveReviewReply()">确定</button>
       </div>
     </div>
   </div>
@@ -5735,6 +5793,99 @@
     function loadCards(){
       if(currentCardTab==='cards') loadCardList(); else loadCardTransfers();
     }
+
+    /* 评论管理 */
+    let reviewPage=1;
+    function loadReviews(){
+      const kw=document.getElementById('reviewKeyword').value.trim();
+      const q=`?page=${reviewPage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}`;
+      fetchA(`${BASE}/reviews${q}`).then(d=>{
+        if(d.code!==0){toast(d.msg||'加载失败');return;}
+        renderReviews(d.data);
+      });
+    }
+    function renderReviews(data){
+      const tb=document.getElementById('reviewBody');
+      if(!data.list.length){tb.innerHTML='<tr><td colspan="10" class="empty-row">暂无数据</td></tr>';document.getElementById('reviewPager').innerHTML='';return;}
+      tb.innerHTML=data.list.map(r=>`<tr>
+        <td class="col-check"><input type="checkbox" class="rv-check" value="${r.id}" onchange="updateReviewBulk()"></td>
+        <td><img src="${r.avatar||'https://placehold.co/40x40/ccc/fff?text=U'}" style="width:40px;height:40px;border-radius:50%;object-fit:cover" onerror="this.src='https://placehold.co/40x40/ccc/fff?text=U'"></td>
+        <td>${escapeHtml(r.goods_title)}</td>
+        <td>${escapeHtml(r.content)}</td>
+        <td>${(r.images||[]).map(img=>`<img src="${img}" style="width:40px;height:40px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="window.open('${img}')">`).join('')}</td>
+        <td>${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</td>
+        <td><label class="switch"><input type="checkbox" ${r.is_hidden?'':'checked'} onchange="toggleReviewHidden(${r.id})"><span></span></label></td>
+        <td>${r.created_at}</td>
+        <td>${r.reply?escapeHtml(r.reply):'--'}</td>
+        <td class="ops">
+          <a href="javascript:" onclick="openReviewReplyModal(${r.id},'${escapeHtml(r.reply||'')}')">回复</a>
+          <a href="javascript:" class="danger" onclick="deleteReview(${r.id})">删除</a>
+        </td>
+      </tr>`).join('');
+      document.getElementById('reviewPager').innerHTML=renderPagerHtml(reviewPage,data.last_page,'reviewPage')+'<span style="font-size:12px;color:#888;margin-left:10px">共 '+data.total+' 条</span>';
+    }
+    function updateReviewBulk(){
+      const boxes=document.querySelectorAll('.rv-check');
+      const checked=[...boxes].filter(c=>c.checked);
+      document.getElementById('reviewCheckedCount').textContent=checked.length;
+      document.getElementById('reviewBulkBar').style.display=checked.length?'flex':'none';
+      document.getElementById('reviewCheckAll').checked=boxes.length&&boxes.length===checked.length;
+    }
+    function toggleReviewCheckAll(){
+      const all=document.getElementById('reviewCheckAll').checked;
+      document.querySelectorAll('.rv-check').forEach(c=>c.checked=all);
+      updateReviewBulk();
+    }
+    function clearReviewCheck(){
+      document.querySelectorAll('.rv-check').forEach(c=>c.checked=false);
+      document.getElementById('reviewCheckAll').checked=false;
+      updateReviewBulk();
+    }
+    function getCheckedReviewIds(){return [...document.querySelectorAll('.rv-check:checked')].map(c=>c.value);}
+    async function toggleReviewHidden(id){
+      const d=await fetchA(`${BASE}/reviews/${id}/toggle_hidden`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'操作失败');loadReviews();}
+    }
+    async function batchToggleReviewHidden(){
+      const ids=getCheckedReviewIds();
+      if(!ids.length){toast('请先选择评论');return;}
+      if(!confirm('确定切换所选评论的显示/隐藏状态吗？'))return;
+      const d=await fetchA(`${BASE}/reviews/batch_toggle_hidden`,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'操作失败');return;}
+      toast('操作成功');clearReviewCheck();loadReviews();
+    }
+    async function batchDeleteReviews(){
+      const ids=getCheckedReviewIds();
+      if(!ids.length){toast('请先选择评论');return;}
+      if(!confirm('确定删除所选评论吗？'))return;
+      const d=await fetchA(`${BASE}/reviews/batch_delete`,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');clearReviewCheck();loadReviews();
+    }
+    async function deleteReview(id){
+      if(!confirm('确定删除该评论吗？'))return;
+      const d=await fetchA(`${BASE}/reviews/batch_delete`,{method:'POST',body:{ids:[id]}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadReviews();
+    }
+    let replyReviewId=0;
+    function openReviewReplyModal(id,reply){
+      replyReviewId=id;
+      document.getElementById('reviewReplyText').value=reply;
+      document.getElementById('reviewReplyModal').classList.add('open');
+    }
+    function closeReviewReplyModal(){
+      document.getElementById('reviewReplyModal').classList.remove('open');
+      replyReviewId=0;
+    }
+    async function saveReviewReply(){
+      const reply=document.getElementById('reviewReplyText').value.trim();
+      if(!reply){toast('请输入回复内容');return;}
+      const d=await fetchA(`${BASE}/reviews/${replyReviewId}/reply`,{method:'POST',body:{reply}});
+      if(d.code!==0){toast(d.msg||'回复失败');return;}
+      toast('回复成功');closeReviewReplyModal();loadReviews();
+    }
+    function exportReviews(){toast('导出功能开发中');}
 
     /* 订单编辑弹窗 */
     let currentOrder=null;

@@ -91,6 +91,13 @@ Route::group('admin', function () {
     Route::get('cards/transfers', 'admin.Card/transfers');
     Route::post('cards/:id/void', 'admin.Card/void');
 
+    // 评论管理
+    Route::get('reviews', 'admin.Review/index');
+    Route::post('reviews/:id/reply', 'admin.Review/reply');
+    Route::post('reviews/:id/toggle_hidden', 'admin.Review/toggleHidden');
+    Route::post('reviews/batch_delete', 'admin.Review/batchDelete');
+    Route::post('reviews/batch_toggle_hidden', 'admin.Review/batchToggleHidden');
+
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');

@@ -297,6 +297,32 @@ CREATE INDEX idx_transfers_from ON card_transfers(from_user_id);
 CREATE INDEX idx_transfers_to   ON card_transfers(to_user_id);
 
 -- =====================================================================
+-- 商品评论
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS goods_reviews (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  order_id     INTEGER NOT NULL DEFAULT 0,
+  order_no     TEXT NOT NULL DEFAULT '',
+  user_id      INTEGER NOT NULL DEFAULT 0,
+  user_name    TEXT NOT NULL DEFAULT '',
+  avatar       TEXT NOT NULL DEFAULT '',
+  goods_id     INTEGER NOT NULL DEFAULT 0,
+  goods_title  TEXT NOT NULL DEFAULT '',
+  goods_image  TEXT NOT NULL DEFAULT '',
+  content      TEXT NOT NULL DEFAULT '',
+  images       TEXT NOT NULL DEFAULT '[]',
+  rating       INTEGER NOT NULL DEFAULT 5,
+  is_hidden    INTEGER NOT NULL DEFAULT 0,
+  reply        TEXT NOT NULL DEFAULT '',
+  reply_at     TEXT DEFAULT NULL,
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_reviews_goods ON goods_reviews(goods_id);
+CREATE INDEX idx_reviews_user  ON goods_reviews(user_id);
+CREATE INDEX idx_reviews_order ON goods_reviews(order_id);
+
+-- =====================================================================
 -- 演示种子数据
 -- =====================================================================
 INSERT INTO users (id, openid, nickname, avatar, phone, level, growth, points, balance, group_id, status)

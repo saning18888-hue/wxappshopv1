@@ -11,6 +11,23 @@
 
 ---
 
+### v0.1.21 · 2026-08-18 · 新增评论管理
+**范围**：运营后台 UI（`server/public/admin.html`）、评论 API（`server/app/controller/admin/Review.php`、`ReviewService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_goods_reviews.php`）。
+**改动**：
+- 新增「订单 > 评论管理」独立菜单入口，按截图还原评论列表。
+- 列表列：用户头像、商品名称、评论内容、评论图片、星级、隐藏/显示开关、评论时间、回复内容、操作（回复/删除）。
+- 新增后台评论列表 `/admin/reviews`、回复 `/admin/reviews/:id/reply`、切换隐藏 `/admin/reviews/:id/toggle_hidden`、批量隐藏显示 `/admin/reviews/batch_toggle_hidden`、批量删除 `/admin/reviews/batch_delete` 接口。
+- 新增 `goods_reviews` 表；新增幂等迁移脚本 `database/apply_goods_reviews.php`。
+- 页面功能：列表加载、关键词搜索、分页、全选批量操作；导出按钮占位。
+
+### v0.1.20 · 2026-08-18 · 新增电子卡券管理
+**范围**：运营后台 UI（`server/public/admin.html`）、卡券 API（`server/app/controller/admin/Card.php`、`CardService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_order_cards.php`）。
+**改动**：
+- 新增「订单 > 电子卡券」独立菜单入口，按截图还原：电子卡券列表 / 转赠记录 两个 tab。
+- 新增后台卡券列表 `/admin/cards`、转赠记录 `/admin/cards/transfers`、卡券作废 `/admin/cards/:id/void` 接口。
+- 新增 `order_cards`、`card_transfers` 表；新增幂等迁移脚本 `database/apply_order_cards.php`。
+- 页面功能：列表加载、关键词搜索、分页、作废操作；导出按钮占位。
+
 ### v0.1.19 · 2026-08-18 · 新增订单售后管理：待退款/已退款/回收站
 **范围**：运营后台 UI（`server/public/admin.html`）、订单 API（`server/app/controller/admin/Order.php`、`OrderService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_order_refund.php`）。
 **改动**：
