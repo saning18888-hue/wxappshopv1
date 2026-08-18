@@ -8,6 +8,14 @@
 - 微信能力：**先用 Mock 模拟**（登录/支付），结构预留真实接口
 - 范围：**垂直切片优先**，再按 PRD 分阶段补齐
 
+## 提交规范（必读）
+- **发版即写更新文档**：每次发版/重大更新**提交 GitHub 前**，必须在 `CHANGELOG.md` 顶部追加本次版本记录（版本号、日期、范围、改动、兼容性）——这是单一数据源，避免漏记。详细换机/环境说明仍在 `RELEASE.md`。
+- **禁止 `git commit -m "中文"`（Windows 会乱码）**：PowerShell 默认 GBK 代码页会把中文字面量双重编码，导致 commit message 变成 `璁㈠崟...` 这类乱码（已在 v0.1.18 踩坑）。
+  - ✅ 正确做法：把中文 message 写入 **UTF-8 无 BOM** 文件后 `git commit -F 文件.txt`；或提交前 `chcp 65001` 切到 UTF-8 代码页。
+  - ✅ 建议：`git config --global i18n.commitEncoding utf-8` 与 `i18n.logOutputEncoding utf-8`。
+- **推送前自检**：`git log -1 --pretty=%s` 若显示非中文即为乱码，必须 `git commit --amend` 修正后再 `git push`。
+- **版本号规则**：`v主.次.修订`，已发版本见 `RELEASE.md`；含 tag 时 `git tag vX.Y.Z` 并 `git push --tags`。
+
 ## 目录结构
 ```
 wxappb2c/
