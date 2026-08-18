@@ -286,4 +286,150 @@ class GoodsService
     {
         Db::name('goods')->where('id', $id)->update(['status' => 0, 'updated_at' => date('Y-m-d H:i:s')]);
     }
+
+    // ---------- 商品规格管理（独立菜单）----------
+
+    public function specList(?string $keyword): array
+    {
+        $q = Db::name('goods_specs')->alias('s')
+            ->field("s.*, GROUP_CONCAT(v.value, ',') as values_text")
+            ->leftJoin('goods_spec_values v', 'v.spec_id=s.id')
+            ->group('s.id')
+            ->order('s.sort', 'asc')
+            ->order('s.id', 'asc');
+        if ($keyword) {
+            $q->where('s.name', 'like', "%{$keyword}%");
+        }
+        $rows = $q->select()->toArray();
+        foreach ($rows as &$r) {
+            $r['values_text'] = trim(str_replace(',', ',', $r['values_text'] ?? ''), ',');
+        }
+        return $rows;
+    }
+
+    public function specDetail(int $id): ?array
+    {
+        $spec = Db::name('goods_specs')->where('id', $id)->find();
+        if (!$spec) {
+            return null;
+        }
+        $spec['values'] = Db::name('goods_spec_values')
+            ->where('spec_id', $id)
+            ->order('sort', 'asc')
+            ->order('id', 'asc')
+            ->select()
+            ->toArray();
+        return $spec;
+    }
+
+    public function specSave(?int $id, array $data): int
+    {
+        $name = trim($data['name'] ?? '');
+        if ($name === '') {
+            throw new \Exception('规格名称不能为空');
+        }
+        $values = array_values(array_filter(array_map(function ($v) {
+            $value = trim($v['value'] ?? '');
+            return $value === '' ? null : [
+                'id'   => intval($v['id'] ?? 0),
+                'value'=> $value,
+                'sort' => intval($v['sort'] ?? 0),
+            ];
+        }, $data['values'] ?? [])));
+        if (empty($values)) {
+            throw new \Exception('至少需要一个规格值');
+        }
+        $default = intval($data['default_spec'] ?? 1);
+        $sort    = intval($data['sort'] ?? 0);
+
+        Db::startTrans();
+        try {
+            if ($id) {
+                $exists = Db::name('goods_specs')->where('name', $name)->where('id', '<>', $id)->find();
+                if ($exists) {
+                    throw new \Exception('规格名称已存在');
+                }
+                Db::name('goods_specs')->where('id', $id)->update([
+                    'name'         => $name,
+                    'default_spec' => $default,
+                    'sort'         => $sort,
+                    'updated_at'   => date('Y-m-d H:i:s'),
+                ]);
+            } else {
+                $exists = Db::name('goods_specs')->where('name', $name)->find();
+                if ($exists) {
+                    throw new \Exception('规格名称已存在');
+                }
+                $id = Db::name('goods_specs')->insertGetId([
+                    'name'         => $name,
+                    'default_spec' => $default,
+                    'sort'         => $sort,
+                    'created_at'   => date('Y-m-d H:i:s'),
+                ]);
+            }
+            // 全量覆盖规格值
+            Db::name('goods_spec_values')->where('spec_id', $id)->delete();
+            foreach ($values as $i => $v) {
+                Db::name('goods_spec_values')->insert([
+                    'spec_id'    => $id,
+                    'goods_id'   => 0,
+                    'value'      => $v['value'],
+                    'sort'       => $i,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            Db::commit();
+            return $id;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
+    public function specDelete(int $id): void
+    {
+        // 已被商品引用的规格不能删除
+        $used = Db::name('goods_skus')->whereLike('spec_value_ids', "%{$id}%")->count();
+        if ($used > 0) {
+            throw new \Exception('该规格已被商品使用，无法删除');
+        }
+        Db::name('goods_spec_values')->where('spec_id', $id)->delete();
+        Db::name('goods_specs')->where('id', $id)->delete();
+    }
+
+    public function specSetDefault(int $id, int $default): void
+    {
+        Db::name('goods_specs')->where('id', $id)->update([
+            'default_spec' => $default ? 1 : 0,
+            'updated_at'   => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    public function specMove(int $id, string $dir): void
+    {
+        $row = Db::name('goods_specs')->where('id', $id)->find();
+        if (!$row) {
+            throw new \Exception('规格不存在');
+        }
+        if ($dir === 'up') {
+            $swap = Db::name('goods_specs')
+                ->where('sort', '<=', $row['sort'])
+                ->where('id', '<>', $id)
+                ->order('sort', 'desc')
+                ->order('id', 'desc')
+                ->find();
+        } else {
+            $swap = Db::name('goods_specs')
+                ->where('sort', '>=', $row['sort'])
+                ->where('id', '<>', $id)
+                ->order('sort', 'asc')
+                ->order('id', 'asc')
+                ->find();
+        }
+        if (!$swap) {
+            return;
+        }
+        Db::name('goods_specs')->where('id', $id)->update(['sort' => $swap['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
+        Db::name('goods_specs')->where('id', $swap['id'])->update(['sort' => $row['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
+    }
 }

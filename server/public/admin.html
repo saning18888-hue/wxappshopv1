@@ -268,6 +268,11 @@
     .upload-add{width:88px;height:88px;border:1px dashed #d0d6e0;border-radius:var(--radius-sm);background:#f7f8fa;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
     .upload-add:hover{border-color:var(--primary);background:var(--primary-50)}
     .upload-add svg{width:22px;height:22px;color:var(--text-muted)}
+    .spec-values{max-width:320px;color:var(--text-secondary);font-size:13px;line-height:1.6;word-break:break-all}
+    #goodsSpecFormModal .field{position:relative}
+    #goodsSpecFormModal .form-input{height:38px;padding:0 10px;font-size:13px}
+    #gsValueTbody td{padding:8px 4px}
+    #gsValueTbody .form-input{width:100%}
     .upload-add input{display:none}
     .upload-tip{font-size:12px;color:var(--text-muted);margin-top:8px}
     .upload-single{width:120px;height:120px}
@@ -960,6 +965,64 @@
               </table>
             </div>
             <div class="pager" id="categoryPager"></div>
+          </div>
+        </div>
+
+        <!-- 商品规格 -->
+        <div id="goodsSpecPanel" class="panel hidden">
+          <div class="card">
+            <h3>商品规格</h3>
+            <div class="toolbar" style="justify-content:space-between">
+              <button class="btn sm" onclick="openGoodsSpecForm()">+ 添加</button>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="goodsSpecKeyword" placeholder="关键词筛选" onkeydown="if(event.key==='Enter')loadGoodsSpecs()">
+                <button class="btn sm" onclick="loadGoodsSpecs()">查询</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>规格名称</th>
+                    <th>规格值</th>
+                    <th style="width:100px">默认规格</th>
+                    <th style="width:110px">排序</th>
+                    <th style="width:120px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="goodsSpecTbody"><tr><td colspan="5" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 商品规格新增/编辑弹窗 -->
+          <div id="goodsSpecFormModal" class="modal" onclick="if(event.target===this)closeGoodsSpecForm()">
+            <div class="modal-card" style="width:520px">
+              <div class="modal-header"><h3 id="goodsSpecFormTitle">添加商品规格</h3><span class="close" onclick="closeGoodsSpecForm()">&times;</span></div>
+              <div class="modal-body">
+                <input type="hidden" id="gsFormId">
+                <div class="field"><label><span class="req">*</span>规格名称</label><input type="text" class="form-input" id="gsFormName" placeholder="规格名称"></div>
+                <div class="field" style="flex-direction:row;align-items:center;justify-content:space-between;gap:16px">
+                  <label style="margin-bottom:0">默认规格</label>
+                  <label class="switch"><input type="checkbox" id="gsFormDefault"><span class="slider"></span></label>
+                </div>
+                <div class="field">
+                  <label style="display:flex;align-items:center;justify-content:space-between">规格值 <button class="btn sm" onclick="addGoodsSpecValueRow()">添加属性值</button></label>
+                  <div class="table-wrap" style="margin-top:8px">
+                    <table>
+                      <thead>
+                        <tr><th>规格值</th><th style="width:80px">排序</th><th style="width:80px">操作</th></tr>
+                      </thead>
+                      <tbody id="gsValueTbody"><tr><td colspan="3" class="empty-row">暂无数据</td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn gray" onclick="closeGoodsSpecForm()">取消</button>
+                <button class="btn" onclick="saveGoodsSpecForm()">确定</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -3404,7 +3467,7 @@
       {key:'goods',label:'商品',icon:ICONS.goods,children:[
         {key:'list',label:'商品列表',icon:ICONS.package,panel:'goodsPanel',default:true},
         {key:'category',label:'商品分类',icon:ICONS.layers,panel:'categoryPanel'},
-        {key:'sku',label:'商品规格',icon:ICONS.ruler},
+        {key:'sku',label:'商品规格',icon:ICONS.ruler,panel:'goodsSpecPanel'},
         {key:'attr',label:'商品属性',icon:ICONS.listCheck}
       ]},
       {key:'orders',label:'订单',icon:ICONS.orders,children:[
@@ -3524,6 +3587,7 @@
 
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
+      if(panelId==='goodsSpecPanel') loadGoodsSpecs();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='sectionPanel') loadSection();
       if(panelId==='layoutPanel') loadLayout();
@@ -4007,10 +4071,10 @@
       document.getElementById('mGroupFormDiscount').value=discount===undefined?100:discount;
       document.getElementById('mGroupFormRemark').value=remark||'';
       title.textContent=id?'编辑分组':'新增分组';
-      show('memberGroupFormModal',true);
+      document.getElementById('memberGroupFormModal').classList.add('open');
     }
     function closeMemberGroupForm(){
-      show('memberGroupFormModal',false);
+      document.getElementById('memberGroupFormModal').classList.remove('open');
       document.getElementById('mGroupFormId').value='';
       document.getElementById('mGroupFormName').value='';
       document.getElementById('mGroupFormLevel').value='0';
@@ -4624,6 +4688,117 @@
       catExpanded[id]=!catExpanded[id];
       loadCategoriesAdmin();
     }
+    async function loadGoodsSpecs(){
+      const kw=document.getElementById('goodsSpecKeyword').value.trim();
+      const d=await fetchA(`${BASE}/goods_specs${kw?'?keyword='+encodeURIComponent(kw):''}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      renderGoodsSpecs(d.data||[]);
+    }
+    function renderGoodsSpecs(list){
+      const tbody=document.getElementById('goodsSpecTbody');
+      if(!list.length){tbody.innerHTML='<tr><td colspan="5" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=list.map((s,i)=>`
+        <tr>
+          <td>${escapeHtml(s.name)}</td>
+          <td><div class="spec-values">${escapeHtml(s.values_text||'')}</div></td>
+          <td><label class="switch"><input type="checkbox" ${s.default_spec==1?'checked':''} onchange="setGoodsSpecDefault(${s.id},this.checked)"><span class="slider"></span></label></td>
+          <td>
+            <div class="ops">
+              <a href="javascript:" title="上移" onclick="moveGoodsSpec(${s.id},'up')">↑</a>
+              <a href="javascript:" title="下移" onclick="moveGoodsSpec(${s.id},'down')">↓</a>
+            </div>
+          </td>
+          <td>
+            <div class="ops">
+              <a href="javascript:" onclick="editGoodsSpec(${s.id})">编辑</a>
+              <a href="javascript:" onclick="deleteGoodsSpec(${s.id},'${escapeHtml(s.name)}')">删除</a>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+    async function setGoodsSpecDefault(id,checked){
+      const d=await fetchA(`${BASE}/goods_specs/${id}/default`,{method:'POST',body:{default_spec:checked?1:0}});
+      if(d.code!==0){toast(d.msg||'设置失败');loadGoodsSpecs();}
+    }
+    async function moveGoodsSpec(id,dir){
+      const d=await fetchA(`${BASE}/goods_specs/${id}/move`,{method:'POST',body:{dir}});
+      if(d.code!==0){toast(d.msg||'移动失败');return;}
+      loadGoodsSpecs();
+    }
+    async function deleteGoodsSpec(id,name){
+      if(!confirm(`确定删除规格「${name}」吗？`))return;
+      const d=await fetchA(`${BASE}/goods_specs/${id}/delete`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadGoodsSpecs();
+    }
+    let gsValueRows=[];
+    function openGoodsSpecForm(){
+      gsValueRows=[];
+      document.getElementById('gsFormId').value='';
+      document.getElementById('gsFormName').value='';
+      document.getElementById('gsFormDefault').checked=false;
+      document.getElementById('goodsSpecFormTitle').textContent='添加商品规格';
+      renderGoodsSpecValues();
+      document.getElementById('goodsSpecFormModal').classList.add('open');
+    }
+    async function editGoodsSpec(id){
+      const d=await fetchA(`${BASE}/goods_specs/${id}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const s=d.data;
+      gsValueRows=(s.values||[]).map(v=>({id:v.id,value:v.value||'',sort:v.sort||0}));
+      document.getElementById('gsFormId').value=id;
+      document.getElementById('gsFormName').value=s.name||'';
+      document.getElementById('gsFormDefault').checked=s.default_spec==1;
+      document.getElementById('goodsSpecFormTitle').textContent='编辑商品规格';
+      renderGoodsSpecValues();
+      document.getElementById('goodsSpecFormModal').classList.add('open');
+    }
+    function closeGoodsSpecForm(){
+      document.getElementById('goodsSpecFormModal').classList.remove('open');
+      document.getElementById('gsFormId').value='';
+      document.getElementById('gsFormName').value='';
+      document.getElementById('gsFormDefault').checked=false;
+      gsValueRows=[];
+      renderGoodsSpecValues();
+    }
+    function addGoodsSpecValueRow(){
+      gsValueRows.push({id:0,value:'',sort:gsValueRows.length});
+      renderGoodsSpecValues();
+    }
+    function removeGoodsSpecValueRow(idx){
+      gsValueRows.splice(idx,1);
+      gsValueRows.forEach((r,i)=>r.sort=i);
+      renderGoodsSpecValues();
+    }
+    function updateGoodsSpecValueRow(idx,field,val){
+      gsValueRows[idx][field]=val;
+    }
+    function renderGoodsSpecValues(){
+      const tbody=document.getElementById('gsValueTbody');
+      if(!gsValueRows.length){tbody.innerHTML='<tr><td colspan="3" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=gsValueRows.map((r,i)=>`
+        <tr>
+          <td><input type="text" class="form-input" value="${escapeHtml(r.value)}" oninput="updateGoodsSpecValueRow(${i},'value',this.value)" placeholder="规格值"></td>
+          <td><input type="number" class="form-input" value="${r.sort}" oninput="updateGoodsSpecValueRow(${i},'sort',parseInt(this.value)||0)"></td>
+          <td><a href="javascript:" onclick="removeGoodsSpecValueRow(${i})">删除</a></td>
+        </tr>`).join('');
+    }
+    async function saveGoodsSpecForm(){
+      const id=document.getElementById('gsFormId').value;
+      const name=document.getElementById('gsFormName').value.trim();
+      const defaultSpec=document.getElementById('gsFormDefault').checked?1:0;
+      if(!name){toast('请输入规格名称');return;}
+      if(!gsValueRows.length){toast('请至少添加一个规格值');return;}
+      const empty=gsValueRows.some(r=>!r.value.trim());
+      if(empty){toast('规格值不能为空');return;}
+      const values=gsValueRows.map((r,i)=>({id:r.id||0,value:r.value.trim(),sort:i}));
+      const d=await fetchA(`${BASE}/goods_specs${id?'/'+id+'/save':''}`,{method:'POST',body:{id:id||0,name,default_spec:defaultSpec,values}});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      toast(id?'保存成功':'新增成功');
+      closeGoodsSpecForm();
+      loadGoodsSpecs();
+    }
+
     function renderCategoryPager(p){
       const total=p.total||0,pages=p.last_page||1,cur=p.page||1,size=p.page_size||categoryPageSize;
       const wrap=document.getElementById('categoryPager');wrap.innerHTML='';

@@ -49,6 +49,13 @@ Route::group('admin', function () {
     Route::post('goods', 'admin.Goods/save');
     Route::put('goods/:id', 'admin.Goods/save');
     Route::delete('goods/:id', 'admin.Goods/remove');
+    Route::get('goods_specs', 'admin.Goods/specList');
+    Route::get('goods_specs/:id', 'admin.Goods/specDetail');
+    Route::post('goods_specs', 'admin.Goods/specSave');
+    Route::post('goods_specs/:id/save', 'admin.Goods/specSave');
+    Route::post('goods_specs/:id/delete', 'admin.Goods/specDelete');
+    Route::post('goods_specs/:id/default', 'admin.Goods/specSetDefault');
+    Route::post('goods_specs/:id/move', 'admin.Goods/specMove');
     Route::get('categories', 'admin.Category/index');
     Route::get('categories/tree', 'admin.Category/tree');
     Route::post('categories', 'admin.Category/save');

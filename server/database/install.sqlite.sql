@@ -129,11 +129,13 @@ CREATE INDEX idx_goods_status ON goods(status);
 
 -- 规格
 CREATE TABLE IF NOT EXISTS goods_specs (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  goods_id   INTEGER NOT NULL,
-  name       TEXT NOT NULL,
-  sort       INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  goods_id      INTEGER NOT NULL,
+  name          TEXT NOT NULL,
+  default_spec  INTEGER NOT NULL DEFAULT 1,
+  sort          INTEGER NOT NULL DEFAULT 0,
+  created_at    TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TEXT DEFAULT NULL
 );
 CREATE INDEX idx_specs_goods ON goods_specs(goods_id);
 

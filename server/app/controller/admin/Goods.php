@@ -85,4 +85,65 @@ class Goods extends AdminController
         (new \app\service\GoodsService())->remove(intval($id));
         return $this->ok();
     }
+
+    // ---------- 商品规格管理 ----------
+
+    public function specList()
+    {
+        $kw = input('get.keyword/s', '');
+        return $this->ok((new \app\service\GoodsService())->specList($kw ?: null));
+    }
+
+    public function specDetail($id)
+    {
+        $d = (new \app\service\GoodsService())->specDetail(intval($id));
+        if (!$d) {
+            return $this->fail('规格不存在');
+        }
+        return $this->ok($d);
+    }
+
+    public function specSave()
+    {
+        try {
+            $d  = $this->body();
+            $id = intval($d['id'] ?? 0);
+            $newId = (new \app\service\GoodsService())->specSave($id ?: null, $d);
+            return $this->ok(['id' => $newId]);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function specDelete($id)
+    {
+        try {
+            (new \app\service\GoodsService())->specDelete(intval($id));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function specSetDefault($id)
+    {
+        try {
+            $d = $this->body();
+            (new \app\service\GoodsService())->specSetDefault(intval($id), intval($d['default_spec'] ?? 1));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function specMove($id)
+    {
+        try {
+            $d = $this->body();
+            (new \app\service\GoodsService())->specMove(intval($id), $d['dir'] ?? 'up');
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
 }
