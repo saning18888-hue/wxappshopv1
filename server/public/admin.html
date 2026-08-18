@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商城运营后台</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap');
     :root{
@@ -136,6 +137,48 @@
     .badge.green{background:#e6f7ef;color:var(--green)}
     .badge.orange{background:var(--primary-50);color:var(--primary)}
     .badge.red{background:#fff1f0;color:#ff4d4f}
+
+    /* Data stats panels */
+    .date-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .date-filter .chip{padding:7px 14px;border-radius:6px;font-size:13px;color:var(--text-secondary);background:#f2f3f5;border:1px solid transparent;cursor:pointer;transition:all .12s}
+    .date-filter .chip:hover{background:#e8eaed}
+    .date-filter .chip.active{background:var(--primary);color:#fff}
+    .date-filter input[type=date]{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#f7f8fa}
+    .date-filter .note{font-size:12px;color:var(--text-muted);margin-left:auto}
+
+    .metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+    .metric-card{border-radius:var(--radius);padding:18px 18px 16px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:transform .15s}
+    .metric-card:hover{transform:translateY(-2px)}
+    .metric-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 60%);pointer-events:none}
+    .metric-card .icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+    .metric-card .icon svg{width:20px;height:20px;stroke:#fff;stroke-width:2}
+    .metric-card .label{font-size:12px;opacity:.92;margin-bottom:6px;font-weight:500}
+    .metric-card .value{font-size:26px;font-weight:700;letter-spacing:-.6px;font-feature-settings:'cv01','tnum'}
+    .metric-card.pink{background:linear-gradient(135deg,#f062d8 0%,#d14fd1 100%)}
+    .metric-card.purple{background:linear-gradient(135deg,#7c6cf2 0%,#6155d9 100%)}
+    .metric-card.blue{background:linear-gradient(135deg,#409eff 0%,#2b7de1 100%)}
+    .metric-card.cyan{background:linear-gradient(135deg,#26c6da 0%,#1aa3b5 100%)}
+    .metric-card.orange{background:linear-gradient(135deg,#ffb74d 0%,#f59e28 100%)}
+    .metric-card.green{background:linear-gradient(135deg,#66bb6a 0%,#43a047 100%)}
+    .metric-card.red{background:linear-gradient(135deg,#ef5350 0%,#d32f2f 100%)}
+    .metric-card.teal{background:linear-gradient(135deg,#4db6ac 0%,#00897b 100%)}
+
+    .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px 14px;box-shadow:var(--shadow);margin-bottom:16px}
+    .chart-card h3{font-size:14px;font-weight:650;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .chart-card h3::before{content:'';width:4px;height:14px;border-radius:2px;background:var(--primary)}
+    .chart-wrap{position:relative;height:300px}
+
+    .funnel-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 0}
+    .funnel-stage{position:relative;width:100%;max-width:560px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:15px;height:70px}
+    .funnel-stage span{position:relative;z-index:2}
+    .funnel-stage .info{position:absolute;right:-190px;width:170px;color:var(--text-secondary);font-size:12px;font-weight:400;line-height:1.5}
+    .funnel-stage .info.left{right:auto;left:-190px;text-align:right}
+    .funnel-stage .info b{display:block;color:var(--text);font-size:13px;margin-bottom:2px}
+    .funnel-stage1{clip-path:polygon(0 0,100% 0,90% 100%,10% 100%);background:linear-gradient(135deg,#5b9bd5 0%,#4a8bc2 100%)}
+    .funnel-stage2{clip-path:polygon(10% 0,90% 0,80% 100%,20% 100%);background:linear-gradient(135deg,#9ccc65 0%,#7cb342 100%)}
+    .funnel-stage3{clip-path:polygon(20% 0,80% 0,70% 100%,30% 100%);background:linear-gradient(135deg,#ffb74d 0%,#f59e28 100%)}
+    .funnel-rate{display:flex;justify-content:center;gap:60px;margin:18px 0 6px;font-size:13px;color:var(--text-secondary)}
+    .funnel-rate .num{color:var(--primary);font-weight:700;font-size:16px}
 
     /* Pagination */
     .pager{display:flex;gap:12px;justify-content:flex-end;align-items:center;margin-top:16px;font-size:13px;color:var(--text-secondary)}
@@ -3868,6 +3911,128 @@
     </div>
   </div>
 
+  <!-- ===================== 数据分析面板 ===================== -->
+  <!-- 商城概况 -->
+  <div id="overviewStatsPanel" class="panel hidden">
+    <div class="date-filter" id="overviewDateFilter">
+      <span class="chip active" data-range="today">今天</span>
+      <span class="chip" data-range="yesterday">昨天</span>
+      <span class="chip" data-range="last7">最近7天</span>
+      <span class="chip" data-range="last30">最近30天</span>
+      <span class="chip" data-range="custom">自定义</span>
+      <input type="date" id="overviewStart"><span>至</span><input type="date" id="overviewEnd">
+      <button class="btn sm" onclick="loadOverviewStats()">查询</button>
+      <span class="note">说明：自定义时间搜索最大支持30天</span>
+    </div>
+    <div class="metric-grid" id="overviewMetrics"></div>
+    <div class="chart-card">
+      <h3>趋势图</h3>
+      <div class="chart-wrap"><canvas id="overviewChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 交易分析 -->
+  <div id="tradeStatsPanel" class="panel hidden">
+    <div class="date-filter" id="tradeDateFilter">
+      <span class="chip active" data-range="today">今天</span>
+      <span class="chip" data-range="yesterday">昨天</span>
+      <span class="chip" data-range="last7">最近7天</span>
+      <span class="chip" data-range="last30">最近30天</span>
+      <span class="chip" data-range="custom">自定义</span>
+      <input type="date" id="tradeStart"><span>至</span><input type="date" id="tradeEnd">
+      <button class="btn sm" onclick="loadTradeStats()">查询</button>
+      <span class="note">说明：自定义时间搜索最大支持30天</span>
+    </div>
+    <div class="chart-card">
+      <h3>交易概况</h3>
+      <div class="funnel-wrap" id="tradeFunnel"></div>
+      <div class="funnel-rate" id="tradeRates"></div>
+    </div>
+  </div>
+
+  <!-- 商品分析 -->
+  <div id="goodsStatsPanel" class="panel hidden">
+    <div class="date-filter" id="goodsDateFilter">
+      <span class="chip active" data-range="today">今天</span>
+      <span class="chip" data-range="yesterday">昨天</span>
+      <span class="chip" data-range="last7">最近7天</span>
+      <span class="chip" data-range="last30">最近30天</span>
+      <span class="chip" data-range="custom">自定义</span>
+      <input type="date" id="goodsStart"><span>至</span><input type="date" id="goodsEnd">
+      <input type="text" id="goodsKeyword" placeholder="商品名称" style="width:160px">
+      <button class="btn sm" onclick="loadGoodsStats()">搜索</button>
+      <button class="btn sm outline" onclick="toast('导出功能开发中')">导出</button>
+      <span class="note">说明：自定义时间搜索最大支持30天，统计的是指定时间内用户浏览过的商品</span>
+    </div>
+    <div class="metric-grid" id="goodsMetrics"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>商品图片</th><th>商品名称</th><th>浏览量</th><th>访客数</th><th>付款人数</th>
+            <th>付款金额</th><th>付款件数</th><th>付款转化率</th>
+          </tr>
+        </thead>
+        <tbody id="goodsStatsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 网站分析 -->
+  <div id="webStatsPanel" class="panel hidden">
+    <div class="date-filter" id="webDateFilter">
+      <span class="chip active" data-range="today">今天</span>
+      <span class="chip" data-range="yesterday">昨天</span>
+      <span class="chip" data-range="last7">最近7天</span>
+      <span class="chip" data-range="last30">最近30天</span>
+      <span class="chip" data-range="custom">自定义</span>
+      <input type="date" id="webStart"><span>至</span><input type="date" id="webEnd">
+      <button class="btn sm" onclick="loadWebStats()">查询</button>
+      <span class="note">说明：自定义时间搜索最大支持30天</span>
+    </div>
+    <div class="metric-grid" id="webMetrics"></div>
+    <div class="chart-card">
+      <h3>趋势图</h3>
+      <div class="chart-wrap"><canvas id="webChart"></canvas></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="chart-card">
+        <h3>新老访客统计</h3>
+        <div class="chart-wrap"><canvas id="webVisitorChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>着陆页面TOP10</h3>
+        <div class="table-wrap"><table><thead><tr><th>页面</th><th>次数</th></tr></thead><tbody id="webTopPagesBody"></tbody></table></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 汇总分析 -->
+  <div id="summaryStatsPanel" class="panel hidden">
+    <div class="date-filter" id="summaryDateFilter">
+      <span class="chip active" data-range="today">今天</span>
+      <span class="chip" data-range="yesterday">昨天</span>
+      <span class="chip" data-range="last7">最近7天</span>
+      <span class="chip" data-range="last30">最近30天</span>
+      <span class="chip" data-range="custom">自定义</span>
+      <input type="date" id="summaryStart"><span>至</span><input type="date" id="summaryEnd">
+      <button class="btn sm" onclick="loadSummaryStats()">查询</button>
+      <button class="btn sm outline" onclick="toast('导出功能开发中')">导出</button>
+      <span class="note">说明：自定义时间搜索最大支持30天</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>汇总名称</th><th>合计</th><th>已授权会员</th><th>非授权会员</th><th>分销商</th>
+            <th>队长</th><th>股东</th><th>省级代理</th><th>市级代理</th><th>区县代理</th>
+          </tr>
+        </thead>
+        <tbody id="summaryStatsBody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
 
   <script>
@@ -3964,11 +4129,11 @@
         {key:'verify',label:'核销管理',icon:ICONS.checkCircle,panel:'verifyPanel'}
       ]},
       {key:'data',label:'数据',icon:ICONS.data,children:[
-        {key:'overview',label:'商城概况',icon:ICONS.pieChart,default:true},
-        {key:'trade',label:'交易分析',icon:ICONS.trendingUp},
-        {key:'goods',label:'商品分析',icon:ICONS.box},
-        {key:'web',label:'网站分析',icon:ICONS.globe},
-        {key:'summary',label:'汇总分析',icon:ICONS.barChart}
+        {key:'overview',label:'商城概况',icon:ICONS.pieChart,panel:'overviewStatsPanel',default:true},
+        {key:'trade',label:'交易分析',icon:ICONS.trendingUp,panel:'tradeStatsPanel'},
+        {key:'goods',label:'商品分析',icon:ICONS.box,panel:'goodsStatsPanel'},
+        {key:'web',label:'网站分析',icon:ICONS.globe,panel:'webStatsPanel'},
+        {key:'summary',label:'汇总分析',icon:ICONS.barChart,panel:'summaryStatsPanel'}
       ]},
       {key:'content',label:'内容',icon:ICONS.content,children:[
         {key:'article',label:'文章管理',icon:ICONS.fileText,default:true},
@@ -4087,6 +4252,11 @@
       if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
+      if(panelId==='overviewStatsPanel') loadOverviewStatsPanel();
+      if(panelId==='tradeStatsPanel') loadTradeStatsPanel();
+      if(panelId==='goodsStatsPanel') loadGoodsStatsPanel();
+      if(panelId==='webStatsPanel') loadWebStatsPanel();
+      if(panelId==='summaryStatsPanel') loadSummaryStatsPanel();
       if(panelId==='memberPanel') loadMembers();
       if(panelId==='memberGroupPanel') loadMemberGroups();
       window.scrollTo(0,0);
@@ -4593,6 +4763,195 @@
       document.getElementById('ovSale').textContent='¥3,420';
       document.getElementById('ovPending').textContent='23';
       document.getElementById('ovGoods').textContent='86';
+    }
+
+    /* ===== 数据分析公共 ===== */
+    const statsCharts={};
+    function bindDateChips(prefix,cb){
+      document.querySelectorAll(`#${prefix}DateFilter .chip`).forEach(el=>{
+        el.onclick=()=>{
+          document.querySelectorAll(`#${prefix}DateFilter .chip`).forEach(c=>c.classList.remove('active'));
+          el.classList.add('active');
+          cb();
+        };
+      });
+    }
+    function getStatsRange(prefix){
+      const active=document.querySelector(`#${prefix}DateFilter .chip.active`);
+      const range=active?active.dataset.range:'today';
+      const start=document.getElementById(prefix+'Start').value;
+      const end=document.getElementById(prefix+'End').value;
+      return {range,start,end};
+    }
+    function fmtMoney(n){return '¥'+(Number(n)||0).toFixed(2);}
+    function metricCard(label,value,icon,color){
+      return `<div class="metric-card ${color}">
+        <div class="icon">${icon}</div>
+        <div class="label">${label}</div>
+        <div class="value">${value}</div>
+      </div>`;
+    }
+    function destroyChart(key){if(statsCharts[key]){statsCharts[key].destroy();delete statsCharts[key];}}
+
+    /* 商城概况 */
+    async function loadOverviewStatsPanel(){
+      bindDateChips('overview',loadOverviewStatsPanel);
+      const {range,start,end}=getStatsRange('overview');
+      const d=await fetchA(`${BASE}/stats/overview?range=${range}&start=${start}&end=${end}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const m=d.data.metrics;
+      const icons={
+        paidAmount:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>',
+        paidOrders:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+        paidBuyers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        paidItems:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+        profit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'
+      };
+      document.getElementById('overviewMetrics').innerHTML=[
+        metricCard('付款金额',fmtMoney(m.paid_amount),icons.paidAmount,'pink'),
+        metricCard('付款订单数',m.paid_orders,icons.paidOrders,'purple'),
+        metricCard('付款买家数',m.paid_buyers,icons.paidBuyers,'blue'),
+        metricCard('付款商品数',m.paid_items,icons.paidItems,'cyan'),
+        metricCard('订单总利润',fmtMoney(m.order_profit),icons.profit,'orange')
+      ].join('');
+
+      const labels=d.data.trend.map(t=>t.date);
+      const ds=[
+        {label:'付款金额',data:d.data.trend.map(t=>t.paid_amount),borderColor:'#f062d8',backgroundColor:'rgba(240,98,216,.1)',yAxisID:'y',tension:.3},
+        {label:'付款订单数',data:d.data.trend.map(t=>t.paid_orders),borderColor:'#7c6cf2',backgroundColor:'rgba(124,108,242,.1)',yAxisID:'y1',tension:.3},
+        {label:'付款买家数',data:d.data.trend.map(t=>t.paid_buyers),borderColor:'#409eff',backgroundColor:'rgba(64,158,255,.1)',yAxisID:'y1',tension:.3},
+        {label:'付款商品数',data:d.data.trend.map(t=>t.paid_items),borderColor:'#26c6da',backgroundColor:'rgba(38,198,218,.1)',yAxisID:'y1',tension:.3},
+        {label:'订单总利润',data:d.data.trend.map(t=>t.order_profit),borderColor:'#ffb74d',backgroundColor:'rgba(255,183,77,.1)',yAxisID:'y',tension:.3}
+      ];
+      destroyChart('overview');
+      const ctx=document.getElementById('overviewChart').getContext('2d');
+      statsCharts.overview=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{display:false}},y:{type:'linear',display:true,position:'left'},y1:{type:'linear',display:false,position:'right',grid:{display:false}}},plugins:{legend:{position:'top'}}}});
+    }
+
+    /* 交易分析 */
+    async function loadTradeStatsPanel(){
+      bindDateChips('trade',loadTradeStatsPanel);
+      const {range,start,end}=getStatsRange('trade');
+      const d=await fetchA(`${BASE}/stats/trade?range=${range}&start=${start}&end=${end}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const r=d.data;
+      document.getElementById('tradeFunnel').innerHTML=`
+        <div class="funnel-stage funnel-stage1"><span>访客</span>
+          <div class="info"><b>访客数：${r.visitor_count}</b></div>
+        </div>
+        <div class="funnel-stage funnel-stage2"><span>下单</span>
+          <div class="info left"><b>下单买家：${r.order_buyer_count}</b><br>下单笔数：${r.order_count}<br>下单金额：${fmtMoney(r.order_amount)}</div>
+        </div>
+        <div class="funnel-stage funnel-stage3"><span>付款</span>
+          <div class="info"><b>付款买家：${r.paid_buyer_count}</b><br>付款笔数：${r.paid_count}<br>付款金额：${fmtMoney(r.paid_amount)}</div>
+        </div>`;
+      document.getElementById('tradeRates').innerHTML=`
+        <div>访客-下单转化率<div class="num">${r.visitor_to_order}%</div></div>
+        <div>访客-付款转化率<div class="num">${r.visitor_to_paid}%</div></div>
+        <div>下单-付款转化率<div class="num">${r.order_to_paid}%</div></div>`;
+    }
+
+    /* 商品分析 */
+    async function loadGoodsStatsPanel(){
+      bindDateChips('goods',loadGoodsStatsPanel);
+      const {range,start,end}=getStatsRange('goods');
+      const kw=document.getElementById('goodsKeyword').value.trim();
+      const d=await fetchA(`${BASE}/stats/goods?range=${range}&start=${start}&end=${end}&keyword=${encodeURIComponent(kw)}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const m=d.data.metrics;
+      const icons={
+        newGoods:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+        visitors:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        pv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+        viewed:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'
+      };
+      document.getElementById('goodsMetrics').innerHTML=[
+        metricCard('新上架商品',m.new_goods,icons.newGoods,'purple'),
+        metricCard('商品访客数',m.goods_visitors,icons.visitors,'pink'),
+        metricCard('商品浏览量',m.goods_pv,icons.pv,'blue'),
+        metricCard('访问商品数',m.viewed_goods,icons.viewed,'cyan')
+      ].join('');
+      const tbody=document.getElementById('goodsStatsBody');
+      const list=d.data.list||[];
+      if(!list.length){tbody.innerHTML='<tr><td colspan="8" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=list.map(g=>`
+        <tr>
+          <td><img class="thumb" src="${g.image||'https://placehold.co/44x44/e6e8eb/999?text=No'}" alt=""></td>
+          <td>${escapeHtml(g.title)}</td>
+          <td>${g.pv}</td>
+          <td>${g.visitors}</td>
+          <td>${g.paid_buyers}</td>
+          <td>${fmtMoney(g.paid_amount)}</td>
+          <td>${g.paid_qty}</td>
+          <td>${g.paid_rate}%</td>
+        </tr>`).join('');
+    }
+
+    /* 网站分析 */
+    async function loadWebStatsPanel(){
+      bindDateChips('web',loadWebStatsPanel);
+      const {range,start,end}=getStatsRange('web');
+      const [d,visitor,top]=await Promise.all([
+        fetchA(`${BASE}/stats/web?range=${range}&start=${start}&end=${end}`),
+        fetchA(`${BASE}/stats/web_visitors?range=${range}&start=${start}&end=${end}`),
+        fetchA(`${BASE}/stats/web_top_pages?range=${range}&start=${start}&end=${end}`)
+      ]);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const m=d.data.metrics;
+      const icons={
+        pv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',
+        uv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        ip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+        vv:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+        depth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>',
+        pages:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+        stay:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+        bounce:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'
+      };
+      document.getElementById('webMetrics').innerHTML=[
+        metricCard('浏览次数PV',m.pv,icons.pv,'pink'),
+        metricCard('独立访客UV',m.uv,icons.uv,'purple'),
+        metricCard('IP',m.ip,icons.ip,'red'),
+        metricCard('访问数VV',m.vv,icons.vv,'blue'),
+        metricCard('平均访问深度',m.avg_depth,icons.depth,'orange'),
+        metricCard('人均浏览页面数',m.avg_pages,icons.pages,'cyan'),
+        metricCard('平均停留时长',m.avg_stay,icons.stay,'purple'),
+        metricCard('跳出率',m.bounce_rate+'%',icons.bounce,'green')
+      ].join('');
+
+      const labels=d.data.trend.map(t=>t.date);
+      destroyChart('web');
+      statsCharts.web=new Chart(document.getElementById('webChart').getContext('2d'),{type:'line',data:{labels,datasets:[
+        {label:'PV',data:d.data.trend.map(t=>t.pv),borderColor:'#f062d8',tension:.3},
+        {label:'UV',data:d.data.trend.map(t=>t.uv),borderColor:'#7c6cf2',tension:.3},
+        {label:'IP',data:d.data.trend.map(t=>t.ip),borderColor:'#ef5350',tension:.3},
+        {label:'VV',data:d.data.trend.map(t=>t.vv),borderColor:'#409eff',tension:.3}
+      ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{display:false}}},plugins:{legend:{position:'top'}}}});
+
+      destroyChart('webVisitor');
+      const v=visitor.data||{new:0,old:0};
+      statsCharts.webVisitor=new Chart(document.getElementById('webVisitorChart').getContext('2d'),{type:'doughnut',data:{labels:['新访客','老访客'],datasets:[{data:[v.new,v.old],backgroundColor:['#ef5350','#455a64'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+
+      const pages=(top.data&&top.data.list)||[];
+      document.getElementById('webTopPagesBody').innerHTML=pages.length?pages.map((p,i)=>`<tr><td>${escapeHtml(p.page)}</td><td>${p.count}</td></tr>`).join(''):'<tr><td colspan="2" class="empty-row">暂无数据</td></tr>';
+    }
+
+    /* 汇总分析 */
+    async function loadSummaryStatsPanel(){
+      bindDateChips('summary',loadSummaryStatsPanel);
+      const {range,start,end}=getStatsRange('summary');
+      const d=await fetchA(`${BASE}/stats/summary?range=${range}&start=${start}&end=${end}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const rows=d.data.rows||[];
+      const tbody=document.getElementById('summaryStatsBody');
+      if(!rows.length){tbody.innerHTML='<tr><td colspan="10" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=rows.map(r=>`<tr>
+        <td>${r.name}</td>
+        <td>${typeof r.total==='number'&&r.name.indexOf('金额')>-1?fmtMoney(r.total):r.total}</td>
+        <td>${r.authorized||'--'}</td><td>${r.unauthorized||'--'}</td>
+        <td>${r.distributor||'--'}</td><td>${r.captain||'--'}</td><td>${r.shareholder||'--'}</td>
+        <td>${r.province_agent||'--'}</td><td>${r.city_agent||'--'}</td><td>${r.district_agent||'--'}</td>
+      </tr>`).join('');
     }
 
     /* Auth */

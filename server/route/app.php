@@ -102,6 +102,15 @@ Route::group('admin', function () {
     Route::post('verify', 'admin.Verify/index');
     Route::get('verify_records', 'admin.Verify/records');
 
+    // 数据分析
+    Route::get('stats/overview', 'admin.Stats/overview');
+    Route::get('stats/trade', 'admin.Stats/trade');
+    Route::get('stats/goods', 'admin.Stats/goods');
+    Route::get('stats/web', 'admin.Stats/web');
+    Route::get('stats/web_visitors', 'admin.Stats/webVisitors');
+    Route::get('stats/web_top_pages', 'admin.Stats/webTopPages');
+    Route::get('stats/summary', 'admin.Stats/summary');
+
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');

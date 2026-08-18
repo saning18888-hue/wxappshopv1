@@ -357,6 +357,36 @@ CREATE INDEX idx_verify_type ON verify_records(verify_type);
 CREATE INDEX idx_verify_code ON verify_records(code);
 
 -- =====================================================================
+-- 网站分析：页面访问与访客会话
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS page_views (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id   TEXT NOT NULL DEFAULT '',
+  user_id      INTEGER NOT NULL DEFAULT 0,
+  page         TEXT NOT NULL DEFAULT '',
+  ip           TEXT NOT NULL DEFAULT '',
+  stay_time    INTEGER NOT NULL DEFAULT 0,   -- 停留时长（秒）
+  is_bounce    INTEGER NOT NULL DEFAULT 0,   -- 是否跳出（1是，0否）
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_pv_session  ON page_views(session_id);
+CREATE INDEX IF NOT EXISTS idx_pv_page     ON page_views(page);
+CREATE INDEX IF NOT EXISTS idx_pv_created  ON page_views(created_at);
+
+CREATE TABLE IF NOT EXISTS visitor_sessions (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  session_id   TEXT NOT NULL DEFAULT '',
+  user_id      INTEGER NOT NULL DEFAULT 0,
+  ip           TEXT NOT NULL DEFAULT '',
+  is_new       INTEGER NOT NULL DEFAULT 1,   -- 1 新访客，0 老访客
+  page_count   INTEGER NOT NULL DEFAULT 0,
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (session_id)
+);
+CREATE INDEX IF NOT EXISTS idx_vs_session ON visitor_sessions(session_id);
+CREATE INDEX IF NOT EXISTS idx_vs_created ON visitor_sessions(created_at);
+
+-- =====================================================================
 -- 演示种子数据
 -- =====================================================================
 INSERT INTO users (id, openid, nickname, avatar, phone, level, growth, points, balance, group_id, status)
