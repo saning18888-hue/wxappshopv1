@@ -11,6 +11,16 @@
 
 ---
 
+### v0.1.22 · 2026-08-18 · 新增核销管理：到店自提/电子卡券/优惠券核销
+**范围**：运营后台 UI（`server/public/admin.html`）、核销 API（`server/app/controller/admin/Verify.php`、`VerifyService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_verify_records.php`）。
+**改动**：
+- 新增「订单 > 核销管理」独立菜单入口，按截图还原：验证核销 / 核销记录 两个 tab。
+- 验证核销：核销类型下拉（到店自提/电子卡券/优惠券）、核销码输入、空值校验、一键核销。
+- 新增后台核销接口 `POST /admin/verify`：到店自提更新订单状态为已完成，电子卡券更新卡券状态为已使用，优惠券更新优惠券状态为已使用。
+- 新增核销记录列表接口 `GET /admin/verify_records`，支持按类型过滤（到店自提/电子卡券）与关键词搜索。
+- 新增 `user_coupons`、`verify_records` 表；新增幂等迁移脚本 `database/apply_verify_records.php`。
+- 核销记录列表列：自提码/券码、提货人/会员、手机号、订单编号、核销员、核销日期、操作（查看订单）。
+
 ### v0.1.21 · 2026-08-18 · 新增评论管理
 **范围**：运营后台 UI（`server/public/admin.html`）、评论 API（`server/app/controller/admin/Review.php`、`ReviewService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_goods_reviews.php`）。
 **改动**：

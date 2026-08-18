@@ -98,6 +98,10 @@ Route::group('admin', function () {
     Route::post('reviews/batch_delete', 'admin.Review/batchDelete');
     Route::post('reviews/batch_toggle_hidden', 'admin.Review/batchToggleHidden');
 
+    // 核销管理
+    Route::post('verify', 'admin.Verify/index');
+    Route::get('verify_records', 'admin.Verify/records');
+
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');

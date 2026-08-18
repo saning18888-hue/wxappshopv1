@@ -323,6 +323,40 @@ CREATE INDEX idx_reviews_user  ON goods_reviews(user_id);
 CREATE INDEX idx_reviews_order ON goods_reviews(order_id);
 
 -- =====================================================================
+-- 优惠券与核销记录
+-- =====================================================================
+CREATE TABLE IF NOT EXISTS user_coupons (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id      INTEGER NOT NULL DEFAULT 0,
+  coupon_id    INTEGER NOT NULL DEFAULT 0,
+  code         TEXT NOT NULL DEFAULT '',
+  title        TEXT NOT NULL DEFAULT '',
+  status       INTEGER NOT NULL DEFAULT 0,  -- 0 未使用，1 已使用
+  used_at      TEXT DEFAULT NULL,
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (code)
+);
+CREATE INDEX idx_user_coupons_user ON user_coupons(user_id);
+CREATE INDEX idx_user_coupons_code ON user_coupons(code);
+
+CREATE TABLE IF NOT EXISTS verify_records (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  verify_type  TEXT NOT NULL DEFAULT '',      -- pickup / card / coupon
+  code         TEXT NOT NULL DEFAULT '',
+  order_id     INTEGER NOT NULL DEFAULT 0,
+  order_no     TEXT NOT NULL DEFAULT '',
+  user_id      INTEGER NOT NULL DEFAULT 0,
+  user_name    TEXT NOT NULL DEFAULT '',
+  phone        TEXT NOT NULL DEFAULT '',
+  verifier_id  INTEGER NOT NULL DEFAULT 0,
+  verifier_name TEXT NOT NULL DEFAULT '',
+  verified_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_verify_type ON verify_records(verify_type);
+CREATE INDEX idx_verify_code ON verify_records(code);
+
+-- =====================================================================
 -- 演示种子数据
 -- =====================================================================
 INSERT INTO users (id, openid, nickname, avatar, phone, level, growth, points, balance, group_id, status)

@@ -1300,6 +1300,71 @@
           </div>
         </div>
 
+        <!-- 核销管理 -->
+        <div id="verifyPanel" class="panel hidden">
+          <div class="card">
+            <h3>核销管理</h3>
+            <div class="order-tabs" id="verifyTabs">
+              <a class="active" data-tab="do" onclick="switchVerifyTab('do')">验证核销</a>
+              <a data-tab="records" onclick="switchVerifyTab('records')">核销记录</a>
+            </div>
+
+            <div id="verifyDoBox">
+              <div class="form" style="max-width:420px;margin-top:10px">
+                <div class="field">
+                  <label>核销类型</label>
+                  <select class="form-input" id="verifyType">
+                    <option value="pickup">到店自提</option>
+                    <option value="card">电子卡券</option>
+                    <option value="coupon">优惠券</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label><span class="req">*</span>核销码</label>
+                  <input type="text" class="form-input" id="verifyCode" placeholder="核销码" onkeydown="if(event.key==='Enter')doVerify()">
+                  <div id="verifyCodeError" class="field-error" style="display:none;color:#ff4d4f;font-size:12px;margin-top:4px">核销码不能为空</div>
+                </div>
+                <div class="field">
+                  <button class="btn" onclick="doVerify()">确定</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="verifyRecordsBox" style="display:none">
+              <div class="order-tabs" id="verifyRecordTabs" style="margin-top:10px">
+                <a class="active" data-type="pickup" onclick="switchVerifyRecordType('pickup')">到店自提</a>
+                <a data-type="card" onclick="switchVerifyRecordType('card')">电子卡券</a>
+              </div>
+              <div class="toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:10px">
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                  <button class="btn sm" onclick="exportVerifyRecords()">导出</button>
+                </div>
+                <div style="display:flex;gap:10px;align-items:center">
+                  <input type="text" class="form-input" id="verifyKeyword" placeholder="关键词搜索" onkeydown="if(event.key==='Enter')loadVerifyRecords()">
+                  <button class="btn sm" onclick="loadVerifyRecords()">查询</button>
+                </div>
+              </div>
+              <div class="table-wrap" id="verifyRecordsTableWrap">
+                <table class="data-table" id="verifyRecordsTable">
+                  <thead>
+                    <tr>
+                      <th id="verifyCodeHead">自提码</th>
+                      <th id="verifyUserHead">提货人</th>
+                      <th style="width:110px">手机号</th>
+                      <th style="width:160px">订单编号</th>
+                      <th style="width:90px">核销员</th>
+                      <th style="width:130px">核销日期</th>
+                      <th style="width:80px">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="verifyRecordsBody"><tr><td colspan="7" class="empty-row">加载中…</td></tr></tbody>
+                </table>
+              </div>
+              <div class="pager" id="verifyRecordsPager"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- 首页装修：按模块分设 -->
         <div id="sectionPanel" class="panel hidden">
           <div class="sec-toolbar">
@@ -5886,6 +5951,59 @@
       toast('回复成功');closeReviewReplyModal();loadReviews();
     }
     function exportReviews(){toast('导出功能开发中');}
+
+    /* 核销管理 */
+    let verifyRecordPage=1;
+    let currentVerifyRecordType='pickup';
+    function switchVerifyTab(tab){
+      document.querySelectorAll('#verifyTabs a').forEach(a=>a.classList.toggle('active',a.dataset.tab===tab));
+      document.getElementById('verifyDoBox').style.display=tab==='do'?'block':'none';
+      document.getElementById('verifyRecordsBox').style.display=tab==='records'?'block':'none';
+      if(tab==='records') loadVerifyRecords();
+    }
+    function switchVerifyRecordType(type){
+      currentVerifyRecordType=type; verifyRecordPage=1;
+      document.querySelectorAll('#verifyRecordTabs a').forEach(a=>a.classList.toggle('active',a.dataset.type===type));
+      document.getElementById('verifyCodeHead').textContent=type==='pickup'?'自提码':'券码';
+      document.getElementById('verifyUserHead').textContent=type==='pickup'?'提货人':'会员';
+      loadVerifyRecords();
+    }
+    async function doVerify(){
+      const type=document.getElementById('verifyType').value;
+      const code=document.getElementById('verifyCode').value.trim();
+      const err=document.getElementById('verifyCodeError');
+      if(!code){err.style.display='block';return;}
+      err.style.display='none';
+      const d=await fetchA(`${BASE}/verify`,{method:'POST',body:{type,code}});
+      if(d.code!==0){toast(d.msg||'核销失败');return;}
+      toast('核销成功');
+      document.getElementById('verifyCode').value='';
+    }
+    async function loadVerifyRecords(){
+      const kw=document.getElementById('verifyKeyword').value.trim();
+      const q=`?type=${currentVerifyRecordType}&page=${verifyRecordPage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}`;
+      const d=await fetchA(`${BASE}/verify_records${q}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const tb=document.getElementById('verifyRecordsBody');
+      if(!d.data.list.length){tb.innerHTML='<tr><td colspan="7" class="empty-row">暂无数据</td></tr>';document.getElementById('verifyRecordsPager').innerHTML='';return;}
+      tb.innerHTML=d.data.list.map(r=>`<tr>
+        <td>${r.code}</td>
+        <td>${escapeHtml(r.user_name)}</td>
+        <td>${escapeHtml(r.phone)}</td>
+        <td>${r.order_no}</td>
+        <td>${escapeHtml(r.verifier_name||r.verifier_id)}</td>
+        <td>${r.verified_at}</td>
+        <td class="ops"><a href="javascript:" onclick="viewOrderByNo('${r.order_no}')">查看订单</a></td>
+      </tr>`).join('');
+      document.getElementById('verifyRecordsPager').innerHTML=renderPagerHtml(verifyRecordPage,d.data.last_page,'verifyRecordPage')+'<span style="font-size:12px;color:#888;margin-left:10px">共 '+d.data.total+' 条</span>';
+    }
+    async function viewOrderByNo(no){
+      if(!no)return;
+      const d=await fetchA(`${BASE}/orders?keyword=${encodeURIComponent(no)}&page=1&page_size=1`);
+      if(d.code!==0 || !d.data.list.length){toast('未找到订单');return;}
+      editOrder(d.data.list[0].id);
+    }
+    function exportVerifyRecords(){toast('导出功能开发中');}
 
     /* 订单编辑弹窗 */
     let currentOrder=null;
