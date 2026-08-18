@@ -278,6 +278,26 @@
     .order-tabs a:hover{color:var(--text)}
     .order-tabs a.active{color:var(--primary);background:var(--primary-50);font-weight:600}
     .order-table thead th{background:#f5f7fa;font-weight:600;font-size:13px;color:var(--text-secondary)}
+
+    /* 核销管理 - 快速核销 */
+    .verify-hero{display:flex;flex-direction:column;align-items:center;padding:34px 24px 30px;background:linear-gradient(135deg,var(--primary-50) 0%,#fff 55%);border-radius:var(--radius);border:1px solid var(--primary-100);margin-top:16px;max-width:500px}
+    .verify-hero-icon{width:58px;height:58px;border-radius:18px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:16px;box-shadow:0 10px 24px rgba(94,106,210,.26)}
+    .verify-hero-icon svg{width:28px;height:28px;stroke-width:2}
+    .verify-hero h4{font-size:18px;font-weight:650;margin-bottom:6px;letter-spacing:-.3px}
+    .verify-hero>p{font-size:13px;color:var(--text-secondary);margin-bottom:26px;text-align:center}
+    .verify-form{width:100%;max-width:360px}
+    .verify-form .field{margin-bottom:18px}
+    .verify-form .field:last-child{margin-bottom:0}
+    .verify-form .field>label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .verify-type-select{appearance:none;width:100%;padding:12px 14px;padding-right:40px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23565b63' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/16px;font-size:14px;color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s,background .15s;cursor:pointer}
+    .verify-type-select:focus{border-color:var(--primary);background-color:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .verify-type-select:hover{border-color:#c9cde0}
+    .verify-input{width:100%;padding:15px 16px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;letter-spacing:.6px;color:var(--text);background:#fff;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+    .verify-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .verify-input::placeholder{color:#b7bbc4}
+    .verify-btn{width:100%;height:46px;border-radius:var(--radius-sm);background:var(--primary);color:#fff;border:0;font-size:15px;font-weight:650;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,transform .1s,box-shadow .15s;box-shadow:0 4px 14px rgba(94,106,210,.24)}
+    .verify-btn:hover{background:var(--primary-700);transform:translateY(-1px);box-shadow:0 6px 18px rgba(94,106,210,.3)}
+    .verify-btn:active{transform:translateY(0)}
     .order-row-wrap{padding:0 !important}
     .order-head{display:flex;gap:20px;padding:10px 14px;background:#f0f6ff;font-size:12px;color:var(--text-secondary)}
     .order-head span{white-space:nowrap}
@@ -1310,22 +1330,32 @@
             </div>
 
             <div id="verifyDoBox">
-              <div class="form" style="max-width:420px;margin-top:10px">
-                <div class="field">
-                  <label>核销类型</label>
-                  <select class="form-input" id="verifyType">
-                    <option value="pickup">到店自提</option>
-                    <option value="card">电子卡券</option>
-                    <option value="coupon">优惠券</option>
-                  </select>
+              <div class="verify-hero">
+                <div class="verify-hero-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                 </div>
-                <div class="field">
-                  <label><span class="req">*</span>核销码</label>
-                  <input type="text" class="form-input" id="verifyCode" placeholder="核销码" onkeydown="if(event.key==='Enter')doVerify()">
-                  <div id="verifyCodeError" class="field-error" style="display:none;color:#ff4d4f;font-size:12px;margin-top:4px">核销码不能为空</div>
-                </div>
-                <div class="field">
-                  <button class="btn" onclick="doVerify()">确定</button>
+                <h4>快速核销</h4>
+                <p>选择核销类型并输入核销码，一键完成核销</p>
+                <div class="verify-form">
+                  <div class="field">
+                    <label>核销类型</label>
+                    <select class="verify-type-select" id="verifyType">
+                      <option value="pickup">到店自提</option>
+                      <option value="card">电子卡券</option>
+                      <option value="coupon">优惠券</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label><span class="req">*</span>核销码</label>
+                    <input type="text" class="verify-input" id="verifyCode" placeholder="请输入核销码" onkeydown="if(event.key==='Enter')doVerify()">
+                    <div id="verifyCodeError" class="field-error" style="display:none;color:#ff4d4f;font-size:12px;margin-top:6px">核销码不能为空</div>
+                  </div>
+                  <div class="field">
+                    <button class="verify-btn" onclick="doVerify()">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      确认核销
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

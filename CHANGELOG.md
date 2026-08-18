@@ -11,6 +11,13 @@
 
 ---
 
+### v0.1.23 · 2026-08-18 · 核销管理「验证核销」界面 UI 优化
+**范围**：运营后台 UI（`server/public/admin.html`）。
+**改动**：
+- 重设计「核销管理 > 验证核销」表单：卡片式容器 + 渐变背景 + 核销图标，提升视觉层级与精致度。
+- 核销类型下拉框自定义箭头样式，告别浏览器默认原生外观。
+- 核销码输入框放大加粗、聚焦主色光晕；确认核销按钮改为通栏大按钮 + 勾选图标 + 悬浮阴影。
+
 ### v0.1.22 · 2026-08-18 · 新增核销管理：到店自提/电子卡券/优惠券核销
 **范围**：运营后台 UI（`server/public/admin.html`）、核销 API（`server/app/controller/admin/Verify.php`、`VerifyService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_verify_records.php`）。
 **改动**：
