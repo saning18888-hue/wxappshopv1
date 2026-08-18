@@ -88,6 +88,54 @@ class Member extends AdminController
         return $this->ok((new MemberService())->groups());
     }
 
+    /** 会员分组管理列表（带关键词筛选） */
+    public function groupList()
+    {
+        $kw = input('get.keyword/s', '');
+        return $this->ok((new MemberService())->groupList($kw ?: null));
+    }
+
+    public function groupCreate()
+    {
+        try {
+            (new MemberService())->groupCreate($this->body());
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function groupUpdate($id)
+    {
+        try {
+            (new MemberService())->groupUpdate(intval($id), $this->body());
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function groupDelete($id)
+    {
+        try {
+            (new MemberService())->groupDelete(intval($id));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function groupBatchDelete()
+    {
+        try {
+            $d = $this->body();
+            (new MemberService())->groupBatchDelete($d['ids'] ?? []);
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
     public function staffList()
     {
         return $this->ok((new MemberService())->staff());

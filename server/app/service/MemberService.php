@@ -178,6 +178,82 @@ class MemberService
         return Db::table('member_groups')->order('level', 'asc')->select()->toArray();
     }
 
+    /** 会员分组管理列表（支持关键词筛选） */
+    public function groupList($keyword)
+    {
+        $query = Db::table('member_groups');
+        if ($keyword !== null && $keyword !== '') {
+            $query->where('name', 'like', "%{$keyword}%");
+        }
+        return $query->order('level', 'asc')->order('id', 'asc')->select()->toArray();
+    }
+
+    public function groupCreate($data)
+    {
+        $name = trim($data['name'] ?? '');
+        if ($name === '') {
+            throw new \Exception('分组名称不能为空');
+        }
+        $exists = Db::table('member_groups')->where('name', $name)->find();
+        if ($exists) {
+            throw new \Exception('分组名称已存在');
+        }
+        Db::table('member_groups')->insert([
+            'name'       => $name,
+            'level'      => intval($data['level'] ?? 0),
+            'discount'   => intval($data['discount'] ?? 100),
+            'remark'     => trim($data['remark'] ?? ''),
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+        return true;
+    }
+
+    public function groupUpdate($id, $data)
+    {
+        $name = trim($data['name'] ?? '');
+        if ($name === '') {
+            throw new \Exception('分组名称不能为空');
+        }
+        $exists = Db::table('member_groups')->where('name', $name)->where('id', '<>', intval($id))->find();
+        if ($exists) {
+            throw new \Exception('分组名称已存在');
+        }
+        Db::table('member_groups')->where('id', intval($id))->update([
+            'name'       => $name,
+            'level'      => intval($data['level'] ?? 0),
+            'discount'   => intval($data['discount'] ?? 100),
+            'remark'     => trim($data['remark'] ?? ''),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        return true;
+    }
+
+    public function groupDelete($id)
+    {
+        $id = intval($id);
+        $used = Db::table('users')->where('group_id', $id)->count();
+        if ($used > 0) {
+            throw new \Exception('该分组下存在会员，无法删除');
+        }
+        Db::table('member_groups')->where('id', $id)->delete();
+        return true;
+    }
+
+    public function groupBatchDelete($ids)
+    {
+        $ids = array_map('intval', $ids);
+        $ids = array_filter($ids);
+        if (empty($ids)) {
+            throw new \Exception('请选择要删除的分组');
+        }
+        $used = Db::table('users')->whereIn('group_id', $ids)->column('group_id');
+        if (!empty($used)) {
+            throw new \Exception('选中的分组中存在已关联会员的分组，无法删除');
+        }
+        Db::table('member_groups')->whereIn('id', $ids)->delete();
+        return true;
+    }
+
     public function staff()
     {
         return Db::table('staff')->order('id', 'asc')->select()->toArray();

@@ -2191,6 +2191,60 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- 会员分组 -->
+        <div id="memberGroupPanel" class="panel hidden">
+          <div class="card">
+            <h3>会员分组</h3>
+            <div class="toolbar" style="justify-content:space-between">
+              <div style="display:flex;gap:10px;align-items:center">
+                <button class="btn sm" onclick="openMemberGroupForm()">+ 添加</button>
+                <button class="btn sm danger" onclick="batchDeleteMemberGroups()">批量删除</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="memberGroupKeyword" placeholder="关键词筛选" onkeydown="if(event.key==='Enter')loadMemberGroups()">
+                <button class="btn sm" onclick="loadMemberGroups()">查询</button>
+              </div>
+            </div>
+            <div class="bulk-bar" id="memberGroupBulkBar" style="display:none">
+              <span>已选择 <b id="memberGroupCheckedCount">0</b> 项</span>
+              <button class="btn sm danger" onclick="batchDeleteMemberGroups()">批量删除</button>
+              <button class="btn sm gray" onclick="clearMemberGroupCheck()">取消选择</button>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="col-check" style="width:50px"><input type="checkbox" id="memberGroupCheckAll" onchange="toggleMemberGroupCheckAll()"></th>
+                    <th>名称</th>
+                    <th style="width:180px">创建时间</th>
+                    <th style="width:120px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="memberGroupTbody"><tr><td colspan="4" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 分组新增/编辑弹窗 -->
+          <div id="memberGroupFormModal" class="modal" onclick="if(event.target===this)closeMemberGroupForm()">
+            <div class="modal-card" style="width:420px">
+              <div class="modal-header"><h3 id="memberGroupFormTitle">新增分组</h3><span class="close" onclick="closeMemberGroupForm()">&times;</span></div>
+              <div class="modal-body">
+                <input type="hidden" id="mGroupFormId">
+                <div class="field"><label><span class="req">*</span>分组名称</label><input type="text" class="form-input" id="mGroupFormName" placeholder="请输入分组名称"></div>
+                <div class="field"><label>等级</label><input type="number" class="form-input" id="mGroupFormLevel" value="0"></div>
+                <div class="field"><label>折扣（%）</label><input type="number" class="form-input" id="mGroupFormDiscount" value="100" min="0" max="100"></div>
+                <div class="field"><label>备注</label><input type="text" class="form-input" id="mGroupFormRemark" placeholder="可选"></div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn gray" onclick="closeMemberGroupForm()">取消</button>
+                <button class="btn" onclick="saveMemberGroupForm()">确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
           <!-- 用户信息弹窗（编辑） -->
           <div id="memberInfoModal" class="modal" onclick="if(event.target===this)closeMemberInfo()">
@@ -3345,7 +3399,7 @@
       ]},
       {key:'member',label:'会员',icon:ICONS.users,children:[
         {key:'list',label:'会员列表',icon:ICONS.users,panel:'memberPanel',default:true},
-        {key:'group',label:'会员分组',icon:ICONS.userCheck}
+        {key:'group',label:'会员分组',icon:ICONS.userCheck,panel:'memberGroupPanel'}
       ]},
       {key:'goods',label:'商品',icon:ICONS.goods,children:[
         {key:'list',label:'商品列表',icon:ICONS.package,panel:'goodsPanel',default:true},
@@ -3479,6 +3533,7 @@
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
       if(panelId==='memberPanel') loadMembers();
+      if(panelId==='memberGroupPanel') loadMemberGroups();
       window.scrollTo(0,0);
     }
 
@@ -3884,6 +3939,97 @@
       const d=await fetchA(`${BASE}/member_agreement`,{method:'POST',body:{service_agreement:service,privacy_agreement:privacy}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       toast('协议已保存');
+    }
+
+    /* 会员分组管理 */
+    async function loadMemberGroups(){
+      const kw=document.getElementById('memberGroupKeyword').value.trim();
+      const d=await fetchA(`${BASE}/member_group_list${kw?'?keyword='+encodeURIComponent(kw):''}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      renderMemberGroups(d.data||[]);
+    }
+    function renderMemberGroups(list){
+      const tbody=document.getElementById('memberGroupTbody');
+      if(!list.length){tbody.innerHTML='<tr><td colspan="4" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=list.map(g=>`
+        <tr>
+          <td class="col-check"><input type="checkbox" class="mg-check" value="${g.id}" onchange="updateMemberGroupBulk()"></td>
+          <td>${escapeHtml(g.name)}</td>
+          <td>${g.created_at||'-'}</td>
+          <td>
+            <div class="ops">
+              <a href="javascript:" onclick="openMemberGroupForm(${g.id},'${escapeHtml(g.name)}',${g.level||0},${g.discount||100},'${escapeHtml(g.remark||'')}')">编辑</a>
+              <a href="javascript:" onclick="deleteMemberGroup(${g.id},'${escapeHtml(g.name)}')">删除</a>
+            </div>
+          </td>
+        </tr>`).join('');
+      document.getElementById('memberGroupCheckAll').checked=false;
+      updateMemberGroupBulk();
+    }
+    function updateMemberGroupBulk(){
+      const boxes=document.querySelectorAll('.mg-check');
+      const checked=[...boxes].filter(c=>c.checked);
+      const bar=document.getElementById('memberGroupBulkBar');
+      document.getElementById('memberGroupCheckedCount').textContent=checked.length;
+      bar.style.display=checked.length?'flex':'none';
+      const all=boxes.length&&boxes.length===checked.length;
+      document.getElementById('memberGroupCheckAll').checked=all;
+    }
+    function toggleMemberGroupCheckAll(){
+      const all=document.getElementById('memberGroupCheckAll').checked;
+      document.querySelectorAll('.mg-check').forEach(c=>c.checked=all);
+      updateMemberGroupBulk();
+    }
+    function clearMemberGroupCheck(){
+      document.querySelectorAll('.mg-check').forEach(c=>c.checked=false);
+      document.getElementById('memberGroupCheckAll').checked=false;
+      updateMemberGroupBulk();
+    }
+    async function batchDeleteMemberGroups(){
+      const ids=[...document.querySelectorAll('.mg-check:checked')].map(c=>c.value);
+      if(!ids.length){toast('请先选择要删除的分组');return;}
+      if(!confirm(`确定删除选中的 ${ids.length} 个分组吗？`))return;
+      const d=await fetchA(`${BASE}/member_groups/batch_delete`,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadMemberGroups();
+    }
+    async function deleteMemberGroup(id,name){
+      if(!confirm(`确定删除分组「${name}」吗？`))return;
+      const d=await fetchA(`${BASE}/member_groups/${id}/delete`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadMemberGroups();
+    }
+    function openMemberGroupForm(id,name,level,discount,remark){
+      const title=document.getElementById('memberGroupFormTitle');
+      document.getElementById('mGroupFormId').value=id||'';
+      document.getElementById('mGroupFormName').value=name||'';
+      document.getElementById('mGroupFormLevel').value=level===undefined?0:level;
+      document.getElementById('mGroupFormDiscount').value=discount===undefined?100:discount;
+      document.getElementById('mGroupFormRemark').value=remark||'';
+      title.textContent=id?'编辑分组':'新增分组';
+      show('memberGroupFormModal',true);
+    }
+    function closeMemberGroupForm(){
+      show('memberGroupFormModal',false);
+      document.getElementById('mGroupFormId').value='';
+      document.getElementById('mGroupFormName').value='';
+      document.getElementById('mGroupFormLevel').value='0';
+      document.getElementById('mGroupFormDiscount').value='100';
+      document.getElementById('mGroupFormRemark').value='';
+    }
+    async function saveMemberGroupForm(){
+      const id=document.getElementById('mGroupFormId').value;
+      const name=document.getElementById('mGroupFormName').value.trim();
+      const level=parseInt(document.getElementById('mGroupFormLevel').value)||0;
+      const discount=parseInt(document.getElementById('mGroupFormDiscount').value);
+      const remark=document.getElementById('mGroupFormRemark').value.trim();
+      if(!name){toast('请输入分组名称');return;}
+      const url=id?`${BASE}/member_groups/${id}/save`:`${BASE}/member_groups`;
+      const d=await fetchA(url,{method:'POST',body:{name,level,discount:isNaN(discount)?100:discount,remark}});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      toast(id?'保存成功':'新增成功');
+      closeMemberGroupForm();
+      loadMemberGroups();
     }
 
     function loadOverviewStats(){

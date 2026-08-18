@@ -80,6 +80,11 @@ Route::group('admin', function () {
     Route::post('members/:id/assign_distributor', 'admin.Member/assignDistributor');
     Route::post('members/:id/logout', 'admin.Member/logout');
     Route::get('member_groups', 'admin.Member/groups');
+    Route::get('member_group_list', 'admin.Member/groupList');
+    Route::post('member_groups', 'admin.Member/groupCreate');
+    Route::post('member_groups/:id/save', 'admin.Member/groupUpdate');
+    Route::post('member_groups/:id/delete', 'admin.Member/groupDelete');
+    Route::post('member_groups/batch_delete', 'admin.Member/groupBatchDelete');
     Route::get('member_staff', 'admin.Member/staffList');
     Route::get('member_distributors', 'admin.Member/distributorList');
     Route::get('member_agreement', 'admin.Member/agreement');
