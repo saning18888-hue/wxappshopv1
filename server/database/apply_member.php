@@ -95,6 +95,10 @@ createTable('staff', "
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
 ");
+addCol('staff','account',"TEXT NOT NULL DEFAULT ''");
+addCol('staff','position',"TEXT NOT NULL DEFAULT ''");
+addCol('staff','wechat',"TEXT NOT NULL DEFAULT ''");
+addCol('staff','qq',"TEXT NOT NULL DEFAULT ''");
 createTable('distributors', "
     CREATE TABLE distributors (
       id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,6 +108,7 @@ createTable('distributors', "
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )
 ");
+addCol('distributors','nickname',"TEXT NOT NULL DEFAULT ''");
 
 // 3. 种子数据（仅空表时）
 seedIfEmpty('member_groups', "

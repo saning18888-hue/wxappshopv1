@@ -47,7 +47,11 @@ CREATE INDEX IF NOT EXISTS idx_member_groups_level ON member_groups(level);
 CREATE TABLE IF NOT EXISTS staff (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
   name       TEXT NOT NULL,
+  account    TEXT NOT NULL DEFAULT '',
+  position   TEXT NOT NULL DEFAULT '',
   phone      TEXT NOT NULL DEFAULT '',
+  wechat     TEXT NOT NULL DEFAULT '',
+  qq         TEXT NOT NULL DEFAULT '',
   remark     TEXT NOT NULL DEFAULT '',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -55,7 +59,8 @@ CREATE TABLE IF NOT EXISTS staff (
 -- 分销商
 CREATE TABLE IF NOT EXISTS distributors (
   id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  name       TEXT NOT NULL,
+  nickname   TEXT NOT NULL DEFAULT '',
+  name       TEXT NOT NULL DEFAULT '',
   phone      TEXT NOT NULL DEFAULT '',
   remark     TEXT NOT NULL DEFAULT '',
   created_at TEXT DEFAULT CURRENT_TIMESTAMP

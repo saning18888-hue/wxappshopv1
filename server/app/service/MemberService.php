@@ -44,8 +44,10 @@ class MemberService
         foreach ($rows as &$r) {
             $r['balance_yuan'] = round($r['balance'] / 100, 2);
             $r['group_name'] = $groups[$r['group_id']] ?? '未分组';
-            $r['staff_name'] = $staff[$r['staff_id']] ?? '';
-            $r['distributor_name'] = $distributors[$r['distributor_id']] ?? '';
+            $r['staff_name'] = $staff[$r['staff_id']]['name'] ?? '';
+            $r['staff_account'] = $staff[$r['staff_id']]['account'] ?? '';
+            $r['distributor_name'] = $distributors[$r['distributor_id']]['name'] ?? '';
+            $r['distributor_nickname'] = $distributors[$r['distributor_id']]['nickname'] ?? '';
             $r['gender_text'] = $r['gender'] == 1 ? '男' : ($r['gender'] == 2 ? '女' : '未知');
             $r['auth_text'] = $r['auth_status'] == 1 ? '已授权' : '未授权';
         }
@@ -58,6 +60,9 @@ class MemberService
         if (!$r) return null;
         $r['balance_yuan'] = round($r['balance'] / 100, 2);
         $r['group_name'] = ($this->groupMap())[$r['group_id']] ?? '未分组';
+        $staff = ($this->staffMap())[$r['staff_id']] ?? [];
+        $r['staff_name'] = $staff['name'] ?? '';
+        $r['staff_account'] = $staff['account'] ?? '';
         return $r;
     }
 
@@ -66,7 +71,7 @@ class MemberService
     {
         $fields = [];
         $allow = ['nickname', 'phone', 'gender', 'level', 'growth', 'points',
-                  'group_id', 'tags', 'staff_id', 'distributor_id'];
+                  'group_id', 'tags', 'staff_id', 'distributor_id', 'avatar'];
         foreach ($allow as $k) {
             if (array_key_exists($k, $data)) {
                 $fields[$k] = $data[$k];
@@ -83,17 +88,22 @@ class MemberService
         return true;
     }
 
-    /** 资产调整：type=growth|points|balance；action=add|subtract */
-    public function adjust($id, $type, $action, $value)
+    /** 资产调整：type=growth|points|balance；mode=add 增加 / sub 减少 / final 最终值 */
+    public function adjust($id, $type, $mode, $value)
     {
-        $value = intval($value);
-        if ($value <= 0) return false;
-        if ($type === 'balance') {
-            $value = intval(floatval($value) * 100); // 前端传元
-        }
+        $raw = floatval($value);
+        if ($raw <= 0) return false;
         $field = $type === 'growth' ? 'growth' : ($type === 'points' ? 'points' : 'balance');
+        $unit = $type === 'balance' ? 100 : 1; // 余额前端传元，需转分
+        $delta = intval(round($raw * $unit));
         $current = Db::table('users')->where('id', $id)->value($field);
-        $next = $action === 'subtract' ? max(0, $current - $value) : $current + $value;
+        if ($mode === 'final') {
+            $next = max(0, $delta);
+        } elseif ($mode === 'sub') {
+            $next = max(0, $current - $delta);
+        } else {
+            $next = $current + $delta;
+        }
         Db::table('users')->where('id', $id)->update([
             $field      => $next,
             'updated_at'=> date('Y-m-d H:i:s'),
@@ -149,17 +159,17 @@ class MemberService
 
     public function staffMap()
     {
-        $rows = Db::table('staff')->field('id,name')->select()->toArray();
+        $rows = Db::table('staff')->field('id,name,account')->select()->toArray();
         $m = [];
-        foreach ($rows as $r) $m[$r['id']] = $r['name'];
+        foreach ($rows as $r) $m[$r['id']] = ['name' => $r['name'], 'account' => $r['account']];
         return $m;
     }
 
     public function distributorMap()
     {
-        $rows = Db::table('distributors')->field('id,name')->select()->toArray();
+        $rows = Db::table('distributors')->field('id,name,nickname')->select()->toArray();
         $m = [];
-        foreach ($rows as $r) $m[$r['id']] = $r['name'];
+        foreach ($rows as $r) $m[$r['id']] = ['name' => $r['name'], 'nickname' => $r['nickname']];
         return $m;
     }
 

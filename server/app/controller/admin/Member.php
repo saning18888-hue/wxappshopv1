@@ -40,17 +40,20 @@ class Member extends AdminController
         return $this->ok();
     }
 
-    /** 成长值/积分/余额调整 */
+    /** 成长值/积分/余额调整（mode: add 增加 / sub 减少 / final 最终值） */
     public function adjust($id)
     {
         $d     = $this->body();
         $type  = trim($d['type'] ?? '');
-        $action = trim($d['action'] ?? 'add');
+        $mode  = trim($d['mode'] ?? 'add');
         $value = floatval($d['value'] ?? 0);
         if (!in_array($type, ['growth', 'points', 'balance'])) {
             return $this->fail('无效的调整类型');
         }
-        (new MemberService())->adjust(intval($id), $type, $action, $value);
+        if (!in_array($mode, ['add', 'sub', 'final'])) {
+            return $this->fail('无效的调整方式');
+        }
+        (new MemberService())->adjust(intval($id), $type, $mode, $value);
         return $this->ok();
     }
 
@@ -95,18 +98,24 @@ class Member extends AdminController
         return $this->ok((new MemberService())->distributors());
     }
 
-    /** 读取会员协议 */
+    /** 读取会员协议（服务协议 + 隐私政策） */
     public function agreement()
     {
         $cfg = SettingsService::get();
-        return $this->ok(['content' => $cfg['member_agreement'] ?? '']);
+        return $this->ok([
+            'service_agreement' => $cfg['member_service_agreement'] ?? '',
+            'privacy_agreement' => $cfg['member_privacy_agreement'] ?? '',
+        ]);
     }
 
     /** 保存会员协议 */
     public function saveAgreement()
     {
         $d = $this->body();
-        SettingsService::save(['member_agreement' => trim($d['content'] ?? '')]);
+        SettingsService::save([
+            'member_service_agreement' => trim($d['service_agreement'] ?? ''),
+            'member_privacy_agreement' => trim($d['privacy_agreement'] ?? ''),
+        ]);
         return $this->ok();
     }
 }

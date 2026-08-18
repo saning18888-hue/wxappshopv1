@@ -147,6 +147,32 @@
     .member-tabs .mtab{padding:10px 16px;font-size:14px;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
     .member-tabs .mtab:hover{color:var(--text)}
     .member-tabs .mtab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+    .view-switch{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+    .view-switch .vs-btn{border:0;background:#fff;padding:0 12px;height:32px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+    .view-switch .vs-btn.active{background:var(--primary);color:#fff}
+    .member-tip{background:#fef0f0;border:1px solid #fbc4c4;color:#d8392b;font-size:13px;padding:10px 12px;border-radius:6px;margin-bottom:12px}
+    .member-tip b{color:#d8392b}
+    .pick-search{display:flex;gap:8px;margin-bottom:12px}
+    .pick-search .form-input{flex:1}
+    .adjust-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px dashed #eee}
+    .adjust-label{width:96px;color:var(--text);font-size:14px;flex:none}
+    .adjust-mode{display:flex;gap:14px;flex:none}
+    .adjust-row .form-input{flex:1}
+    .readonly-box{background:#f5f7fa;color:#909399;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px}
+    .avatar-upload{display:flex;align-items:center;gap:12px}
+    .avatar-preview{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#f0f0f0;border:1px solid var(--border)}
+    .cell-avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#f0f0f0;display:flex;align-items:center;justify-content:center}
+    .cell-avatar img{width:100%;height:100%;object-fit:cover}
+    .no-avatar{font-size:11px;color:#bbb}
+    .oid-cell{font-size:11px;color:var(--text-muted);max-width:160px;word-break:break-all}
+    .member-card-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:4px}
+    .mcard{border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+    .mcard-avatar{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#f0f0f0;margin:0 auto 8px}
+    .mcard-name{font-weight:600;color:var(--text)}
+    .mcard-sub{font-size:12px;color:var(--text-muted);margin:4px 0 10px}
+    .agreement-block{margin-bottom:18px}
+    .agreement-title{font-size:14px;font-weight:600;color:var(--text);margin:0 0 8px}
+    .rte-sep{display:inline-block;width:1px;height:18px;background:var(--border);margin:0 4px;vertical-align:middle}
     .member-cell{display:flex;align-items:center;gap:10px}
     .member-cell img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#f0f0f0}
     .member-cell .nick{font-weight:500;color:var(--text);display:block}
@@ -2065,110 +2091,219 @@
               <div class="mtab" data-tab="agreement" onclick="switchMemberTab('agreement')">会员协议</div>
             </div>
 
-            <!-- 列表视图 -->
+            <!-- 列表 / 卡片视图 -->
             <div id="memberListBox">
               <div class="toolbar">
                 <button class="btn sm" onclick="exportMembers()">导出</button>
-                <button class="btn sm" onclick="document.getElementById('memberImportFile').click()">导入</button>
-                <input type="file" id="memberImportFile" style="display:none" accept=".csv,.xls,.xlsx" onchange="importMembers(this)">
-                <button class="btn sm" onclick="openMemberGroup()">修改分组</button>
+                <button class="btn sm" onclick="openMemberGroup()">修改会员分组</button>
                 <button class="btn sm" onclick="openBatchStaff()">分配员工</button>
                 <div class="toolbar-right">
                   <input type="text" class="form-input" id="memberKeyword" placeholder="昵称/手机号" onkeydown="if(event.key==='Enter')loadMembers()">
                   <button class="btn sm" onclick="loadMembers()">查询</button>
+                  <div class="view-switch">
+                    <button class="vs-btn active" id="vsListBtn" onclick="switchMemberView('list')">列表</button>
+                    <button class="vs-btn" id="vsCardBtn" onclick="switchMemberView('card')">卡片</button>
+                  </div>
                 </div>
+              </div>
+
+              <div id="memberLogoutTip" class="member-tip" style="display:none">
+                当前共有 <b id="memberLogoutCount">0</b> 位会员申请注销账号，请及时处理（通过后将清除账号所有数据，拒绝后恢复为正常会员）。
               </div>
 
               <div class="bulk-bar" id="memberBulkBar" style="display:none">
                 <span>已选择 <b id="memberCheckedCount">0</b> 位会员</span>
                 <button class="btn sm" onclick="openMemberGroup()">修改分组</button>
                 <button class="btn sm" onclick="openBatchStaff()">分配员工</button>
-                <button class="btn sm" onclick="openBatchDistributor()">分配分销商</button>
                 <button class="btn sm gray" onclick="clearMemberCheck()">取消选择</button>
               </div>
 
-              <div class="table-wrap">
+              <div class="table-wrap" id="memberTableWrap">
                 <table>
-                  <thead><tr>
-                    <th style="width:36px"><input type="checkbox" id="memberCheckAll" onchange="toggleMemberCheckAll(this.checked)"></th>
-                    <th>会员</th><th>ID</th><th>会员分组</th><th>手机号</th><th>性别</th>
-                    <th>平台来源</th><th>等级</th><th>成长值</th><th>积分</th><th>储值余额</th>
-                    <th>所在员工</th><th>所在分销商</th><th>备注</th><th>注册时间</th><th style="width:210px">操作</th>
-                  </tr></thead>
+                  <thead id="memberThead"></thead>
                   <tbody id="memberTbody">
-                    <tr><td colspan="16" class="empty-row">加载中…</td></tr>
+                    <tr><td colspan="14" class="empty-row">加载中…</td></tr>
                   </tbody>
                 </table>
               </div>
+
+              <div class="member-card-view" id="memberCardView" style="display:none"></div>
+
               <div class="pager" id="memberPager"></div>
             </div>
 
             <!-- 会员协议视图 -->
             <div id="memberAgreementBox" style="display:none">
-              <p class="delivery-desc">该协议将展示在会员注册 / 授权页面，支持直接编辑文本。</p>
-              <textarea id="memberAgreementContent" class="form-input" style="width:100%;min-height:360px" placeholder="请输入会员协议内容…"></textarea>
+              <p class="delivery-desc">会员协议将展示在会员注册 / 授权页面，可分别编辑「服务协议」与「隐私政策」。</p>
+              <div class="agreement-block">
+                <h4 class="agreement-title">服务协议</h4>
+                <div class="rte-wrap" id="rteServiceWrap">
+                  <div class="rte-toolbar" id="rteServiceToolbar">
+                    <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
+                    <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+                    <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+                    <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="formatBlock" data-val="h2" title="标题">H</button>
+                    <button type="button" data-cmd="insertOrderedList" title="有序列表">1.</button>
+                    <button type="button" data-cmd="insertUnorderedList" title="无序列表">•</button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="justifyLeft" title="左对齐">左</button>
+                    <button type="button" data-cmd="justifyCenter" title="居中">中</button>
+                    <button type="button" data-cmd="justifyRight" title="右对齐">右</button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="link" title="链接">链接</button>
+                    <button type="button" data-cmd="image" title="图片">图片</button>
+                    <button type="button" data-cmd="source" title="源码">源码</button>
+                  </div>
+                  <div class="rte-editor" id="rteService" contenteditable="true"></div>
+                  <textarea class="rte-source" id="rteServiceSource" style="display:none"></textarea>
+                </div>
+              </div>
+              <div class="agreement-block">
+                <h4 class="agreement-title">隐私政策</h4>
+                <div class="rte-wrap" id="rtePrivacyWrap">
+                  <div class="rte-toolbar" id="rtePrivacyToolbar">
+                    <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
+                    <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+                    <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+                    <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="formatBlock" data-val="h2" title="标题">H</button>
+                    <button type="button" data-cmd="insertOrderedList" title="有序列表">1.</button>
+                    <button type="button" data-cmd="insertUnorderedList" title="无序列表">•</button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="justifyLeft" title="左对齐">左</button>
+                    <button type="button" data-cmd="justifyCenter" title="居中">中</button>
+                    <button type="button" data-cmd="justifyRight" title="右对齐">右</button>
+                    <span class="rte-sep"></span>
+                    <button type="button" data-cmd="link" title="链接">链接</button>
+                    <button type="button" data-cmd="image" title="图片">图片</button>
+                    <button type="button" data-cmd="source" title="源码">源码</button>
+                  </div>
+                  <div class="rte-editor" id="rtePrivacy" contenteditable="true"></div>
+                  <textarea class="rte-source" id="rtePrivacySource" style="display:none"></textarea>
+                </div>
+              </div>
               <div style="margin-top:14px;text-align:right">
                 <button class="btn gray" onclick="loadMemberAgreement()">重置</button>
-                <button class="btn" onclick="saveMemberAgreement()">保存协议</button>
+                <button class="btn" onclick="saveMemberAgreement()">确定</button>
               </div>
             </div>
           </div>
 
-          <!-- 用户信息弹窗 -->
+          <!-- 用户信息弹窗（编辑） -->
           <div id="memberInfoModal" class="modal" onclick="if(event.target===this)closeMemberInfo()">
-            <div class="modal-card" style="width:460px">
-              <div class="modal-header"><h3>会员信息</h3><span class="close" onclick="closeMemberInfo()">&times;</span></div>
-              <div class="modal-body" id="memberInfoBody"></div>
-              <div class="modal-footer"><button class="btn gray" onclick="closeMemberInfo()">关闭</button></div>
+            <div class="modal-card" style="width:480px">
+              <div class="modal-header"><h3>用户信息</h3><span class="close" onclick="closeMemberInfo()">&times;</span></div>
+              <div class="modal-body">
+                <input type="hidden" id="mInfoId">
+                <div class="field"><label><span class="req">*</span>昵称</label><input type="text" class="form-input" id="mInfoNickname"></div>
+                <div class="field"><label>手机号</label><input type="text" class="form-input" id="mInfoPhone"></div>
+                <div class="field"><label>分销商信息</label><div class="readonly-box" id="mInfoDistributor">无</div></div>
+                <div class="field"><label>头像</label>
+                  <div class="avatar-upload">
+                    <img id="mInfoAvatar" class="avatar-preview" src="" onerror="this.style.display='none'">
+                    <button class="btn sm" type="button" onclick="document.getElementById('mInfoAvatarFile').click()">上传头像</button>
+                    <input type="file" id="mInfoAvatarFile" style="display:none" accept="image/*" onchange="uploadMemberAvatar(this)">
+                  </div>
+                </div>
+                <div class="field"><label>性别</label>
+                  <div class="inline-radios">
+                    <label class="radio-label"><input type="radio" name="mInfoGender" value="0" checked> 未知</label>
+                    <label class="radio-label"><input type="radio" name="mInfoGender" value="1"> 男</label>
+                    <label class="radio-label"><input type="radio" name="mInfoGender" value="2"> 女</label>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn gray" onclick="closeMemberInfo()">取消</button>
+                <button class="btn" onclick="saveMemberInfo()">确定</button>
+              </div>
             </div>
           </div>
 
-          <!-- 修改弹窗 -->
+          <!-- 修改成长值、积分等 -->
           <div id="memberEditModal" class="modal" onclick="if(event.target===this)closeMemberEdit()">
             <div class="modal-card" style="width:560px">
-              <div class="modal-header"><h3>修改会员</h3><span class="close" onclick="closeMemberEdit()">&times;</span></div>
+              <div class="modal-header"><h3>修改成长值、积分等</h3><span class="close" onclick="closeMemberEdit()">&times;</span></div>
               <div class="modal-body">
                 <input type="hidden" id="mEditId">
-                <div class="field"><label>昵称</label><input type="text" class="form-input" id="mEditNickname"></div>
-                <div class="field"><label>手机号</label><input type="text" class="form-input" id="mEditPhone"></div>
-                <div class="field"><label>性别</label>
-                  <div class="inline-radios">
-                    <label class="radio-label"><input type="radio" name="mEditGender" value="0" checked> 未知</label>
-                    <label class="radio-label"><input type="radio" name="mEditGender" value="1"> 男</label>
-                    <label class="radio-label"><input type="radio" name="mEditGender" value="2"> 女</label>
+                <div class="adjust-row">
+                  <label class="adjust-label">调整成长值</label>
+                  <div class="adjust-mode">
+                    <label class="radio-label"><input type="radio" name="mGrowthMode" value="add" checked> 增加</label>
+                    <label class="radio-label"><input type="radio" name="mGrowthMode" value="sub"> 减少</label>
+                    <label class="radio-label"><input type="radio" name="mGrowthMode" value="final"> 最终值</label>
                   </div>
+                  <input type="number" class="form-input" id="mGrowthVal" style="width:140px">
                 </div>
-                <div class="field"><label>会员等级</label><input type="number" class="form-input" id="mEditLevel" style="width:120px"></div>
-                <div class="field"><label>成长值</label><input type="number" class="form-input" id="mEditGrowth" style="width:120px"></div>
-                <div class="field"><label>积分</label><input type="number" class="form-input" id="mEditPoints" style="width:120px"></div>
-                <div class="field"><label>储值余额（元）</label><input type="number" class="form-input" id="mEditBalance" style="width:120px" step="0.01"></div>
-                <div class="field"><label>会员分组</label><select class="form-input" id="mEditGroup" style="width:180px"></select></div>
-                <div class="field"><label>备注</label><input type="text" class="form-input" id="mEditTags"></div>
+                <div class="adjust-row">
+                  <label class="adjust-label">调整积分</label>
+                  <div class="adjust-mode">
+                    <label class="radio-label"><input type="radio" name="mPointsMode" value="add" checked> 增加</label>
+                    <label class="radio-label"><input type="radio" name="mPointsMode" value="sub"> 减少</label>
+                    <label class="radio-label"><input type="radio" name="mPointsMode" value="final"> 最终值</label>
+                  </div>
+                  <input type="number" class="form-input" id="mPointsVal" style="width:140px">
+                </div>
+                <div class="adjust-row">
+                  <label class="adjust-label">调整储值金额</label>
+                  <div class="adjust-mode">
+                    <label class="radio-label"><input type="radio" name="mBalanceMode" value="add" checked> 增加</label>
+                    <label class="radio-label"><input type="radio" name="mBalanceMode" value="sub"> 减少</label>
+                    <label class="radio-label"><input type="radio" name="mBalanceMode" value="final"> 最终值</label>
+                  </div>
+                  <input type="number" class="form-input" id="mBalanceVal" style="width:140px" step="0.01">
+                </div>
+                <div class="field"><label>分组名称</label><select class="form-input" id="mEditGroup" style="width:200px"></select></div>
               </div>
               <div class="modal-footer">
                 <button class="btn gray" onclick="closeMemberEdit()">取消</button>
-                <button class="btn" onclick="saveMemberEdit()">保存</button>
+                <button class="btn" onclick="saveMemberEdit()">确定</button>
               </div>
             </div>
           </div>
 
-          <!-- 分配员工弹窗 -->
+          <!-- 分配员工 -->
           <div id="memberStaffModal" class="modal" onclick="if(event.target===this)closeMemberStaff()">
-            <div class="modal-card" style="width:460px">
+            <div class="modal-card" style="width:700px;max-width:94vw">
               <div class="modal-header"><h3 id="memberStaffTitle">分配员工</h3><span class="close" onclick="closeMemberStaff()">&times;</span></div>
               <div class="modal-body">
-                <div class="sel-list" id="memberStaffList"></div>
+                <div class="pick-search">
+                  <input type="text" class="form-input" id="memberStaffKeyword" placeholder="账号 / 姓名" oninput="memberStaffPage=1;loadStaffList()">
+                  <button class="btn sm" onclick="memberStaffPage=1;loadStaffList()">搜索</button>
+                </div>
+                <div class="table-wrap" style="max-height:360px;overflow:auto">
+                  <table>
+                    <thead><tr><th>账号</th><th>姓名</th><th>职位</th><th>手机号</th><th>微信号</th><th>QQ号</th><th style="width:90px">操作</th></tr></thead>
+                    <tbody id="memberStaffTbody"><tr><td colspan="7" class="empty-row">加载中…</td></tr></tbody>
+                  </table>
+                </div>
+                <div class="pager" id="memberStaffPager"></div>
               </div>
+              <div class="modal-footer"><button class="btn gray" onclick="closeMemberStaff()">关闭</button></div>
             </div>
           </div>
 
-          <!-- 分配分销商弹窗 -->
+          <!-- 分配分销商 -->
           <div id="memberDistributorModal" class="modal" onclick="if(event.target===this)closeMemberDistributor()">
-            <div class="modal-card" style="width:460px">
+            <div class="modal-card" style="width:640px;max-width:94vw">
               <div class="modal-header"><h3 id="memberDistributorTitle">分配分销商</h3><span class="close" onclick="closeMemberDistributor()">&times;</span></div>
               <div class="modal-body">
-                <div class="sel-list" id="memberDistributorList"></div>
+                <div class="pick-search">
+                  <input type="text" class="form-input" id="memberDistributorKeyword" placeholder="分销商名称" oninput="memberDistributorPage=1;loadDistributorList()">
+                  <button class="btn sm" onclick="memberDistributorPage=1;loadDistributorList()">搜索</button>
+                </div>
+                <div class="table-wrap" style="max-height:360px;overflow:auto">
+                  <table>
+                    <thead><tr><th>会员昵称</th><th>姓名</th><th>手机号</th><th style="width:90px">操作</th></tr></thead>
+                    <tbody id="memberDistributorTbody"><tr><td colspan="4" class="empty-row">加载中…</td></tr></tbody>
+                  </table>
+                </div>
+                <div class="pager" id="memberDistributorPager"></div>
               </div>
+              <div class="modal-footer"><button class="btn gray" onclick="closeMemberDistributor()">关闭</button></div>
             </div>
           </div>
 
@@ -3353,6 +3488,7 @@
     let memberOpId=0;
     let memberOpMode='';
     let memberGroupsCache=[],memberStaffCache=[],memberDistributorCache=[];
+    let memberView='list',memberStaffPage=1,memberStaffTotal=0,memberDistributorPage=1,memberDistributorTotal=0,rteInited=false;
 
     function switchMemberTab(tab){
       memberTab=tab;
@@ -3366,6 +3502,34 @@
       else{memberPage=1;loadMembers();}
     }
 
+    function switchMemberView(v){
+      memberView=v;
+      document.getElementById('vsListBtn').classList.toggle('active',v==='list');
+      document.getElementById('vsCardBtn').classList.toggle('active',v==='card');
+      document.getElementById('memberTableWrap').style.display=v==='list'?'':'none';
+      document.getElementById('memberCardView').style.display=v==='card'?'':'none';
+      loadMembers();
+    }
+
+    function setMemberHead(){
+      const th=document.getElementById('memberThead');
+      if(memberTab==='logout'){
+        th.innerHTML=`<tr>
+          <th style="width:36px"><input type="checkbox" id="memberCheckAll" onchange="toggleMemberCheckAll(this.checked)"></th>
+          <th style="width:56px">用户头像</th><th>用户昵称</th><th>平台来源</th><th>手机号</th>
+          <th>OPENID</th><th>注销原因</th><th>注册时间</th><th>申请时间</th><th style="width:200px">操作</th>
+        </tr>`;
+      }else{
+        th.innerHTML=`<tr>
+          <th style="width:36px"><input type="checkbox" id="memberCheckAll" onchange="toggleMemberCheckAll(this.checked)"></th>
+          <th style="width:60px">ID</th><th style="width:56px">用户头像</th><th>用户昵称</th>
+          <th>等级</th><th>成长值</th><th>积分</th><th>储值余额</th>
+          <th>所在分组</th><th>平台来源</th><th>手机号</th><th>OPENID</th>
+          <th>所属员工</th><th style="width:230px">操作</th>
+        </tr>`;
+      }
+    }
+
     async function loadMembers(){
       const kw=document.getElementById('memberKeyword').value.trim();
       const q=`?tab=${memberTab}&keyword=${encodeURIComponent(kw)}&page=${memberPage}&page_size=${memberSize}`;
@@ -3373,8 +3537,16 @@
       if(d.code!==0){toast(d.msg||'加载失败');return;}
       const list=d.data.list||[];
       memberTotal=d.data.total||0;
+      setMemberHead();
+      document.getElementById('memberLogoutTip').style.display='none';
+      if(memberTab==='logout'){
+        document.getElementById('memberLogoutCount').textContent=memberTotal;
+        document.getElementById('memberLogoutTip').style.display=memberTotal>0?'block':'none';
+      }
+      if(memberView==='card'){renderMemberCards(list);updateMemberBulkBar();return;}
       const tbody=document.getElementById('memberTbody');
-      if(list.length===0){tbody.innerHTML=`<tr><td colspan="16" class="empty-row">暂无会员数据</td></tr>`;}
+      const colspan=memberTab==='logout'?10:14;
+      if(list.length===0){tbody.innerHTML=`<tr><td colspan="${colspan}" class="empty-row">暂无会员数据</td></tr>`;}
       else{tbody.innerHTML=list.map(m=>renderMemberRow(m)).join('');}
       renderMemberPager();
       list.forEach(m=>{if(memberChecked.has(m.id)){const cb=document.getElementById('mchk_'+m.id);if(cb)cb.checked=true;}});
@@ -3383,26 +3555,48 @@
 
     function renderMemberRow(m){
       const ops=renderMemberOps(m);
-      const avatar=m.avatar?`<img src="${m.avatar}" onerror="this.style.display='none'">`:'';
-      const oid=(m.openid||'').slice(0,12);
+      const avatar=m.avatar?`<img src="${m.avatar}" onerror="this.style.display='none'">`:`<span class="no-avatar">无</span>`;
+      if(memberTab==='logout'){
+        return `<tr>
+          <td><input type="checkbox" id="mchk_${m.id}" ${memberChecked.has(m.id)?'checked':''} onchange="onMemberCheck(${m.id},this.checked)"></td>
+          <td><div class="cell-avatar">${avatar}</div></td>
+          <td>${escapeHtml(m.nickname||'')}</td>
+          <td>${escapeHtml(m.source||'-')}</td>
+          <td>${escapeHtml(m.phone||'-')}</td>
+          <td class="oid-cell">${escapeHtml(m.openid||'-')}</td>
+          <td>${escapeHtml(m.delete_reason||'-')}</td>
+          <td>${escapeHtml((m.created_at||'').slice(0,10))}</td>
+          <td>${escapeHtml((m.delete_apply_time||'').slice(0,10))}</td>
+          <td><div class="member-ops">${ops}</div></td>
+        </tr>`;
+      }
       return `<tr>
         <td><input type="checkbox" id="mchk_${m.id}" ${memberChecked.has(m.id)?'checked':''} onchange="onMemberCheck(${m.id},this.checked)"></td>
-        <td><div class="member-cell">${avatar}<div><span class="nick">${escapeHtml(m.nickname||'')}</span><span class="oid">${oid||''}</span></div></div></td>
         <td>${m.id}</td>
-        <td>${escapeHtml(m.group_name||'未分组')}</td>
-        <td>${escapeHtml(m.phone||'-')}</td>
-        <td>${m.gender_text||'未知'}</td>
-        <td>${escapeHtml(m.source||'-')}</td>
+        <td><div class="cell-avatar">${avatar}</div></td>
+        <td>${escapeHtml(m.nickname||'')}</td>
         <td>V${m.level||0}</td>
         <td>${m.growth||0}</td>
         <td>${m.points||0}</td>
         <td>¥${(m.balance_yuan!=null?m.balance_yuan:0)}</td>
-        <td>${escapeHtml(m.staff_name||'-')}</td>
-        <td>${escapeHtml(m.distributor_name||'-')}</td>
-        <td>${escapeHtml(m.tags||'-')}</td>
-        <td>${escapeHtml((m.created_at||'').slice(0,10))}</td>
+        <td>${escapeHtml(m.group_name||'未分组')}</td>
+        <td>${escapeHtml(m.source||'-')}</td>
+        <td>${escapeHtml(m.phone||'-')}</td>
+        <td class="oid-cell">${escapeHtml(m.openid||'-')}</td>
+        <td>${escapeHtml(m.staff_name?('用户名：'+m.staff_name+(m.staff_account?(' 账号：'+m.staff_account):'')):'-')}</td>
         <td><div class="member-ops">${ops}</div></td>
       </tr>`;
+    }
+
+    function renderMemberCards(list){
+      const wrap=document.getElementById('memberCardView');
+      if(!list||list.length===0){wrap.innerHTML='<div class="empty" style="padding:40px;grid-column:1/-1">暂无会员数据</div>';return;}
+      wrap.innerHTML=list.map(m=>`<div class="mcard">
+        <img class="mcard-avatar" src="${m.avatar||''}" onerror="this.style.display='none'">
+        <div class="mcard-name">${escapeHtml(m.nickname||'')}</div>
+        <div class="mcard-sub">V${m.level||0} · ${escapeHtml(m.group_name||'未分组')}</div>
+        <div class="mcard-ops"><div class="member-ops">${renderMemberOps(m)}</div></div>
+      </div>`).join('');
     }
 
     function renderMemberOps(m){
@@ -3444,88 +3638,107 @@
       const d=await fetchA(`${BASE}/members/${id}`);
       if(d.code!==0){toast(d.msg||'加载失败');return;}
       const m=d.data;
-      document.getElementById('memberInfoBody').innerHTML=`
-        <img class="member-info-avatar" src="${m.avatar||''}" onerror="this.style.display='none'">
-        <div class="member-info-row"><span class="k">昵称</span><span class="v">${escapeHtml(m.nickname||'')}</span></div>
-        <div class="member-info-row"><span class="k">ID</span><span class="v">${m.id}</span></div>
-        <div class="member-info-row"><span class="k">手机号</span><span class="v">${escapeHtml(m.phone||'-')}</span></div>
-        <div class="member-info-row"><span class="k">性别</span><span class="v">${m.gender==1?'男':(m.gender==2?'女':'未知')}</span></div>
-        <div class="member-info-row"><span class="k">会员分组</span><span class="v">${escapeHtml(m.group_name||'未分组')}</span></div>
-        <div class="member-info-row"><span class="k">会员等级</span><span class="v">V${m.level||0}</span></div>
-        <div class="member-info-row"><span class="k">成长值</span><span class="v">${m.growth||0}</span></div>
-        <div class="member-info-row"><span class="k">积分</span><span class="v">${m.points||0}</span></div>
-        <div class="member-info-row"><span class="k">储值余额</span><span class="v">¥${(m.balance_yuan!=null?m.balance_yuan:0)}</span></div>
-        <div class="member-info-row"><span class="k">所在员工</span><span class="v">${escapeHtml(m.staff_name||'-')}</span></div>
-        <div class="member-info-row"><span class="k">所在分销商</span><span class="v">${escapeHtml(m.distributor_name||'-')}</span></div>
-        <div class="member-info-row"><span class="k">授权状态</span><span class="v">${m.auth_status==1?'已授权':'未授权'}</span></div>
-        <div class="member-info-row"><span class="k">注册时间</span><span class="v">${escapeHtml(m.created_at||'')}</span></div>
-        ${m.delete_status==1?`<div class="member-info-row"><span class="k">注销申请</span><span class="v">${escapeHtml(m.delete_reason||'')}（${escapeHtml(m.delete_apply_time||'')}）</span></div>`:''}
-      `;
+      document.getElementById('mInfoId').value=m.id;
+      document.getElementById('mInfoNickname').value=m.nickname||'';
+      document.getElementById('mInfoPhone').value=m.phone||'';
+      setRadioValue('mInfoGender',String(m.gender||0));
+      document.getElementById('mInfoDistributor').textContent=m.distributor_name?m.distributor_name:'无';
+      const av=document.getElementById('mInfoAvatar');
+      if(m.avatar){av.src=m.avatar;av.style.display='';av.setAttribute('src',m.avatar);}else{av.style.display='none';}
       document.getElementById('memberInfoModal').classList.add('open');
     }
     function closeMemberInfo(){document.getElementById('memberInfoModal').classList.remove('open');}
+    async function saveMemberInfo(){
+      const id=document.getElementById('mInfoId').value;
+      const data={
+        nickname:document.getElementById('mInfoNickname').value.trim(),
+        phone:document.getElementById('mInfoPhone').value.trim(),
+        gender:parseInt(getRadioValue('mInfoGender')||'0',10),
+        avatar:document.getElementById('mInfoAvatar').getAttribute('src')||''
+      };
+      const d=await fetchA(`${BASE}/members/${id}/save`,{method:'POST',body:data});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      toast('已保存');closeMemberInfo();loadMembers();
+    }
+    async function uploadMemberAvatar(input){
+      if(!input.files||!input.files.length)return;
+      const url=await uploadToServer(input.files[0],'image');
+      if(url){const av=document.getElementById('mInfoAvatar');av.src=url;av.style.display='';av.setAttribute('src',url);}
+      input.value='';
+    }
 
     async function openMemberEdit(id){
+      memberOpId=id;
       const d=await fetchA(`${BASE}/members/${id}`);
       if(d.code!==0){toast(d.msg||'加载失败');return;}
       const m=d.data;
       const g=await fetchA(`${BASE}/member_groups`);
       memberGroupsCache=g.data||[];
       document.getElementById('mEditId').value=m.id;
-      document.getElementById('mEditNickname').value=m.nickname||'';
-      document.getElementById('mEditPhone').value=m.phone||'';
-      setRadioValue('mEditGender',String(m.gender||0));
-      document.getElementById('mEditLevel').value=m.level||0;
-      document.getElementById('mEditGrowth').value=m.growth||0;
-      document.getElementById('mEditPoints').value=m.points||0;
-      document.getElementById('mEditBalance').value=(m.balance_yuan!=null?m.balance_yuan:0);
-      document.getElementById('mEditTags').value=m.tags||'';
+      document.getElementById('mGrowthVal').value='';
+      document.getElementById('mPointsVal').value='';
+      document.getElementById('mBalanceVal').value='';
       const sel=document.getElementById('mEditGroup');
       sel.innerHTML=memberGroupsCache.map(x=>`<option value="${x.id}" ${x.id==m.group_id?'selected':''}>${escapeHtml(x.name)}</option>`).join('');
+      sel.value=m.group_id||'';
       document.getElementById('memberEditModal').classList.add('open');
     }
     function closeMemberEdit(){document.getElementById('memberEditModal').classList.remove('open');}
     async function saveMemberEdit(){
       const id=document.getElementById('mEditId').value;
-      const data={
-        nickname:document.getElementById('mEditNickname').value.trim(),
-        phone:document.getElementById('mEditPhone').value.trim(),
-        gender:parseInt(getRadioValue('mEditGender')||'0',10),
-        level:parseInt(document.getElementById('mEditLevel').value||0,10),
-        growth:parseInt(document.getElementById('mEditGrowth').value||0,10),
-        points:parseInt(document.getElementById('mEditPoints').value||0,10),
-        balance_yuan:parseFloat(document.getElementById('mEditBalance').value||0),
-        group_id:parseInt(document.getElementById('mEditGroup').value||0,10),
-        tags:document.getElementById('mEditTags').value.trim()
-      };
-      const d=await fetchA(`${BASE}/members/${id}/save`,{method:'POST',body:data});
-      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      const gid=parseInt(document.getElementById('mEditGroup').value||0,10);
+      const sends=[fetchA(`${BASE}/members/${id}/save`,{method:'POST',body:{group_id:gid}})];
+      const g=parseFloat(document.getElementById('mGrowthVal').value||0);
+      if(g>0){const mode=getRadioValue('mGrowthMode');sends.push(fetchA(`${BASE}/members/${id}/adjust`,{method:'POST',body:{type:'growth',mode,value:g}}));}
+      const p=parseFloat(document.getElementById('mPointsVal').value||0);
+      if(p>0){const mode=getRadioValue('mPointsMode');sends.push(fetchA(`${BASE}/members/${id}/adjust`,{method:'POST',body:{type:'points',mode,value:p}}));}
+      const b=parseFloat(document.getElementById('mBalanceVal').value||0);
+      if(b>0){const mode=getRadioValue('mBalanceMode');sends.push(fetchA(`${BASE}/members/${id}/adjust`,{method:'POST',body:{type:'balance',mode,value:b}}));}
+      await Promise.all(sends);
       toast('已保存');closeMemberEdit();loadMembers();
     }
 
     async function openMemberStaff(id){
-      memberOpId=id;memberOpMode='staff';
-      const d=await fetchA(`${BASE}/member_staff`);
-      memberStaffCache=d.data||[];
+      memberOpId=id;memberOpMode='staff';memberStaffPage=1;
       document.getElementById('memberStaffTitle').textContent=id?'分配员工':'批量分配员工';
-      renderStaffList();
+      document.getElementById('memberStaffKeyword').value='';
+      await loadStaffList();
       document.getElementById('memberStaffModal').classList.add('open');
     }
     async function openBatchStaff(){
       if(memberChecked.size===0){toast('请先勾选会员');return;}
-      memberOpId=0;memberOpMode='batchStaff';
-      const d=await fetchA(`${BASE}/member_staff`);
-      memberStaffCache=d.data||[];
+      memberOpId=0;memberOpMode='batchStaff';memberStaffPage=1;
       document.getElementById('memberStaffTitle').textContent='批量分配员工';
-      renderStaffList();
+      document.getElementById('memberStaffKeyword').value='';
+      await loadStaffList();
       document.getElementById('memberStaffModal').classList.add('open');
     }
+    async function loadStaffList(){
+      const d=await fetchA(`${BASE}/member_staff`);
+      const all=d.data||[];
+      const kw=document.getElementById('memberStaffKeyword').value.trim();
+      const filtered=kw?all.filter(s=>((s.account||'').includes(kw)||(s.name||'').includes(kw))):all;
+      memberStaffTotal=filtered.length;
+      const start=(memberStaffPage-1)*8;
+      memberStaffCache=filtered.slice(start,start+8);
+      renderStaffList();renderStaffPager();
+    }
     function renderStaffList(){
-      const wrap=document.getElementById('memberStaffList');
-      if(memberStaffCache.length===0){wrap.innerHTML='<div style="padding:20px;text-align:center;color:#999">暂无员工，请先在员工管理中添加</div>';return;}
-      wrap.innerHTML=memberStaffCache.map(s=>`<div class="sel-item" onclick="confirmAssignStaff(${s.id})">
-        <div><div class="sel-name">${escapeHtml(s.name)}</div><div class="sel-sub">${escapeHtml(s.phone||'')}</div></div>
-        <span class="sel-badge">选择</span></div>`).join('');
+      const tb=document.getElementById('memberStaffTbody');
+      if(memberStaffCache.length===0){tb.innerHTML='<tr><td colspan="7" class="empty-row">暂无员工</td></tr>';return;}
+      tb.innerHTML=memberStaffCache.map(s=>`<tr>
+        <td>${escapeHtml(s.account||'-')}</td>
+        <td>${escapeHtml(s.name||'')}</td>
+        <td>${escapeHtml(s.position||'-')}</td>
+        <td>${escapeHtml(s.phone||'-')}</td>
+        <td>${escapeHtml(s.wechat||'-')}</td>
+        <td>${escapeHtml(s.qq||'-')}</td>
+        <td><button class="btn sm" onclick="confirmAssignStaff(${s.id})">选择</button></td>
+      </tr>`).join('');
+    }
+    function renderStaffPager(){
+      const pages=Math.max(1,Math.ceil(memberStaffTotal/8));
+      document.getElementById('memberStaffPager').innerHTML=`<button ${memberStaffPage<=1?'disabled':''} onclick="memberStaffPage--;loadStaffList()">上一页</button><span style="font-size:12px;color:#888">第 ${memberStaffPage} / ${pages} 页（共 ${memberStaffTotal} 条）</span><button ${memberStaffPage>=pages?'disabled':''} onclick="memberStaffPage++;loadStaffList()">下一页</button>`;
     }
     async function confirmAssignStaff(staffId){
       const ids=memberOpMode==='batchStaff'?[...memberChecked]:[memberOpId];
@@ -3535,28 +3748,43 @@
     function closeMemberStaff(){document.getElementById('memberStaffModal').classList.remove('open');}
 
     async function openMemberDistributor(id){
-      memberOpId=id;memberOpMode='distributor';
-      const d=await fetchA(`${BASE}/member_distributors`);
-      memberDistributorCache=d.data||[];
+      memberOpId=id;memberOpMode='distributor';memberDistributorPage=1;
       document.getElementById('memberDistributorTitle').textContent=id?'分配分销商':'批量分配分销商';
-      renderDistributorList();
+      document.getElementById('memberDistributorKeyword').value='';
+      await loadDistributorList();
       document.getElementById('memberDistributorModal').classList.add('open');
     }
     async function openBatchDistributor(){
       if(memberChecked.size===0){toast('请先勾选会员');return;}
-      memberOpId=0;memberOpMode='batchDistributor';
-      const d=await fetchA(`${BASE}/member_distributors`);
-      memberDistributorCache=d.data||[];
+      memberOpId=0;memberOpMode='batchDistributor';memberDistributorPage=1;
       document.getElementById('memberDistributorTitle').textContent='批量分配分销商';
-      renderDistributorList();
+      document.getElementById('memberDistributorKeyword').value='';
+      await loadDistributorList();
       document.getElementById('memberDistributorModal').classList.add('open');
     }
+    async function loadDistributorList(){
+      const d=await fetchA(`${BASE}/member_distributors`);
+      const all=d.data||[];
+      const kw=document.getElementById('memberDistributorKeyword').value.trim();
+      const filtered=kw?all.filter(s=>((s.name||'').includes(kw)||(s.nickname||'').includes(kw))):all;
+      memberDistributorTotal=filtered.length;
+      const start=(memberDistributorPage-1)*8;
+      memberDistributorCache=filtered.slice(start,start+8);
+      renderDistributorList();renderDistributorPager();
+    }
     function renderDistributorList(){
-      const wrap=document.getElementById('memberDistributorList');
-      if(memberDistributorCache.length===0){wrap.innerHTML='<div style="padding:20px;text-align:center;color:#999">暂无分销商</div>';return;}
-      wrap.innerHTML=memberDistributorCache.map(s=>`<div class="sel-item" onclick="confirmAssignDistributor(${s.id})">
-        <div><div class="sel-name">${escapeHtml(s.name)}</div><div class="sel-sub">${escapeHtml(s.phone||'')}</div></div>
-        <span class="sel-badge">选择</span></div>`).join('');
+      const tb=document.getElementById('memberDistributorTbody');
+      if(memberDistributorCache.length===0){tb.innerHTML='<tr><td colspan="4" class="empty-row">暂无分销商</td></tr>';return;}
+      tb.innerHTML=memberDistributorCache.map(s=>`<tr>
+        <td>${escapeHtml(s.nickname||'-')}</td>
+        <td>${escapeHtml(s.name||'')}</td>
+        <td>${escapeHtml(s.phone||'-')}</td>
+        <td><button class="btn sm" onclick="confirmAssignDistributor(${s.id})">选择</button></td>
+      </tr>`).join('');
+    }
+    function renderDistributorPager(){
+      const pages=Math.max(1,Math.ceil(memberDistributorTotal/8));
+      document.getElementById('memberDistributorPager').innerHTML=`<button ${memberDistributorPage<=1?'disabled':''} onclick="memberDistributorPage--;loadDistributorList()">上一页</button><span style="font-size:12px;color:#888">第 ${memberDistributorPage} / ${pages} 页（共 ${memberDistributorTotal} 条）</span><button ${memberDistributorPage>=pages?'disabled':''} onclick="memberDistributorPage++;loadDistributorList()">下一页</button>`;
     }
     async function confirmAssignDistributor(distId){
       const ids=memberOpMode==='batchDistributor'?[...memberChecked]:[memberOpId];
@@ -3564,6 +3792,43 @@
       toast('分配成功');closeMemberDistributor();clearMemberCheck();loadMembers();
     }
     function closeMemberDistributor(){document.getElementById('memberDistributorModal').classList.remove('open');}
+
+    /* 轻量富文本编辑器（会员协议双实例） */
+    function initSimpleRte(editorId,sourceId){
+      const editor=document.getElementById(editorId);
+      const source=document.getElementById(sourceId);
+      const wrap=editor.closest('.rte-wrap');
+      const toolbar=wrap.querySelector('.rte-toolbar');
+      let range=null;
+      const saveRange=()=>{const s=window.getSelection();if(s&&s.rangeCount&&editor.contains(s.anchorNode))range=s.getRangeAt(0).cloneRange();};
+      editor.addEventListener('mouseup',saveRange);
+      editor.addEventListener('keyup',saveRange);
+      const restore=()=>{if(range){editor.focus();const s=window.getSelection();s.removeAllRanges();s.addRange(range);}};
+      const exec=(cmd,val=null)=>{restore();try{document.execCommand(cmd,false,val);}catch(e){}};
+      toolbar.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
+        const cmd=b.dataset.cmd,val=b.dataset.val;
+        if(cmd==='source'){toggleSource();return;}
+        if(cmd==='link'){const url=prompt('链接地址','https://');if(url)exec('createLink',url);return;}
+        if(cmd==='image'){pickImage();return;}
+        exec(cmd,val);
+      }));
+      function toggleSource(){
+        const isSrc=wrap.classList.toggle('source-mode');
+        if(isSrc){source.value=editor.innerHTML;}else{editor.innerHTML=source.value;}
+        source.style.display=isSrc?'block':'none';
+      }
+      async function pickImage(){
+        const input=document.createElement('input');input.type='file';input.accept='image/*';
+        input.onchange=async()=>{if(input.files&&input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){restore();document.execCommand('insertImage',false,url);}}};
+        input.click();
+      }
+    }
+    function getRteHTML(editorId){
+      const editor=document.getElementById(editorId);
+      const wrap=editor.closest('.rte-wrap');
+      const source=wrap.querySelector('.rte-source');
+      return wrap.classList.contains('source-mode')?source.value:editor.innerHTML;
+    }
 
     async function openMemberGroup(id){
       let title='修改分组';
@@ -3587,17 +3852,12 @@
       const d=await fetchA(`${BASE}/members?tab=${memberTab}&keyword=${encodeURIComponent(document.getElementById('memberKeyword').value.trim())}&page=1&page_size=100000`);
       const list=(d.data&&d.data.list)||[];
       if(list.length===0){toast('暂无可导出数据');return;}
-      const headers=['ID','昵称','手机号','性别','会员分组','等级','成长值','积分','储值余额','所在员工','所在分销商','注册时间'];
-      const rows=list.map(m=>[m.id,m.nickname,m.phone,m.gender_text,m.group_name,'V'+(m.level||0),m.growth,m.points,m.balance_yuan,m.staff_name,m.distributor_name,(m.created_at||'').slice(0,10)]);
+      const headers=['ID','昵称','等级','成长值','积分','储值余额','会员分组','平台来源','手机号','OPENID','所属员工'];
+      const rows=list.map(m=>[m.id,m.nickname,'V'+(m.level||0),m.growth,m.points,m.balance_yuan,m.group_name,m.source,m.phone,m.openid,(m.staff_name||'')+(m.staff_account?(' 账号：'+m.staff_account):'')]);
       const csv=[headers.join(',')].concat(rows.map(r=>r.map(c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`).join(','))).join('\n');
       const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
       const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='会员列表.csv';a.click();
       toast('已导出');
-    }
-    function importMembers(input){
-      if(!input.files||!input.files.length){return;}
-      toast('导入功能即将开放，当前可手动维护');
-      input.value='';
     }
 
     async function deleteMember(id){
@@ -3613,12 +3873,15 @@
     }
 
     async function loadMemberAgreement(){
+      if(!rteInited){initSimpleRte('rteService','rteServiceSource');initSimpleRte('rtePrivacy','rtePrivacySource');rteInited=true;}
       const d=await fetchA(`${BASE}/member_agreement`);
-      document.getElementById('memberAgreementContent').value=(d.data&&d.data.content)||'';
+      document.getElementById('rteService').innerHTML=(d.data&&d.data.service_agreement)||'';
+      document.getElementById('rtePrivacy').innerHTML=(d.data&&d.data.privacy_agreement)||'';
     }
     async function saveMemberAgreement(){
-      const content=document.getElementById('memberAgreementContent').value;
-      const d=await fetchA(`${BASE}/member_agreement`,{method:'POST',body:{content}});
+      const service=getRteHTML('rteService');
+      const privacy=getRteHTML('rtePrivacy');
+      const d=await fetchA(`${BASE}/member_agreement`,{method:'POST',body:{service_agreement:service,privacy_agreement:privacy}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       toast('协议已保存');
     }
