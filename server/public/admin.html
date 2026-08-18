@@ -695,6 +695,73 @@
       .bn-item{grid-template-columns:30px 64px 1fr auto}
       .bn-icons img{width:28px;height:28px}
     }
+
+    /* ===== 配送设置 ===== */
+    .delivery-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;border-radius:var(--radius) var(--radius) 0 0}
+    .delivery-tab{padding:14px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative;transition:.15s;user-select:none}
+    .delivery-tab.active{color:var(--primary);font-weight:600}
+    .delivery-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
+    .delivery-pane{display:none;padding:24px}
+    .delivery-pane.active{display:block}
+    .delivery-desc{font-size:13px;color:var(--text-secondary);margin-bottom:18px}
+    .delivery-switch-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .delivery-switch-row .switch-desc{font-size:13px;color:var(--text-secondary)}
+    .delivery-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .delivery-toolbar .left{display:flex;gap:10px;align-items:center}
+    .delivery-toolbar .right{display:flex;gap:10px;align-items:center}
+    .delivery-toolbar input[type=text]{width:180px;height:34px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#f7f8fa;outline:none}
+    .delivery-toolbar input[type=text]:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .delivery-toolbar select{height:34px;padding:0 8px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#f7f8fa;outline:none}
+    .delivery-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);overflow:hidden}
+    .delivery-table th,.delivery-table td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);color:var(--text)}
+    .delivery-table th{background:#f7f8fa;font-weight:600;color:var(--text-secondary);font-size:12px}
+    .delivery-table tbody tr:hover{background:#fafbff}
+    .delivery-table .col-check{width:40px;text-align:center}
+    .delivery-table .col-enable{width:80px}
+    .delivery-table .col-default{width:80px}
+    .delivery-table .col-op{width:140px}
+    .delivery-table .op-btns{display:flex;gap:8px;flex-wrap:wrap}
+    .delivery-table .op-btns .btn-link{font-size:13px;color:var(--primary);cursor:pointer;background:none;border:none;padding:0}
+    .delivery-table .op-btns .btn-link:hover{text-decoration:underline}
+    .delivery-table .tag-default{display:inline-block;padding:2px 8px;background:#e6f7ff;color:#1890ff;border-radius:4px;font-size:12px}
+    .delivery-table .empty-row{text-align:center;color:var(--text-muted);padding:40px 16px}
+
+    /* 运费模板弹窗 */
+    #deliveryTemplateModal .modal-card{width:720px;max-width:96vw}
+    #deliveryTemplateModal .tm-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-top:16px}
+    #deliveryTemplateModal .tm-section-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px}
+    #deliveryTemplateModal .tm-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    #deliveryTemplateModal .tm-row label{font-size:13px;color:var(--text-secondary);white-space:nowrap}
+    #deliveryTemplateModal .tm-row .form-input{width:90px}
+    #deliveryTemplateModal .tm-row .form-input.wide{width:200px}
+    #deliveryTemplateModal .tm-tip{font-size:12px;color:var(--text-muted);margin-top:6px}
+    #deliveryTemplateModal .tm-add-region{color:var(--primary);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px}
+    #deliveryTemplateModal .tm-add-region:hover{text-decoration:underline}
+    #deliveryTemplateModal .region-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    #deliveryTemplateModal .region-table th,.region-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+    #deliveryTemplateModal .region-table th{background:#f7f8fa;font-weight:600;color:var(--text-secondary);font-size:12px}
+    #deliveryTemplateModal .region-table td{color:var(--text)}
+    #deliveryTemplateModal .region-table .region-names{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #deliveryTemplateModal .region-table .btn-link{font-size:12px;color:var(--primary);cursor:pointer;background:none;border:none;padding:0}
+    #deliveryTemplateModal .region-table .btn-link.danger{color:#dc3545}
+    #deliveryTemplateModal .free-condition{display:flex;align-items:center;gap:10px;margin-top:14px}
+    #deliveryTemplateModal .free-condition input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary)}
+    #deliveryTemplateModal .free-condition .form-input{width:100px}
+    #deliveryTemplateModal .modal-body{max-height:80vh;overflow:auto}
+
+    /* 区域选择弹窗 */
+    #regionPickerModal .modal-card{width:640px;max-width:96vw;max-height:86vh}
+    #regionPickerModal .modal-body{max-height:calc(86vh - 120px);overflow:auto;padding:20px}
+    #regionPickerModal .region-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    #regionPickerModal .region-list{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    @media (max-width:800px){#regionPickerModal .region-list{grid-template-columns:repeat(2,1fr)}}
+    #regionPickerModal .region-group{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text)}
+    #regionPickerModal .region-group input[type=checkbox]{width:16px;height:16px;margin-top:2px;accent-color:var(--primary);flex-shrink:0}
+    #regionPickerModal .region-group .rg-label{cursor:pointer;user-select:none;line-height:1.4}
+    #regionPickerModal .region-group .city-count{color:var(--text-muted);font-size:12px;margin-left:4px}
+    #regionPickerModal .select-all-row{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:13px;color:var(--text-secondary)}
+    #regionPickerModal .select-all-row label{display:flex;align-items:center;gap:6px;cursor:pointer}
+    #regionPickerModal .empty-tip{text-align:center;color:var(--text-muted);padding:30px;font-size:13px}
   </style>
 </head>
 <body>
@@ -1746,6 +1813,98 @@
           </div>
         </div>
 
+        <!-- 配送设置 -->
+        <div id="deliveryPanel" class="panel hidden setting-panel">
+          <div class="setting-wrap">
+            <div class="delivery-tabs">
+              <div class="delivery-tab active" data-tab="express" onclick="switchDeliveryTab('express')">快递发货</div>
+              <div class="delivery-tab" data-tab="pickup" onclick="switchDeliveryTab('pickup')">到店自提</div>
+              <div class="delivery-tab" data-tab="local" onclick="switchDeliveryTab('local')">同城配送</div>
+            </div>
+            <div class="delivery-panes">
+              <!-- 快递发货 -->
+              <div class="delivery-pane active" data-pane="express">
+                <p class="delivery-desc">买家下单时可选择快递发货，由商家安排快递送货上门。</p>
+                <div class="delivery-switch-row">
+                  <label class="switch">
+                    <input type="checkbox" id="expressEnabled" data-setting="delivery.express.enabled" onchange="toggleDeliveryExpress(this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                  <span class="switch-desc">快递发货</span>
+                </div>
+                <div id="expressContent">
+                  <div class="delivery-toolbar">
+                    <div class="left">
+                      <button class="btn" onclick="openDeliveryTemplateModal()">+ 添加模板</button>
+                      <button class="btn gray" onclick="batchDeleteDeliveryTemplates()">批量删除</button>
+                    </div>
+                    <div class="right">
+                      <input type="text" id="deliverySearchInput" placeholder="关键词筛选" oninput="renderDeliveryTemplates()">
+                      <select id="deliveryViewMode" onchange="renderDeliveryTemplates()">
+                        <option value="list">列表</option>
+                        <option value="card">卡片</option>
+                      </select>
+                    </div>
+                  </div>
+                  <table class="delivery-table">
+                    <thead>
+                      <tr>
+                        <th class="col-check"><input type="checkbox" id="deliveryCheckAll" onchange="toggleDeliveryCheckAll(this)"></th>
+                        <th>模板名称</th>
+                        <th class="col-enable">启用</th>
+                        <th class="col-default">默认</th>
+                        <th class="col-op">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="deliveryTemplateTbody">
+                      <tr><td colspan="5" class="empty-row">暂无数据</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- 到店自提 -->
+              <div class="delivery-pane" data-pane="pickup">
+                <p class="delivery-desc">买家下单时可选择到商家指定地点自行提货。</p>
+                <div class="delivery-switch-row">
+                  <label class="switch">
+                    <input type="checkbox" id="pickupEnabled" data-setting="delivery.pickup.enabled" onchange="toggleDeliveryPickup(this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                  <span class="switch-desc">到店自提</span>
+                </div>
+                <div id="pickupContent" style="display:none">
+                  <div class="setting-card">
+                    <div class="field"><label>自提点名称</label><input type="text" class="form-input" data-setting="delivery.pickup.name" placeholder="例如：总店自提点"></div>
+                    <div class="field"><label>详细地址</label><input type="text" class="form-input" data-setting="delivery.pickup.address" placeholder="请输入自提点详细地址"></div>
+                    <div class="field"><label>联系电话</label><input type="text" class="form-input" data-setting="delivery.pickup.phone" placeholder="请输入联系电话"></div>
+                    <div class="field"><label>营业时间</label><input type="text" class="form-input" data-setting="delivery.pickup.hours" placeholder="例如：09:00 - 18:00"></div>
+                    <div class="form-actions"><button class="btn" onclick="savePickupSettings()">保存</button></div>
+                  </div>
+                </div>
+              </div>
+              <!-- 同城配送 -->
+              <div class="delivery-pane" data-pane="local">
+                <p class="delivery-desc">商家在配送范围内安排自有或第三方配送员送货上门。</p>
+                <div class="delivery-switch-row">
+                  <label class="switch">
+                    <input type="checkbox" id="localEnabled" data-setting="delivery.local.enabled" onchange="toggleDeliveryLocal(this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                  <span class="switch-desc">同城配送</span>
+                </div>
+                <div id="localContent" style="display:none">
+                  <div class="setting-card">
+                    <div class="field"><label>起送金额（元）</label><input type="number" class="form-input" data-setting="delivery.local.min_amount" placeholder="0"></div>
+                    <div class="field"><label>配送费（元）</label><input type="number" class="form-input" data-setting="delivery.local.fee" placeholder="0"></div>
+                    <div class="field"><label>配送范围（公里）</label><input type="number" class="form-input" data-setting="delivery.local.radius" placeholder="例如：5"></div>
+                    <div class="form-actions"><button class="btn" onclick="saveLocalSettings()">保存</button></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 通用占位 -->
         <div id="placeholderPanel" class="panel hidden">
           <div class="card">
@@ -2251,6 +2410,91 @@
     </div>
   </div>
 
+  <!-- 运费模板弹窗 -->
+  <div id="deliveryTemplateModal" class="modal" onclick="if(event.target===this) closeDeliveryTemplateModal()">
+    <div class="modal-card">
+      <div class="modal-header"><h3 id="deliveryTemplateTitle">添加模板</h3><span class="close" onclick="closeDeliveryTemplateModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="field"><label>模板名称 <span style="color:#dc3545">*</span></label><input type="text" class="form-input wide" id="tmName" placeholder="模板名称"></div>
+        <div class="field"><label>提示</label><input type="text" class="form-input wide" id="tmTip" placeholder="提示"></div>
+        <p class="delivery-desc">该提示将展示在移动端订单确认页</p>
+
+        <div class="tm-section">
+          <div class="tm-section-title">计价方式</div>
+          <div class="opt-row" style="margin-bottom:12px">
+            <label><input type="radio" name="tmType" value="piece" checked onchange="renderTmRegionTable()"> 按件数</label>
+            <label><input type="radio" name="tmType" value="weight" onchange="renderTmRegionTable()"> 按重量</label>
+          </div>
+          <div class="tm-row">
+            <label>默认运费：</label>
+            <input type="number" class="form-input" id="tmDefaultBase" value="0" min="0" step="0.01">
+            <span id="tmUnit1">件</span>
+            <span>内，¥</span>
+            <input type="number" class="form-input" id="tmDefaultBaseFee" value="0" min="0" step="0.01">
+            <span>，每增加</span>
+            <input type="number" class="form-input" id="tmDefaultExtra" value="0" min="0" step="0.01">
+            <span id="tmUnit2">件</span>
+            <span>，增加运费 ¥</span>
+            <input type="number" class="form-input" id="tmDefaultExtraFee" value="0" min="0" step="0.01">
+          </div>
+          <p class="tm-tip">默认运费适用于未指定地区的订单。</p>
+
+          <div class="tm-section-title" style="margin-top:18px">指定地区运费</div>
+          <div class="tm-add-region" onclick="openRegionPickerForNew()">+ 为指定地区添加运费</div>
+          <table class="region-table">
+            <thead>
+              <tr>
+                <th>运送到</th>
+                <th class="tm-th-base">首 <span id="thUnitBase">件</span></th>
+                <th>首费 ¥</th>
+                <th class="tm-th-extra">续 <span id="thUnitExtra">件</span></th>
+                <th>续费 ¥</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="tmRegionTbody">
+              <tr><td colspan="6" class="empty-row">暂无数据</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="free-condition">
+          <input type="checkbox" id="tmFreeEnabled" onchange="toggleTmFree(this.checked)">
+          <label for="tmFreeEnabled">包邮条件</label>
+          <span id="tmFreeWrap" style="display:none;align-items:center;gap:8px">
+            <span>满</span>
+            <input type="number" class="form-input" id="tmFreeAmount" value="0" min="0" step="0.01">
+            <span>元包邮</span>
+          </span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeDeliveryTemplateModal()">取消</button>
+        <button class="btn" onclick="saveDeliveryTemplate()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 区域选择弹窗 -->
+  <div id="regionPickerModal" class="modal" onclick="if(event.target===this) closeRegionPicker()">
+    <div class="modal-card">
+      <div class="modal-header"><h3>区域选择</h3><span class="close" onclick="closeRegionPicker()">&times;</span></div>
+      <div class="modal-body">
+        <div class="region-toolbar">
+          <div class="select-all-row">
+            <label><input type="checkbox" id="regionCheckAll" onchange="toggleRegionCheckAll(this)"> 全选</label>
+          </div>
+          <div style="font-size:13px;color:var(--text-muted)" id="regionSelectedCount">已选 0 个</div>
+        </div>
+        <div id="regionList" class="region-list"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeRegionPicker()">取消</button>
+        <button class="btn" onclick="confirmRegionPicker()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 底部导航编辑弹窗 -->
   <div id="bottomNavModal" class="modal">
     <div class="modal-card bn-modal-card">
@@ -2358,6 +2602,10 @@
     const BASE='/admin';
     const token=()=>localStorage.getItem('admin_token')||'';
 
+    function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function getRadioValue(name){const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:'';}
+    function setRadioValue(name,value){document.querySelectorAll(`input[name="${name}"]`).forEach(el=>el.checked=(el.value===value));}
+
     /* 菜单配置 */
     const ICONS={
       overview:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
@@ -2424,7 +2672,7 @@
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings,panel:'basePanel'},
         {key:'info',label:'店铺设置',icon:ICONS.store,panel:'shopPanel'},
-        {key:'delivery',label:'配送设置',icon:ICONS.truck}
+        {key:'delivery',label:'配送设置',icon:ICONS.truck,panel:'deliveryPanel'}
       ]},
       {key:'member',label:'会员',icon:ICONS.users,children:[
         {key:'list',label:'会员列表',icon:ICONS.users,default:true},
@@ -2559,6 +2807,7 @@
       if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='basePanel') loadSettings();
       if(panelId==='shopPanel') loadShopSettings();
+      if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
       window.scrollTo(0,0);
     }
@@ -2906,7 +3155,6 @@
       if(!selected.length){wrap.innerHTML='';return;}
       wrap.innerHTML=selected.map(a=>`<div style="margin-bottom:8px"><span style="color:#606266;font-size:13px">${escapeHtml(a.name)}：</span><span style="color:#303133;font-size:13px">${(a.values||[]).map(v=>escapeHtml(v)).join(', ')}</span></div>`).join('');
     }
-    function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
     /* Rich text editor（保存选区，工具栏/插入资源时不会丢失光标） */
     let gDetailRange=null;
@@ -4184,6 +4432,239 @@
         setMapPickerMarker(loc.lat,loc.lng);
         document.getElementById('mapAddress').value=(item.title||item.address||'')+'';
       }catch(e){toast('搜索失败，请直接在地图上点击选择');}
+    }
+
+    /* ===== 配送设置 ===== */
+    const REGION_DATA={"provinces":[{"name":"北京市","cities":["北京市"]},{"name":"天津市","cities":["天津市"]},{"name":"河北省","cities":["石家庄市","唐山市","秦皇岛市","邯郸市","邢台市","保定市","张家口市","承德市","沧州市","廊坊市","衡水市"]},{"name":"山西省","cities":["太原市","大同市","阳泉市","长治市","晋城市","朔州市","晋中市","运城市","忻州市","临汾市","吕梁市"]},{"name":"内蒙古自治区","cities":["呼和浩特市","包头市","乌海市","赤峰市","通辽市","鄂尔多斯市","呼伦贝尔市","巴彦淖尔市","乌兰察布市","兴安盟","锡林郭勒盟","阿拉善盟"]},{"name":"辽宁省","cities":["沈阳市","大连市","鞍山市","抚顺市","本溪市","丹东市","锦州市","营口市","阜新市","辽阳市","盘锦市","铁岭市","朝阳市","葫芦岛市"]},{"name":"吉林省","cities":["长春市","吉林市","四平市","辽源市","通化市","白山市","松原市","白城市","延边朝鲜族自治州"]},{"name":"黑龙江省","cities":["哈尔滨市","齐齐哈尔市","鸡西市","鹤岗市","双鸭山市","大庆市","伊春市","佳木斯市","七台河市","牡丹江市","黑河市","绥化市","大兴安岭地区"]},{"name":"上海市","cities":["上海市"]},{"name":"江苏省","cities":["南京市","无锡市","徐州市","常州市","苏州市","南通市","连云港市","淮安市","盐城市","扬州市","镇江市","泰州市","宿迁市"]},{"name":"浙江省","cities":["杭州市","宁波市","温州市","嘉兴市","湖州市","绍兴市","金华市","衢州市","舟山市","台州市","丽水市"]},{"name":"安徽省","cities":["合肥市","芜湖市","蚌埠市","淮南市","马鞍山市","淮北市","铜陵市","安庆市","黄山市","滁州市","阜阳市","宿州市","六安市","亳州市","池州市","宣城市"]},{"name":"福建省","cities":["福州市","厦门市","莆田市","三明市","泉州市","漳州市","南平市","龙岩市","宁德市"]},{"name":"江西省","cities":["南昌市","景德镇市","萍乡市","九江市","新余市","鹰潭市","赣州市","吉安市","宜春市","抚州市","上饶市"]},{"name":"山东省","cities":["济南市","青岛市","淄博市","枣庄市","东营市","烟台市","潍坊市","济宁市","泰安市","威海市","日照市","临沂市","德州市","聊城市","滨州市","菏泽市"]},{"name":"河南省","cities":["郑州市","开封市","洛阳市","平顶山市","安阳市","鹤壁市","新乡市","焦作市","濮阳市","许昌市","漯河市","三门峡市","南阳市","商丘市","信阳市","周口市","驻马店市","济源市"]},{"name":"湖北省","cities":["武汉市","黄石市","十堰市","宜昌市","襄阳市","鄂州市","荆门市","孝感市","荆州市","黄冈市","咸宁市","随州市","恩施土家族苗族自治州","仙桃市","潜江市","天门市","神农架林区"]},{"name":"湖南省","cities":["长沙市","株洲市","湘潭市","衡阳市","邵阳市","岳阳市","常德市","张家界市","益阳市","郴州市","永州市","怀化市","娄底市","湘西土家族苗族自治州"]},{"name":"广东省","cities":["广州市","韶关市","深圳市","珠海市","汕头市","佛山市","江门市","湛江市","茂名市","肇庆市","惠州市","梅州市","汕尾市","河源市","阳江市","清远市","东莞市","中山市","潮州市","揭阳市","云浮市"]},{"name":"广西壮族自治区","cities":["南宁市","柳州市","桂林市","梧州市","北海市","防城港市","钦州市","贵港市","玉林市","百色市","贺州市","河池市","来宾市","崇左市"]},{"name":"海南省","cities":["海口市","三亚市","三沙市","儋州市","五指山市","琼海市","文昌市","万宁市","东方市","定安县","屯昌县","澄迈县","临高县","白沙黎族自治县","昌江黎族自治县","乐东黎族自治县","陵水黎族自治县","保亭黎族苗族自治县","琼中黎族苗族自治县"]},{"name":"重庆市","cities":["重庆市"]},{"name":"四川省","cities":["成都市","自贡市","攀枝花市","泸州市","德阳市","绵阳市","广元市","遂宁市","内江市","乐山市","南充市","眉山市","宜宾市","广安市","达州市","雅安市","巴中市","资阳市","阿坝藏族羌族自治州","甘孜藏族自治州","凉山彝族自治州"]},{"name":"贵州省","cities":["贵阳市","六盘水市","遵义市","安顺市","毕节市","铜仁市","黔西南布依族苗族自治州","黔东南苗族侗族自治州","黔南布依族苗族自治州"]},{"name":"云南省","cities":["昆明市","曲靖市","玉溪市","保山市","昭通市","丽江市","普洱市","临沧市","楚雄彝族自治州","红河哈尼族彝族自治州","文山壮族苗族自治州","西双版纳傣族自治州","大理白族自治州","德宏傣族景颇族自治州","怒江傈僳族自治州","迪庆藏族自治州"]},{"name":"西藏自治区","cities":["拉萨市","日喀则市","昌都市","林芝市","山南市","那曲市","阿里地区"]},{"name":"陕西省","cities":["西安市","铜川市","宝鸡市","咸阳市","渭南市","延安市","汉中市","榆林市","安康市","商洛市"]},{"name":"甘肃省","cities":["兰州市","嘉峪关市","金昌市","白银市","天水市","武威市","张掖市","平凉市","酒泉市","庆阳市","定西市","陇南市","临夏回族自治州","甘南藏族自治州"]},{"name":"青海省","cities":["西宁市","海东市","海北藏族自治州","黄南藏族自治州","海南藏族自治州","果洛藏族自治州","玉树藏族自治州","海西蒙古族藏族自治州"]},{"name":"宁夏回族自治区","cities":["银川市","石嘴山市","吴忠市","固原市","中卫市"]},{"name":"新疆维吾尔自治区","cities":["乌鲁木齐市","克拉玛依市","吐鲁番市","哈密市","昌吉回族自治州","博尔塔拉蒙古自治州","巴音郭楞蒙古自治州","阿克苏地区","克孜勒苏柯尔克孜自治州","喀什地区","和田地区","伊犁哈萨克自治州","塔城地区","阿勒泰地区","石河子市","阿拉尔市","图木舒克市","五家渠市","北屯市","铁门关市","双河市","可克达拉市","昆玉市","胡杨河市","新星市","白杨市"]},{"name":"台湾省","cities":["台北市","高雄市","台中市","台南市","新北市","桃园市","基隆市","新竹市","嘉义市","新竹县","苗栗县","彰化县","南投县","云林县","嘉义县","屏东县","宜兰县","花莲县","台东县","澎湖县"]},{"name":"香港特别行政区","cities":["香港特别行政区"]},{"name":"澳门特别行政区","cities":["澳门特别行政区"]}],"regions":{"华北":[0,1,2,3,4],"东北":[5,6,7],"华东":[8,9,10,11,12,13,14],"华中":[15,16,17],"华南":[18,19,20],"西南":[21,22,23,24,25],"西北":[26,27,28,29,30],"港澳台":[31,32,33]}};
+    let deliveryData={express:{enabled:false,templates:[]},pickup:{enabled:false,name:'',address:'',phone:'',hours:''},local:{enabled:false,min_amount:0,fee:0,radius:0}};
+    let tmEditingIndex=-1,tmRegionEditingIndex=-1;
+
+    function switchDeliveryTab(tab){
+      document.querySelectorAll('.delivery-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
+      document.querySelectorAll('.delivery-pane').forEach(el=>el.classList.toggle('active',el.dataset.pane===tab));
+    }
+    async function loadDeliverySettings(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const s=d.data||{};
+      deliveryData={
+        express:{enabled:!!s.delivery_express_enabled,templates:Array.isArray(s.delivery_express_templates)?JSON.parse(JSON.stringify(s.delivery_express_templates)):[]},
+        pickup:{enabled:!!s.delivery_pickup_enabled,name:s.delivery_pickup_name||'',address:s.delivery_pickup_address||'',phone:s.delivery_pickup_phone||'',hours:s.delivery_pickup_hours||''},
+        local:{enabled:!!s.delivery_local_enabled,min_amount:Number(s.delivery_local_min_amount||0),fee:Number(s.delivery_local_fee||0),radius:Number(s.delivery_local_radius||0)}
+      };
+      document.getElementById('expressEnabled').checked=deliveryData.express.enabled;
+      document.getElementById('expressContent').style.display=deliveryData.express.enabled?'block':'none';
+      document.getElementById('pickupEnabled').checked=deliveryData.pickup.enabled;
+      document.getElementById('pickupContent').style.display=deliveryData.pickup.enabled?'block':'none';
+      document.querySelector('[data-setting="delivery.pickup.name"]').value=deliveryData.pickup.name;
+      document.querySelector('[data-setting="delivery.pickup.address"]').value=deliveryData.pickup.address;
+      document.querySelector('[data-setting="delivery.pickup.phone"]').value=deliveryData.pickup.phone;
+      document.querySelector('[data-setting="delivery.pickup.hours"]').value=deliveryData.pickup.hours;
+      document.getElementById('localEnabled').checked=deliveryData.local.enabled;
+      document.getElementById('localContent').style.display=deliveryData.local.enabled?'block':'none';
+      document.querySelector('[data-setting="delivery.local.min_amount"]').value=deliveryData.local.min_amount;
+      document.querySelector('[data-setting="delivery.local.fee"]').value=deliveryData.local.fee;
+      document.querySelector('[data-setting="delivery.local.radius"]').value=deliveryData.local.radius;
+      renderDeliveryTemplates();
+      switchDeliveryTab('express');
+    }
+    function toggleDeliveryExpress(v){deliveryData.express.enabled=v;document.getElementById('expressContent').style.display=v?'block':'none';saveDeliveryExpress();}
+    function toggleDeliveryPickup(v){deliveryData.pickup.enabled=v;document.getElementById('pickupContent').style.display=v?'block':'none';saveDeliveryPickup();}
+    function toggleDeliveryLocal(v){deliveryData.local.enabled=v;document.getElementById('localContent').style.display=v?'block':'none';saveDeliveryLocal();}
+    async function saveDeliveryExpress(){await saveDeliveryBatch({delivery_express_enabled:deliveryData.express.enabled?1:0,delivery_express_templates:JSON.stringify(deliveryData.express.templates)});}
+    async function saveDeliveryPickup(){await saveDeliveryBatch({delivery_pickup_enabled:deliveryData.pickup.enabled?1:0,delivery_pickup_name:deliveryData.pickup.name,delivery_pickup_address:deliveryData.pickup.address,delivery_pickup_phone:deliveryData.pickup.phone,delivery_pickup_hours:deliveryData.pickup.hours});}
+    async function saveDeliveryLocal(){await saveDeliveryBatch({delivery_local_enabled:deliveryData.local.enabled?1:0,delivery_local_min_amount:deliveryData.local.min_amount,delivery_local_fee:deliveryData.local.fee,delivery_local_radius:deliveryData.local.radius});}
+    async function saveDeliveryBatch(payload){
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify(payload)});
+      if(d.code!==0){toast(d.msg||'保存失败');return false;}
+      toast('已保存');return true;
+    }
+    function renderDeliveryTemplates(){
+      const kw=document.getElementById('deliverySearchInput').value.trim().toLowerCase();
+      const list=deliveryData.express.templates.filter(t=>(t.name||'').toLowerCase().includes(kw));
+      const tb=document.getElementById('deliveryTemplateTbody');
+      if(!list.length){tb.innerHTML='<tr><td colspan="5" class="empty-row">暂无数据</td></tr>';return;}
+      tb.innerHTML=list.map((t,i)=>{
+        const realIndex=deliveryData.express.templates.indexOf(t);
+        return `<tr>
+          <td class="col-check"><input type="checkbox" class="dt-check" data-idx="${realIndex}"></td>
+          <td>${escapeHtml(t.name||'未命名')}</td>
+          <td class="col-enable"><label class="switch"><input type="checkbox" ${t.enabled?'checked':''} onchange="toggleTemplateEnabled(${realIndex},this.checked)"><span class="slider"></span></label></td>
+          <td class="col-default">${t.is_default?'<span class="tag-default">默认</span>':''}</td>
+          <td class="col-op"><div class="op-btns">
+            <button class="btn-link" onclick="editDeliveryTemplate(${realIndex})">编辑</button>
+            <button class="btn-link" onclick="setDefaultTemplate(${realIndex})">默认</button>
+            <button class="btn-link danger" onclick="deleteDeliveryTemplate(${realIndex})">删除</button>
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+    function toggleDeliveryCheckAll(cb){document.querySelectorAll('.dt-check').forEach(c=>c.checked=cb.checked);}
+    function toggleTemplateEnabled(idx,v){deliveryData.express.templates[idx].enabled=v;saveDeliveryExpress();}
+    function setDefaultTemplate(idx){
+      deliveryData.express.templates.forEach((t,i)=>t.is_default=(i===idx));
+      saveDeliveryExpress();renderDeliveryTemplates();
+    }
+    function deleteDeliveryTemplate(idx){
+      if(!confirm('确定删除该模板吗？'))return;
+      deliveryData.express.templates.splice(idx,1);
+      saveDeliveryExpress();renderDeliveryTemplates();
+    }
+    function batchDeleteDeliveryTemplates(){
+      const idxs=Array.from(document.querySelectorAll('.dt-check:checked')).map(c=>Number(c.dataset.idx)).sort((a,b)=>b-a);
+      if(!idxs.length){toast('请先勾选要删除的模板');return;}
+      if(!confirm(`确定删除选中的 ${idxs.length} 个模板吗？`))return;
+      idxs.forEach(i=>deliveryData.express.templates.splice(i,1));
+      saveDeliveryExpress();renderDeliveryTemplates();
+    }
+    function editDeliveryTemplate(idx){openDeliveryTemplateModal(idx);}
+
+    /* 运费模板弹窗 */
+    function openDeliveryTemplateModal(idx){
+      tmEditingIndex=(typeof idx==='number')?idx:-1;
+      document.getElementById('deliveryTemplateTitle').textContent=tmEditingIndex>=0?'编辑模板':'添加模板';
+      const t=tmEditingIndex>=0?deliveryData.express.templates[tmEditingIndex]:{name:'',tip:'',type:'piece',base:0,base_fee:0,extra:0,extra_fee:0,free_enabled:false,free_amount:0,regions:[]};
+      document.getElementById('tmName').value=t.name||'';
+      document.getElementById('tmTip').value=t.tip||'';
+      setRadioValue('tmType',t.type||'piece');
+      document.getElementById('tmDefaultBase').value=t.base||0;
+      document.getElementById('tmDefaultBaseFee').value=t.base_fee||0;
+      document.getElementById('tmDefaultExtra').value=t.extra||0;
+      document.getElementById('tmDefaultExtraFee').value=t.extra_fee||0;
+      document.getElementById('tmFreeEnabled').checked=!!t.free_enabled;
+      document.getElementById('tmFreeAmount').value=t.free_amount||0;
+      document.getElementById('tmFreeWrap').style.display=t.free_enabled?'flex':'none';
+      updateTmUnits();
+      renderTmRegionTable();
+      document.getElementById('deliveryTemplateModal').classList.add('show');
+    }
+    function closeDeliveryTemplateModal(){document.getElementById('deliveryTemplateModal').classList.remove('show');tmEditingIndex=-1;tmRegionEditingIndex=-1;}
+    function toggleTmFree(v){document.getElementById('tmFreeWrap').style.display=v?'flex':'none';}
+    function updateTmUnits(){
+      const type=getRadioValue('tmType');
+      const unit=type==='weight'?'kg':'件';
+      document.getElementById('tmUnit1').textContent=unit;
+      document.getElementById('tmUnit2').textContent=unit;
+      document.getElementById('thUnitBase').textContent=unit;
+      document.getElementById('thUnitExtra').textContent=unit;
+    }
+    function renderTmRegionTable(){
+      updateTmUnits();
+      const t=tmEditingIndex>=0?deliveryData.express.templates[tmEditingIndex]:null;
+      const regions=(t&&t.regions)?t.regions:[];
+      const tb=document.getElementById('tmRegionTbody');
+      if(!regions.length){tb.innerHTML='<tr><td colspan="6" class="empty-row">暂无数据</td></tr>';return;}
+      tb.innerHTML=regions.map((r,i)=>`<tr>
+        <td class="region-names" title="${escapeHtml(r.names.join('、'))}">${escapeHtml(r.names.join('、'))}</td>
+        <td>${r.base}</td>
+        <td>${r.base_fee}</td>
+        <td>${r.extra}</td>
+        <td>${r.extra_fee}</td>
+        <td><button class="btn-link" onclick="editTmRegion(${i})">编辑</button> <button class="btn-link danger" onclick="deleteTmRegion(${i})">删除</button></td>
+      </tr>`).join('');
+    }
+    function saveDeliveryTemplate(){
+      const name=document.getElementById('tmName').value.trim();
+      if(!name){toast('请输入模板名称');return;}
+      const type=getRadioValue('tmType');
+      const payload={
+        name,tip:document.getElementById('tmTip').value.trim(),type,
+        base:Number(document.getElementById('tmDefaultBase').value)||0,
+        base_fee:Number(document.getElementById('tmDefaultBaseFee').value)||0,
+        extra:Number(document.getElementById('tmDefaultExtra').value)||0,
+        extra_fee:Number(document.getElementById('tmDefaultExtraFee').value)||0,
+        free_enabled:document.getElementById('tmFreeEnabled').checked,
+        free_amount:Number(document.getElementById('tmFreeAmount').value)||0,
+        enabled:true,is_default:false,
+        regions:(tmEditingIndex>=0&&deliveryData.express.templates[tmEditingIndex].regions)?deliveryData.express.templates[tmEditingIndex].regions:[]
+      };
+      if(tmEditingIndex>=0){
+        payload.enabled=deliveryData.express.templates[tmEditingIndex].enabled;
+        payload.is_default=deliveryData.express.templates[tmEditingIndex].is_default;
+        deliveryData.express.templates[tmEditingIndex]=payload;
+      }else{
+        if(!deliveryData.express.templates.length)payload.is_default=true;
+        deliveryData.express.templates.push(payload);
+      }
+      saveDeliveryExpress();
+      renderDeliveryTemplates();
+      closeDeliveryTemplateModal();
+    }
+    function savePickupSettings(){
+      deliveryData.pickup.name=document.querySelector('[data-setting="delivery.pickup.name"]').value.trim();
+      deliveryData.pickup.address=document.querySelector('[data-setting="delivery.pickup.address"]').value.trim();
+      deliveryData.pickup.phone=document.querySelector('[data-setting="delivery.pickup.phone"]').value.trim();
+      deliveryData.pickup.hours=document.querySelector('[data-setting="delivery.pickup.hours"]').value.trim();
+      saveDeliveryPickup();
+    }
+    function saveLocalSettings(){
+      deliveryData.local.min_amount=Number(document.querySelector('[data-setting="delivery.local.min_amount"]').value)||0;
+      deliveryData.local.fee=Number(document.querySelector('[data-setting="delivery.local.fee"]').value)||0;
+      deliveryData.local.radius=Number(document.querySelector('[data-setting="delivery.local.radius"]').value)||0;
+      saveDeliveryLocal();
+    }
+
+    /* 区域选择 */
+    function openRegionPickerForNew(){tmRegionEditingIndex=-1;openRegionPicker([],onRegionPicked);}
+    function editTmRegion(i){
+      tmRegionEditingIndex=i;
+      const t=deliveryData.express.templates[tmEditingIndex];
+      const selected=(t.regions[i]&&t.regions[i].codes)?t.regions[i].codes:[];
+      openRegionPicker(selected,onRegionPicked);
+    }
+    function deleteTmRegion(i){
+      const t=deliveryData.express.templates[tmEditingIndex];
+      t.regions.splice(i,1);renderTmRegionTable();
+    }
+    function onRegionPicked(codes){
+      const names=codes.map(code=>{
+        const [pIdx,cIdx]=code.split('-').map(Number);
+        if(isNaN(cIdx))return REGION_DATA.provinces[pIdx].name;
+        return REGION_DATA.provinces[pIdx].cities[cIdx];
+      });
+      const region={codes,names,base:1,base_fee:0,extra:1,extra_fee:0};
+      const t=deliveryData.express.templates[tmEditingIndex];
+      if(!t.regions)t.regions=[];
+      if(tmRegionEditingIndex>=0)t.regions[tmRegionEditingIndex]=region;else t.regions.push(region);
+      renderTmRegionTable();
+    }
+    let regionPickerCallback=null,regionSelectedCodes=[];
+    function openRegionPicker(initialCodes,cb){
+      regionPickerCallback=cb;regionSelectedCodes=Array.isArray(initialCodes)?initialCodes.slice():[];
+      renderRegionList();
+      updateRegionCheckAll();
+      updateRegionSelectedCount();
+      document.getElementById('regionPickerModal').classList.add('show');
+    }
+    function closeRegionPicker(){document.getElementById('regionPickerModal').classList.remove('show');regionPickerCallback=null;}
+    function confirmRegionPicker(){if(regionPickerCallback)regionPickerCallback(regionSelectedCodes.slice());closeRegionPicker();}
+    function renderRegionList(){
+      const box=document.getElementById('regionList');
+      box.innerHTML=REGION_DATA.provinces.map((p,pIdx)=>{
+        const code=`${pIdx}`;
+        const checked=regionSelectedCodes.includes(code)?'checked':'';
+        return `<div class="region-group"><input type="checkbox" id="rg-${pIdx}" value="${code}" ${checked} onchange="toggleRegionCode('${code}',this.checked)"><label class="rg-label" for="rg-${pIdx}">${escapeHtml(p.name)}<span class="city-count">(${p.cities.length})</span></label></div>`;
+      }).join('');
+    }
+    function toggleRegionCode(code,checked){
+      const set=new Set(regionSelectedCodes);
+      if(checked)set.add(code);else set.delete(code);
+      regionSelectedCodes=Array.from(set);
+      updateRegionCheckAll();updateRegionSelectedCount();
+    }
+    function toggleRegionCheckAll(cb){
+      if(cb.checked)regionSelectedCodes=REGION_DATA.provinces.map((_,i)=>`${i}`);
+      else regionSelectedCodes=[];
+      renderRegionList();updateRegionSelectedCount();
+    }
+    function updateRegionCheckAll(){
+      const cb=document.getElementById('regionCheckAll');
+      if(!cb)return;
+      cb.checked=regionSelectedCodes.length===REGION_DATA.provinces.length;
+    }
+    function updateRegionSelectedCount(){
+      const el=document.getElementById('regionSelectedCount');
+      if(el)el.textContent=`已选 ${regionSelectedCodes.length} 个`;
     }
 
     function switchBottomNavTab(tab){
