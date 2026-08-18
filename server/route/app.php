@@ -80,6 +80,12 @@ Route::group('admin', function () {
     Route::post('orders/batch_ship', 'admin.Order/batchShip');
     Route::post('orders_create', 'admin.Order/create');
 
+    // 售后订单
+    Route::get('orders_aftersale', 'admin.Order/aftersale');
+    Route::post('orders_aftersale/:id/refund', 'admin.Order/refund');
+    Route::post('orders_aftersale/soft_delete', 'admin.Order/softDelete');
+    Route::post('orders_aftersale/restore', 'admin.Order/restore');
+
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');
     Route::post('design/:page/save', 'admin.Design/save');

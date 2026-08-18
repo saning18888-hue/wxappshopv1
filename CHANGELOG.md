@@ -4,12 +4,22 @@
 >
 > **维护约定（强制，每次提交 GitHub 前都要做）**：
 > 1. 每次发版 / 重大更新提交到 GitHub 前，必须在本文件**最顶部**追加一条本次版本记录（最新在上）。
-> 2. 版本号规则：以 `v0.1.17`（基础设置 Linear）为锚，其后的补丁序列为 `v0.1.17.1`、`v0.1.17.2`…；订单管理后台增强独立跃升为 `v0.1.18`（用户确认的唯一正式版）；`v0.1.18` 之后的补丁为 `v0.1.18.1`、`v0.1.18.2`…。所有号须与 `git tag` 一致。
+> 2. 版本号规则：以 `v0.1.17`（基础设置 Linear）为锚，其后的补丁序列为 `v0.1.17.1`～`v0.1.17.5`；订单管理后台增强独立跃升为 `v0.1.18`（用户确认的唯一正式版）；`v0.1.18.1` 为收尾文档版（仅 CHANGELOG/README/RELEASE 规范，**冻结**，不再续 `v0.1.18.2`）。**下一次发版从 `v0.1.19` 开始**（不再使用 `v0.1.18.x` 补丁序列）。所有号须与 `git tag` 一致。
 > 3. 提交信息使用英文，或 UTF-8 无 BOM 文件 + `git commit -F`（**禁止 `git commit -m "中文"`**，Windows GBK 会双重编码成乱码，详见 README「提交规范」与 RELEASE.md「关键坑」）。
 > 4. 环境/换机说明见 `RELEASE.md`；本文件只记「改了什么」。
 > 5. 推送：记录写完并 commit 后，`git push origin master --tags`。
 
 ---
+
+### v0.1.19 · 2026-08-18 · 新增订单售后管理：待退款/已退款/回收站
+**范围**：运营后台 UI（`server/public/admin.html`）、订单 API（`server/app/controller/admin/Order.php`、`OrderService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_order_refund.php`）。
+**改动**：
+- 新增「订单 > 订单售后」独立菜单入口，按截图还原：全部 / 待退款 / 已退款 / 回收站 四个 tab。
+- 新增后端售后订单列表接口 `GET /admin/orders_aftersale`，支持 tab 过滤与关键词搜索。
+- 新增退款完成接口 `POST /admin/orders_aftersale/:id/refund`（标记 status=12 并记录退款金额/原因/时间）。
+- 新增软删除/恢复接口 `POST /admin/orders_aftersale/soft_delete` 与 `POST /admin/orders_aftersale/restore`，实现回收站。
+- 数据库 `orders` 表新增 `is_deleted`、`refund_apply_at`、`refund_finish_at`、`refund_reason`、`refund_amount` 字段；新增幂等迁移脚本 `database/apply_order_refund.php`。
+- 页面对应功能：列表加载、分页、关键词搜索、全选/批量删除、批量恢复、单条退款弹窗、查看订单详情；导出按钮占位（后续接入）。
 
 ### v0.1.18.1 · 2026-08-18 · 会员/商品/小程序端增强 + 工程治理
 **范围**：会员管理、商品规格/属性、小程序端底部导航配置、交付弹窗、调试清理、CHANGELOG 规范固化。

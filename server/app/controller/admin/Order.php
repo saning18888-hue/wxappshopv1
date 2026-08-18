@@ -90,4 +90,63 @@ class Order extends AdminController
             return $this->fail($e->getMessage());
         }
     }
+
+    /**
+     * 售后订单列表
+     */
+    public function aftersale()
+    {
+        $tab     = input('get.tab/s', 'all');
+        $keyword = input('get.keyword/s', '');
+        $page    = input('get.page/d', 1);
+        $size    = input('get.page_size/d', 20);
+        $data    = (new \app\service\OrderService())->adminAftersaleList(
+            $page, $size, $tab, $keyword
+        );
+        return $this->ok($data);
+    }
+
+    /**
+     * 售后订单：标记退款完成
+     */
+    public function refund($id)
+    {
+        try {
+            $d      = $this->body();
+            $amount = floatval($d['amount'] ?? 0);
+            $reason = trim($d['reason'] ?? '');
+            (new \app\service\OrderService())->refundOrder(intval($id), $amount, $reason);
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * 售后订单：软删除（移入回收站）
+     */
+    public function softDelete()
+    {
+        try {
+            $ids = $this->body()['ids'] ?? [];
+            (new \app\service\OrderService())->softDeleteOrders(array_map('intval', $ids));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    /**
+     * 售后订单：恢复（从回收站移出）
+     */
+    public function restore()
+    {
+        try {
+            $ids = $this->body()['ids'] ?? [];
+            (new \app\service\OrderService())->restoreOrders(array_map('intval', $ids));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
 }

@@ -1169,6 +1169,54 @@
           </div>
         </div>
 
+        <!-- 订单售后 -->
+        <div id="aftersalePanel" class="panel hidden">
+          <div class="card">
+            <h3>订单售后</h3>
+            <div class="order-tabs" id="aftersaleTabs">
+              <a class="active" data-tab="all" onclick="switchAftersaleTab('all')">全部</a>
+              <a data-tab="pending" onclick="switchAftersaleTab('pending')">待退款</a>
+              <a data-tab="refunded" onclick="switchAftersaleTab('refunded')">已退款</a>
+              <a data-tab="recycle" onclick="switchAftersaleTab('recycle')">回收站</a>
+            </div>
+            <div class="toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn sm" onclick="exportAftersales()">导出</button>
+                <button class="btn sm danger" onclick="batchDeleteAftersales()">删除</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="aftersaleKeyword" placeholder="订单号/交易号/手机号/买家" onkeydown="if(event.key==='Enter')loadAftersales()">
+                <button class="btn sm" onclick="loadAftersales()">查询</button>
+              </div>
+            </div>
+            <div class="bulk-bar" id="aftersaleBulkBar" style="display:none">
+              <span>已选择 <b id="aftersaleCheckedCount">0</b> 项</span>
+              <button class="btn sm danger" id="aftersaleBulkDeleteBtn" onclick="batchDeleteAftersales()">删除</button>
+              <button class="btn sm" id="aftersaleBulkRestoreBtn" style="display:none" onclick="batchRestoreAftersales()">恢复</button>
+              <button class="btn sm gray" onclick="clearAftersaleCheck()">取消选择</button>
+            </div>
+            <div class="table-wrap" id="aftersaleTableWrap">
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th class="col-check" style="width:40px"><input type="checkbox" id="aftersaleCheckAll" onchange="toggleAftersaleCheckAll()"></th>
+                    <th>商品信息</th>
+                    <th style="width:110px">单价x数量</th>
+                    <th style="width:90px">买家</th>
+                    <th style="width:180px">收货信息</th>
+                    <th style="width:80px">应付金额</th>
+                    <th style="width:80px">订单类型</th>
+                    <th style="width:80px">订单状态</th>
+                    <th style="width:170px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="aftersaleBody"><tr><td colspan="9" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="pager" id="aftersalePager"></div>
+          </div>
+        </div>
+
         <!-- 首页装修：按模块分设 -->
         <div id="sectionPanel" class="panel hidden">
           <div class="sec-toolbar">
@@ -2989,6 +3037,21 @@
     </div>
   </div>
 
+  <!-- 退款弹窗 -->
+  <div id="refundModal" class="modal" onclick="if(event.target===this)closeRefundModal()">
+    <div class="modal-card" style="width:460px">
+      <div class="modal-header"><h3>确认退款</h3><span class="close" onclick="closeRefundModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="field"><label><span class="req">*</span>退款金额（¥）</label><input type="number" class="form-input" id="refundAmount" step="0.01" min="0.01" placeholder="请输入退款金额"></div>
+        <div class="field"><label>退款原因</label><textarea class="form-input" id="refundReason" rows="3" placeholder="选填"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeRefundModal()">取消</button>
+        <button class="btn" onclick="saveRefund()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 订单编辑弹窗 -->
   <div id="orderEditModal" class="modal" onclick="if(event.target===this)closeOrderEditModal()">
     <div class="modal-card lg" style="width:760px;max-width:92vw">
@@ -3703,7 +3766,7 @@
       ]},
       {key:'orders',label:'订单',icon:ICONS.orders,children:[
         {key:'list',label:'订单列表',icon:ICONS.clipboard,panel:'ordersPanel',default:true},
-        {key:'refund',label:'订单售后',icon:ICONS.rotateCcw},
+        {key:'refund',label:'订单售后',icon:ICONS.rotateCcw,panel:'aftersalePanel'},
         {key:'cards',label:'电子卡券',icon:ICONS.creditCard},
         {key:'review',label:'评论管理',icon:ICONS.message},
         {key:'verify',label:'核销管理',icon:ICONS.checkCircle}
@@ -3821,6 +3884,7 @@
       if(panelId==='goodsSpecPanel') loadGoodsSpecs();
       if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
+      if(panelId==='aftersalePanel') loadAftersales();
       if(panelId==='sectionPanel') loadSection();
       if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
@@ -5406,6 +5470,149 @@
     function printOrder(id){toast('打印功能暂未接入硬件');}
     function printSmallOrder(id){toast('小票打印功能暂未接入硬件');}
     function exportOrders(){toast('导出功能开发中');}
+
+    /* 订单售后 */
+    let aftersalePage=1;
+    let currentAftersaleTab='all';
+    const AFTERSALE_STATUS_TEXT={11:'待退款',12:'已退款'};
+    const AFTERSALE_STATUS_CLASS={11:'badge orange',12:'badge green'};
+    function statusBadgeA(s){return `<span class="${AFTERSALE_STATUS_CLASS[s]||'badge gray'}">${AFTERSALE_STATUS_TEXT[s]||s}</span>`;}
+    function switchAftersaleTab(tab){
+      currentAftersaleTab=tab;
+      aftersalePage=1;
+      document.querySelectorAll('#aftersaleTabs a').forEach(a=>a.classList.toggle('active',a.dataset.tab===tab));
+      const isRecycle=tab==='recycle';
+      document.getElementById('aftersaleBulkDeleteBtn').style.display=isRecycle?'none':'inline-flex';
+      document.getElementById('aftersaleBulkRestoreBtn').style.display=isRecycle?'inline-flex':'none';
+      loadAftersales();
+    }
+    async function loadAftersales(){
+      const kw=document.getElementById('aftersaleKeyword').value.trim();
+      const q=`?tab=${currentAftersaleTab}&page=${aftersalePage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}`;
+      const d=await fetchA(`${BASE}/orders_aftersale${q}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const tb=document.getElementById('aftersaleBody');
+      if(!d.data.list.length){tb.innerHTML='<tr><td colspan="9" class="empty-row">暂无数据</td></tr>';document.getElementById('aftersalePager').innerHTML='';return;}
+      tb.innerHTML=d.data.list.map(o=>renderAftersaleRow(o)).join('');
+      document.getElementById('aftersalePager').innerHTML=`
+        <button ${aftersalePage<=1?'disabled':''} onclick="aftersalePage--;loadAftersales()">上一页</button>
+        <span style="font-size:12px;color:#888">第 ${d.data.page||aftersalePage} / ${d.data.last_page||1} 页</span>
+        <button ${aftersalePage>=(d.data.last_page||1)?'disabled':''} onclick="aftersalePage++;loadAftersales()">下一页</button>`;
+      updateAftersaleBulk();
+    }
+    function renderAftersaleRow(o){
+      const first=(o.items||[])[0];
+      const more=(o.items||[]).length>1?`<div class="muted" style="margin-top:4px">等 ${o.items.length} 件商品</div>`:'';
+      const isRecycle=currentAftersaleTab==='recycle';
+      const actionBtns=[];
+      actionBtns.push(`<button class="btn sm outline" onclick="viewAftersale(${o.id})">查看</button>`);
+      if(!isRecycle){
+        if(o.status==11) actionBtns.push(`<button class="btn sm" onclick="openRefundModal(${o.id})">退款</button>`);
+        actionBtns.push(`<a href="javascript:" class="danger" onclick="deleteAftersale(${o.id},'${escapeHtml(o.order_no)}')">删除</a>`);
+      }else{
+        actionBtns.push(`<a href="javascript:" onclick="restoreAftersale(${o.id})">恢复</a>`);
+      }
+      return `<tr>
+        <td class="col-check"><input type="checkbox" class="as-check" value="${o.id}" onchange="updateAftersaleBulk()"></td>
+        <td colspan="8" class="order-row-wrap">
+          <div class="order-head">
+            <span>下单时间：${o.created_at||'-'}</span>
+            <span>订单编号：${o.order_no}</span>
+            <span>交易单号：${o.trade_no||'-'}</span>
+          </div>
+          <div class="order-body">
+            <div class="order-goods">
+              ${first?`<img src="${first.image||''}" onerror="this.style.display='none'">`:''}
+              <div>
+                <div class="og-title">${first?escapeHtml(first.goods_title):'-'}</div>
+                <div class="og-spec">${first?escapeHtml(first.spec_desc||''):''}</div>
+                ${more}
+              </div>
+            </div>
+            <div class="order-cell">${first?'¥'+fmtMoney(first.price)+' x '+first.quantity:'-'}</div>
+            <div class="order-cell">${escapeHtml(o.user_name||o.user_id||'')}</div>
+            <div class="order-cell addr">${escapeHtml(o.receiver_name)}<br>${escapeHtml(o.receiver_phone)}<br>${escapeHtml(o.address)}</div>
+            <div class="order-cell price">¥${fmtMoney(o.pay_amount)}</div>
+            <div class="order-cell">${o.order_type_text||'普通订单'}</div>
+            <div class="order-cell">${statusBadgeA(o.status)}</div>
+            <div class="order-cell ops">${actionBtns.join(' ')}</div>
+          </div>
+        </td>
+      </tr>`;
+    }
+    function updateAftersaleBulk(){
+      const boxes=document.querySelectorAll('.as-check');
+      const checked=[...boxes].filter(c=>c.checked);
+      const bar=document.getElementById('aftersaleBulkBar');
+      document.getElementById('aftersaleCheckedCount').textContent=checked.length;
+      bar.style.display=checked.length?'flex':'none';
+      const all=boxes.length&&boxes.length===checked.length;
+      document.getElementById('aftersaleCheckAll').checked=all;
+    }
+    function toggleAftersaleCheckAll(){
+      const all=document.getElementById('aftersaleCheckAll').checked;
+      document.querySelectorAll('.as-check').forEach(c=>c.checked=all);
+      updateAftersaleBulk();
+    }
+    function clearAftersaleCheck(){
+      document.querySelectorAll('.as-check').forEach(c=>c.checked=false);
+      document.getElementById('aftersaleCheckAll').checked=false;
+      updateAftersaleBulk();
+    }
+    function getCheckedAftersaleIds(){
+      return [...document.querySelectorAll('.as-check:checked')].map(c=>c.value);
+    }
+    async function batchDeleteAftersales(){
+      const ids=getCheckedAftersaleIds();
+      if(!ids.length){toast('请先选择订单');return;}
+      if(!confirm(`确定删除选中的 ${ids.length} 个售后订单吗？`))return;
+      const url=currentAftersaleTab==='recycle'?`${BASE}/orders/batch_delete`:`${BASE}/orders_aftersale/soft_delete`;
+      const d=await fetchA(url,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');clearAftersaleCheck();loadAftersales();
+    }
+    async function batchRestoreAftersales(){
+      const ids=getCheckedAftersaleIds();
+      if(!ids.length){toast('请先选择订单');return;}
+      if(!confirm(`确定恢复选中的 ${ids.length} 个售后订单吗？`))return;
+      const d=await fetchA(`${BASE}/orders_aftersale/restore`,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'恢复失败');return;}
+      toast('恢复成功');clearAftersaleCheck();loadAftersales();
+    }
+    async function deleteAftersale(id,no){
+      if(!confirm(`确定删除售后订单「${no}」吗？`))return;
+      const d=await fetchA(`${BASE}/orders_aftersale/soft_delete`,{method:'POST',body:{ids:[id]}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadAftersales();
+    }
+    async function restoreAftersale(id){
+      const d=await fetchA(`${BASE}/orders_aftersale/restore`,{method:'POST',body:{ids:[id]}});
+      if(d.code!==0){toast(d.msg||'恢复失败');return;}
+      toast('恢复成功');loadAftersales();
+    }
+    function viewAftersale(id){editOrder(id,'items');}
+
+    /* 退款弹窗 */
+    let refundOrderId=0;
+    function openRefundModal(id){
+      refundOrderId=id;
+      document.getElementById('refundAmount').value='';
+      document.getElementById('refundReason').value='';
+      document.getElementById('refundModal').classList.add('open');
+    }
+    function closeRefundModal(){
+      document.getElementById('refundModal').classList.remove('open');
+      refundOrderId=0;
+    }
+    async function saveRefund(){
+      const amount=parseFloat(document.getElementById('refundAmount').value)||0;
+      const reason=document.getElementById('refundReason').value.trim();
+      if(amount<=0){toast('请输入退款金额');return;}
+      const d=await fetchA(`${BASE}/orders_aftersale/${refundOrderId}/refund`,{method:'POST',body:{amount,reason}});
+      if(d.code!==0){toast(d.msg||'退款失败');return;}
+      toast('退款成功');closeRefundModal();loadAftersales();
+    }
+    function exportAftersales(){toast('导出功能开发中');}
 
     /* 订单编辑弹窗 */
     let currentOrder=null;

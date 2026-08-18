@@ -214,6 +214,11 @@ CREATE TABLE IF NOT EXISTS orders (
   remark            TEXT NOT NULL DEFAULT '',
   shipping_company  TEXT NOT NULL DEFAULT '',
   shipping_no       TEXT NOT NULL DEFAULT '',
+  is_deleted        INTEGER NOT NULL DEFAULT 0,
+  refund_apply_at   TEXT,
+  refund_finish_at  TEXT,
+  refund_reason     TEXT NOT NULL DEFAULT '',
+  refund_amount     INTEGER NOT NULL DEFAULT 0,
   created_at     TEXT DEFAULT CURRENT_TIMESTAMP,
   updated_at     TEXT DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (order_no)

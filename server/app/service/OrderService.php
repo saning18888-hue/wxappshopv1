@@ -348,4 +348,87 @@ class OrderService
         }
         return $this->create($userId, $itemsIn, $address);
     }
+
+    // ---------- 后台管理：售后订单 ----------
+
+    public function adminAftersaleList(int $page, int $pageSize, string $tab, ?string $keyword): array
+    {
+        $q = Db::name('orders');
+        switch ($tab) {
+            case 'recycle':
+                $q->where('is_deleted', 1);
+                break;
+            case 'pending':
+                $q->where('status', 11)->where('is_deleted', 0);
+                break;
+            case 'refunded':
+                $q->where('status', 12)->where('is_deleted', 0);
+                break;
+            case 'all':
+            default:
+                $q->whereIn('status', [11, 12])->where('is_deleted', 0);
+                break;
+        }
+        if ($keyword) {
+            $q->where(function ($query) use ($keyword) {
+                $query->where('order_no', 'like', "%{$keyword}%")
+                      ->whereOr('trade_no', 'like', "%{$keyword}%")
+                      ->whereOr('receiver_name', 'like', "%{$keyword}%")
+                      ->whereOr('receiver_phone', 'like', "%{$keyword}%");
+            });
+        }
+        $total = $q->count();
+        $rows  = $q->order('id desc')->page($page, $pageSize)->select()->toArray();
+        $list  = array_map(fn($o) => $this->formatOrder($o, []), $rows);
+        return [
+            'list'      => $list,
+            'total'     => (int) $total,
+            'page'      => $page,
+            'page_size' => $pageSize,
+            'last_page' => max(1, (int) ceil($total / $pageSize)),
+        ];
+    }
+
+    public function softDeleteOrders(array $ids): void
+    {
+        if (empty($ids)) {
+            throw new \Exception('请选择要删除的订单');
+        }
+        Db::name('orders')->whereIn('id', $ids)->where('is_deleted', 0)->update([
+            'is_deleted' => 1,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    public function restoreOrders(array $ids): void
+    {
+        if (empty($ids)) {
+            throw new \Exception('请选择要恢复的订单');
+        }
+        Db::name('orders')->whereIn('id', $ids)->where('is_deleted', 1)->update([
+            'is_deleted' => 0,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    public function refundOrder(int $id, float $amount, string $reason): void
+    {
+        $o = Db::name('orders')->where('id', $id)->where('is_deleted', 0)->find();
+        if (!$o) {
+            throw new \Exception('订单不存在');
+        }
+        if (!in_array((int) $o['status'], [11, 12], true)) {
+            // 非售后状态也可以发起退款：统一变更为退款中
+        }
+        $refundAmount = intval(round($amount * 100));
+        $now = date('Y-m-d H:i:s');
+        Db::name('orders')->where('id', $id)->update([
+            'status'          => 12,
+            'refund_amount'   => $refundAmount,
+            'refund_reason'   => $reason,
+            'refund_finish_at'=> $now,
+            'refund_apply_at' => $o['refund_apply_at'] ?: $now,
+            'updated_at'      => $now,
+        ]);
+    }
 }
