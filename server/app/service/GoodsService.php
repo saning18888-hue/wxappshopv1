@@ -432,4 +432,133 @@ class GoodsService
         Db::name('goods_specs')->where('id', $id)->update(['sort' => $swap['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
         Db::name('goods_specs')->where('id', $swap['id'])->update(['sort' => $row['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
     }
+
+    // ---------- 商品属性管理（独立菜单）----------
+
+    public function attrList(?string $keyword): array
+    {
+        $q = Db::name('goods_attrs')
+            ->where('goods_id', 0)
+            ->order('sort', 'asc')
+            ->order('id', 'asc');
+        if ($keyword) {
+            $q->where('name', 'like', "%{$keyword}%");
+        }
+        $rows = $q->select()->toArray();
+        foreach ($rows as &$r) {
+            $arr = json_decode($r['attr_values'] ?: '[]', true);
+            $r['values_text'] = is_array($arr) ? implode(', ', array_column($arr, 'value')) : '';
+            $r['values'] = is_array($arr) ? $arr : [];
+        }
+        return $rows;
+    }
+
+    public function attrDetail(int $id): ?array
+    {
+        $attr = Db::name('goods_attrs')->where('id', $id)->find();
+        if (!$attr) {
+            return null;
+        }
+        $attr['values'] = json_decode($attr['attr_values'] ?: '[]', true) ?: [];
+        return $attr;
+    }
+
+    public function attrSave(?int $id, array $data): int
+    {
+        $name = trim($data['name'] ?? '');
+        if ($name === '') {
+            throw new \Exception('属性名称不能为空');
+        }
+        $values = array_values(array_filter(array_map(function ($v) {
+            $value = trim($v['value'] ?? '');
+            return $value === '' ? null : ['value' => $value, 'sort' => intval($v['sort'] ?? 0)];
+        }, $data['values'] ?? [])));
+        if (empty($values)) {
+            throw new \Exception('至少需要一个属性值');
+        }
+        foreach ($values as $i => &$v) {
+            $v['sort'] = $i;
+        }
+        unset($v);
+        $default = intval($data['default_attr'] ?? 0);
+        $sort    = intval($data['sort'] ?? 0);
+
+        if ($id) {
+            $exists = Db::name('goods_attrs')->where('name', $name)->where('goods_id', 0)->where('id', '<>', $id)->find();
+            if ($exists) {
+                throw new \Exception('属性名称已存在');
+            }
+            Db::name('goods_attrs')->where('id', $id)->update([
+                'name'         => $name,
+                'attr_values'  => json_encode($values, JSON_UNESCAPED_UNICODE),
+                'default_attr' => $default,
+                'sort'         => $sort,
+                'updated_at'   => date('Y-m-d H:i:s'),
+            ]);
+        } else {
+            $exists = Db::name('goods_attrs')->where('name', $name)->where('goods_id', 0)->find();
+            if ($exists) {
+                throw new \Exception('属性名称已存在');
+            }
+            $id = Db::name('goods_attrs')->insertGetId([
+                'goods_id'     => 0,
+                'name'         => $name,
+                'attr_values'  => json_encode($values, JSON_UNESCAPED_UNICODE),
+                'default_attr' => $default,
+                'sort'         => $sort,
+                'created_at'   => date('Y-m-d H:i:s'),
+            ]);
+        }
+        return $id;
+    }
+
+    public function attrDelete(int $id): void
+    {
+        $row = Db::name('goods_attrs')->where('id', $id)->find();
+        if (!$row) {
+            throw new \Exception('属性不存在');
+        }
+        if (intval($row['used']) === 1) {
+            throw new \Exception('该属性已被商品使用，无法删除');
+        }
+        Db::name('goods_attrs')->where('id', $id)->delete();
+    }
+
+    public function attrSetDefault(int $id, int $default): void
+    {
+        Db::name('goods_attrs')->where('id', $id)->update([
+            'default_attr' => $default ? 1 : 0,
+            'updated_at'   => date('Y-m-d H:i:s'),
+        ]);
+    }
+
+    public function attrMove(int $id, string $dir): void
+    {
+        $row = Db::name('goods_attrs')->where('id', $id)->find();
+        if (!$row) {
+            throw new \Exception('属性不存在');
+        }
+        if ($dir === 'up') {
+            $swap = Db::name('goods_attrs')
+                ->where('goods_id', 0)
+                ->where('sort', '<=', $row['sort'])
+                ->where('id', '<>', $id)
+                ->order('sort', 'desc')
+                ->order('id', 'desc')
+                ->find();
+        } else {
+            $swap = Db::name('goods_attrs')
+                ->where('goods_id', 0)
+                ->where('sort', '>=', $row['sort'])
+                ->where('id', '<>', $id)
+                ->order('sort', 'asc')
+                ->order('id', 'asc')
+                ->find();
+        }
+        if (!$swap) {
+            return;
+        }
+        Db::name('goods_attrs')->where('id', $id)->update(['sort' => $swap['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
+        Db::name('goods_attrs')->where('id', $swap['id'])->update(['sort' => $row['sort'], 'updated_at' => date('Y-m-d H:i:s')]);
+    }
 }

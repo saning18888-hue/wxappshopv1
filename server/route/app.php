@@ -56,6 +56,13 @@ Route::group('admin', function () {
     Route::post('goods_specs/:id/delete', 'admin.Goods/specDelete');
     Route::post('goods_specs/:id/default', 'admin.Goods/specSetDefault');
     Route::post('goods_specs/:id/move', 'admin.Goods/specMove');
+    Route::get('goods_attrs', 'admin.Goods/attrList');
+    Route::get('goods_attrs/:id', 'admin.Goods/attrDetail');
+    Route::post('goods_attrs', 'admin.Goods/attrSave');
+    Route::post('goods_attrs/:id/save', 'admin.Goods/attrSave');
+    Route::post('goods_attrs/:id/delete', 'admin.Goods/attrDelete');
+    Route::post('goods_attrs/:id/default', 'admin.Goods/attrSetDefault');
+    Route::post('goods_attrs/:id/move', 'admin.Goods/attrMove');
     Route::get('categories', 'admin.Category/index');
     Route::get('categories/tree', 'admin.Category/tree');
     Route::post('categories', 'admin.Category/save');

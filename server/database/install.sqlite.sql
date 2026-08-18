@@ -165,13 +165,15 @@ CREATE INDEX idx_skus_goods ON goods_skus(goods_id);
 
 -- 商品属性
 CREATE TABLE IF NOT EXISTS goods_attrs (
-  id         INTEGER PRIMARY KEY AUTOINCREMENT,
-  goods_id   INTEGER NOT NULL,
-  name       TEXT NOT NULL DEFAULT '',
-  attr_values TEXT NOT NULL DEFAULT '[]',
-  used       INTEGER NOT NULL DEFAULT 0,
-  sort       INTEGER NOT NULL DEFAULT 0,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  goods_id      INTEGER NOT NULL DEFAULT 0,
+  name          TEXT NOT NULL DEFAULT '',
+  attr_values   TEXT NOT NULL DEFAULT '[]',
+  default_attr  INTEGER NOT NULL DEFAULT 0,
+  used          INTEGER NOT NULL DEFAULT 0,
+  sort          INTEGER NOT NULL DEFAULT 0,
+  created_at    TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at    TEXT DEFAULT NULL
 );
 CREATE INDEX idx_attrs_goods ON goods_attrs(goods_id);
 

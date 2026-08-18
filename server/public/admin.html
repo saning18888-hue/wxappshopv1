@@ -1026,6 +1026,64 @@
           </div>
         </div>
 
+        <!-- 商品属性 -->
+        <div id="goodsAttrPanel" class="panel hidden">
+          <div class="card">
+            <h3>商品属性</h3>
+            <div class="toolbar" style="justify-content:space-between">
+              <button class="btn sm" onclick="openGoodsAttrForm()">+ 添加</button>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="goodsAttrKeyword" placeholder="关键词筛选" onkeydown="if(event.key==='Enter')loadGoodsAttrs()">
+                <button class="btn sm" onclick="loadGoodsAttrs()">查询</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>属性名称</th>
+                    <th>属性值</th>
+                    <th style="width:100px">默认属性</th>
+                    <th style="width:110px">排序</th>
+                    <th style="width:100px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="goodsAttrTbody"><tr><td colspan="5" class="empty-row">加载中…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 商品属性新增/编辑弹窗 -->
+          <div id="goodsAttrFormModal" class="modal" onclick="if(event.target===this)closeGoodsAttrForm()">
+            <div class="modal-card" style="width:520px">
+              <div class="modal-header"><h3 id="goodsAttrFormTitle">添加商品属性</h3><span class="close" onclick="closeGoodsAttrForm()">&times;</span></div>
+              <div class="modal-body">
+                <input type="hidden" id="gaFormId">
+                <div class="field"><label><span class="req">*</span>属性名称</label><input type="text" class="form-input" id="gaFormName" placeholder="属性名称"></div>
+                <div class="field" style="flex-direction:row;align-items:center;justify-content:space-between;gap:16px">
+                  <label style="margin-bottom:0">默认属性</label>
+                  <label class="switch"><input type="checkbox" id="gaFormDefault"><span class="slider"></span></label>
+                </div>
+                <div class="field">
+                  <label style="display:flex;align-items:center;justify-content:space-between">属性值 <button class="btn sm" onclick="addGoodsAttrValueRow()">添加属性值</button></label>
+                  <div class="table-wrap" style="margin-top:8px">
+                    <table>
+                      <thead>
+                        <tr><th>属性值</th><th style="width:80px">排序</th><th style="width:80px">操作</th></tr>
+                      </thead>
+                      <tbody id="gaValueTbody"><tr><td colspan="3" class="empty-row">暂无数据</td></tr></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn gray" onclick="closeGoodsAttrForm()">取消</button>
+                <button class="btn" onclick="saveGoodsAttrForm()">确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 订单列表 -->
         <div id="ordersPanel" class="panel hidden">
           <div class="card">
@@ -3468,7 +3526,7 @@
         {key:'list',label:'商品列表',icon:ICONS.package,panel:'goodsPanel',default:true},
         {key:'category',label:'商品分类',icon:ICONS.layers,panel:'categoryPanel'},
         {key:'sku',label:'商品规格',icon:ICONS.ruler,panel:'goodsSpecPanel'},
-        {key:'attr',label:'商品属性',icon:ICONS.listCheck}
+        {key:'attr',label:'商品属性',icon:ICONS.listCheck,panel:'goodsAttrPanel'}
       ]},
       {key:'orders',label:'订单',icon:ICONS.orders,children:[
         {key:'list',label:'订单列表',icon:ICONS.clipboard,panel:'ordersPanel',default:true},
@@ -3588,6 +3646,7 @@
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='goodsSpecPanel') loadGoodsSpecs();
+      if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
       if(panelId==='sectionPanel') loadSection();
       if(panelId==='layoutPanel') loadLayout();
@@ -4797,6 +4856,115 @@
       toast(id?'保存成功':'新增成功');
       closeGoodsSpecForm();
       loadGoodsSpecs();
+    }
+
+    /* 商品属性管理 */
+    async function loadGoodsAttrs(){
+      const kw=document.getElementById('goodsAttrKeyword').value.trim();
+      const d=await fetchA(`${BASE}/goods_attrs${kw?'?keyword='+encodeURIComponent(kw):''}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      renderGoodsAttrs(d.data||[]);
+    }
+    function renderGoodsAttrs(list){
+      const tbody=document.getElementById('goodsAttrTbody');
+      if(!list.length){tbody.innerHTML='<tr><td colspan="5" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=list.map(a=>`
+        <tr>
+          <td>${escapeHtml(a.name)}</td>
+          <td><div class="spec-values">${escapeHtml(a.values_text||'')}</div></td>
+          <td><label class="switch"><input type="checkbox" ${a.default_attr==1?'checked':''} onchange="setGoodsAttrDefault(${a.id},this.checked)"><span class="slider"></span></label></td>
+          <td>
+            <div class="ops">
+              <a href="javascript:" title="上移" onclick="moveGoodsAttr(${a.id},'up')">↑</a>
+              <a href="javascript:" title="下移" onclick="moveGoodsAttr(${a.id},'down')">↓</a>
+            </div>
+          </td>
+          <td>
+            <div class="ops"><a href="javascript:" onclick="editGoodsAttr(${a.id})">编辑</a></div>
+          </td>
+        </tr>`).join('');
+    }
+    async function setGoodsAttrDefault(id,checked){
+      const d=await fetchA(`${BASE}/goods_attrs/${id}/default`,{method:'POST',body:{default_attr:checked?1:0}});
+      if(d.code!==0){toast(d.msg||'设置失败');loadGoodsAttrs();}
+    }
+    async function moveGoodsAttr(id,dir){
+      const d=await fetchA(`${BASE}/goods_attrs/${id}/move`,{method:'POST',body:{dir}});
+      if(d.code!==0){toast(d.msg||'移动失败');return;}
+      loadGoodsAttrs();
+    }
+    async function deleteGoodsAttr(id,name){
+      if(!confirm(`确定删除属性「${name}」吗？`))return;
+      const d=await fetchA(`${BASE}/goods_attrs/${id}/delete`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadGoodsAttrs();
+    }
+    let gaValueRows=[];
+    function openGoodsAttrForm(){
+      gaValueRows=[];
+      document.getElementById('gaFormId').value='';
+      document.getElementById('gaFormName').value='';
+      document.getElementById('gaFormDefault').checked=false;
+      document.getElementById('goodsAttrFormTitle').textContent='添加商品属性';
+      renderGoodsAttrValues();
+      document.getElementById('goodsAttrFormModal').classList.add('open');
+    }
+    async function editGoodsAttr(id){
+      const d=await fetchA(`${BASE}/goods_attrs/${id}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const a=d.data;
+      gaValueRows=(a.values||[]).map(v=>({value:v.value||'',sort:v.sort||0}));
+      document.getElementById('gaFormId').value=id;
+      document.getElementById('gaFormName').value=a.name||'';
+      document.getElementById('gaFormDefault').checked=a.default_attr==1;
+      document.getElementById('goodsAttrFormTitle').textContent='编辑商品属性';
+      renderGoodsAttrValues();
+      document.getElementById('goodsAttrFormModal').classList.add('open');
+    }
+    function closeGoodsAttrForm(){
+      document.getElementById('goodsAttrFormModal').classList.remove('open');
+      document.getElementById('gaFormId').value='';
+      document.getElementById('gaFormName').value='';
+      document.getElementById('gaFormDefault').checked=false;
+      gaValueRows=[];
+      renderGoodsAttrValues();
+    }
+    function addGoodsAttrValueRow(){
+      gaValueRows.push({value:'',sort:gaValueRows.length});
+      renderGoodsAttrValues();
+    }
+    function removeGoodsAttrValueRow(idx){
+      gaValueRows.splice(idx,1);
+      gaValueRows.forEach((r,i)=>r.sort=i);
+      renderGoodsAttrValues();
+    }
+    function updateGoodsAttrValueRow(idx,val){
+      gaValueRows[idx].value=val;
+    }
+    function renderGoodsAttrValues(){
+      const tbody=document.getElementById('gaValueTbody');
+      if(!gaValueRows.length){tbody.innerHTML='<tr><td colspan="3" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=gaValueRows.map((r,i)=>`
+        <tr>
+          <td><input type="text" class="form-input" value="${escapeHtml(r.value)}" oninput="updateGoodsAttrValueRow(${i},this.value)" placeholder="属性值${i}"></td>
+          <td><input type="number" class="form-input" value="${r.sort}" oninput="gaValueRows[${i}].sort=parseInt(this.value)||0"></td>
+          <td><a href="javascript:" onclick="removeGoodsAttrValueRow(${i})">删除</a></td>
+        </tr>`).join('');
+    }
+    async function saveGoodsAttrForm(){
+      const id=document.getElementById('gaFormId').value;
+      const name=document.getElementById('gaFormName').value.trim();
+      const defaultAttr=document.getElementById('gaFormDefault').checked?1:0;
+      if(!name){toast('请输入属性名称');return;}
+      if(!gaValueRows.length){toast('请至少添加一个属性值');return;}
+      const empty=gaValueRows.some(r=>!r.value.trim());
+      if(empty){toast('属性值不能为空');return;}
+      const values=gaValueRows.map((r,i)=>({value:r.value.trim(),sort:i}));
+      const d=await fetchA(`${BASE}/goods_attrs${id?'/'+id+'/save':''}`,{method:'POST',body:{id:id||0,name,default_attr:defaultAttr,values}});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      toast(id?'保存成功':'新增成功');
+      closeGoodsAttrForm();
+      loadGoodsAttrs();
     }
 
     function renderCategoryPager(p){

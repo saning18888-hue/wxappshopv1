@@ -146,4 +146,65 @@ class Goods extends AdminController
             return $this->fail($e->getMessage());
         }
     }
+
+    // ---------- 商品属性管理 ----------
+
+    public function attrList()
+    {
+        $kw = input('get.keyword/s', '');
+        return $this->ok((new \app\service\GoodsService())->attrList($kw ?: null));
+    }
+
+    public function attrDetail($id)
+    {
+        $d = (new \app\service\GoodsService())->attrDetail(intval($id));
+        if (!$d) {
+            return $this->fail('属性不存在');
+        }
+        return $this->ok($d);
+    }
+
+    public function attrSave()
+    {
+        try {
+            $d  = $this->body();
+            $id = intval($d['id'] ?? 0);
+            $newId = (new \app\service\GoodsService())->attrSave($id ?: null, $d);
+            return $this->ok(['id' => $newId]);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function attrDelete($id)
+    {
+        try {
+            (new \app\service\GoodsService())->attrDelete(intval($id));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function attrSetDefault($id)
+    {
+        try {
+            $d = $this->body();
+            (new \app\service\GoodsService())->attrSetDefault(intval($id), intval($d['default_attr'] ?? 1));
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
+
+    public function attrMove($id)
+    {
+        try {
+            $d = $this->body();
+            (new \app\service\GoodsService())->attrMove(intval($id), $d['dir'] ?? 'up');
+            return $this->ok();
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
+    }
 }
