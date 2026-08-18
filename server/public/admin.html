@@ -157,6 +157,7 @@
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:100}
     .modal.show{display:flex}
     #goodsPickerModal{z-index:110}
+    #mapPickerModal{z-index:200}
     .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md);font-size:14px;line-height:1.5}
     .modal-card.lg{width:860px}
     .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
@@ -727,27 +728,41 @@
     .delivery-table .empty-row{text-align:center;color:var(--text-muted);padding:40px 16px}
 
     /* 运费模板弹窗 */
-    #deliveryTemplateModal .modal-card{width:720px;max-width:96vw}
-    #deliveryTemplateModal .tm-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-top:16px}
-    #deliveryTemplateModal .tm-section-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px}
-    #deliveryTemplateModal .tm-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-    #deliveryTemplateModal .tm-row label{font-size:13px;color:var(--text-secondary);white-space:nowrap}
-    #deliveryTemplateModal .tm-row .form-input{width:90px}
-    #deliveryTemplateModal .tm-row .form-input.wide{width:200px}
-    #deliveryTemplateModal .tm-tip{font-size:12px;color:var(--text-muted);margin-top:6px}
-    #deliveryTemplateModal .tm-add-region{color:var(--primary);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:12px}
-    #deliveryTemplateModal .tm-add-region:hover{text-decoration:underline}
-    #deliveryTemplateModal .region-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
-    #deliveryTemplateModal .region-table th,.region-table td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
-    #deliveryTemplateModal .region-table th{background:#f7f8fa;font-weight:600;color:var(--text-secondary);font-size:12px}
+    #deliveryTemplateModal .modal-card{width:760px;max-width:96vw;border-radius:14px}
+    #deliveryTemplateModal .tm-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+    #deliveryTemplateModal .tm-form-row .field{margin-bottom:0}
+    #deliveryTemplateModal .tm-section{background:#fafbfc;border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;margin-top:18px}
+    #deliveryTemplateModal .tm-section-head{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    #deliveryTemplateModal .tm-section-icon{width:26px;height:26px;border-radius:6px;background:var(--primary-100);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+    #deliveryTemplateModal .tm-section-title{font-size:14px;font-weight:600;color:var(--text)}
+    #deliveryTemplateModal .tm-section-sub{font-size:12px;color:var(--text-muted);margin-left:auto}
+    #deliveryTemplateModal .opt-row{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+    #deliveryTemplateModal .opt-row label{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text);cursor:pointer;font-weight:500}
+    #deliveryTemplateModal .opt-row input[type=radio]{width:16px;height:16px;accent-color:var(--primary)}
+    #deliveryTemplateModal .tm-fee-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px}
+    #deliveryTemplateModal .tm-fee-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;align-items:end;margin-bottom:8px}
+    #deliveryTemplateModal .tm-fee-item{display:flex;flex-direction:column;gap:6px}
+    #deliveryTemplateModal .tm-fee-item label{font-size:12px;color:var(--text-secondary)}
+    #deliveryTemplateModal .tm-fee-item .inline{display:flex;align-items:center;gap:6px}
+    #deliveryTemplateModal .tm-fee-item .form-input{width:100%}
+    #deliveryTemplateModal .tm-fee-divider{font-size:13px;color:var(--text-muted);padding-bottom:10px;text-align:center}
+    #deliveryTemplateModal .tm-tip{font-size:12px;color:var(--text-muted);margin-top:8px;background:var(--primary-50);padding:8px 10px;border-radius:6px}
+    #deliveryTemplateModal .tm-add-region{display:inline-flex;align-items:center;gap:5px;color:#fff;background:var(--primary);font-size:12px;font-weight:500;padding:7px 12px;border-radius:6px;cursor:pointer;margin-bottom:12px;transition:background .15s}
+    #deliveryTemplateModal .tm-add-region:hover{background:var(--primary-700)}
+    #deliveryTemplateModal .region-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:#fff}
+    #deliveryTemplateModal .region-table th,.region-table td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--border)}
+    #deliveryTemplateModal .region-table th{background:#f5f6ff;font-weight:600;color:var(--text-secondary);font-size:12px}
+    #deliveryTemplateModal .region-table tbody tr:hover{background:#fafbfc}
     #deliveryTemplateModal .region-table td{color:var(--text)}
     #deliveryTemplateModal .region-table .region-names{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #deliveryTemplateModal .region-table .btn-link{font-size:12px;color:var(--primary);cursor:pointer;background:none;border:none;padding:0}
+    #deliveryTemplateModal .region-table .btn-link:hover{text-decoration:underline}
     #deliveryTemplateModal .region-table .btn-link.danger{color:#dc3545}
-    #deliveryTemplateModal .free-condition{display:flex;align-items:center;gap:10px;margin-top:14px}
+    #deliveryTemplateModal .free-condition{display:flex;align-items:center;gap:12px;margin-top:18px;padding:14px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm)}
+    #deliveryTemplateModal .free-condition label{font-size:13px;color:var(--text);font-weight:500}
     #deliveryTemplateModal .free-condition input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary)}
-    #deliveryTemplateModal .free-condition .form-input{width:100px}
-    #deliveryTemplateModal .modal-body{max-height:80vh;overflow:auto}
+    #deliveryTemplateModal .free-condition .form-input{width:120px}
+    #deliveryTemplateModal .modal-body{max-height:82vh;overflow:auto;padding:22px 24px}
 
     /* 区域选择弹窗 */
     #regionPickerModal .modal-card{width:640px;max-width:96vw;max-height:86vh}
@@ -1057,18 +1072,39 @@
             .pickup-card .pc-op .btn-link.danger{color:#dc3545}
             #pickupPointModal .map-row{margin-top:6px}
             /* 同城配送 */
-            #localRuleModal .local-rule-body{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-            #localRuleModal .local-rule-form .field{margin-bottom:14px}
-            #localRuleModal .local-rule-fee .field{margin-bottom:14px}
-            #localRuleModal .inline-radios{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-            #localRuleModal .inline-radios label:first-child{min-width:70px}
-            #localRuleModal .radio-label{font-size:14px;color:var(--text);display:flex;align-items:center;gap:4px;cursor:pointer}
-            #localRuleModal .inline-input{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-            #localRuleModal .inline-input label{min-width:70px}
-            #localRuleModal .inline-input .form-input{width:100px}
-            #localRuleModal .inline-input .unit{font-size:14px;color:var(--text-secondary);white-space:nowrap}
-            #localMapWrap{height:220px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#f7f8fa;overflow:hidden;margin-top:10px}
-            #localRuleModal .btn.sm{height:32px;padding:0 12px;font-size:13px}
+            #localRuleModal .modal-card{width:780px;max-width:96vw;border-radius:14px}
+            #localRuleModal .local-rule-body{display:grid;grid-template-columns:320px 1fr;gap:24px}
+            #localRuleModal .field{margin-bottom:16px}
+            #localRuleModal .field label{display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:8px}
+            #localRuleModal .field label .required{color:#dc3545;margin-right:3px}
+            #localRuleModal .form-input{width:100%;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#f7f8fa;font-size:14px;outline:none;transition:.15s}
+            #localRuleModal .form-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            #localRuleModal .form-input:read-only{background:#f2f3f5;color:var(--text-secondary)}
+            #localRuleModal .map-row{display:flex;gap:10px;align-items:stretch}
+            #localRuleModal .map-row .form-input{flex:1}
+            #localRuleModal .map-row .btn-map{height:36px;padding:0 16px;border:1px solid var(--primary);border-radius:var(--radius-sm);background:#fff;color:var(--primary);font-size:13px;font-weight:500;cursor:pointer;transition:.15s;white-space:nowrap}
+            #localRuleModal .map-row .btn-map:hover{background:var(--primary-50)}
+            #localRuleModal .address-preview{height:180px;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--border);background:#f7f8fa;margin-top:8px}
+            #localRuleModal .address-empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:13px;flex-direction:column;gap:6px}
+            #localRuleModal .inline-radios{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+            #localRuleModal .radio-label{font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:500}
+            #localRuleModal .radio-label input[type=radio]{width:16px;height:16px;accent-color:var(--primary)}
+            #localRuleModal .fee-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+            #localRuleModal .fee-card{background:#fafbfc;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:6px}
+            #localRuleModal .fee-card label{font-size:12px;color:var(--text-secondary)}
+            #localRuleModal .fee-card .inline{display:flex;align-items:center;gap:6px}
+            #localRuleModal .fee-card .form-input{width:100%}
+            #localRuleModal .fee-card .unit{font-size:13px;color:var(--text-muted);white-space:nowrap}
+            #localRuleModal .section-hr{height:1px;background:var(--border);margin:18px 0}
+            #localRuleModal .ladder-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-top:10px}
+            #localRuleModal .ladder-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px}
+            #localRuleModal .ladder-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+            #localRuleModal .ladder-row:last-child{margin-bottom:0}
+            #localRuleModal .ladder-row label{font-size:12px;color:var(--text-secondary);min-width:64px;margin:0}
+            #localRuleModal .ladder-row .form-input{width:90px}
+            #localRuleModal .ladder-row .unit{font-size:13px;color:var(--text-muted)}
+            #localRuleModal .btn.sm{height:32px;padding:0 14px;font-size:13px;border-radius:6px}
+            #localRuleModal .right-col{border-left:1px solid var(--border);padding-left:24px}
             /* 同城配送时间 */
             #localTimeModal .local-time-body .field{margin-bottom:16px}
             #localTimeModal .checkboxes{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -2499,32 +2535,57 @@
     <div class="modal-card">
       <div class="modal-header"><h3 id="deliveryTemplateTitle">添加模板</h3><span class="close" onclick="closeDeliveryTemplateModal()">&times;</span></div>
       <div class="modal-body">
-        <div class="field"><label>模板名称 <span style="color:#dc3545">*</span></label><input type="text" class="form-input wide" id="tmName" placeholder="模板名称"></div>
-        <div class="field"><label>提示</label><input type="text" class="form-input wide" id="tmTip" placeholder="提示"></div>
-        <p class="delivery-desc">该提示将展示在移动端订单确认页</p>
+        <div class="tm-form-row">
+          <div class="field">
+            <label>模板名称 <span style="color:#dc3545">*</span></label>
+            <input type="text" class="form-input" id="tmName" placeholder="例如：全国通用运费">
+          </div>
+          <div class="field">
+            <label>提示 <span style="color:var(--text-muted);font-weight:400">（展示在订单确认页）</span></label>
+            <input type="text" class="form-input" id="tmTip" placeholder="例如：偏远地区请联系客服">
+          </div>
+        </div>
 
         <div class="tm-section">
-          <div class="tm-section-title">计价方式</div>
-          <div class="opt-row" style="margin-bottom:12px">
+          <div class="tm-section-head">
+            <div class="tm-section-icon">¥</div>
+            <div class="tm-section-title">计价方式</div>
+            <div class="tm-section-sub">未指定地区将按默认运费计算</div>
+          </div>
+          <div class="opt-row">
             <label><input type="radio" name="tmType" value="piece" checked onchange="renderTmRegionTable()"> 按件数</label>
             <label><input type="radio" name="tmType" value="weight" onchange="renderTmRegionTable()"> 按重量</label>
           </div>
-          <div class="tm-row">
-            <label>默认运费：</label>
-            <input type="number" class="form-input" id="tmDefaultBase" value="0" min="0" step="0.01">
-            <span id="tmUnit1">件</span>
-            <span>内，¥</span>
-            <input type="number" class="form-input" id="tmDefaultBaseFee" value="0" min="0" step="0.01">
-            <span>，每增加</span>
-            <input type="number" class="form-input" id="tmDefaultExtra" value="0" min="0" step="0.01">
-            <span id="tmUnit2">件</span>
-            <span>，增加运费 ¥</span>
-            <input type="number" class="form-input" id="tmDefaultExtraFee" value="0" min="0" step="0.01">
+          <div class="tm-fee-card">
+            <div class="tm-fee-row">
+              <div class="tm-fee-item">
+                <label>首 <span id="tmUnit1">件</span> 数量</label>
+                <input type="number" class="form-input" id="tmDefaultBase" value="0" min="0" step="0.01">
+              </div>
+              <div class="tm-fee-item">
+                <label>首费（¥）</label>
+                <input type="number" class="form-input" id="tmDefaultBaseFee" value="0" min="0" step="0.01">
+              </div>
+              <div class="tm-fee-item">
+                <label>续 <span id="tmUnit2">件</span> 数量</label>
+                <input type="number" class="form-input" id="tmDefaultExtra" value="0" min="0" step="0.01">
+              </div>
+              <div class="tm-fee-item">
+                <label>续费（¥）</label>
+                <input type="number" class="form-input" id="tmDefaultExtraFee" value="0" min="0" step="0.01">
+              </div>
+            </div>
+            <p class="tm-tip">默认运费适用于未指定地区的订单</p>
           </div>
-          <p class="tm-tip">默认运费适用于未指定地区的订单。</p>
+        </div>
 
-          <div class="tm-section-title" style="margin-top:18px">指定地区运费</div>
-          <div class="tm-add-region" onclick="openRegionPickerForNew()">+ 为指定地区添加运费</div>
+        <div class="tm-section">
+          <div class="tm-section-head">
+            <div class="tm-section-icon">📍</div>
+            <div class="tm-section-title">指定地区运费</div>
+            <div class="tm-section-sub">为不同省市设置差异化运费</div>
+          </div>
+          <div class="tm-add-region" onclick="openRegionPickerForNew()">＋ 为指定地区添加运费</div>
           <table class="region-table">
             <thead>
               <tr>
@@ -2533,7 +2594,7 @@
                 <th>首费 ¥</th>
                 <th class="tm-th-extra">续 <span id="thUnitExtra">件</span></th>
                 <th>续费 ¥</th>
-                <th>操作</th>
+                <th style="width:90px">操作</th>
               </tr>
             </thead>
             <tbody id="tmRegionTbody">
@@ -2544,9 +2605,9 @@
 
         <div class="free-condition">
           <input type="checkbox" id="tmFreeEnabled" onchange="toggleTmFree(this.checked)">
-          <label for="tmFreeEnabled">包邮条件</label>
-          <span id="tmFreeWrap" style="display:none;align-items:center;gap:8px">
-            <span>满</span>
+          <label for="tmFreeEnabled">开启包邮条件</label>
+          <span id="tmFreeWrap" style="display:none;align-items:center;gap:10px">
+            <span>订单满</span>
             <input type="number" class="form-input" id="tmFreeAmount" value="0" min="0" step="0.01">
             <span>元包邮</span>
           </span>
@@ -2614,75 +2675,109 @@
 
   <!-- 同城配送规则弹窗 -->
   <div id="localRuleModal" class="modal" onclick="if(event.target===this) closeLocalRuleModal()">
-    <div class="modal-card" style="width:760px;max-width:96vw">
+    <div class="modal-card">
       <div class="modal-header"><h3 id="localRuleModalTitle">添加</h3><span class="close" onclick="closeLocalRuleModal()">&times;</span></div>
       <div class="modal-body local-rule-body">
         <input type="hidden" id="localRuleIdx" value="-1">
         <div class="local-rule-form">
           <div class="field">
-            <label><span style="color:#dc3545">*</span> 规则名称</label>
-            <input type="text" class="form-input" id="localRuleName" placeholder="规则名称">
+            <label><span class="required">*</span>规则名称</label>
+            <input type="text" class="form-input" id="localRuleName" placeholder="例如：市区同城配送">
           </div>
           <div class="field">
             <label>取货地址</label>
             <div class="map-row">
-              <input type="text" class="form-input" id="localRuleAddress" placeholder="" readonly>
-              <button type="button" class="btn-map" onclick="openLocalMapPicker()">设置</button>
+              <input type="text" class="form-input" id="localRuleAddress" placeholder="点击设置选择取货地址" readonly>
+              <button type="button" class="btn-map" onclick="openLocalMapPicker()">设置地址</button>
             </div>
           </div>
-          <div class="field inline-radios">
-            <label>计算距离</label>
+          <div id="localMapWrap" class="address-preview">
+            <div class="address-empty">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              点击「设置地址」在地图中选择取货点
+            </div>
+          </div>
+          <div class="field inline-radios" style="margin-top:14px">
+            <label style="margin:0">计算距离</label>
             <label class="radio-label"><input type="radio" name="localRuleDistance" value="route" checked> 路线规划</label>
             <label class="radio-label"><input type="radio" name="localRuleDistance" value="straight"> 直线距离</label>
           </div>
-          <div class="field inline-input">
-            <label>服务半径</label>
-            <input type="number" class="form-input" id="localRuleRadius" value="2" min="0" step="0.1"><span class="unit">/km</span>
-          </div>
-          <div id="localMapWrap" class="local-map-wrap"></div>
-        </div>
-        <div class="local-rule-fee">
-          <div class="field inline-input">
-            <label>起送价格</label>
-            <input type="number" class="form-input" id="localRuleMinAmount" value="0" min="0" step="0.01"><span class="unit">元</span>
-          </div>
-          <div class="field inline-input">
-            <label>基础配送费</label>
-            <input type="number" class="form-input" id="localRuleBaseFee" value="0" min="0" step="0.01"><span class="unit">元</span>
-          </div>
-          <div class="field inline-input">
-            <label>满*免配送费</label>
-            <input type="number" class="form-input" id="localRuleFreeAmount" value="0" min="0" step="0.01"><span class="unit">元</span>
-          </div>
           <div class="field inline-radios">
-            <label>定时达</label>
+            <label style="margin:0">服务半径</label>
+            <div class="inline" style="display:flex;align-items:center;gap:6px">
+              <input type="number" class="form-input" id="localRuleRadius" value="2" min="0" step="0.1" style="width:90px">
+              <span style="font-size:13px;color:var(--text-secondary)">km</span>
+            </div>
+          </div>
+        </div>
+        <div class="local-rule-fee right-col">
+          <div class="field">
+            <label>基础费用</label>
+            <div class="fee-grid">
+              <div class="fee-card">
+                <label>起送价格</label>
+                <div class="inline"><input type="number" class="form-input" id="localRuleMinAmount" value="0" min="0" step="0.01"><span class="unit">元</span></div>
+              </div>
+              <div class="fee-card">
+                <label>基础配送费</label>
+                <div class="inline"><input type="number" class="form-input" id="localRuleBaseFee" value="0" min="0" step="0.01"><span class="unit">元</span></div>
+              </div>
+              <div class="fee-card">
+                <label>满额免配送费</label>
+                <div class="inline"><input type="number" class="form-input" id="localRuleFreeAmount" value="0" min="0" step="0.01"><span class="unit">元</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field inline-radios">
+            <label style="margin:0">定时达</label>
             <label class="radio-label"><input type="radio" name="localRuleTimed" value="1" checked> 打开</label>
             <label class="radio-label"><input type="radio" name="localRuleTimed" value="0"> 关闭</label>
             <button type="button" class="btn sm" onclick="openLocalTimeModal()">时间设置</button>
           </div>
+
+          <div class="section-hr"></div>
+
           <div class="field inline-radios">
-            <label>阶梯配送费</label>
+            <label style="margin:0">阶梯配送费</label>
             <label class="radio-label"><input type="radio" name="localRuleLadder" value="1" onchange="toggleLocalLadder(true)"> 开启</label>
             <label class="radio-label"><input type="radio" name="localRuleLadder" value="0" checked onchange="toggleLocalLadder(false)"> 关闭</label>
           </div>
           <div id="localLadderWrap" style="display:none">
-            <div class="field inline-input">
-              <label>起送半径</label>
-              <input type="number" class="form-input" id="localRuleLadderBaseRadius" value="0" min="0" step="0.1"><span class="unit">公里内基础配送费￥</span>
-              <input type="number" class="form-input" id="localRuleLadderBaseFee" value="0" min="0" step="0.01"><span class="unit">，每增加</span>
-              <input type="number" class="form-input" id="localRuleLadderStepRadius" value="0" min="0" step="0.1"><span class="unit">公里，配送费用增加</span>
-              <input type="number" class="form-input" id="localRuleLadderStepFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+            <div class="ladder-box">
+              <div class="ladder-title">按距离阶梯计费</div>
+              <div class="ladder-row">
+                <label>起送半径</label>
+                <input type="number" class="form-input" id="localRuleLadderBaseRadius" value="0" min="0" step="0.1"><span class="unit">公里内</span>
+                <span class="unit">基础费</span>
+                <input type="number" class="form-input" id="localRuleLadderBaseFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+              </div>
+              <div class="ladder-row">
+                <label>每增加</label>
+                <input type="number" class="form-input" id="localRuleLadderStepRadius" value="0" min="0" step="0.1"><span class="unit">公里</span>
+                <span class="unit">运费增加</span>
+                <input type="number" class="form-input" id="localRuleLadderStepFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+              </div>
             </div>
-            <div class="field inline-input">
-              <label>起送重量</label>
-              <input type="number" class="form-input" id="localRuleLadderBaseWeight" value="0" min="0" step="0.01"><span class="unit">kg内配送费￥</span>
-              <input type="number" class="form-input" id="localRuleLadderWeightFee" value="0" min="0" step="0.01"><span class="unit">，每增加</span>
-              <input type="number" class="form-input" id="localRuleLadderStepWeight" value="0" min="0" step="0.01"><span class="unit">kg，配送费用增加</span>
-              <input type="number" class="form-input" id="localRuleLadderStepWeightFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+            <div class="ladder-box" style="margin-top:12px">
+              <div class="ladder-title">按重量阶梯计费</div>
+              <div class="ladder-row">
+                <label>起送重量</label>
+                <input type="number" class="form-input" id="localRuleLadderBaseWeight" value="0" min="0" step="0.01"><span class="unit">kg内</span>
+                <span class="unit">配送费</span>
+                <input type="number" class="form-input" id="localRuleLadderWeightFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+              </div>
+              <div class="ladder-row">
+                <label>每增加</label>
+                <input type="number" class="form-input" id="localRuleLadderStepWeight" value="0" min="0" step="0.01"><span class="unit">kg</span>
+                <span class="unit">运费增加</span>
+                <input type="number" class="form-input" id="localRuleLadderStepWeightFee" value="0" min="0" step="0.01"><span class="unit">元</span>
+              </div>
             </div>
           </div>
-          <div class="field inline-radios">
-            <label>按件计算</label>
+
+          <div class="field inline-radios" style="margin-top:14px">
+            <label style="margin:0">按件计算</label>
             <label class="radio-label"><input type="radio" name="localRuleByPiece" value="1"> 是</label>
             <label class="radio-label"><input type="radio" name="localRuleByPiece" value="0" checked> 否</label>
           </div>
@@ -5069,9 +5164,9 @@
     function renderLocalMap(val){
       const container=document.getElementById('localMapWrap');
       const m=val.match(/(-?\d+\.?\d*)\s*,\s*(-?\d+\.?\d*)/);
-      if(!m){container.innerHTML='<div class="map-empty">点击「设置」在地图上选择取货地址</div>';return;}
+      if(!m){container.innerHTML='<div class="address-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>点击「设置地址」在地图中选择取货点</div>';return;}
       const lng=parseFloat(m[1]),lat=parseFloat(m[2]);
-      if(!window.TMap){container.innerHTML='<div class="map-empty">地图未加载，请配置腾讯地图密钥</div>';return;}
+      if(!window.TMap){container.innerHTML='<div class="address-empty"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>地图未加载，请配置腾讯地图密钥</div>';return;}
       container.innerHTML='';
       const map=new TMap.Map(container,{center:new TMap.LatLng(lat,lng),zoom:13});
       new TMap.MultiMarker({map:map,geometries:[{id:'local',position:new TMap.LatLng(lat,lng)}]});
