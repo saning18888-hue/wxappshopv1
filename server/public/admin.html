@@ -911,189 +911,636 @@
         <!-- 基础设置 -->
         <div id="basePanel" class="panel hidden">
           <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..600&display=swap');
-            /* ===== Linear 浅色模式设计令牌 ===== */
-            #basePanel{
-              font-family:'Inter Variable',Inter,'SF Pro Display',-apple-system,system-ui,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;
-              font-feature-settings:'cv01','ss03';
-              color:#1c1c1f;
-            }
-            #basePanel .sec-title{font-size:20px;font-weight:590;letter-spacing:-0.24px;color:#0f1011}
-            #basePanel .card{background:#ffffff;border:1px solid #e6e6e6;border-radius:12px;padding:24px;box-shadow:rgba(0,0,0,0.03) 0 1px 2px}
-            /* 4 个 Tab：Linear pill 分段导航 */
-            #basePanel .bs-tabs{display:flex;gap:4px;margin-bottom:22px;flex-wrap:wrap;border:1px solid #e6e6e6;border-radius:8px;padding:4px;background:#f7f8f8}
-            #basePanel .bs-tab{padding:7px 16px;border-radius:6px;background:transparent;color:#62666d;cursor:pointer;font-size:14px;font-weight:510;letter-spacing:-0.165px;border:1px solid transparent;transition:.15s}
-            #basePanel .bs-tab:hover{color:#0f1011}
-            #basePanel .bs-tab.active{background:#5e6ad2;color:#ffffff;border-color:#5e6ad2}
+            #basePanel{background:var(--bg);min-height:100%}
+            #basePanel .setting-wrap{max-width:none}
+            #basePanel .bs-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);padding:0 24px;margin-bottom:0;border-radius:var(--radius) var(--radius) 0 0}
+            #basePanel .bs-tab{padding:14px 20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative;transition:.15s;user-select:none}
+            #basePanel .bs-tab:hover{color:var(--primary)}
+            #basePanel .bs-tab.active{color:var(--primary);font-weight:600}
+            #basePanel .bs-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
+            #basePanel .setting-card{background:var(--surface);padding:24px 32px 32px;border:1px solid var(--border);border-top:0;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
+            #basePanel .section-title{font-size:16px;font-weight:600;color:var(--text);padding-left:10px;border-left:4px solid var(--primary);margin-bottom:24px;line-height:1}
+            #basePanel .form-row{display:flex;align-items:flex-start;margin-bottom:22px}
+            #basePanel .form-label{width:120px;color:var(--text);font-size:14px;padding-top:5px;flex-shrink:0;text-align:left;line-height:1.5}
+            #basePanel .form-control{flex:1;min-width:0}
+            #basePanel .radio-group,#basePanel .checkbox-group{display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+            #basePanel .radio-group label,#basePanel .checkbox-group label{display:inline-flex;align-items:center;gap:6px;color:var(--text-secondary);font-size:14px;cursor:pointer;line-height:1.5}
+            #basePanel input[type="radio"],#basePanel input[type="checkbox"]{accent-color:var(--primary);width:16px;height:16px;margin:0;cursor:pointer;flex-shrink:0}
+            #basePanel .form-hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6}
+            #basePanel .form-input{width:100%;max-width:520px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);outline:none;transition:.15s;box-sizing:border-box;background:#f7f8fa}
+            #basePanel .form-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            #basePanel .form-select{height:36px;padding:0 28px 0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px}
+            #basePanel .form-select:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            #basePanel .form-inline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+            #basePanel .inline-text{font-size:14px;color:var(--text-secondary)}
+            #basePanel .inline-num{width:100px;max-width:none;text-align:center}
+            #basePanel .form-actions{padding:8px 0 0 120px}
+            #basePanel .btn-submit{background:var(--primary);color:#fff;border:none;height:36px;padding:0 32px;border-radius:var(--radius-sm);font-size:14px;cursor:pointer;transition:.15s}
+            #basePanel .btn-submit:hover{background:var(--primary-700)}
+            #basePanel .cart-icon-group{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+            #basePanel .cart-icon-group label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+            #basePanel .cart-icon-group svg{width:20px;height:20px;fill:none;stroke:var(--text-secondary);stroke-width:1.6}
+            #basePanel .cart-icon-group input:checked+svg{stroke:var(--primary)}
+            #basePanel .link{color:var(--primary);text-decoration:none}
+            #basePanel .link:hover{color:var(--primary-700)}
+            #basePanel .editor-wrap{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;max-width:680px;background:var(--surface)}
+            #basePanel .editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;border-bottom:1px solid var(--border);background:#f7f8fa}
+            #basePanel .editor-toolbar button{width:28px;height:26px;border:1px solid transparent;border-radius:3px;background:transparent;color:var(--text-secondary);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+            #basePanel .editor-toolbar button:hover{border-color:var(--border);background:var(--surface)}
+            #basePanel .editor-content{width:100%;min-height:140px;padding:12px;border:none;resize:vertical;font-size:14px;line-height:1.6;color:var(--text);outline:none;font-family:inherit;box-sizing:border-box}
+            #basePanel .editor-content::placeholder{color:var(--text-muted)}
+            #basePanel .switch .slider{background:#cdcfd6}
+            #basePanel .switch input:checked+.slider{background:var(--primary)}
+            /* 兼容其它 pane 旧结构 */
             #basePanel .bs-pane .row{margin-bottom:20px}
-            #basePanel .bs-pane label.lbl{display:block;font-size:13px;font-weight:510;color:#3b3b40;margin-bottom:8px;letter-spacing:-0.13px}
-            /* 输入框：极淡背景 + 聚焦紫环 */
-            #basePanel .lin-input,#basePanel textarea.lin-input{width:100%;box-sizing:border-box;background:#f3f4f5;border:1px solid #e6e6e6;border-radius:6px;padding:10px 12px;font-size:14px;color:#0f1011;font-family:inherit;outline:none;transition:.15s;line-height:1.5}
-            #basePanel .lin-input:focus,#basePanel textarea.lin-input:focus{border-color:#5e6ad2;box-shadow:rgba(94,106,210,0.25) 0 0 0 3px;background:#ffffff}
-            #basePanel .lin-form-row{display:flex;gap:10px}
-            /* 单选分段控件：唯一彩色用于选中态 */
-            #basePanel .seg{display:inline-flex;border:1px solid #e6e6e6;border-radius:8px;overflow:hidden}
-            #basePanel .seg-item{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;font-size:14px;color:#3b3b40;cursor:pointer;background:#ffffff;border-right:1px solid #e6e6e6;transition:.15s;user-select:none}
+            #basePanel .bs-pane label.lbl{display:block;font-size:14px;color:var(--text);margin-bottom:8px}
+            #basePanel .lin-input,#basePanel textarea.lin-input{width:100%;max-width:520px;box-sizing:border-box;background:#f7f8fa;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:14px;color:var(--text);outline:none;transition:.15s}
+            #basePanel .lin-input:focus,#basePanel textarea.lin-input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            #basePanel .seg{display:inline-flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+            #basePanel .seg-item{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;font-size:14px;color:var(--text-secondary);cursor:pointer;background:var(--surface);border-right:1px solid var(--border);transition:.15s;user-select:none}
             #basePanel .seg-item:last-child{border-right:none}
-            #basePanel .seg-item.active{background:#5e6ad2;color:#ffffff}
+            #basePanel .seg-item.active{background:var(--primary);color:#fff}
             #basePanel .seg-item input{position:absolute;opacity:0;pointer-events:none}
-            #basePanel .hint{font-size:12px;color:#8a8f98;margin-top:7px;letter-spacing:-0.13px;line-height:1.5}
-            #basePanel .opt-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:4px}
-            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:7px;font-size:14px;color:#3b3b40;cursor:pointer}
-            #basePanel .opt-row input{accent-color:#5e6ad2;width:16px;height:16px}
-            /* 主操作按钮：品牌靛蓝 */
-            #basePanel .btn.primary{background:#5e6ad2;border-color:#5e6ad2;color:#fff}
-            #basePanel .btn.primary:hover{background:#7170ff;border-color:#7170ff}
+            #basePanel .hint{font-size:12px;color:var(--text-muted);margin-top:7px;line-height:1.6}
+            #basePanel .opt-row{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+            #basePanel .opt-row label{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--text-secondary);cursor:pointer}
+            #basePanel .opt-row input{accent-color:var(--primary);width:16px;height:16px}
           </style>
-          <div class="sec-toolbar">
-            <div class="sec-title"><span class="ic">⚙</span> 基础设置</div>
-            <div class="sec-actions">
-              <button class="btn primary" onclick="saveSettings()">保存设置</button>
-            </div>
-          </div>
-          <div class="card">
+          <div class="setting-wrap">
             <div class="bs-tabs">
               <div class="bs-tab active" data-tab="basic" onclick="switchBaseTab('basic')">基础设置</div>
               <div class="bs-tab" data-tab="goods" onclick="switchBaseTab('goods')">商品设置</div>
               <div class="bs-tab" data-tab="trade" onclick="switchBaseTab('trade')">交易设置</div>
               <div class="bs-tab" data-tab="security" onclick="switchBaseTab('security')">安全设置</div>
             </div>
+            <div class="setting-card">
+              <!-- 基础设置 -->
+              <div class="bs-pane" data-pane="basic">
+                <div class="section-title">站点设置</div>
 
-            <!-- 基础设置 -->
-            <div class="bs-pane" data-pane="basic">
-              <div class="row">
-                <label class="lbl">站点状态</label>
-                <div class="seg">
-                  <label class="seg-item"><input type="radio" name="site_status" value="open" data-setting="site_status" onchange="syncSeg(this)"> 开启（营业中）</label>
-                  <label class="seg-item"><input type="radio" name="site_status" value="close" data-setting="site_status" onchange="syncSeg(this)"> 关闭（打烊）</label>
+                <div class="form-row">
+                  <label class="form-label">站点状态</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="site_status" value="open" data-setting="site_status" checked> 开启</label>
+                      <label><input type="radio" name="site_status" value="close" data-setting="site_status"> 关闭</label>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <label class="lbl">站点打烊说明</label>
-                <textarea class="lin-input" rows="2" data-setting="close_reason" placeholder="店铺休息时给用户看的文案"></textarea>
-              </div>
-              <div class="row">
-                <label class="lbl">站点名称</label>
-                <input class="lin-input" data-setting="store_name" placeholder="商城名称">
-              </div>
-              <div class="row">
-                <label class="lbl">站点 Logo（图片 URL）</label>
-                <input class="lin-input" data-setting="store_logo" placeholder="https://...">
-              </div>
-              <div class="row">
-                <label class="lbl">客服类型</label>
-                <div class="seg">
-                  <label class="seg-item"><input type="radio" name="service_type" value="online" data-setting="service_type" onchange="syncSeg(this)"> 在线客服</label>
-                  <label class="seg-item"><input type="radio" name="service_type" value="phone" data-setting="service_type" onchange="syncSeg(this)"> 电话客服</label>
-                  <label class="seg-item"><input type="radio" name="service_type" value="wechat" data-setting="service_type" onchange="syncSeg(this)"> 微信客服</label>
-                </div>
-              </div>
-              <div class="row">
-                <label class="lbl">客服电话</label>
-                <input class="lin-input" data-setting="service_phone" placeholder="如 400-000-0000">
-              </div>
-              <div class="row">
-                <label class="lbl">客服微信号</label>
-                <input class="lin-input" data-setting="service_wechat" placeholder="微信号">
-              </div>
-              <div class="row">
-                <label class="lbl">首页悬浮按钮</label>
-                <label class="switch"><input type="checkbox" data-setting="show_float_button"><span class="slider"></span></label>
-                <div class="hint">关闭后隐藏首页右下角的悬浮「客服/回到顶部」按钮。</div>
-              </div>
-              <div class="row">
-                <label class="lbl">门店地图（用于「查看门店」定位）</label>
-                <div class="lin-form-row" style="gap:10px">
-                  <input class="lin-input" style="flex:1" data-setting="map_name" placeholder="门店名称">
-                  <input class="lin-input" style="flex:1" data-setting="map_address" placeholder="门店地址">
-                </div>
-                <div class="lin-form-row" style="gap:10px;margin-top:10px">
-                  <input class="lin-input" style="flex:1" data-setting="map_lng" data-type="number" placeholder="经度 lng">
-                  <input class="lin-input" style="flex:1" data-setting="map_lat" data-type="number" placeholder="纬度 lat">
-                </div>
-              </div>
-            </div>
 
-            <!-- 商品设置 -->
-            <div class="bs-pane hidden" data-pane="goods">
-              <div class="row">
-                <label class="lbl">购买权限</label>
-                <div class="seg">
-                  <label class="seg-item"><input type="radio" name="buy_permission" value="all" data-setting="buy_permission" onchange="syncSeg(this)"> 所有人可买</label>
-                  <label class="seg-item"><input type="radio" name="buy_permission" value="login" data-setting="buy_permission" onchange="syncSeg(this)"> 登录用户</label>
-                  <label class="seg-item"><input type="radio" name="buy_permission" value="member" data-setting="buy_permission" onchange="syncSeg(this)"> 有会员卡</label>
+                <div class="form-row">
+                  <label class="form-label">平台账号</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="platform_account" value="open" data-setting="platform_account" checked> 开启</label>
+                      <label><input type="radio" name="platform_account" value="close" data-setting="platform_account"> 关闭</label>
+                    </div>
+                    <div class="form-hint">开启后会员在各平台绑定同一手机号，指定主会员后，实现数据统一</div>
+                  </div>
                 </div>
-                <div class="hint">选择「有会员卡」时，未绑定会员卡的用户下单将被拦截。</div>
-              </div>
-              <div class="row">
-                <label class="lbl">商品详情页展示项</label>
-                <div class="opt-row">
-                  <label><input type="checkbox" data-setting="show_sales"> 显示销量</label>
-                  <label><input type="checkbox" data-setting="show_stock"> 显示库存</label>
-                  <label><input type="checkbox" data-setting="show_original_price"> 显示划线原价</label>
-                  <label><input type="checkbox" data-setting="show_comment"> 显示评价</label>
-                </div>
-              </div>
-              <div class="row">
-                <label class="lbl">商品详情页按钮</label>
-                <div class="opt-row">
-                  <label><input type="checkbox" data-setting="cart_button"> 加入购物车</label>
-                  <label><input type="checkbox" data-setting="buy_button"> 立即购买</label>
-                </div>
-              </div>
-            </div>
 
-            <!-- 交易设置 -->
-            <div class="bs-pane hidden" data-pane="trade">
-              <div class="row">
-                <label class="lbl">未支付订单自动取消（分钟）</label>
-                <input class="lin-input" style="max-width:200px" data-setting="auto_cancel_minutes" data-type="number" placeholder="30">
-              </div>
-              <div class="row">
-                <label class="lbl">下单需绑定手机号</label>
-                <label class="switch"><input type="checkbox" data-setting="require_mobile"><span class="slider"></span></label>
-              </div>
-              <div class="row">
-                <label class="lbl">允许评价订单</label>
-                <label class="switch"><input type="checkbox" data-setting="allow_comment"><span class="slider"></span></label>
-              </div>
-              <div class="row">
-                <label class="lbl">可用支付方式</label>
-                <div class="opt-row">
-                  <label><input type="checkbox" id="payWechat"> 微信支付</label>
-                  <label><input type="checkbox" id="payAlipay"> 支付宝</label>
+                <div class="form-row">
+                  <label class="form-label">网址统一</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="url_unified" value="open" data-setting="url_unified" checked> 开启</label>
+                      <label><input type="radio" name="url_unified" value="close" data-setting="url_unified"> 关闭</label>
+                    </div>
+                    <div class="form-hint">开启后：H5、公众号、企业微信使用统一网址，支付授权地址一样，关闭后：公众号、企业微信不使用统一网址，支付授权地址不一样</div>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <label class="lbl">支付后动作</label>
-                <div class="seg">
-                  <label class="seg-item"><input type="radio" name="pay_after_action" value="none" data-setting="pay_after_action" onchange="syncSeg(this)"> 无</label>
-                  <label class="seg-item"><input type="radio" name="pay_after_action" value="coupon" data-setting="pay_after_action" onchange="syncSeg(this)"> 发券</label>
-                  <label class="seg-item"><input type="radio" name="pay_after_action" value="points" data-setting="pay_after_action" onchange="syncSeg(this)"> 送积分</label>
-                </div>
-              </div>
-            </div>
 
-            <!-- 安全设置 -->
-            <div class="bs-pane hidden" data-pane="security">
-              <div class="row">
-                <label class="lbl">登录图形验证码</label>
-                <label class="switch"><input type="checkbox" data-setting="captcha_login"><span class="slider"></span></label>
+                <div class="form-row">
+                  <label class="form-label">页面标题</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="page_title_align" value="left" data-setting="page_title_align" checked> 靠左</label>
+                      <label><input type="radio" name="page_title_align" value="center" data-setting="page_title_align"> 居中</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">客服按钮</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="customer_service_button" value="unified" data-setting="customer_service_button" checked> 统一设置</label>
+                      <label><input type="radio" name="customer_service_button" value="separate" data-setting="customer_service_button"> 分端设置</label>
+                      <label><input type="radio" name="customer_service_button" value="close" data-setting="customer_service_button"> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">客服类型</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="customer_service_type" value="weapp" data-setting="customer_service_type"> 微信小程序客服</label>
+                      <label><input type="radio" name="customer_service_type" value="business_helper" data-setting="customer_service_type"> 商家助手</label>
+                      <label><input type="radio" name="customer_service_type" value="business_phone" data-setting="customer_service_type" checked> 商家电话</label>
+                      <label><input type="radio" name="customer_service_type" value="third_party" data-setting="customer_service_type"> 第三方客服</label>
+                      <label><input type="radio" name="customer_service_type" value="wechat" data-setting="customer_service_type"> 微信客服</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">强制授权</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="force_auth_member_info" checked> 会员信息</label>
+                      <label><input type="checkbox" data-setting="force_auth_mobile" checked> 手机号</label>
+                    </div>
+                    <div class="form-hint">暂不支持H5和公众号端</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">地图密钥key</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="map_key" placeholder="">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">地图密钥secret</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="map_secret" placeholder="">
+                    <div class="form-hint">系统使用腾讯地图，去 <a class="link" href="https://lbs.qq.com/" target="_blank" rel="noopener">申请账号</a></div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">收藏提示</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="collect_tip" value="open" data-setting="collect_tip" checked> 开启</label>
+                      <label><input type="radio" name="collect_tip" value="close" data-setting="collect_tip"> 关闭</label>
+                    </div>
+                    <div class="form-hint">微信小程序右上角收藏提示</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">订单留言</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="order_message" value="open" data-setting="order_message"> 开启</label>
+                      <label><input type="radio" name="order_message" value="close" data-setting="order_message" checked> 关闭</label>
+                    </div>
+                    <div class="form-hint">订单留言是否必填</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">订单留言提示</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="order_message_tip" placeholder="订单留言提示文字">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">首页副标题</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="home_subtitle" placeholder="首页副标题">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">滚动订单</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="scroll_order" value="open" data-setting="scroll_order" checked> 开启</label>
+                      <label><input type="radio" name="scroll_order" value="close" data-setting="scroll_order"> 关闭</label>
+                    </div>
+                    <div class="form-hint">首页订单滚动提示</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">首页按钮</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="home_button" value="show" data-setting="home_button" checked> 显示</label>
+                      <label><input type="radio" name="home_button" value="hide" data-setting="home_button"> 隐藏</label>
+                    </div>
+                    <div class="form-hint">微信小程序左上角原生返回首页按钮</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">防止录屏</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="prevent_screenshot" value="open" data-setting="prevent_screenshot"> 开启</label>
+                      <label><input type="radio" name="prevent_screenshot" value="close" data-setting="prevent_screenshot" checked> 关闭</label>
+                    </div>
+                    <div class="form-hint">仅支持微信小程序端</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">禁止PC端小程序</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="forbid_pc_miniprogram" value="open" data-setting="forbid_pc_miniprogram"> 开启</label>
+                      <label><input type="radio" name="forbid_pc_miniprogram" value="close" data-setting="forbid_pc_miniprogram" checked> 关闭</label>
+                    </div>
+                    <div class="form-hint">仅支持微信小程序端</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">购物车图标</label>
+                  <div class="form-control">
+                    <div class="cart-icon-group">
+                      <label title="无">
+                        <input type="radio" name="cart_icon" value="none" data-setting="cart_icon">
+                        <span>无</span>
+                      </label>
+                      <label title="购物车">
+                        <input type="radio" name="cart_icon" value="cart1" data-setting="cart_icon">
+                        <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M6 6L5 3H2"/></svg>
+                      </label>
+                      <label title="购物车">
+                        <input type="radio" name="cart_icon" value="cart2" data-setting="cart_icon">
+                        <svg viewBox="0 0 24 24"><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/><circle cx="10" cy="21" r="1.5"/><circle cx="20" cy="21" r="1.5"/></svg>
+                      </label>
+                      <label title="购物车">
+                        <input type="radio" name="cart_icon" value="cart3" data-setting="cart_icon" checked>
+                        <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+                      </label>
+                      <label title="加号">
+                        <input type="radio" name="cart_icon" value="plus" data-setting="cart_icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+                      </label>
+                      <label title="减号">
+                        <input type="radio" name="cart_icon" value="minus" data-setting="cart_icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">分享显示控制</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="share_goods_detail" checked> 商品详情</label>
+                      <label><input type="checkbox" data-setting="share_group_detail" checked> 拼团详情</label>
+                      <label><input type="checkbox" data-setting="share_bargain_detail" checked> 砍价详情</label>
+                      <label><input type="checkbox" data-setting="share_seckill_detail" checked> 秒杀详情</label>
+                    </div>
+                    <div class="form-hint">未选中的项，在移动端对应页面将不显示分享按钮</div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveSettings()">确定</button>
+                </div>
               </div>
-              <div class="row">
-                <label class="lbl">下单图形验证码</label>
-                <label class="switch"><input type="checkbox" data-setting="captcha_order"><span class="slider"></span></label>
+
+              <!-- 商品设置 -->
+              <div class="bs-pane hidden" data-pane="goods">
+                <div class="section-title">商品设置</div>
+
+                <div class="form-row">
+                  <label class="form-label">条目显示控制</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="show_goods_sales" checked> 商品销量</label>
+                      <label><input type="checkbox" data-setting="show_goods_promotion"> 商品促销语</label>
+                      <label><input type="checkbox" data-setting="show_goods_detail" checked> 商品详情</label>
+                      <label><input type="checkbox" data-setting="show_goods_attr"> 商品属性</label>
+                      <label><input type="checkbox" data-setting="show_goods_comment"> 商品评论</label>
+                    </div>
+                    <div class="form-hint">未选中的项，在移动端商品详情页将不再显示</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">图片点击放大</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="zoom_banner"> 轮播图</label>
+                      <label><input type="checkbox" data-setting="zoom_spec"> 规格图</label>
+                      <label><input type="checkbox" data-setting="zoom_detail"> 详情图</label>
+                    </div>
+                    <div class="form-hint">未选中的项，在移动端商品详情页点击图片将不能放大</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">商品详情文本</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="text_goods_detail" value="商品详情" placeholder="商品详情">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">商品属性文本</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="text_goods_attr" value="商品属性" placeholder="商品属性">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">商品评论文本</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="text_goods_comment" value="商品评论" placeholder="商品评论">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">商品图片缩放</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="goods_image_zoom" value="open" data-setting="goods_image_zoom"> 开启</label>
+                      <label><input type="radio" name="goods_image_zoom" value="close" data-setting="goods_image_zoom" checked> 关闭</label>
+                    </div>
+                    <div class="form-hint">商品列表页面图片缩放显示</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">商品排序</label>
+                  <div class="form-control form-inline">
+                    <select class="form-select" data-setting="goods_sort_field">
+                      <option value="recommend" selected>推荐</option>
+                      <option value="sales">销量</option>
+                      <option value="price">价格</option>
+                      <option value="new">新品</option>
+                    </select>
+                    <select class="form-select" data-setting="goods_sort_order">
+                      <option value="desc" selected>降序</option>
+                      <option value="asc">升序</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">电子卡券转赠规则</label>
+                  <div class="form-control">
+                    <div class="editor-wrap">
+                      <div class="editor-toolbar">
+                        <button type="button">H</button>
+                        <button type="button">B</button>
+                        <button type="button">I</button>
+                        <button type="button">U</button>
+                        <button type="button">S</button>
+                        <button type="button">左</button>
+                        <button type="button">中</button>
+                        <button type="button">右</button>
+                        <button type="button">链</button>
+                        <button type="button">序</button>
+                        <button type="button">勾</button>
+                        <button type="button">引</button>
+                        <button type="button">码</button>
+                        <button type="button">情</button>
+                        <button type="button">线</button>
+                        <button type="button">撤</button>
+                        <button type="button">重</button>
+                        <button type="button">表</button>
+                        <button type="button">图</button>
+                        <button type="button">视</button>
+                        <button type="button">附</button>
+                        <button type="button">源</button>
+                        <button type="button">屏</button>
+                      </div>
+                      <textarea class="editor-content" data-setting="gift_rule" rows="6" placeholder="请输入正文"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveSettings()">确定</button>
+                </div>
               </div>
-              <div class="row">
-                <label class="lbl">滑块验证</label>
-                <label class="switch"><input type="checkbox" data-setting="slider_verify"><span class="slider"></span></label>
+
+              <!-- 交易设置 -->
+              <div class="bs-pane hidden" data-pane="trade">
+                <div class="section-title">交易设置</div>
+
+                <div class="form-row">
+                  <label class="form-label">在线购买</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="online_buy" value="open" data-setting="online_buy" checked> 开启</label>
+                      <label><input type="radio" name="online_buy" value="close" data-setting="online_buy"> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">购买权限</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="buy_permission" value="all" data-setting="buy_permission" checked> 所有人</label>
+                      <label><input type="radio" name="buy_permission" value="level" data-setting="buy_permission"> 有会员等级</label>
+                      <label><input type="radio" name="buy_permission" value="member" data-setting="buy_permission"> 有会员卡</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">快速购买</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="quick_buy" value="open" data-setting="quick_buy" checked> 开启</label>
+                      <label><input type="radio" name="quick_buy" value="close" data-setting="quick_buy"> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">支付方式</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="pay_online" checked> 在线支付</label>
+                      <label><input type="checkbox" data-setting="pay_balance" checked> 储值余额</label>
+                      <label><input type="checkbox" data-setting="pay_cod"> 货到付款</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">默认配送方式</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="default_delivery" value="express" data-setting="default_delivery"> 快递配送</label>
+                      <label><input type="radio" name="default_delivery" value="self_pickup" data-setting="default_delivery"> 到店自提</label>
+                      <label><input type="radio" name="default_delivery" value="same_city" data-setting="default_delivery" checked> 同城配送</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">打款方式</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="transfer_method" value="v2" data-setting="transfer_method" checked> 企业付款到零钱V2</label>
+                      <label><input type="radio" name="transfer_method" value="v3" data-setting="transfer_method"> 商家转账到零钱V3</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">支持IOS端支付</label>
+                  <div class="form-control">
+                    <div class="checkbox-group">
+                      <label><input type="checkbox" data-setting="ios_pay_card" checked> 电子卡券</label>
+                      <label><input type="checkbox" data-setting="ios_pay_balance" checked> 会员储值</label>
+                      <label><input type="checkbox" data-setting="ios_pay_knowledge" checked> 知识付费</label>
+                    </div>
+                    <div class="form-hint">微信小程序IOS端限制虚拟物品的售卖，除非必要，不建议勾选以上三项</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">订单超时</label>
+                  <div class="form-control form-inline">
+                    <span class="inline-text">未支付订单</span>
+                    <input type="number" class="form-input inline-num" data-setting="order_timeout_minutes" value="120">
+                    <span class="inline-text">分钟后自动取消</span>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">自动收货</label>
+                  <div class="form-control form-inline">
+                    <span class="inline-text">超过</span>
+                    <input type="number" class="form-input inline-num" data-setting="auto_receive_days" value="0">
+                    <span class="inline-text">天后未收货，系统自动确认收货</span>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">普通订单</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="normal_order" value="open" data-setting="normal_order"> 开启</label>
+                      <label><input type="radio" name="normal_order" value="close" data-setting="normal_order" checked> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">电子卡券</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="e_card_order" value="open" data-setting="e_card_order"> 开启</label>
+                      <label><input type="radio" name="e_card_order" value="close" data-setting="e_card_order" checked> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">跨门店核销</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="cross_store_verify" value="open" data-setting="cross_store_verify"> 开启</label>
+                      <label><input type="radio" name="cross_store_verify" value="close" data-setting="cross_store_verify" checked> 关闭</label>
+                    </div>
+                    <div class="form-hint">开启后员工可核销其它门店的订单、卡券、优惠券等</div>
+                  </div>
+                </div>
+
+                <div class="section-title">协议设置</div>
+
+                <div class="form-row">
+                  <label class="form-label">协议显示</label>
+                  <div class="form-control">
+                    <div class="radio-group">
+                      <label><input type="radio" name="agreement_show" value="open" data-setting="agreement_show"> 开启</label>
+                      <label><input type="radio" name="agreement_show" value="close" data-setting="agreement_show" checked> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">协议名称</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" data-setting="agreement_name" value="订单协议" placeholder="订单协议">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">协议内容</label>
+                  <div class="form-control">
+                    <div class="editor-wrap">
+                      <div class="editor-toolbar">
+                        <button type="button">H</button>
+                        <button type="button">B</button>
+                        <button type="button">I</button>
+                        <button type="button">U</button>
+                        <button type="button">S</button>
+                        <button type="button">左</button>
+                        <button type="button">中</button>
+                        <button type="button">右</button>
+                        <button type="button">链</button>
+                        <button type="button">序</button>
+                        <button type="button">勾</button>
+                        <button type="button">引</button>
+                        <button type="button">码</button>
+                        <button type="button">情</button>
+                        <button type="button">线</button>
+                        <button type="button">撤</button>
+                        <button type="button">重</button>
+                        <button type="button">表</button>
+                        <button type="button">图</button>
+                        <button type="button">视</button>
+                        <button type="button">附</button>
+                        <button type="button">源</button>
+                        <button type="button">屏</button>
+                      </div>
+                      <textarea class="editor-content" data-setting="agreement_content" rows="6" placeholder="请输入正文"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveSettings()">确定</button>
+                </div>
               </div>
-              <div class="row">
-                <label class="lbl">风控等级</label>
-                <div class="seg">
-                  <label class="seg-item"><input type="radio" name="risk_control" value="low" data-setting="risk_control" onchange="syncSeg(this)"> 低</label>
-                  <label class="seg-item"><input type="radio" name="risk_control" value="middle" data-setting="risk_control" onchange="syncSeg(this)"> 中</label>
-                  <label class="seg-item"><input type="radio" name="risk_control" value="high" data-setting="risk_control" onchange="syncSeg(this)"> 高</label>
+
+              <!-- 安全设置 -->
+              <div class="bs-pane hidden" data-pane="security">
+                <div class="section-title">验证手机号</div>
+
+                <div class="form-row">
+                  <label class="form-label">手机号</label>
+                  <div class="form-control">
+                    <a class="link" href="javascript:;" onclick="toast('请在个人中心设置手机号')">设置</a>
+                  </div>
+                </div>
+
+                <div class="section-title">提现安全设置</div>
+
+                <div class="form-row">
+                  <label class="form-label">手机验证</label>
+                  <div class="form-control">
+                    <label class="switch"><input type="checkbox" data-setting="withdraw_mobile_verify"><span class="slider"></span></label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">打款验证</label>
+                  <div class="form-control">
+                    <div class="form-inline">
+                      <span class="inline-text">单次打款验证金额</span>
+                      <input type="number" class="form-input inline-num" data-setting="single_verify_amount" placeholder="">
+                    </div>
+                    <div class="form-hint">超过输入金额后，线上打款需要输入验证码</div>
+                    <div class="form-inline" style="margin-top:12px">
+                      <span class="inline-text">每日合计验证金额</span>
+                      <input type="number" class="form-input inline-num" data-setting="daily_verify_amount" placeholder="">
+                    </div>
+                    <div class="form-hint">每日系统线上打款累计金额超过输入金额后，线上打款需要输入验证码</div>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveSettings()">确定</button>
                 </div>
               </div>
             </div>
@@ -3252,11 +3699,36 @@
     }
 
     /* ===== 基础设置 ===== */
+    const settingsDefaults={
+      /* 基础设置 */
+      site_status:'open',platform_account:'open',url_unified:'open',page_title_align:'left',
+      customer_service_button:'unified',customer_service_type:'business_phone',
+      force_auth_member_info:true,force_auth_mobile:true,
+      collect_tip:'open',order_message:'close',scroll_order:'open',home_button:'show',
+      prevent_screenshot:'close',forbid_pc_miniprogram:'close',cart_icon:'cart3',
+      share_goods_detail:true,share_group_detail:true,share_bargain_detail:true,share_seckill_detail:true,
+      /* 商品设置 */
+      show_goods_sales:true,show_goods_promotion:false,show_goods_detail:true,show_goods_attr:false,show_goods_comment:false,
+      zoom_banner:false,zoom_spec:false,zoom_detail:false,
+      text_goods_detail:'商品详情',text_goods_attr:'商品属性',text_goods_comment:'商品评论',
+      goods_image_zoom:'close',goods_sort_field:'recommend',goods_sort_order:'desc',
+      /* 交易设置 */
+      online_buy:'open',buy_permission:'all',quick_buy:'open',
+      pay_online:true,pay_balance:true,pay_cod:false,
+      default_delivery:'same_city',transfer_method:'v2',
+      ios_pay_card:true,ios_pay_balance:true,ios_pay_knowledge:true,
+      order_timeout_minutes:120,auto_receive_days:0,
+      normal_order:'close',e_card_order:'close',cross_store_verify:'close',
+      agreement_show:'close',agreement_name:'订单协议',
+      /* 安全设置 */
+      withdraw_mobile_verify:false,
+      pay_methods:['wechat']
+    };
     let settingsData={};
     async function loadSettings(){
       const d=await fetchA(`${BASE}/settings`);
       if(d.code!==0){toast(d.msg||'加载失败');return;}
-      settingsData=d.data||{};
+      settingsData=Object.assign({},settingsDefaults,d.data||{});
       bindSettingsForm();
     }
     function syncSeg(radio){
@@ -3271,14 +3743,16 @@
       if(!form)return;
       form.querySelectorAll('[data-setting]').forEach(el=>{
         const k=el.dataset.setting; const v=settingsData[k];
-        if(el.type==='checkbox') el.checked=!!v;
+        if(el.type==='checkbox'){ if(v!==undefined&&v!==null) el.checked=!!v; }
         else if(el.type==='radio') el.checked=(el.value===String(v));
         else el.value=(v===undefined||v===null)?'':v;
       });
       form.querySelectorAll('input[type=radio]').forEach(r=>{ if(r.checked) syncSeg(r); });
       const pm=settingsData.pay_methods||['wechat'];
-      document.getElementById('payWechat').checked=pm.indexOf('wechat')>=0;
-      document.getElementById('payAlipay').checked=pm.indexOf('alipay')>=0;
+      const payWechat=document.getElementById('payWechat');
+      const payAlipay=document.getElementById('payAlipay');
+      if(payWechat) payWechat.checked=pm.indexOf('wechat')>=0;
+      if(payAlipay) payAlipay.checked=pm.indexOf('alipay')>=0;
       switchBaseTab('basic');
     }
     async function saveSettings(){
