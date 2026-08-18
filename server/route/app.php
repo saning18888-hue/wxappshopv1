@@ -74,7 +74,11 @@ Route::group('admin', function () {
     Route::post('upload/video', 'admin.Upload/video');
     Route::get('orders', 'admin.Order/index');
     Route::get('orders/:id', 'admin.Order/detail');
+    Route::post('orders/:id/save', 'admin.Order/save');
     Route::post('orders/:id/status', 'admin.Order/changeStatus');
+    Route::post('orders/batch_delete', 'admin.Order/batchDelete');
+    Route::post('orders/batch_ship', 'admin.Order/batchShip');
+    Route::post('orders_create', 'admin.Order/create');
 
     // 页面装修（DIY）：首页 / 底部导航
     Route::get('design/:page', 'admin.Design/page');

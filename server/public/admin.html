@@ -273,6 +273,33 @@
     #goodsSpecFormModal .form-input{height:38px;padding:0 10px;font-size:13px}
     #gsValueTbody td{padding:8px 4px}
     #gsValueTbody .form-input{width:100%}
+    .order-tabs{display:flex;gap:6px;margin:14px 0;border-bottom:1px solid var(--border);padding-bottom:8px}
+    .order-tabs a{padding:6px 14px;font-size:13px;color:var(--text-secondary);border-radius:6px 6px 0 0;cursor:pointer;transition:all .15s}
+    .order-tabs a:hover{color:var(--text)}
+    .order-tabs a.active{color:var(--primary);background:var(--primary-50);font-weight:600}
+    .order-table thead th{background:#f5f7fa;font-weight:600;font-size:13px;color:var(--text-secondary)}
+    .order-row-wrap{padding:0 !important}
+    .order-head{display:flex;gap:20px;padding:10px 14px;background:#f0f6ff;font-size:12px;color:var(--text-secondary)}
+    .order-head span{white-space:nowrap}
+    .order-body{display:flex;align-items:center;border-bottom:1px solid var(--border)}
+    .order-body:last-child{border-bottom:none}
+    .order-goods{display:flex;align-items:center;gap:10px;padding:12px 14px;flex:1;min-width:200px}
+    .order-goods img{width:54px;height:54px;object-fit:cover;border-radius:6px;background:#f5f7fa}
+    .og-title{font-weight:600;font-size:13px;color:var(--text);line-height:1.4}
+    .og-spec{font-size:12px;color:var(--text-muted);margin-top:2px}
+    .order-cell{padding:12px 8px;font-size:13px;color:var(--text);text-align:center;border-left:1px solid var(--border);min-height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+    .order-cell.addr{text-align:left;align-items:flex-start;line-height:1.6;color:var(--text-secondary);font-size:12px}
+    .order-cell.price{color:var(--danger);font-weight:600}
+    .order-cell.ops{gap:6px;flex-wrap:wrap}
+    .order-cell.ops .btn,.order-cell.ops a{font-size:12px}
+    .oe-tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:16px}
+    .oe-tabs a{padding:8px 4px;margin-right:20px;font-size:14px;color:var(--text-secondary);cursor:pointer;position:relative}
+    .oe-tabs a.active{color:var(--primary);font-weight:600}
+    .oe-tabs a.active::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--primary)}
+    .oe-panel{animation:fadeIn .2s}
+    .oe-summary{background:#f8f9fa;border-radius:8px;padding:14px 16px;margin-top:14px;font-size:13px;color:var(--text-secondary);line-height:2.2}
+    #oeTabItems .table-wrap{margin-top:10px}
+    #oeTabMessage .table-wrap{margin-top:10px}
     .upload-add input{display:none}
     .upload-tip{font-size:12px;color:var(--text-muted);margin-top:8px}
     .upload-single{width:120px;height:120px}
@@ -1087,21 +1114,55 @@
         <!-- 订单列表 -->
         <div id="ordersPanel" class="panel hidden">
           <div class="card">
-            <div class="toolbar">
-              <select id="orderStatus">
-                <option value="-1">全部状态</option>
-                <option value="0">待付款</option>
-                <option value="1">待发货</option>
-                <option value="2">待收货</option>
-                <option value="3">已完成</option>
-                <option value="-2">已取消</option>
-              </select>
-              <button class="btn" onclick="loadOrders()">查询</button>
+            <h3>订单列表</h3>
+            <div class="order-tabs" id="orderTabs">
+              <a class="active" data-status="-1" onclick="switchOrderTab(-1)">所有订单</a>
+              <a data-status="0" onclick="switchOrderTab(0)">待付款</a>
+              <a data-status="1" onclick="switchOrderTab(1)">待发货</a>
+              <a data-status="2" onclick="switchOrderTab(2)">待核销</a>
+              <a data-status="3" onclick="switchOrderTab(3)">已发货</a>
+              <a data-status="5" onclick="switchOrderTab(5)">已完成</a>
+              <a data-status="10" onclick="switchOrderTab(10)">已取消</a>
+              <a data-status="20" onclick="switchOrderTab(20)">已关闭</a>
+              <a data-status="-3" onclick="switchOrderTab(-3)">回收站</a>
             </div>
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>订单号</th><th>用户</th><th>金额</th><th>状态</th><th>时间</th><th>操作</th></tr></thead>
-                <tbody id="ordersBody"></tbody>
+            <div class="toolbar" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <button class="btn sm" onclick="batchShipOrders()">批量发货</button>
+                <button class="btn sm" onclick="openCreateWaybillModal()">+ 生成配送单</button>
+                <button class="btn sm" onclick="openCreateOrderModal()">+ 创建订单</button>
+                <button class="btn sm outline" onclick="exportOrders()">导出全部订单</button>
+                <button class="btn sm danger" onclick="batchDeleteOrders()">删除</button>
+              </div>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="text" class="form-input" id="orderKeyword" placeholder="订单号/交易号/手机号/买家" onkeydown="if(event.key==='Enter')loadOrders()">
+                <button class="btn sm" onclick="loadOrders()">查询</button>
+              </div>
+            </div>
+            <div class="bulk-bar" id="orderBulkBar" style="display:none">
+              <span>已选择 <b id="orderCheckedCount">0</b> 项</span>
+              <button class="btn sm" onclick="batchShipOrders()">批量发货</button>
+              <button class="btn sm danger" onclick="batchDeleteOrders()">删除</button>
+              <button class="btn sm gray" onclick="clearOrderCheck()">取消选择</button>
+            </div>
+            <div class="table-wrap" id="ordersTableWrap">
+              <table class="order-table">
+                <thead>
+                  <tr>
+                    <th class="col-check" style="width:40px"><input type="checkbox" id="orderCheckAll" onchange="toggleOrderCheckAll()"></th>
+                    <th>商品信息</th>
+                    <th style="width:110px">单价x数量</th>
+                    <th style="width:90px">买家</th>
+                    <th style="width:180px">收货信息</th>
+                    <th style="width:80px">应付金额</th>
+                    <th style="width:80px">订单类型</th>
+                    <th style="width:80px">商品类型</th>
+                    <th style="width:70px">平台来源</th>
+                    <th style="width:80px">订单状态</th>
+                    <th style="width:170px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="ordersBody"><tr><td colspan="11" class="empty-row">加载中…</td></tr></tbody>
               </table>
             </div>
             <div class="pager" id="ordersPager"></div>
@@ -2928,12 +2989,124 @@
     </div>
   </div>
 
-  <!-- 订单详情弹窗 -->
-  <div id="orderModal" class="modal">
-    <div class="modal-card lg">
-      <div class="modal-header"><h3>订单详情</h3><span class="close" onclick="closeOrderModal()">&times;</span></div>
-      <div class="modal-body" id="orderDetail"></div>
-      <div class="modal-footer" id="orderFooter"></div>
+  <!-- 订单编辑弹窗 -->
+  <div id="orderEditModal" class="modal" onclick="if(event.target===this)closeOrderEditModal()">
+    <div class="modal-card lg" style="width:760px;max-width:92vw">
+      <div class="modal-header"><h3 id="orderEditTitle">编辑</h3><span class="close" onclick="closeOrderEditModal()">&times;</span></div>
+      <div class="modal-body">
+        <input type="hidden" id="oeOrderId">
+        <div class="oe-tabs">
+          <a class="active" data-tab="info" onclick="switchOrderEditTab('info')">订单信息</a>
+          <a data-tab="items" onclick="switchOrderEditTab('items')">购物清单</a>
+          <a data-tab="message" onclick="switchOrderEditTab('message')">商品留言</a>
+        </div>
+        <div id="oeTabInfo" class="oe-panel">
+          <div class="field"><label>姓名</label><input type="text" class="form-input" id="oeName"></div>
+          <div class="field"><label>手机号</label><input type="text" class="form-input" id="oePhone"></div>
+          <div class="field"><label>地址</label><input type="text" class="form-input" id="oeAddress"></div>
+          <div class="field"><label>买家留言</label><textarea class="form-input" id="oeBuyerMessage" rows="3"></textarea></div>
+          <div class="field"><label>订单备注</label><textarea class="form-input" id="oeRemark" rows="3"></textarea></div>
+        </div>
+        <div id="oeTabItems" class="oe-panel hidden">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>商品信息</th><th>价格x数量</th><th>小计</th><th>优惠金额</th><th>应付金额</th></tr></thead>
+              <tbody id="oeItemsBody"></tbody>
+            </table>
+          </div>
+          <div class="oe-summary" id="oeSummary"></div>
+          <div class="field" style="flex-direction:row;align-items:center;gap:12px;margin-top:12px">
+            <label style="margin-bottom:0;white-space:nowrap">修改支付金额为（¥）：</label>
+            <input type="number" class="form-input" id="oePayAmount" step="0.01" style="width:160px">
+          </div>
+        </div>
+        <div id="oeTabMessage" class="oe-panel hidden">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>商品信息</th><th>留言信息</th></tr></thead>
+              <tbody id="oeMessageBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeOrderEditModal()">取消</button>
+        <button class="btn" onclick="saveOrderEdit()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 批量发货弹窗 -->
+  <div id="batchShipModal" class="modal" onclick="if(event.target===this)closeBatchShipModal()">
+    <div class="modal-card" style="width:460px">
+      <div class="modal-header"><h3>批量发货</h3><span class="close" onclick="closeBatchShipModal()">&times;</span></div>
+      <div class="modal-body">
+        <p class="muted" style="margin-bottom:16px">选择Excel文件前，请确保导入的数据与模板的数据项一致。<a href="javascript:" onclick="downloadShipTemplate()">下载Excel模板</a></p>
+        <div class="field" style="flex-direction:row;align-items:center;gap:12px">
+          <label style="margin-bottom:0;white-space:nowrap">导入模板</label>
+          <label class="btn sm" style="position:relative;overflow:hidden">
+            <input type="file" id="batchShipFile" accept=".xlsx,.xls" style="position:absolute;opacity:0;left:0;top:0;width:100%;height:100%" onchange="onBatchShipFileChange(this)">
+            选择文件
+          </label>
+          <span id="batchShipFileName" class="muted" style="font-size:12px"></span>
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:16px">
+          <label style="margin-bottom:0">发货方式</label>
+          <label class="radio-label"><input type="radio" name="shipType" value="express" checked onchange="updateBatchShipType()"> 常用快递</label>
+          <label class="radio-label"><input type="radio" name="shipType" value="none" onchange="updateBatchShipType()"> 不需要</label>
+        </div>
+        <div class="field" id="shipCompanyWrap"><label>物流公司</label><select class="form-input" id="shipCompany">
+          <option>顺丰速运</option>
+          <option>百世快递</option>
+          <option>中通快递</option>
+          <option>申通快递</option>
+          <option>圆通速递</option>
+          <option>韵达速递</option>
+          <option>邮政快递包裹</option>
+          <option>EMS</option>
+          <option>京东快递</option>
+          <option>德邦快递</option>
+        </select></div>
+        <div class="field" id="shipNoWrap"><label>默认物流单号</label><input type="text" class="form-input" id="shipNo" placeholder="可不填，导入文件时会按文件内容覆盖"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeBatchShipModal()">取消</button>
+        <button class="btn" onclick="confirmBatchShip()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 创建订单弹窗 -->
+  <div id="createOrderModal" class="modal" onclick="if(event.target===this)closeCreateOrderModal()">
+    <div class="modal-card lg" style="width:760px;max-width:92vw">
+      <div class="modal-header"><h3>创建订单</h3><span class="close" onclick="closeCreateOrderModal()">&times;</span></div>
+      <div class="modal-body">
+        <div class="field"><label><span class="req">*</span>下单用户</label><button class="btn sm" onclick="openSelectUserModal()">+ 选择会员</button></div>
+        <div class="table-wrap" style="margin:-8px 0 12px">
+          <table>
+            <thead><tr><th>头像</th><th>会员昵称</th><th>平台来源</th><th>操作</th></tr></thead>
+            <tbody id="coUserBody"><tr><td colspan="4" class="empty-row">暂无数据</td></tr></tbody>
+          </table>
+        </div>
+        <div class="field"><label><span class="req">*</span>下单商品</label><button class="btn sm" onclick="openSelectGoodsModal()">选择商品</button></div>
+        <div class="table-wrap" style="margin:-8px 0 12px">
+          <table>
+            <thead><tr><th>商品</th><th>库存</th><th>商品类型</th><th>选择规格</th><th>购买数量</th><th>操作</th></tr></thead>
+            <tbody id="coGoodsBody"><tr><td colspan="6" class="empty-row">暂无数据</td></tr></tbody>
+          </table>
+        </div>
+        <div class="field" style="flex-direction:row;align-items:center;gap:16px">
+          <label style="margin-bottom:0">配送方式</label>
+          <label class="radio-label"><input type="radio" name="coShipType" value="express" checked> 快递配送</label>
+          <label class="radio-label"><input type="radio" name="coShipType" value="same_day"> 同城配送</label>
+        </div>
+        <div class="field"><label>订单留言</label><textarea class="form-input" id="coMessage" rows="2"></textarea></div>
+        <div class="oe-summary" id="coSummary">商品金额 0　会员等级 0　满减 0　运费 0　合计 0</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn outline" onclick="calcCreateOrderPrice()">计算价格</button>
+        <button class="btn" onclick="confirmCreateOrder()">确认</button>
+      </div>
     </div>
   </div>
 
@@ -5109,63 +5282,306 @@
 
     /* Orders */
     let ordersPage=1;
-    const ORDER_STATUS={0:'待付款',1:'待发货',2:'待收货',3:'已完成','-2':'已取消'};
+    let currentOrderStatus=-1;
+    const ORDER_STATUS={'-1':'全部',0:'待付款',1:'待发货',2:'待核销',3:'已发货',5:'已完成',10:'已取消',20:'已关闭','-3':'回收站'};
+    const ORDER_STATUS_CLASS={0:'badge orange',1:'badge orange',2:'badge blue',3:'badge green',5:'badge gray',10:'badge red',20:'badge gray','-3':'badge gray'};
     function statusBadgeO(s){
-      const map={'0':'badge orange','1':'badge orange','2':'badge green','3':'badge gray','-2':'badge red'};
-      return `<span class="badge ${map[s]||'badge gray'}">${ORDER_STATUS[s]||s}</span>`;
+      return `<span class="badge ${ORDER_STATUS_CLASS[s]||'badge gray'}">${ORDER_STATUS[s]||s}</span>`;
+    }
+    function switchOrderTab(status){
+      currentOrderStatus=status;
+      ordersPage=1;
+      document.querySelectorAll('#orderTabs a').forEach(a=>a.classList.toggle('active',parseInt(a.dataset.status)===status));
+      loadOrders();
     }
     async function loadOrders(){
-      const status=document.getElementById('orderStatus').value;
-      const q=`?status=${status}&page=${ordersPage}&page_size=10`;
+      const kw=document.getElementById('orderKeyword').value.trim();
+      let status=currentOrderStatus;
+      let deleted=0;
+      if(status===-3){status=-1;deleted=1;}
+      const q=`?status=${status}&page=${ordersPage}&page_size=10${kw?'&keyword='+encodeURIComponent(kw):''}${deleted?'&deleted=1':''}`;
       const d=await fetchA(`${BASE}/orders${q}`);
-      if(d.code!==0){toast(d.msg);return;}
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
       const tb=document.getElementById('ordersBody');
-      tb.innerHTML=d.data.list.map(o=>`<tr>
-        <td><b>${o.order_no}</b></td>
-        <td>${o.user_name||o.user_id||'-'}</td>
-        <td>${fmtMoney(o.total_amount)}</td>
-        <td>${statusBadgeO(o.status)}</td>
-        <td>${o.created_at||'-'}</td>
-        <td><button class="btn sm outline" onclick="viewOrder(${o.id})">详情</button></td>
-      </tr>`).join('');
+      if(!d.data.list.length){tb.innerHTML='<tr><td colspan="11" class="empty-row">暂无数据</td></tr>';document.getElementById('ordersPager').innerHTML='';return;}
+      tb.innerHTML=d.data.list.map(o=>renderOrderRow(o)).join('');
       const p=d.data.pagination||{};
       document.getElementById('ordersPager').innerHTML=`
         <button ${ordersPage<=1?'disabled':''} onclick="ordersPage--;loadOrders()">上一页</button>
         <span style="font-size:12px;color:#888">第 ${p.page||ordersPage} / ${p.last_page||1} 页</span>
         <button ${ordersPage>=(p.last_page||1)?'disabled':''} onclick="ordersPage++;loadOrders()">下一页</button>`;
+      updateOrderBulk();
     }
-    async function viewOrder(id){
+    function renderOrderRow(o){
+      const first=(o.items||[])[0];
+      const more=(o.items||[]).length>1?`<div class="muted" style="margin-top:4px">等 ${o.items.length} 件商品</div>`:'';
+      const actionBtns=[];
+      actionBtns.push(`<button class="btn sm outline" onclick="viewOrder(${o.id})">查看订单</button>`);
+      actionBtns.push(`<button class="btn sm outline" onclick="editOrder(${o.id})">编辑状态</button>`);
+      if(o.status==1) actionBtns.push(`<button class="btn sm" onclick="shipOrder(${o.id})">发货</button>`);
+      actionBtns.push(`<a href="javascript:" onclick="editOrder(${o.id})">编辑</a>`);
+      actionBtns.push(`<a href="javascript:" onclick="printOrder(${o.id})">打印订单</a>`);
+      actionBtns.push(`<a href="javascript:" onclick="printSmallOrder(${o.id})">小票打印</a>`);
+      actionBtns.push(`<a href="javascript:" class="danger" onclick="deleteOrder(${o.id},'${escapeHtml(o.order_no)}')">删除</a>`);
+      return `<tr>
+        <td class="col-check"><input type="checkbox" class="o-check" value="${o.id}" onchange="updateOrderBulk()"></td>
+        <td colspan="10" class="order-row-wrap">
+          <div class="order-head">
+            <span>下单时间：${o.created_at||'-'}</span>
+            <span>订单编号：${o.order_no}</span>
+            <span>交易单号：${o.trade_no||'-'}</span>
+          </div>
+          <div class="order-body">
+            <div class="order-goods">
+              ${first?`<img src="${first.image||''}" onerror="this.style.display='none'">`:''}
+              <div>
+                <div class="og-title">${first?escapeHtml(first.goods_title):'-'}</div>
+                <div class="og-spec">${first?escapeHtml(first.spec_desc||''):''}</div>
+                ${more}
+              </div>
+            </div>
+            <div class="order-cell">${first?'¥'+fmtMoney(first.price)+' x '+first.quantity:'-'}</div>
+            <div class="order-cell">${escapeHtml(o.user_name||o.user_id||'')}</div>
+            <div class="order-cell addr">${escapeHtml(o.receiver_name)}<br>${escapeHtml(o.receiver_phone)}<br>${escapeHtml(o.address)}</div>
+            <div class="order-cell price">¥${fmtMoney(o.pay_amount)}</div>
+            <div class="order-cell">${o.order_type_text||'普通订单'}</div>
+            <div class="order-cell">普通商品</div>
+            <div class="order-cell">${o.source_text||'微信'}</div>
+            <div class="order-cell">${statusBadgeO(o.status)}</div>
+            <div class="order-cell ops">${actionBtns.join(' ')}</div>
+          </div>
+        </td>
+      </tr>`;
+    }
+    function updateOrderBulk(){
+      const boxes=document.querySelectorAll('.o-check');
+      const checked=[...boxes].filter(c=>c.checked);
+      const bar=document.getElementById('orderBulkBar');
+      document.getElementById('orderCheckedCount').textContent=checked.length;
+      bar.style.display=checked.length?'flex':'none';
+      const all=boxes.length&&boxes.length===checked.length;
+      document.getElementById('orderCheckAll').checked=all;
+    }
+    function toggleOrderCheckAll(){
+      const all=document.getElementById('orderCheckAll').checked;
+      document.querySelectorAll('.o-check').forEach(c=>c.checked=all);
+      updateOrderBulk();
+    }
+    function clearOrderCheck(){
+      document.querySelectorAll('.o-check').forEach(c=>c.checked=false);
+      document.getElementById('orderCheckAll').checked=false;
+      updateOrderBulk();
+    }
+    function getCheckedOrderIds(){
+      return [...document.querySelectorAll('.o-check:checked')].map(c=>c.value);
+    }
+    async function batchDeleteOrders(){
+      const ids=getCheckedOrderIds();
+      if(!ids.length){toast('请先选择订单');return;}
+      if(!confirm(`确定删除选中的 ${ids.length} 个订单吗？`))return;
+      const d=await fetchA(`${BASE}/orders/batch_delete`,{method:'POST',body:{ids}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');clearOrderCheck();loadOrders();
+    }
+    async function deleteOrder(id,no){
+      if(!confirm(`确定删除订单「${no}」吗？`))return;
+      const d=await fetchA(`${BASE}/orders/batch_delete`,{method:'POST',body:{ids:[id]}});
+      if(d.code!==0){toast(d.msg||'删除失败');return;}
+      toast('删除成功');loadOrders();
+    }
+    async function shipOrder(id){
+      const d=await fetchA(`${BASE}/orders/${id}/status`,{method:'POST',body:{status:3}});
+      if(d.code!==0){toast(d.msg||'发货失败');return;}
+      toast('已发货');loadOrders();
+    }
+    async function batchShipOrders(){
+      const ids=getCheckedOrderIds();
+      if(!ids.length){toast('请先选择待发货订单');return;}
+      openBatchShipModal(ids);
+    }
+    function viewOrder(id){
+      // 简化：复用编辑弹窗的购物清单 tab
+      editOrder(id,'items');
+    }
+    function printOrder(id){toast('打印功能暂未接入硬件');}
+    function printSmallOrder(id){toast('小票打印功能暂未接入硬件');}
+    function exportOrders(){toast('导出功能开发中');}
+
+    /* 订单编辑弹窗 */
+    let currentOrder=null;
+    function switchOrderEditTab(tab){
+      document.querySelectorAll('.oe-tabs a').forEach(a=>a.classList.toggle('active',a.dataset.tab===tab));
+      ['info','items','message'].forEach(t=>document.getElementById('oeTab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hidden',t!==tab));
+    }
+    async function editOrder(id,activeTab){
       const d=await fetchA(`${BASE}/orders/${id}`);
-      if(d.code!==0){toast(d.msg);return;}
-      const o=d.data;
-      const items=(o.items||[]).map(i=>`<div style="display:flex;gap:10px;margin:8px 0;padding:8px;background:#fafafa;border-radius:6px">
-        <img src="${i.cover||''}" style="width:50px;height:50px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">
-        <div><div style="font-weight:600">${i.title}</div><div class="muted">${i.sku_desc||''} x${i.quantity} · ${fmtMoney(i.price)}</div></div>
-      </div>`).join('');
-      document.getElementById('orderDetail').innerHTML=`
-        <p><b>订单号：</b>${o.order_no}</p>
-        <p><b>状态：</b>${statusBadgeO(o.status)}</p>
-        <p><b>金额：</b>${fmtMoney(o.total_amount)}（运费 ${fmtMoney(o.freight_amount||0)}）</p>
-        <p><b>收货人：</b>${o.receiver_name||'-'} ${o.receiver_mobile||''}</p>
-        <p><b>地址：</b>${o.receiver_address||'-'}</p>
-        <p><b>下单时间：</b>${o.created_at||'-'}</p>
-        <h4 style="margin:14px 0 8px">商品明细</h4>${items||'<p class="muted">无明细</p>'}`;
-      const footer=document.getElementById('orderFooter');
-      footer.innerHTML='';
-      const statusBtns=[];
-      if(o.status==0) statusBtns.push(['标记取消','-2']);
-      if(o.status==1) statusBtns.push(['标记发货',2]);
-      statusBtns.forEach(([label,val])=>{
-        const b=document.createElement('button');b.className='btn sm';b.textContent=label;b.onclick=()=>changeStatus(id,val);footer.appendChild(b);
-      });
-      footer.appendChild(Object.assign(document.createElement('button'),{className:'btn gray sm',textContent:'关闭',onclick:closeOrderModal}));
-      document.getElementById('orderModal').classList.add('show');
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      currentOrder=d.data;
+      const o=currentOrder;
+      document.getElementById('oeOrderId').value=id;
+      document.getElementById('oeName').value=o.receiver_name||'';
+      document.getElementById('oePhone').value=o.receiver_phone||'';
+      document.getElementById('oeAddress').value=o.address||'';
+      document.getElementById('oeBuyerMessage').value=o.buyer_message||'';
+      document.getElementById('oeRemark').value=o.remark||'';
+      document.getElementById('oePayAmount').value=o.pay_amount||'';
+      // 购物清单
+      document.getElementById('oeItemsBody').innerHTML=(o.items||[]).map(i=>`
+        <tr>
+          <td>
+            <div style="display:flex;gap:10px;align-items:center">
+              <img src="${i.image||''}" style="width:50px;height:50px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">
+              <div>
+                <div style="font-weight:600">${escapeHtml(i.goods_title)}</div>
+                <div class="muted">${escapeHtml(i.spec_desc||'')}</div>
+              </div>
+            </div>
+          </td>
+          <td>¥${fmtMoney(i.price)} x ${i.quantity}</td>
+          <td>¥${fmtMoney(i.subtotal)}</td>
+          <td>¥${fmtMoney(o.discount)}</td>
+          <td>¥${fmtMoney(i.subtotal)}</td>
+        </tr>`).join('')||'<tr><td colspan="5" class="empty-row">无商品</td></tr>';
+      document.getElementById('oeSummary').innerHTML=`
+        优惠金额：¥${fmtMoney(o.discount)}　　优惠券：¥0.00
+        会员折扣：¥${fmtMoney(o.member_discount)}　　运费：¥${fmtMoney(o.shipping_fee)}
+        余额抵扣：¥${fmtMoney(o.balance_used)}　　实付金额：¥${fmtMoney(o.pay_amount)}`;
+      // 商品留言
+      document.getElementById('oeMessageBody').innerHTML=(o.items||[]).map(i=>`
+        <tr>
+          <td>
+            <div style="display:flex;gap:10px;align-items:center">
+              <img src="${i.image||''}" style="width:50px;height:50px;object-fit:cover;border-radius:4px" onerror="this.style.display='none'">
+              <div>${escapeHtml(i.goods_title)}<div class="muted">${escapeHtml(i.spec_desc||'')}</div></div>
+            </div>
+          </td>
+          <td>${o.buyer_message?escapeHtml(o.buyer_message):'无留言信息'}</td>
+        </tr>`).join('')||'<tr><td colspan="2" class="empty-row">无商品</td></tr>';
+      switchOrderEditTab(activeTab||'info');
+      document.getElementById('orderEditModal').classList.add('open');
     }
-    function closeOrderModal(){document.getElementById('orderModal').classList.remove('show');}
-    async function changeStatus(id,status){
-      const d=await fetchA(`${BASE}/orders/${id}/status`,{method:'POST',body:{status}});
-      if(d.code===0){toast('状态更新成功');closeOrderModal();loadOrders();}else{toast(d.msg);}
+    function closeOrderEditModal(){
+      document.getElementById('orderEditModal').classList.remove('open');
+      currentOrder=null;
     }
+    async function saveOrderEdit(){
+      const id=document.getElementById('oeOrderId').value;
+      const body={
+        receiver_name:document.getElementById('oeName').value.trim(),
+        receiver_phone:document.getElementById('oePhone').value.trim(),
+        address:document.getElementById('oeAddress').value.trim(),
+        buyer_message:document.getElementById('oeBuyerMessage').value.trim(),
+        remark:document.getElementById('oeRemark').value.trim(),
+        pay_amount:parseFloat(document.getElementById('oePayAmount').value)||0,
+      };
+      const d=await fetchA(`${BASE}/orders/${id}/save`,{method:'POST',body});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      toast('保存成功');closeOrderEditModal();loadOrders();
+    }
+
+    /* 批量发货 */
+    let batchShipIds=[];
+    function openBatchShipModal(ids){
+      batchShipIds=ids||[];
+      document.getElementById('batchShipFile').value='';
+      document.getElementById('batchShipFileName').textContent='';
+      document.getElementById('shipCompany').selectedIndex=0;
+      document.getElementById('shipNo').value='';
+      document.querySelector('input[name=shipType][value=express]').checked=true;
+      updateBatchShipType();
+      document.getElementById('batchShipModal').classList.add('open');
+    }
+    function closeBatchShipModal(){document.getElementById('batchShipModal').classList.remove('open');batchShipIds=[];}
+    function onBatchShipFileChange(input){document.getElementById('batchShipFileName').textContent=input.files[0]?.name||'';}
+    function updateBatchShipType(){
+      const type=document.querySelector('input[name=shipType]:checked')?.value||'express';
+      document.getElementById('shipCompanyWrap').style.display=type==='none'?'none':'block';
+      document.getElementById('shipNoWrap').style.display=type==='none'?'none':'block';
+    }
+    function downloadShipTemplate(){
+      if(!batchShipIds.length){toast('请先选择订单后再下载模板');return;}
+      const head='\ufeff订单号,物流公司,物流单号\n';
+      const rows=batchShipIds.map(id=>`${id},,\n`).join('');
+      const blob=new Blob([head+rows],{type:'text/csv;charset=utf-8'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='批量发货模板.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},100);
+    }
+    async function confirmBatchShip(){
+      if(!batchShipIds.length){toast('请选择订单');return;}
+      const shipType=document.querySelector('input[name=shipType]:checked')?.value||'express';
+      const shippingCompany=shipType==='none'?'':document.getElementById('shipCompany').value;
+      const shippingNo=shipType==='none'?'':document.getElementById('shipNo').value.trim();
+      const fileInput=document.getElementById('batchShipFile');
+      let rows=[];
+      if(fileInput.files[0]){
+        const text=await fileInput.files[0].text();
+        rows=text.replace(/^\ufeff/,'').split(/\r?\n/).slice(1).filter(l=>l.trim()).map(l=>{
+          const p=l.split(',');
+          return {order_no:(p[0]||'').trim(),shipping_company:(p[1]||'').trim(),shipping_no:(p[2]||'').trim()};
+        }).filter(r=>r.order_no);
+      }
+      const body={orders:batchShipIds.map(id=>({id})),ship_type:shipType,shipping_company:shippingCompany,shipping_no:shippingNo,rows};
+      const d=await fetchA(`${BASE}/orders/batch_ship`,{method:'POST',body});
+      if(d.code!==0){toast(d.msg||'发货失败');return;}
+      toast('批量发货成功');closeBatchShipModal();clearOrderCheck();loadOrders();
+    }
+
+    /* 创建订单 */
+    let coUser=null,coItems=[];
+    function openCreateOrderModal(){
+      coUser=null;coItems=[];
+      renderCreateOrderUser();renderCreateOrderGoods();
+      document.getElementById('coMessage').value='';
+      document.querySelector('input[name=coShipType][value=express]').checked=true;
+      updateCreateOrderSummary();
+      document.getElementById('createOrderModal').classList.add('open');
+    }
+    function closeCreateOrderModal(){document.getElementById('createOrderModal').classList.remove('open');coUser=null;coItems=[];}
+    function renderCreateOrderUser(){
+      const tbody=document.getElementById('coUserBody');
+      if(!coUser){tbody.innerHTML='<tr><td colspan="4" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=`<tr>
+        <td><img src="${coUser.avatar||''}" style="width:40px;height:40px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'"></td>
+        <td>${escapeHtml(coUser.nickname||coUser.id)}</td>
+        <td>微信</td>
+        <td><a href="javascript:" onclick="coUser=null;renderCreateOrderUser();">删除</a></td>
+      </tr>`;
+    }
+    function renderCreateOrderGoods(){
+      const tbody=document.getElementById('coGoodsBody');
+      if(!coItems.length){tbody.innerHTML='<tr><td colspan="6" class="empty-row">暂无数据</td></tr>';return;}
+      tbody.innerHTML=coItems.map((it,i)=>`
+        <tr>
+          <td>${escapeHtml(it.title)}</td>
+          <td>${it.stock}</td>
+          <td>普通商品</td>
+          <td>${escapeHtml(it.specDesc||'默认')}</td>
+          <td><input type="number" class="form-input" value="${it.quantity}" onchange="coItems[${i}].quantity=parseInt(this.value)||1;updateCreateOrderSummary()" style="width:70px"></td>
+          <td><a href="javascript:" onclick="coItems.splice(${i},1);renderCreateOrderGoods();updateCreateOrderSummary();">删除</a></td>
+        </tr>`).join('');
+    }
+    function updateCreateOrderSummary(){
+      const goodsAmount=coItems.reduce((s,it)=>s+(it.price||0)*it.quantity,0);
+      const shipping=goodsAmount>=9900?0:1000;
+      const total=goodsAmount+shipping;
+      document.getElementById('coSummary').textContent=`商品金额 ${fmtMoney(goodsAmount)}　会员等级 0　满减 0　运费 ${fmtMoney(shipping)}　合计 ${fmtMoney(total)}`;
+    }
+    function calcCreateOrderPrice(){updateCreateOrderSummary();toast('价格已计算');}
+    async function confirmCreateOrder(){
+      if(!coUser){toast('请选择下单用户');return;}
+      if(!coItems.length){toast('请选择下单商品');return;}
+      const body={
+        user_id:coUser.id,
+        items:coItems.map(it=>({sku_id:it.skuId,quantity:it.quantity})),
+        address:{name:'后台下单',phone:'13800000000',address:'后台地址'},
+      };
+      const d=await fetchA(`${BASE}/orders_create`,{method:'POST',body});
+      if(d.code!==0){toast(d.msg||'创建失败');return;}
+      toast('创建成功');closeCreateOrderModal();switchOrderTab(-1);
+    }
+    function openSelectUserModal(){toast('选择会员弹窗开发中');}
+    function openSelectGoodsModal(){toast('选择商品弹窗开发中');}
+    function openCreateWaybillModal(){toast('生成配送单开发中');}
 
     /* 首页装修：按模块分设设置 */
     let designConfig={page:'home',components:[]};

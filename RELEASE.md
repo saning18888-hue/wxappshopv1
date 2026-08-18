@@ -55,6 +55,17 @@ php think run -H 127.0.0.1 -p 8787                                       # 启�
 
 ## 版本记录（最新在上）
 
+### v0.1.18 · 2026-08-18 · 订单管理后台增强：搜索/编辑/批量发货/代下单
+**范围**：后台订单管理（`server/app/controller/admin/Order.php`、`OrderService.php`、`route/app.php`、SQLite 安装脚本）、运营后台 UI（`server/public/admin.html`）、幂等迁移脚本（`server/database/apply_orders.php`）。
+**改动**：
+- **订单服务层**（`OrderService.php`）：`adminList` 新增关键词搜索；`formatOrder` 透出交易号、订单类型/来源、会员优惠、余额抵扣、优惠券、买家留言、备注、物流公司与物流单号；新增 `save`（编辑订单：收件人/地址/留言/备注/实付）、`batchDelete`（批量删除）、`batchShip`（批量发货，支持快递与无需物流两种模式并补全物流公司与单号）、`create`（后台代下单）。
+- **后台接口**（`route/app.php` + `admin/Order.php`）：新增 `order/save`、`order/batchDelete`、`order/batchShip`、`order/create` 路由与权限校验。
+- **数据表升级**：`install.sqlite.sql` 的 `orders` 表新增 `trade_no / member_discount / balance_used / coupon_amount / order_type / source / buyer_message / remark / shipping_company / shipping_no` 字段。
+- **迁移脚本**：新增 `server/database/apply_orders.php`，对已存在的 SQLite 库幂等补列，避免重复执行报错。
+- **运营后台 UI**（`admin.html`）：订单列表升级——关键词搜索、详情/编辑弹窗、批量发货（含物流公司下拉与单号、无需物流开关）、批量删除、后台代下单弹窗、状态列与文案优化。
+- **素材**：新增 banner 示例视频 `server/public/uploads/banner/20260814/...mp4`。
+**兼容性**：`apply_orders.php` 为幂等迁移，可反复执行；新字段均有默认值，不影响旧订单展示。
+
 ### v0.1.17 · 2026-08-17 · 基础设置页视觉升级：套用 Linear 浅色设计系统
 **范围**：`server/public/admin.html` 的「基础设置」`basePanel` 样式（其余面板不变）。
 **改动**：按品牌设计风格专家（Linear）的浅色模式令牌重做——Inter 字体 + `cv01/ss03` 特性、weight 510/590 字重、近黑标题 + 紫调 `#5e6ad2` 强调、4 个 Tab 改为 Linear pill 分段导航、单选分段控件选中态用品牌靛蓝、输入框极淡背景 + 聚焦紫环、8px 栅格间距与极淡边框。字段顺序严格沿用截图结构（基础设置 → 商品设置 → 交易设置 → 安全设置）。
