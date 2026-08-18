@@ -1,6 +1,7 @@
 <?php
 namespace app\controller\api\v1;
 
+use app\common\controller\ApiController;
 use app\service\SettingsService;
 
 class Settings extends ApiController

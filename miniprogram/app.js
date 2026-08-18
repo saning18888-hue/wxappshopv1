@@ -1,5 +1,57 @@
 const auth = require('./utils/auth');
 const settings = require('./utils/settings');
+const api = require('./utils/request');
+
+// 后台底部导航 link.id -> 小程序 tabBar pagePath 映射
+const BOTTOM_NAV_PAGE_MAP = {
+  home: 'pages/index/index',
+  category: 'pages/category/category',
+  cart: 'pages/cart/cart',
+  user: 'pages/member/member',
+  member: 'pages/member/member',
+};
+
+// 与原生 tabBar（app.json）顺序保持一致的 pagePath 列表
+const TAB_BAR_PAGES = [
+  'pages/index/index',
+  'pages/category/category',
+  'pages/cart/cart',
+  'pages/member/member',
+];
+
+function downloadFile(url) {
+  return new Promise((resolve) => {
+    if (!url) return resolve('');
+    wx.downloadFile({
+      url,
+      success: (res) => resolve(res.tempFilePath || ''),
+      fail: () => resolve(''),
+    });
+  });
+}
+
+function applyBottomNav() {
+  api.get('/bottom_nav')
+    .then((cfg) => {
+      const comp = cfg && cfg.components && cfg.components.find((c) => c.type === 'bottom_nav');
+      const items = (comp && comp.props && comp.props.items) || [];
+      items.forEach((it) => {
+        const pagePath = BOTTOM_NAV_PAGE_MAP[it.link && it.link.id];
+        if (!pagePath) return;
+        const index = TAB_BAR_PAGES.indexOf(pagePath);
+        if (index === -1) return;
+        Promise.all([downloadFile(it.icon), downloadFile(it.active_icon)])
+          .then(([iconPath, selectedIconPath]) => {
+            const setCfg = { index };
+            if (it.name) setCfg.text = it.name;
+            if (iconPath) setCfg.iconPath = iconPath;
+            if (selectedIconPath) setCfg.selectedIconPath = selectedIconPath;
+            wx.setTabBarItem(setCfg);
+          });
+      });
+    })
+    .catch(() => {});
+}
 
 App({
   globalData: {
@@ -16,5 +68,7 @@ App({
     settings.fetchSettings().then(() => {
       this.globalData.settings = settings.getSettings();
     });
+    // 拉取后台底部导航配置并应用到原生 tabBar
+    applyBottomNav();
   },
 });

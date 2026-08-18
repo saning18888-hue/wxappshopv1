@@ -12,6 +12,9 @@ Route::group('api/v1', function () {
     // 首页 DIY 装修
     Route::get('home', 'api/v1.Home/index');
 
+    // 底部导航配置下发
+    Route::get('bottom_nav', 'api/v1.Design/bottomNav');
+
     // 分类
     Route::get('categories', 'api/v1.Category/index');
 
