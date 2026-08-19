@@ -4234,7 +4234,13 @@
       document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
       const panelId=node.panel||'placeholderPanel';
       const panel=document.getElementById(panelId);
-      if(panel) panel.classList.remove('hidden');
+      if(panel){
+        // 部分面板（如数据分析面板）在 DOM 中位于 .content 之外，会导致点开一片空白；
+        // 显示前将其移入可见内容容器，保证渲染在内容区内。
+        const content=document.querySelector('.content');
+        if(content && !content.contains(panel)) content.appendChild(panel);
+        panel.classList.remove('hidden');
+      }
 
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
@@ -4964,7 +4970,9 @@
       }
       const r=await fetch(url,opts);
       if(r.status===401){logout();throw new Error('未授权');}
-      return r.json();
+      // 兼容服务端 500 返回 HTML 的场景：解析失败时返回友好错误对象，避免整页崩溃
+      const data=await r.json().catch(()=>({code:-1,msg:'服务器返回异常（'+(r.status||'')+'）'}));
+      return data;
     }
     function toast(msg){
       const t=document.getElementById('toast');
@@ -8164,15 +8172,22 @@
     /* Init */
     (async()=>{
       if(localStorage.getItem('admin_token')){
+        // 拉一次数据校验登录态：仅“未授权(401)”才强制退出，临时服务端错误不退出，保证界面可见
+        let authed=true;
         try{
           await fetchA(`${BASE}/goods?page=1&page_size=1`);
+        }catch(e){
+          if(e && e.message==='未授权'){ authed=false; }
+        }
+        if(!authed){ logout(); }
+        else{
           document.getElementById('loginWrap').classList.add('hidden');
           document.getElementById('mainView').classList.remove('hidden');
           document.getElementById('who').textContent=localStorage.getItem('admin_user')||'admin';
-          await loadCategories();
+          try{ await loadCategories(); }catch(_){}
           renderSidebar();
           switchMenu('overview','dashboard');
-        }catch(e){logout();}
+        }
       }
     })();
   </script>
