@@ -138,4 +138,23 @@ Route::group('admin', function () {
     Route::get('member_distributors', 'admin.Member/distributorList');
     Route::get('member_agreement', 'admin.Member/agreement');
     Route::post('member_agreement', 'admin.Member/saveAgreement');
+
+    // 文章分类
+    Route::get('article_categories', 'admin.ArticleCategory/index');
+    Route::get('article_categories/tree', 'admin.ArticleCategory/tree');
+    Route::post('article_categories', 'admin.ArticleCategory/save');
+    Route::post('article_categories/:id/save', 'admin.ArticleCategory/save');
+    Route::post('article_categories/:id/delete', 'admin.ArticleCategory/remove');
+    Route::post('article_categories/:id/status', 'admin.ArticleCategory/toggleStatus');
+
+    // 文章
+    Route::get('articles', 'admin.Article/index');
+    Route::get('articles/export', 'admin.Article/export');
+    Route::get('articles/:id', 'admin.Article/info');
+    Route::post('articles', 'admin.Article/save');
+    Route::post('articles/:id/save', 'admin.Article/save');
+    Route::post('articles/:id/delete', 'admin.Article/remove');
+    Route::post('articles/batch_delete', 'admin.Article/batchDelete');
+    Route::post('articles/:id/show', 'admin.Article/toggleShow');
+    Route::post('articles_settings', 'admin.Article/settings');
 });

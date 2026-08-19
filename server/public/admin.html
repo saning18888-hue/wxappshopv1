@@ -289,6 +289,79 @@
     .goods-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
     .goods-panel{display:none}
     .goods-panel.active{display:block}
+    .tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:-6px -4px 16px -4px;padding:0 4px}
+    .article-tab{padding:9px 14px;font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;margin-bottom:-1px}
+    .article-tab:hover{color:var(--text)}
+    .article-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+    .article-pane{display:none}
+    .article-pane.active{display:block}
+
+    /* ===== 文章管理 UI 美化 ===== */
+    .article-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin:0 0 18px}
+    .article-tab{padding:10px 16px;font-size:13.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;border:1px solid transparent;border-bottom:0;margin-bottom:-1px;border-radius:10px 10px 0 0;transition:all .15s;position:relative}
+    .article-tab:hover{color:var(--text);background:var(--primary-50)}
+    .article-tab.active{color:var(--primary);background:var(--surface);border-color:var(--border);border-bottom-color:var(--surface);font-weight:600}
+    .article-tab.active::after{content:'';position:absolute;left:14px;right:14px;bottom:-1px;height:2px;background:var(--primary);border-radius:2px}
+
+    .article-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+    .article-toolbar .spacer{flex:1}
+    .article-toolbar .input{height:38px;padding:0 12px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:var(--text);outline:none;transition:border-color .12s,box-shadow .12s,background .12s}
+    .article-toolbar .input:hover{border-color:#c4c8d4}
+    .article-toolbar .input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .article-toolbar select.input{cursor:pointer;padding-right:32px;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2012%2012%22%3E%3Cpath%20d=%22M3%204.5L6%207.5L9%204.5%22%20stroke=%22%236b7280%22%20stroke-width=%221.4%22%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E);background-repeat:no-repeat;background-position:right 11px center}
+    .article-toolbar .btn.primary{box-shadow:0 2px 8px rgba(94,106,210,.25)}
+
+    .article-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface)}
+    .article-table-wrap table{margin:0}
+    .article-table-wrap th:first-child,.article-table-wrap td:first-child{width:44px;text-align:center}
+    .a-cover{width:56px;height:40px;object-fit:cover;border-radius:8px;background:#f0f0f0;display:block;box-shadow:0 1px 2px rgba(16,24,40,.08)}
+    .a-main{min-width:200px}
+    .a-title{font-weight:600;color:var(--text);font-size:13.5px;line-height:1.35}
+    .a-sub{font-size:12px;color:var(--text-muted);margin-top:3px}
+    .a-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .a-actions .btn.sm{height:30px;padding:0 11px;font-size:12px}
+    .a-time{font-size:12.5px;color:var(--text-muted);white-space:nowrap}
+
+    /* 编辑弹窗：两栏布局 */
+    .a-modal-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+    .a-col{min-width:0}
+    .a-field{margin-bottom:18px}
+    #tab-settings .a-field{margin-bottom:26px}
+    .a-field>label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:6px}
+    .a-field>label .req{color:#ff4d4f;margin-left:2px}
+    .a-field .input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;outline:none;font-size:13.5px;background:#fff;color:var(--text);transition:border-color .12s,box-shadow .12s,background .12s}
+    .a-field .input:hover{border-color:#c4c8d4}
+    .a-field .input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .a-field select.input,.a-field select{cursor:pointer;padding-right:34px;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2012%2012%22%3E%3Cpath%20d=%22M3%204.5L6%207.5L9%204.5%22%20stroke=%22%236b7280%22%20stroke-width=%221.4%22%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E);background-repeat:no-repeat;background-position:right 12px center}
+    .a-field .radio{margin-top:4px}
+    /* 基础设置：带图标分段控件（标签/图标/选项保持充足间距，避免拥挤死板） */
+    .a-set{display:flex;align-items:center;gap:22px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px}
+    .a-set-name{display:inline-flex;align-items:center;gap:9px;min-width:118px;font-size:13.5px;font-weight:500;color:var(--text)}
+    .a-set-name svg{width:16px;height:16px;color:var(--primary);flex:none}
+    .a-seg{display:inline-flex;background:#eef0f4;border-radius:10px;padding:3px;gap:3px}
+    .a-seg label{position:relative;display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:8px;font-size:13px;color:var(--text-secondary);cursor:pointer;user-select:none;transition:all .15s}
+    .a-seg input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .a-seg .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid #c4c8d4;transition:all .15s;flex:none}
+    .a-seg label:hover{color:var(--text)}
+    .a-seg label:has(input:checked){background:#fff;color:var(--primary);font-weight:600;box-shadow:0 1px 4px rgba(16,24,40,.12)}
+    .a-seg label:has(input:checked) .dot{background:var(--primary);border-color:var(--primary)}
+    .a-side{background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--radius);padding:16px}
+    .a-side-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin:0 0 14px;letter-spacing:.3px}
+    .a-cover-uploader{display:block;margin-bottom:4px}
+    .a-cover-uploader .uploader-box{width:100%;height:118px;font-size:28px}
+    .a-hint{font-size:11.5px;color:var(--text-muted);line-height:1.55;margin-top:10px}
+    .a-full{grid-column:1 / -1;margin-top:4px}
+    .a-content-label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:6px}
+    @media(max-width:680px){.a-modal-grid{grid-template-columns:1fr}}
+    .uploader{display:inline-block}
+    .uploader-box{width:96px;height:96px;border:1.5px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:28px;color:#bbb;cursor:pointer;background-size:cover;background-position:center;background-color:#fafafa;transition:border-color .15s}
+    .uploader-box:hover{border-color:var(--primary)}
+    .editor{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .editor-bar{display:flex;gap:6px;padding:6px 8px;background:#fafbfc;border-bottom:1px solid var(--border)}
+    .editor-bar button{padding:4px 10px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;font-size:13px}
+    .editor-bar button:hover{border-color:var(--primary);color:var(--primary)}
+    .editor-body{min-height:200px;padding:14px;outline:none;line-height:1.7;font-size:14px}
+    .editor-body:empty:before{content:'请输入文章内容…';color:#bbb}
     .goods-form-row{display:flex;gap:16px;margin-bottom:14px;align-items:flex-start}
     .goods-form-row .field{flex:1;margin-bottom:0}
     .goods-form-row .field.half{flex:0 0 50%}
@@ -3911,6 +3984,168 @@
     </div>
   </div>
 
+  <!-- ===================== 文章管理 ===================== -->
+  <div id="articlePanel" class="panel hidden">
+    <div class="card">
+      <div class="article-tabs">
+        <button class="article-tab active" data-tab="list" onclick="switchArticleTab('list')">文章列表</button>
+        <button class="article-tab" data-tab="category" onclick="switchArticleTab('category')">文章分类</button>
+        <button class="article-tab" data-tab="settings" onclick="switchArticleTab('settings')">基础设置</button>
+      </div>
+
+      <!-- 文章列表 -->
+      <div id="tab-list" class="article-pane active">
+        <div class="article-toolbar">
+          <input id="aKw" class="input" placeholder="关键词">
+          <select id="aCat" class="input"><option value="0">全部分类</option></select>
+          <select id="aRec" class="input"><option value="-1">全部推荐</option><option value="1">已推荐</option><option value="0">未推荐</option></select>
+          <select id="aShow" class="input"><option value="-1">全部显示</option><option value="1">显示中</option><option value="0">已隐藏</option></select>
+          <button class="btn sm" onclick="loadArticles(1)">查询</button>
+          <span class="spacer"></span>
+          <button class="btn sm" onclick="exportArticles()">导出</button>
+          <button class="btn sm danger" onclick="batchDeleteArticles()">批量删除</button>
+          <button class="btn sm primary" onclick="openArticleModal()">添加</button>
+        </div>
+        <div class="article-table-wrap">
+        <table class="table">
+          <thead><tr>
+            <th><input type="checkbox" id="aCheckAll" onchange="toggleCheckAll('a')"></th>
+            <th>ID</th><th>封面</th><th>文章标题</th><th>推荐</th><th>状态</th><th>显示/隐藏</th><th>发布时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="aList"></tbody>
+        </table>
+        </div>
+        <div class="pager" id="aPager"></div>
+      </div>
+
+      <!-- 文章分类 -->
+      <div id="tab-category" class="article-pane">
+        <div class="article-toolbar">
+          <input id="acKw" class="input" placeholder="分类名称">
+          <button class="btn sm" onclick="loadArticleCategories(1)">查询</button>
+          <span class="spacer"></span>
+          <button class="btn sm primary" onclick="openArticleCategoryModal()">添加</button>
+        </div>
+        <div class="article-table-wrap">
+        <table class="table">
+          <thead><tr><th>ID</th><th>分类名称</th><th>上级分类</th><th>排序</th><th>添加时间</th><th>是否启用</th><th>操作</th></tr></thead>
+          <tbody id="acList"></tbody>
+        </table>
+        </div>
+        <div class="pager" id="acPager"></div>
+      </div>
+
+      <!-- 基础设置 -->
+      <div id="tab-settings" class="article-pane">
+        <div class="a-hint" style="margin-bottom:18px">配置文章详情页默认展示的字段，保存后立即生效。</div>
+        <div class="a-col" style="max-width:460px">
+          <div class="a-set">
+            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M9 6v12M15 6v12"/></svg>文章标题</span>
+            <div class="a-seg">
+              <label><input type="radio" name="aTitleShow" value="1" checked><span class="dot"></span>显示</label>
+              <label><input type="radio" name="aTitleShow" value="0"><span class="dot"></span>隐藏</label>
+            </div>
+          </div>
+          <div class="a-set">
+            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>发布时间</span>
+            <div class="a-seg">
+              <label><input type="radio" name="aPublishShow" value="1" checked><span class="dot"></span>显示</label>
+              <label><input type="radio" name="aPublishShow" value="0"><span class="dot"></span>隐藏</label>
+            </div>
+          </div>
+          <div class="a-set">
+            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>浏览量</span>
+            <div class="a-seg">
+              <label><input type="radio" name="aViewsShow" value="1" checked><span class="dot"></span>显示</label>
+              <label><input type="radio" name="aViewsShow" value="0"><span class="dot"></span>隐藏</label>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:20px"><button class="btn sm primary" onclick="saveArticleSettings()">保存设置</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑文章弹窗 -->
+  <div id="articleModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head"><span id="articleModalTitle">添加文章</span><button class="modal-close" onclick="closeArticleModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-modal-grid">
+          <div class="a-col">
+            <div class="a-field"><label>文章标题 <span class="req">*</span></label><input id="aTitle" class="input"></div>
+            <div class="a-field"><label>文章分类 <span class="req">*</span></label><select id="aCategory" class="input"></select></div>
+            <div class="a-field"><label>简介</label><input id="aIntro" class="input"></div>
+            <div class="a-field"><label>作者</label><input id="aAuthor" class="input"></div>
+            <div class="a-field"><label>来源</label><input id="aSource" class="input"></div>
+            <div class="a-field"><label>阅读量</label><input id="aViews" type="number" class="input" value="0"></div>
+            <div class="a-field"><label>文章关键字</label><input id="aKeywords" class="input"></div>
+            <div class="a-field"><label>外部链接</label><input id="aLink" class="input"></div>
+            <div class="a-field"><label>是否推荐</label><div class="radio"><label><input type="radio" name="aRecommend" value="1">推荐</label><label><input type="radio" name="aRecommend" value="0" checked>不推荐</label></div></div>
+          </div>
+          <div class="a-side">
+            <div class="a-side-title">封面与展示</div>
+            <div class="a-field"><label>显示模式</label><div class="radio"><label><input type="radio" name="aDisplayMode" value="native" checked>原生</label><label><input type="radio" name="aDisplayMode" value="webview">webview</label></div></div>
+            <div class="a-field"><label>视频类型</label>
+              <select id="aVideoType" class="input">
+                <option value="none">无</option><option value="mp4">mp4</option><option value="tencent">腾讯</option><option value="douyin">抖音</option><option value="weishi">微视</option>
+              </select>
+            </div>
+            <div class="a-field"><label>文章封面</label>
+              <div class="a-cover-uploader uploader" onclick="document.getElementById('aCoverInput').click()">
+                <div id="aCoverPreview" class="uploader-box">+</div>
+              </div>
+              <input id="aCoverInput" type="file" accept="image/*" hidden onchange="uploadArticleCover()">
+              <div class="a-hint">建议尺寸 750×420，封面将展示在文章列表与详情页顶部。</div>
+            </div>
+          </div>
+        </div>
+        <div class="a-full">
+          <label class="a-content-label">内容</label>
+          <div class="editor">
+            <div class="editor-bar">
+              <button type="button" onclick="editorCmd('bold')"><b>B</b></button>
+              <button type="button" onclick="editorCmd('italic')"><i>I</i></button>
+              <button type="button" onclick="editorCmd('underline')"><u>U</u></button>
+              <button type="button" onclick="editorCmd('insertUnorderedList')">• 列表</button>
+              <button type="button" onclick="editorCmd('createLink')">🔗 链接</button>
+            </div>
+            <div id="aContent" class="editor-body" contenteditable="true"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn sm" onclick="closeArticleModal()">取消</button><button class="btn sm primary" onclick="saveArticle()">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑文章分类弹窗 -->
+  <div id="articleCategoryModal" class="modal">
+    <div class="modal-card">
+      <div class="modal-head"><span id="articleCategoryModalTitle">添加文章分类</span><button class="modal-close" onclick="closeArticleCategoryModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-modal-grid">
+          <div class="a-col">
+            <div class="a-field"><label>分类名称 <span class="req">*</span></label><input id="acName" class="input"></div>
+            <div class="a-field"><label>上级分类</label><select id="acParent" class="input"></select></div>
+            <div class="a-field"><label>排序</label><input id="acSort" type="number" class="input" value="0"></div>
+            <div class="a-field"><label>是否启用</label><div class="radio"><label><input type="radio" name="acStatus" value="1" checked>启用</label><label><input type="radio" name="acStatus" value="0">禁用</label></div></div>
+          </div>
+          <div class="a-side">
+            <div class="a-side-title">分类封面</div>
+            <div class="a-field"><label>封面图片</label>
+              <div class="a-cover-uploader uploader" onclick="document.getElementById('acCoverInput').click()">
+                <div id="acCoverPreview" class="uploader-box">+</div>
+              </div>
+              <input id="acCoverInput" type="file" accept="image/*" hidden onchange="uploadArticleCategoryCover()">
+              <div class="a-hint">可选，建议尺寸 200×200，展示在分类导航与筛选页。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn sm" onclick="closeArticleCategoryModal()">取消</button><button class="btn sm primary" onclick="saveArticleCategory()">确定</button></div>
+    </div>
+  </div>
+
   <!-- ===================== 数据分析面板 ===================== -->
   <!-- 商城概况 -->
   <div id="overviewStatsPanel" class="panel hidden">
@@ -4136,7 +4371,7 @@
         {key:'summary',label:'汇总分析',icon:ICONS.barChart,panel:'summaryStatsPanel'}
       ]},
       {key:'content',label:'内容',icon:ICONS.content,children:[
-        {key:'article',label:'文章管理',icon:ICONS.fileText,default:true},
+        {key:'article',label:'文章管理',icon:ICONS.fileText,panel:'articlePanel',default:true},
         {key:'banner',label:'banner管理',icon:ICONS.image},
         {key:'cube',label:'魔方导航',icon:ICONS.grid},
         {key:'album',label:'相册管理',icon:ICONS.images},
@@ -8167,6 +8402,292 @@
       if(r.code!==0){toast(r.msg||'保存失败');return;}
       const p=await fetchA(`${BASE}/design/bottom_nav/publish`,{method:'POST',body:{}});
       toast(p.code===0?'发布成功':(p.msg||'发布失败'));
+    }
+
+    /* ===================== 文章管理 ===================== */
+    let aPage=1, aEditingId=0, aCoverUrl='', acEditingId=0, acCoverUrl='';
+
+    function renderPager(id, pagination, callback){
+      const cur=pagination.page, last=pagination.last_page||1, total=pagination.total||0;
+      const el=document.getElementById(id);
+      if(!el) return;
+      if(last<=1 && total<=0){ el.innerHTML=''; return; }
+      el.innerHTML = `
+        <button ${cur<=1?'disabled':''} onclick="${callback.name}(${Math.max(1,cur-1)})">上一页</button>
+        <span class="muted" style="margin:0 8px">第 ${cur} / ${last} 页（共 ${total} 条）</span>
+        <button ${cur>=last?'disabled':''} onclick="${callback.name}(${Math.min(last,cur+1)})">下一页</button>`;
+    }
+
+    function switchArticleTab(tab){
+      document.querySelectorAll('.article-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+      document.querySelectorAll('.article-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+      if(tab==='list') loadArticles(1);
+      else if(tab==='category') loadArticleCategories(1);
+      else if(tab==='settings') loadArticleSettings();
+    }
+
+    function loadArticles(page){
+      aPage = page || aPage || 1;
+      const kw=document.getElementById('aKw').value.trim();
+      const cat=document.getElementById('aCat').value;
+      const rec=document.getElementById('aRec').value;
+      const show=document.getElementById('aShow').value;
+      fetchA(`${BASE}/articles?page=${aPage}&page_size=10&keyword=${encodeURIComponent(kw)}&category_id=${cat}&is_recommend=${rec}&is_show=${show}`).then(r=>{
+        if(r.code!==0){toast(r.msg||'加载失败');return;}
+        const list=r.data.list||[];
+        const tb=document.getElementById('aList');
+        tb.innerHTML = list.length ? list.map(a=>`
+          <tr>
+            <td><input type="checkbox" class="a-check" value="${a.id}"></td>
+            <td>${a.id}</td>
+            <td>${a.cover_image?`<img src="${a.cover_image}" class="a-cover" alt="">`:'<span class="muted">—</span>'}</td>
+            <td><div class="a-main"><div class="a-title">${escapeHtml(a.title)}</div><div class="a-sub">${escapeHtml(a.author||'')}${a.author?' · ':''}浏览 ${a.views||0}</div></div></td>
+            <td>${a.is_recommend?'<span class="badge green">已推荐</span>':'<span class="badge gray">未推荐</span>'}</td>
+            <td><span class="badge ${a.is_show?'green':'gray'}">${a.is_show?'显示中':'已隐藏'}</span></td>
+            <td><button class="btn sm ${a.is_show?'primary':'outline'}" onclick="toggleArticleShow(${a.id},${a.is_show?0:1})">${a.is_show?'隐藏':'显示'}</button></td>
+            <td class="a-time">${a.publish_time||'-'}</td>
+            <td><div class="a-actions"><button class="btn sm" onclick="openArticleModal(${a.id})">编辑</button><button class="btn sm danger" onclick="deleteArticle(${a.id})">删除</button></div></td>
+          </tr>`).join('') : '<tr><td colspan="9" class="empty">暂无文章</td></tr>';
+        renderPager('aPager', r.data.pagination, loadArticles);
+        // 同步分类下拉（仅首次）
+        if(document.getElementById('aCat').options.length<=1) loadArticleCategoryOptions();
+      }).catch(e=>toast(e.message||'加载失败'));
+    }
+
+    function populateCategorySelect(selId, nodes, withTop){
+      const sel=document.getElementById(selId);
+      if(!sel) return;
+      sel.innerHTML = withTop ? '<option value="0">请选择分类</option>' : '';
+      const walk=(ns,pre='')=>(ns||[]).forEach(n=>{ if(n.id>0){const o=document.createElement('option');o.value=n.id;o.textContent=pre+n.name;sel.appendChild(o);} if(n.children&&n.children.length) walk(n.children,pre+'  '); });
+      walk(nodes||[]);
+    }
+    function loadArticleCategoryOptions(){
+      fetchA(`${BASE}/article_categories/tree`).then(r=>{
+        if(r.code!==0) return;
+        populateCategorySelect('aCat', r.data, true);
+      });
+    }
+
+    function toggleArticleShow(id,val){
+      fetchA(`${BASE}/articles/${id}/show`,{method:'POST',body:{is_show:val}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'操作失败');return;}
+        loadArticles(aPage);
+      });
+    }
+
+    function toggleCheckAll(prefix){
+      document.querySelectorAll('.'+prefix+'-check').forEach(c=>c.checked=document.getElementById(prefix+'CheckAll').checked);
+    }
+
+    function batchDeleteArticles(){
+      const ids=[...document.querySelectorAll('.a-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请先选择文章');return;}
+      if(!confirm('确定删除选中的 '+ids.length+' 篇文章？')) return;
+      fetchA(`${BASE}/articles/batch_delete`,{method:'POST',body:{ids}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'删除失败');return;}
+        toast('已删除');loadArticles(1);
+      });
+    }
+
+    function deleteArticle(id){
+      if(!confirm('确定删除该文章？')) return;
+      fetchA(`${BASE}/articles/${id}/delete`,{method:'POST',body:{}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'删除失败');return;}
+        toast('已删除');loadArticles(aPage);
+      });
+    }
+
+    function exportArticles(){
+      const kw=document.getElementById('aKw').value.trim();
+      const cat=document.getElementById('aCat').value;
+      const rec=document.getElementById('aRec').value;
+      const show=document.getElementById('aShow').value;
+      const q=`keyword=${encodeURIComponent(kw)}&category_id=${cat}&is_recommend=${rec}&is_show=${show}`;
+      window.open(`${BASE}/articles/export?${q}`,'_blank');
+    }
+
+    function openArticleModal(id){
+      aEditingId = id||0;
+      aCoverUrl='';
+      document.getElementById('articleModalTitle').textContent = id?'编辑文章':'添加文章';
+      ['aTitle','aIntro','aAuthor','aSource','aKeywords','aLink'].forEach(k=>document.getElementById(k).value='');
+      document.getElementById('aViews').value='0';
+      setRadio('aDisplayMode','native');
+      setRadio('aRecommend','0');
+      document.getElementById('aVideoType').value='none';
+      document.getElementById('aContent').innerHTML='';
+      document.getElementById('aCoverPreview').innerHTML='+';
+      document.getElementById('aCoverPreview').style.backgroundImage='';
+      fetchA(`${BASE}/article_categories/tree`).then(r=>{
+        if(r.code===0){
+          populateCategorySelect('aCat', r.data, true);
+          populateCategorySelect('aCategory', r.data, true);
+        }
+      });
+      if(id){
+        fetchA(`${BASE}/articles/${id}`).then(r=>{
+          if(r.code!==0){toast(r.msg||'加载失败');return;}
+          const a=r.data;
+          document.getElementById('aTitle').value=a.title||'';
+          document.getElementById('aIntro').value=a.intro||'';
+          document.getElementById('aAuthor').value=a.author||'';
+          document.getElementById('aSource').value=a.source||'';
+          document.getElementById('aViews').value=a.views||0;
+          document.getElementById('aKeywords').value=a.keywords||'';
+          document.getElementById('aLink').value=a.external_link||'';
+          document.getElementById('aVideoType').value=a.video_type||'none';
+          document.getElementById('aContent').innerHTML=a.content||'';
+          setRadio('aDisplayMode',a.display_mode||'native');
+          setRadio('aRecommend',String(a.is_recommend||0));
+          if(a.cover_image){aCoverUrl=a.cover_image;const p=document.getElementById('aCoverPreview');p.innerHTML='';p.style.backgroundImage=`url(${a.cover_image})`;}
+          // 确保分类加载后选中
+          const wait=setInterval(()=>{ if(sel.options.length>1){sel.value=String(a.category_id||0);clearInterval(wait);} },100);
+        });
+      }
+      document.getElementById('articleModal').classList.add('show');
+    }
+    function closeArticleModal(){document.getElementById('articleModal').classList.remove('show');}
+
+    function uploadArticleCover(){
+      const input=document.getElementById('aCoverInput');
+      if(!input.files[0]) return;
+      uploadToServer(input.files[0],'image').then(url=>{
+        if(url){aCoverUrl=url;const p=document.getElementById('aCoverPreview');p.innerHTML='';p.style.backgroundImage=`url(${url})`;}
+      });
+    }
+
+    function saveArticle(){
+      const title=document.getElementById('aTitle').value.trim();
+      const cat=document.getElementById('aCategory').value;
+      if(!title){toast('文章标题不能为空');return;}
+      if(!cat||cat==='0'){toast('请选择文章分类');return;}
+      const body={
+        title,
+        category_id:+cat,
+        author:document.getElementById('aAuthor').value.trim(),
+        source:document.getElementById('aSource').value.trim(),
+        cover_image:aCoverUrl,
+        intro:document.getElementById('aIntro').value.trim(),
+        keywords:document.getElementById('aKeywords').value.trim(),
+        external_link:document.getElementById('aLink').value.trim(),
+        display_mode:getRadio('aDisplayMode'),
+        is_recommend:+getRadio('aRecommend'),
+        is_show:1,
+        views:+document.getElementById('aViews').value||0,
+        video_type:document.getElementById('aVideoType').value,
+        content:document.getElementById('aContent').innerHTML
+      };
+      fetchA(aEditingId?`${BASE}/articles/${aEditingId}/save`:`${BASE}/articles`,{method:'POST',body}).then(r=>{
+        if(r.code!==0){toast(r.msg||'保存失败');return;}
+        toast('已保存');closeArticleModal();loadArticles(aPage);
+      });
+    }
+
+    function loadArticleCategories(page){
+      const kw=document.getElementById('acKw').value.trim();
+      fetchA(`${BASE}/article_categories?page=${page||1}&page_size=20&keyword=${encodeURIComponent(kw)}`).then(r=>{
+        if(r.code!==0){toast(r.msg||'加载失败');return;}
+        const list=r.data.list||[];
+        const tb=document.getElementById('acList');
+        const parentName=id=>{const f=list.find(x=>x.id===id);return f?f.name:'顶级分类';};
+        tb.innerHTML = list.length ? list.map(c=>`
+          <tr>
+            <td>${c.id}</td>
+            <td>${escapeHtml(c.name)}</td>
+            <td>${c.parent_id?parentName(c.parent_id):'<span class="muted">顶级分类</span>'}</td>
+            <td>${c.sort||0}</td>
+            <td>${c.created_at||'-'}</td>
+            <td><span class="badge ${c.status?'green':'gray'}">${c.status?'已启用':'已禁用'}</span></td>
+            <td><div class="a-actions"><button class="btn sm" onclick="openArticleCategoryModal(${c.id})">编辑</button><button class="btn sm danger" onclick="deleteArticleCategory(${c.id})">删除</button></div></td>
+          </tr>`).join('') : '<tr><td colspan="7" class="empty">暂无分类</td></tr>';
+        renderPager('acPager', r.data.pagination, loadArticleCategories);
+      }).catch(e=>toast(e.message||'加载失败'));
+    }
+
+    function openArticleCategoryModal(id){
+      acEditingId=id||0;acCoverUrl='';
+      document.getElementById('articleCategoryModalTitle').textContent=id?'编辑文章分类':'添加文章分类';
+      document.getElementById('acName').value='';
+      document.getElementById('acSort').value='0';
+      setRadio('acStatus','1');
+      document.getElementById('acCoverPreview').innerHTML='+';
+      document.getElementById('acCoverPreview').style.backgroundImage='';
+      // 上级分类下拉
+      const sel=document.getElementById('acParent');
+      sel.innerHTML='<option value="0">顶级分类</option>';
+      fetchA(`${BASE}/article_categories/tree`).then(r=>{
+        if(r.code!==0) return;
+        const walk=(nodes,pre='')=>nodes.forEach(n=>{ if(n.id>0){const o=document.createElement('option');o.value=n.id;o.textContent=pre+n.name;sel.appendChild(o);} if(n.children&&n.children.length) walk(n.children,pre+'&nbsp;&nbsp;'); });
+        walk(r.data||[]);
+        if(id){fetchA(`${BASE}/article_categories`).then(rr=>{ if(rr.code===0){const c=(rr.data.list||[]).find(x=>x.id===id); if(c){document.getElementById('acName').value=c.name;document.getElementById('acSort').value=c.sort||0;sel.value=String(c.parent_id||0);setRadio('acStatus',String(c.status||1));if(c.cover_image){acCoverUrl=c.cover_image;const p=document.getElementById('acCoverPreview');p.innerHTML='';p.style.backgroundImage=`url(${c.cover_image})`;}}}})}
+      });
+      document.getElementById('articleCategoryModal').classList.add('show');
+    }
+    function closeArticleCategoryModal(){document.getElementById('articleCategoryModal').classList.remove('show');}
+
+    function uploadArticleCategoryCover(){
+      const input=document.getElementById('acCoverInput');
+      if(!input.files[0]) return;
+      uploadToServer(input.files[0],'image').then(url=>{
+        if(url){acCoverUrl=url;const p=document.getElementById('acCoverPreview');p.innerHTML='';p.style.backgroundImage=`url(${url})`;}
+      });
+    }
+
+    function saveArticleCategory(){
+      const name=document.getElementById('acName').value.trim();
+      if(!name){toast('分类名称不能为空');return;}
+      const body={
+        name,
+        parent_id:+document.getElementById('acParent').value||0,
+        sort:+document.getElementById('acSort').value||0,
+        cover_image:acCoverUrl,
+        status:+getRadio('acStatus')
+      };
+      fetchA(acEditingId?`${BASE}/article_categories/${acEditingId}/save`:`${BASE}/article_categories`,{method:'POST',body}).then(r=>{
+        if(r.code!==0){toast(r.msg||'保存失败');return;}
+        toast('已保存');closeArticleCategoryModal();loadArticleCategories(1);
+      });
+    }
+
+    function toggleArticleCategoryStatus(id,val){
+      fetchA(`${BASE}/article_categories/${id}/status`,{method:'POST',body:{status:val}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'操作失败');return;}
+        loadArticleCategories(1);
+      });
+    }
+    function deleteArticleCategory(id){
+      if(!confirm('确定删除该分类？')) return;
+      fetchA(`${BASE}/article_categories/${id}/delete`,{method:'POST',body:{}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'删除失败');return;}
+        toast('已删除');loadArticleCategories(1);
+      });
+    }
+
+    function loadArticleSettings(){
+      fetchA(`${BASE}/settings`).then(r=>{
+        if(r.code!==0) return;
+        const cfg=((r.data&&r.data.article)||{});
+        setRadio('aTitleShow',String(cfg.title_show??1));
+        setRadio('aPublishShow',String(cfg.publish_show??1));
+        setRadio('aViewsShow',String(cfg.views_show??1));
+      });
+    }
+    function saveArticleSettings(){
+      const body={
+        title_show:+getRadio('aTitleShow'),
+        publish_show:+getRadio('aPublishShow'),
+        views_show:+getRadio('aViewsShow')
+      };
+      fetchA(`${BASE}/articles_settings`,{method:'POST',body}).then(r=>{
+        if(r.code!==0){toast(r.msg||'保存失败');return;}
+        toast('已保存');
+      });
+    }
+
+    function editorCmd(cmd){
+      document.getElementById('aContent').focus();
+      if(cmd==='createLink'){ const url=prompt('输入链接地址'); if(url) document.execCommand('createLink',false,url); return; }
+      document.execCommand(cmd,false,null);
     }
 
     /* Init */

@@ -1,6 +1,7 @@
 <?php
 namespace app\controller\admin;
 
+use app\common\controller\AdminController;
 use app\service\SettingsService;
 use think\facade\Request;
 

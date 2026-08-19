@@ -11,6 +11,23 @@
 
 ---
 
+### v0.1.26 · 2026-08-19 · 新增文章管理模块（列表/分类/设置）+ 文章管理 UI 美化 + 项目 UI 设计规范
+**范围**：运营后台 UI（`server/public/admin.html`）、文章 API（`server/app/controller/admin/Article.php`、`ArticleCategory.php`、`Settings.php`、`route/app.php`）、数据库迁移（`server/database/apply_articles.php`）、封面资源（`server/public/uploads/banner/20260819/`）、项目规范（`UI设计规范.md`）。
+**改动**：
+- 新增「文章管理」完整模块：文章列表（封面 / 标题 + 作者·浏览量副行 / 推荐 / 状态 / 显示隐藏 / 操作）、文章分类（上级分类 / 排序 / 启用）、基础设置（文章详情页字段显隐）。
+- 新增后台接口：文章 CRUD、分类 CRUD、文章设置读写；新增 `apply_articles.php` 幂等迁移脚本与 `banner/20260819` 封面目录。
+- 文章管理 UI 美化：tab 下划线高亮、工具栏圆角控件 + 自定义下拉箭头、表格圆角包裹、编辑弹窗两栏 grid（主表单 + 封面展示侧栏）、状态徽章 `.badge`、操作 `.btn.sm`。
+- 基础设置重构为「带图标分段控件」：每项一行卡片，左侧 16px 线性图标 + 名称，右侧胶囊式二选一（显示 / 隐藏），图标与文字、选项圆点均留 ≥8px 间距，告别拥挤死板。
+- 新增项目级 `UI设计规范.md`：统一间距呼吸感、表单控件（禁止裸 radio、必须 hover/focus 态）、图标用法、表格 / 弹窗 / 颜色变量化与提交前自检清单，约束后续页面设计。
+
+### v0.1.25 · 2026-08-19 · 修复：登录后空白、F5 自动退出、数据分析子菜单不显示
+**范围**：后端配置（`server/config/database.php`、`server/.env`）、运营后台 UI（`server/public/admin.html`）。
+**改动**：
+- 修复 SQLite 数据库文件路径解析：`.env` 的 `DB_SQLITE_PATH` 相对路径统一以项目根目录 `root_path()` 为基准解析为绝对路径，修复因 PHP 进程启动目录不同导致的 `unable to open database file`，从而解决登录后所有数据接口 500、后台空白、F5 刷新即退出登录的问题。
+- `.env` 注释由 `#` 改为标准的 `;`，规避 `parse_ini_file` 仅识别 `;` 的解析隐患。
+- 修复「数据」一级菜单下 5 个分析子菜单（商城概况 / 交易分析 / 商品分析 / 网站分析 / 汇总分析）点开空白：面板原先置于可见内容区 `.content` 之外，现于 `switchMenu` 显示前将其移入 `.content` 容器。
+- 前端容错增强：`fetchA` 在 500 等非 JSON 响应时不再抛出解析异常导致整页崩溃；启动逻辑仅在真正 401（未授权）时退出登录，临时服务端错误不再强制退出。
+
 ### v0.1.24 · 2026-08-18 · 新增数据分析套件：商城概况 / 交易分析 / 商品分析 / 网站分析 / 汇总分析
 **范围**：运营后台 UI（`server/public/admin.html`）、数据分析 API（`server/app/controller/admin/Stats.php`、`StatsService.php`、`route/app.php`）、数据库（`server/database/install.sqlite.sql`、新增 `apply_stats_page_views.php`）。
 **改动**：
