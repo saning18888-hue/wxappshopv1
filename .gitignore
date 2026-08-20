@@ -15,3 +15,16 @@ public/uploads/**/*.mp4
 vendor/
 .idea/
 .vscode/
+node_modules/
+
+# 调试 / 临时文件（本机保留，不入库）
+_*.ps1
+_*.png
+**/_*/
+server/php_server.err
+server/php_server.log
+server/_test.ps1
+server/check_tables.php
+stats_*.json
+stats_*.html
+stats_err*.html

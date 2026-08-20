@@ -157,4 +157,34 @@ Route::group('admin', function () {
     Route::post('articles/batch_delete', 'admin.Article/batchDelete');
     Route::post('articles/:id/show', 'admin.Article/toggleShow');
     Route::post('articles_settings', 'admin.Article/settings');
+
+    // 相册分类
+    Route::get('album_categories', 'admin.AlbumCategory/index');
+    Route::get('album_categories/all', 'admin.AlbumCategory/all');
+    Route::get('album_categories/:id', 'admin.AlbumCategory/info');
+    Route::post('album_categories', 'admin.AlbumCategory/save');
+    Route::post('album_categories/:id/save', 'admin.AlbumCategory/save');
+    Route::post('album_categories/:id/delete', 'admin.AlbumCategory/remove');
+    Route::post('album_categories/batch_delete', 'admin.AlbumCategory/batchDelete');
+    Route::post('album_categories/:id/status', 'admin.AlbumCategory/toggleStatus');
+
+    // 相册
+    Route::get('albums', 'admin.Album/index');
+    Route::get('albums/all', 'admin.Album/all');
+    Route::get('albums/:id', 'admin.Album/info');
+    Route::post('albums', 'admin.Album/save');
+    Route::post('albums/:id/save', 'admin.Album/save');
+    Route::post('albums/:id/delete', 'admin.Album/remove');
+    Route::post('albums/batch_delete', 'admin.Album/batchDelete');
+    Route::post('albums/:id/status', 'admin.Album/toggleStatus');
+
+    // 相册图片
+    Route::get('album_images', 'admin.AlbumImage/index');
+    Route::post('album_images/upload', 'admin.AlbumImage/upload');
+    Route::post('album_images/:id/save', 'admin.AlbumImage/save');
+    Route::post('album_images/:id/delete', 'admin.AlbumImage/remove');
+    Route::post('album_images/batch_delete', 'admin.AlbumImage/batchDelete');
+    Route::post('album_images/set_cover', 'admin.AlbumImage/setCover');
+    Route::post('album_images/move_album', 'admin.AlbumImage/moveAlbum');
+    Route::post('album_images/rename', 'admin.AlbumImage/rename');
 });

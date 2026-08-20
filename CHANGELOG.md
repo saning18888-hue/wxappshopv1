@@ -11,6 +11,27 @@
 
 ---
 
+### v0.1.28 · 2026-08-20 · 后台 UI 统一美化整改 + 新增相册管理模块
+**范围**：运营后台 UI（`server/public/admin.html`）、相册 API（`server/app/controller/admin/Album.php`、`AlbumCategory.php`、`AlbumImage.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_albums.php`）、工程配置（`.gitignore`）。
+
+**后台 UI 统一美化整改**
+- 统一全站关闭按钮：所有弹窗 `.modal-header .close` 改为 28px 圆形（浅灰底 + 居中叉号），与文章 / 相册管理子菜单一致。
+- 全局表单控件：新增 `.form-input` / `.form-select` / `.form-textarea` 统一样式（极淡背景 + 1px 描边 + focus 靛蓝光环），`.form-select` 使用自定义 SVG 箭头（`appearance:none` 去除原生外观）；商品分析 / 经营概况等面板日期框、会员编辑弹窗下拉框、配送 / 自提 / 同城 / 商品工具栏、地图 / 分页等输入框全部套用。
+- 会员编辑弹窗：radio 选项与增减（stepper）控件修正到同一水平线。
+- 工具栏对齐：会员列表工具栏右侧搜索框 / 查询 / 视图切换错位修复（`.toolbar-right{display:flex;align-items:center;gap:8px}`，搜索框与按钮等高）。
+
+**原生弹窗全面替换（网站一体风格）**
+- 新增自定义弹窗：图片重命名 `#albumImageRenameModal`、通用确认 `#commonConfirmModal`（「!」图标 + 取消 / 确定双按钮）、通用输入 `#commonInputModal`。
+- 整份文件全部原生 `confirm()`（31 处）/ `prompt()`（8 处）替换为 `await confirmDialog()` / `await promptDialog()` 的网站风格 Promise 弹窗（会员 / 商品 / 订单 / 卡券 / 评论 / 配送 / 文章 / 相册 / 精选推荐等多处删除、改名、链接选择等），相关调用函数改为 `async`。
+
+**新增相册管理模块（后端补全，前端 UI 此前已存在）**
+- 后台「内容 > 相册管理」：相册分类（上级分类 / 排序 / 启用）、相册（封面 / 名称 / 分类 / 状态）、相册图片（上传 / 重命名 / 设封面 / 移动到其他相册 / 批量删除）。
+- 后端：`Album` / `AlbumCategory` / `AlbumImage` 三个控制器（列表 / 详情 / 保存 / 删除 / 批量删除 / 状态切换 / 上传 / 设封面 / 移动 / 重命名接口），`route/app.php` 注册相册相关路由。
+- 数据库：幂等迁移 `apply_albums.php` 新建 `album_categories` / `albums` / `album_images` 三张表。
+
+**工程治理**
+- 更新 `.gitignore`：排除本机调试 / 临时文件（`_*.ps1`、`_*.png`、`**/_*/`、`node_modules/`、`stats_*.json`、`stats_*.html`、`php_server.*`、`server/_test.ps1`、`server/check_tables.php`），避免误入库。
+
 ### v0.1.27 · 2026-08-20 · 移除 banner 管理模块
 **范围**：运营后台 UI（`server/public/admin.html`）、后端（删除 `server/app/controller/admin/Banner.php`、`server/database/apply_banners.php`、`server/route/app.php` 中的 banner 路由）、数据库（sqlite 中 `banners` 表）。
 **改动**：

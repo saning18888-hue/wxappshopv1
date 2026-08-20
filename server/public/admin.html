@@ -42,6 +42,15 @@
     .btn{border:0;border-radius:var(--radius-sm);padding:9px 16px;font-size:13px;font-weight:510;background:var(--primary);color:#fff;transition:background .15s,transform .1s;font-feature-settings:'cv01','ss03'}
     .btn:hover{background:var(--primary-700)}
     .btn:active{transform:translateY(1px)}
+    /* 通用表单控件：统一所有弹窗/面板里原始输入框的样式 */
+    .form-input,.form-select,.form-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;font-size:13px;background:#f7f8fa;color:var(--text);box-sizing:border-box}
+    .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .form-input::placeholder{color:#adb3bc}
+    .form-select{cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+    .form-textarea{min-height:80px;resize:vertical;font-family:inherit}
+    /* .field 内的 select/textarea 也统一 */
+    .field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px;background:#f7f8fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:32px;transition:border-color .12s,box-shadow .12s,background .12s}
+    .field select:focus{border-color:var(--primary);background-color:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
     .btn.gray{background:#f2f3f5;color:var(--text-secondary)}
     .btn.gray:hover{background:#e8eaed}
     .btn.danger{background:#fff;color:#ff4d4f;border:1px solid #ffd6d6}
@@ -106,6 +115,7 @@
     .toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
     .toolbar input,.toolbar select{padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px;background:#f7f8fa;transition:border-color .12s,box-shadow .12s,background .12s}
     .toolbar input:focus,.toolbar select:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .toolbar select{cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
     .muted{color:var(--text-muted);font-size:13px}
 
     /* Stats */
@@ -190,8 +200,10 @@
     .member-tabs .mtab{padding:10px 16px;font-size:14px;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:.15s}
     .member-tabs .mtab:hover{color:var(--text)}
     .member-tabs .mtab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
-    .view-switch{display:inline-flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-    .view-switch .vs-btn{border:0;background:#fff;padding:0 12px;height:32px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+    .toolbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .toolbar-right .form-input{width:200px;padding:8px 11px}
+    .view-switch{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+    .view-switch .vs-btn{border:0;background:#fff;padding:0 12px;height:34px;font-size:13px;color:var(--text-secondary);cursor:pointer}
     .view-switch .vs-btn.active{background:var(--primary);color:#fff}
     .member-tip{background:#fef0f0;border:1px solid #fbc4c4;color:#d8392b;font-size:13px;padding:10px 12px;border-radius:6px;margin-bottom:12px}
     .member-tip b{color:#d8392b}
@@ -199,8 +211,12 @@
     .pick-search .form-input{flex:1}
     .adjust-row{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px dashed #eee}
     .adjust-label{width:96px;color:var(--text);font-size:14px;flex:none}
-    .adjust-mode{display:flex;gap:14px;flex:none}
+    .adjust-mode{display:flex;align-items:center;gap:14px;flex:none}
     .adjust-row .form-input{flex:1}
+    #memberEditModal .modal-card{border-radius:16px}
+    #memberEditModal .adjust-row{padding:14px 0;border-bottom:1px dashed var(--border)}
+    #memberEditModal .adjust-row:last-of-type{border-bottom:0}
+    #memberEditModal .adjust-label{color:var(--text-secondary);font-weight:500}
     .readonly-box{background:#f5f7fa;color:#909399;border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px}
     .avatar-upload{display:flex;align-items:center;gap:12px}
     .avatar-preview{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#f0f0f0;border:1px solid var(--border)}
@@ -240,7 +256,7 @@
     .field>label{display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:7px}
     .inline-radios{display:flex;gap:18px;flex-wrap:wrap;padding-top:4px}
     .radio-label{font-size:13px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer}
-    .radio-label input[type=radio]{width:16px;height:16px;accent-color:var(--primary)}
+    .radio-label input[type=radio]{width:16px;height:16px;accent-color:var(--primary);margin:0;flex-shrink:0}
     .pager-pages{display:flex;align-items:center;gap:6px}
     .pager-pages button{min-width:30px;height:30px;padding:0 6px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);cursor:pointer;line-height:1;transition:all .12s}
     .pager-pages button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -260,10 +276,17 @@
     #goodsPickerModal{z-index:110}
     #mapPickerModal{z-index:200}
     .modal-card{background:var(--surface);border-radius:var(--radius);width:640px;max-width:92vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md);font-size:14px;line-height:1.5}
+    #commonConfirmModal .modal-card,#commonInputModal .modal-card{overflow:visible}
+    .confirm-icon{width:46px;height:46px;border-radius:50%;background:var(--primary-100,#eef0fb);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin:30px auto 14px}
+    .confirm-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px}
+    .confirm-msg{font-size:13px;color:var(--text-secondary);padding:0 28px 24px;line-height:1.7}
+    .confirm-foot{display:flex;gap:10px;padding:0 24px 24px;justify-content:center}
+    .confirm-foot .btn{flex:1;max-width:150px}
     .modal-card.lg{width:860px}
     .modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
     .modal-header h3{font-size:15px;font-weight:600}
-    .modal-header .close{font-size:20px;color:var(--text-muted);cursor:pointer;line-height:1}
+    .modal-header .close{width:28px;height:28px;border-radius:50%;border:0;background:#f2f3f5;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:18px;line-height:1;padding:0}
+    .modal-header .close:hover{background:#eee;color:var(--text)}
     .modal-body{padding:18px 20px;overflow:auto}
     .modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
     .form-row{display:flex;gap:16px;margin-bottom:14px}
@@ -323,17 +346,24 @@
     .a-time{font-size:12.5px;color:var(--text-muted);white-space:nowrap}
 
     /* 编辑弹窗：两栏布局 */
-    .a-modal-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+    #articleModal .modal-card{width:820px;max-width:94vw;border-radius:16px}
+    #articleCategoryModal .modal-card{width:560px;max-width:94vw;border-radius:16px}
+    .a-modal-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:28px;align-items:start}
     .a-col{min-width:0}
+    .a-section-title{font-size:13px;font-weight:600;color:var(--text);margin:0 0 14px;letter-spacing:.2px}
+    .a-form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .a-field{margin-bottom:18px}
     #tab-settings .a-field{margin-bottom:26px}
-    .a-field>label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:6px}
+    .a-field>label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:7px}
     .a-field>label .req{color:#ff4d4f;margin-left:2px}
-    .a-field .input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;outline:none;font-size:13.5px;background:#fff;color:var(--text);transition:border-color .12s,box-shadow .12s,background .12s}
-    .a-field .input:hover{border-color:#c4c8d4}
+    .a-field .input{width:100%;height:40px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;outline:none;font-size:13.5px;background:#fff;color:var(--text);transition:border-color .15s,box-shadow .15s,background .15s}
+    .a-field textarea.input{height:auto;min-height:80px;resize:vertical;line-height:1.55;padding:10px 12px}
+    .a-field select.input,.a-field select{height:40px;cursor:pointer;padding-right:34px;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2012%2012%22%3E%3Cpath%20d=%22M3%204.5L6%207.5L9%204.5%22%20stroke=%22%236b7280%22%20stroke-width=%221.4%22%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E);background-repeat:no-repeat;background-position:right 12px center}
+    .a-field .input:hover{border-color:#c4c8d4;background:#fff}
     .a-field .input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
-    .a-field select.input,.a-field select{cursor:pointer;padding-right:34px;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url(data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2212%22%20height=%2212%22%20viewBox=%220%200%2012%2012%22%3E%3Cpath%20d=%22M3%204.5L6%207.5L9%204.5%22%20stroke=%22%236b7280%22%20stroke-width=%221.4%22%20fill=%22none%22%20stroke-linecap=%22round%22%20stroke-linejoin=%22round%22/%3E%3C/svg%3E);background-repeat:no-repeat;background-position:right 12px center}
-    .a-field .radio{margin-top:4px}
+    .a-field .radio-group{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding-top:2px}
+    .a-field .radio{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--text-secondary);cursor:pointer;margin-right:0}
+    .a-field .radio input{width:16px;height:16px;accent-color:var(--primary);margin:0}
     /* 基础设置：带图标分段控件（标签/图标/选项保持充足间距，避免拥挤死板） */
     .a-set{display:flex;align-items:center;gap:22px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px}
     .a-set-name{display:inline-flex;align-items:center;gap:9px;min-width:118px;font-size:13.5px;font-weight:500;color:var(--text)}
@@ -345,23 +375,25 @@
     .a-seg label:hover{color:var(--text)}
     .a-seg label:has(input:checked){background:#fff;color:var(--primary);font-weight:600;box-shadow:0 1px 4px rgba(16,24,40,.12)}
     .a-seg label:has(input:checked) .dot{background:var(--primary);border-color:var(--primary)}
-    .a-side{background:var(--primary-50);border:1px solid var(--primary-100);border-radius:var(--radius);padding:16px}
-    .a-side-title{font-size:12px;font-weight:600;color:var(--text-secondary);margin:0 0 14px;letter-spacing:.3px}
-    .a-cover-uploader{display:block;margin-bottom:4px}
-    .a-cover-uploader .uploader-box{width:100%;height:118px;font-size:28px}
+    .a-side{background:linear-gradient(180deg,#f8f9ff 0%,#f4f6fb 100%);border:1px solid var(--primary-100);border-radius:14px;padding:20px}
+    .a-side-title{font-size:13px;font-weight:600;color:var(--text);margin:0 0 16px;letter-spacing:.2px}
+    .a-article-cover .uploader-box{width:100%;aspect-ratio:16/9;max-height:220px;border-radius:12px;font-size:32px}
+    .a-category-cover .uploader-box{width:160px;height:160px;border-radius:12px;font-size:32px}
+    .a-icon-uploader{display:inline-block;vertical-align:top;margin-bottom:4px}
+    .a-icon-uploader .uploader-box{width:120px;height:120px;border-radius:12px;font-size:28px}
     .a-hint{font-size:11.5px;color:var(--text-muted);line-height:1.55;margin-top:10px}
     .a-full{grid-column:1 / -1;margin-top:4px}
-    .a-content-label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:6px}
-    @media(max-width:680px){.a-modal-grid{grid-template-columns:1fr}}
+    .a-content-label{display:block;font-size:12px;font-weight:510;color:var(--text-secondary);margin-bottom:7px}
+    @media(max-width:760px){.a-modal-grid{grid-template-columns:1fr}}
     .uploader{display:inline-block}
     .uploader-box{width:96px;height:96px;border:1.5px dashed var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:28px;color:#bbb;cursor:pointer;background-size:cover;background-position:center;background-color:#fafafa;transition:border-color .15s}
     .uploader-box:hover{border-color:var(--primary)}
-    .editor{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-    .editor-bar{display:flex;gap:6px;padding:6px 8px;background:#fafbfc;border-bottom:1px solid var(--border)}
-    .editor-bar button{padding:4px 10px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer;font-size:13px}
-    .editor-bar button:hover{border-color:var(--primary);color:var(--primary)}
-    .editor-body{min-height:200px;padding:14px;outline:none;line-height:1.7;font-size:14px}
-    .editor-body:empty:before{content:'请输入文章内容…';color:#bbb}
+    .editor{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
+    .editor-bar{display:flex;gap:6px;padding:8px 10px;background:#f8f9fb;border-bottom:1px solid var(--border)}
+    .editor-bar button{padding:5px 12px;border:1px solid var(--border);background:#fff;border-radius:8px;cursor:pointer;font-size:13px;color:var(--text-secondary);transition:all .12s}
+    .editor-bar button:hover{border-color:var(--primary);color:var(--primary);background:#fff}
+    .editor-body{min-height:180px;padding:12px;outline:none;line-height:1.7;font-size:14px}
+    .editor-body:empty:before{content:'在此输入正文...';color:#bbb;pointer-events:none}
     .goods-form-row{display:flex;gap:16px;margin-bottom:14px;align-items:flex-start}
     .goods-form-row .field{flex:1;margin-bottom:0}
     .goods-form-row .field.half{flex:0 0 50%}
@@ -735,9 +767,9 @@
     .modal-panel{width:520px;max-width:calc(100vw - 32px);background:var(--surface);border-radius:var(--radius);box-shadow:0 12px 40px rgba(0,0,0,.12);transform:translateY(16px);transition:transform .2s;max-height:90vh;overflow:auto}
     .modal-backdrop.show .modal-panel{transform:translateY(0)}
     .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
-    .modal-head h4{font-size:15px;font-weight:700}
-    .modal-head .close{width:28px;height:28px;border-radius:50%;border:0;background:#f2f3f5;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
-    .modal-head .close:hover{background:#eee;color:var(--text)}
+    .modal-head h4,.modal-head span[id$="ModalTitle"]{font-size:15px;font-weight:600;color:var(--text)}
+    .modal-head .close,.modal-head .modal-close{width:28px;height:28px;border-radius:50%;border:0;background:#f2f3f5;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:18px;line-height:1;padding:0}
+    .modal-head .close:hover,.modal-head .modal-close:hover{background:#eee;color:var(--text)}
     .modal-body{padding:20px}
     .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:#fafbfc}
     .modal-foot .btn.gray{background:#f2f3f5;color:#6b7280;border:1px solid #e6e8eb;transition:all .12s}
@@ -1098,8 +1130,8 @@
         <div id="goodsPanel" class="panel hidden">
           <div class="card">
             <div class="toolbar">
-              <select id="goodsCat"><option value="0">全部分类</option></select>
-              <input id="goodsKw" placeholder="搜索商品标题">
+              <select id="goodsCat" class="form-select" style="width:150px"><option value="0">全部分类</option></select>
+              <input id="goodsKw" class="form-input" placeholder="搜索商品标题" style="width:220px">
               <button class="btn" onclick="loadGoods()">查询</button>
               <button class="btn outline" onclick="openGoodsModal()">+ 新增商品</button>
             </div>
@@ -2498,9 +2530,9 @@
                       <button class="btn" onclick="openDeliveryTemplateModal()">+ 添加模板</button>
                       <button class="btn gray" onclick="batchDeleteDeliveryTemplates()">批量删除</button>
                     </div>
-                    <div class="right">
-                      <input type="text" id="deliverySearchInput" placeholder="关键词筛选" oninput="renderDeliveryTemplates()">
-                      <select id="deliveryViewMode" onchange="renderDeliveryTemplates()">
+                    <div class="right" style="display:flex;align-items:center;gap:8px">
+                      <input type="text" id="deliverySearchInput" class="form-input" placeholder="关键词筛选" oninput="renderDeliveryTemplates()" style="width:180px">
+                      <select id="deliveryViewMode" class="form-select" onchange="renderDeliveryTemplates()" style="width:100px">
                         <option value="list">列表</option>
                         <option value="card">卡片</option>
                       </select>
@@ -2538,9 +2570,9 @@
                       <button type="button" class="btn btn-primary" onclick="openPickupPointModal()"><i data-feather="plus"></i> 添加</button>
                       <button type="button" class="btn btn-danger" onclick="batchDeletePickupPoints()">批量删除</button>
                     </div>
-                    <div class="right">
-                      <input type="text" id="pickupSearchInput" placeholder="关键词筛选" oninput="renderPickupPoints()">
-                      <select id="pickupViewMode" onchange="renderPickupPoints()" title="切换视图">
+                    <div class="right" style="display:flex;align-items:center;gap:8px">
+                      <input type="text" id="pickupSearchInput" class="form-input" placeholder="关键词筛选" oninput="renderPickupPoints()" style="width:180px">
+                      <select id="pickupViewMode" class="form-select" onchange="renderPickupPoints()" title="切换视图" style="width:100px">
                         <option value="list">列表</option>
                         <option value="card">卡片</option>
                       </select>
@@ -2578,9 +2610,9 @@
                       <button type="button" class="btn btn-primary" onclick="openLocalRuleModal()"><i data-feather="plus"></i> 添加</button>
                       <button type="button" class="btn btn-danger" onclick="batchDeleteLocalRules()">批量删除</button>
                     </div>
-                    <div class="right">
-                      <input type="text" id="localSearchInput" placeholder="关键词筛选" oninput="renderLocalRules()">
-                      <select id="localViewMode" onchange="renderLocalRules()" title="切换视图">
+                    <div class="right" style="display:flex;align-items:center;gap:8px">
+                      <input type="text" id="localSearchInput" class="form-input" placeholder="关键词筛选" oninput="renderLocalRules()" style="width:180px">
+                      <select id="localViewMode" class="form-select" onchange="renderLocalRules()" title="切换视图" style="width:100px">
                         <option value="list">列表</option>
                         <option value="card">卡片</option>
                       </select>
@@ -2834,7 +2866,7 @@
                   </div>
                   <input type="number" class="form-input" id="mBalanceVal" style="width:140px" step="0.01">
                 </div>
-                <div class="field"><label>分组名称</label><select class="form-input" id="mEditGroup" style="width:200px"></select></div>
+                <div class="field" style="margin-top:18px"><label>分组名称</label><select class="form-select" id="mEditGroup" style="width:200px"></select></div>
               </div>
               <div class="modal-footer">
                 <button class="btn gray" onclick="closeMemberEdit()">取消</button>
@@ -2890,7 +2922,7 @@
             <div class="modal-card" style="width:420px">
               <div class="modal-header"><h3 id="memberGroupTitle">修改分组</h3><span class="close" onclick="closeMemberGroup()">&times;</span></div>
               <div class="modal-body">
-                <div class="field"><label>选择会员分组</label><select class="form-input" id="mGroupSelect"></select></div>
+                <div class="field"><label>选择会员分组</label><select class="form-select" id="mGroupSelect"></select></div>
               </div>
               <div class="modal-footer">
                 <button class="btn gray" onclick="closeMemberGroup()">取消</button>
@@ -2957,7 +2989,7 @@
           </div>
           <div class="goods-form-item">
             <label class="goods-form-label"><span class="req">*</span>商品分类</label>
-            <div class="goods-form-control"><select id="gCat"><option value="">请选择</option></select></div>
+            <div class="goods-form-control"><select id="gCat" class="form-select"><option value="">请选择</option></select></div>
           </div>
           <div class="goods-form-item">
             <label class="goods-form-label">促销语</label>
@@ -3426,7 +3458,7 @@
           <label class="radio-label"><input type="radio" name="shipType" value="express" checked onchange="updateBatchShipType()"> 常用快递</label>
           <label class="radio-label"><input type="radio" name="shipType" value="none" onchange="updateBatchShipType()"> 不需要</label>
         </div>
-        <div class="field" id="shipCompanyWrap"><label>物流公司</label><select class="form-input" id="shipCompany">
+        <div class="field" id="shipCompanyWrap"><label>物流公司</label><select class="form-select" id="shipCompany">
           <option>顺丰速运</option>
           <option>百世快递</option>
           <option>中通快递</option>
@@ -3488,8 +3520,8 @@
       <div class="modal-body">
         <input type="hidden" id="cId">
         <div class="form-row">
-          <div class="field"><label>分类简称</label><input id="cName" placeholder="请输入分类名称"></div>
-          <div class="field"><label>上级分类</label><select id="cParent"></select></div>
+          <div class="field"><label>分类简称</label><input id="cName" class="form-input" placeholder="请输入分类名称"></div>
+          <div class="field"><label>上级分类</label><select id="cParent" class="form-select"></select></div>
         </div>
         <div class="form-row">
           <div class="field"><label>关键字</label><input id="cKeywords" placeholder="搜索关键字"></div>
@@ -3529,15 +3561,15 @@
         <div class="map-coords">
           <div class="field">
             <label>经度</label>
-            <input type="text" id="mapLng" placeholder="经度">
+            <input type="text" id="mapLng" class="form-input" placeholder="经度">
           </div>
           <div class="field">
             <label>纬度</label>
-            <input type="text" id="mapLat" placeholder="纬度">
+            <input type="text" id="mapLat" class="form-input" placeholder="纬度">
           </div>
           <div class="field" style="flex:1">
             <label>地址</label>
-            <input type="text" id="mapAddress" placeholder="位置名称 / 详细地址">
+            <input type="text" id="mapAddress" class="form-input" placeholder="位置名称 / 详细地址">
           </div>
         </div>
       </div>
@@ -3844,7 +3876,7 @@
             <span class="unit">-</span>
             <input type="time" class="form-input" id="localTimeClose" value="18:00:00">
             <label style="margin-left:12px">时间间隔</label>
-            <select id="localTimeInterval" class="form-input">
+            <select id="localTimeInterval" class="form-select">
               <option value="60">1小时</option>
               <option value="30">30分钟</option>
               <option value="15">15分钟</option>
@@ -3944,12 +3976,12 @@
         <div class="picker-filter">
           <div class="field">
             <label>商品分类</label>
-            <select id="goodsPickerCat" onchange="onGoodsPickerCat()"></select>
+            <select id="goodsPickerCat" class="form-select" onchange="onGoodsPickerCat()"></select>
           </div>
           <div class="field picker-search-field">
             <label>搜索</label>
             <div class="picker-search-line">
-              <input id="goodsPickerKw" placeholder="商品名称" onkeydown="if(event.key==='Enter')onGoodsPickerSearch()">
+              <input id="goodsPickerKw" class="form-input" placeholder="商品名称" onkeydown="if(event.key==='Enter')onGoodsPickerSearch()">
               <button class="btn sm" onclick="onGoodsPickerSearch()">搜索</button>
             </div>
           </div>
@@ -4066,6 +4098,155 @@
     </div>
   </div>
 
+  <!-- ===================== 相册管理 ===================== -->
+  <div id="albumPanel" class="panel hidden">
+    <div class="card">
+      <div class="article-tabs">
+        <button class="article-tab active" data-tab="album-list" onclick="switchAlbumTab('album-list')">相册列表</button>
+        <button class="article-tab" data-tab="album-category" onclick="switchAlbumTab('album-category')">相册分类</button>
+      </div>
+
+      <!-- 相册列表 -->
+      <div id="tab-album-list" class="article-pane active">
+        <div class="article-toolbar">
+          <input id="albumKw" class="input" placeholder="关键词">
+          <select id="albumCatFilter" class="input"><option value="0">全部分类</option></select>
+          <button class="btn sm" onclick="loadAlbums(1)">查询</button>
+          <span class="spacer"></span>
+          <button class="btn sm danger" onclick="batchDeleteAlbums()">批量删除</button>
+          <button class="btn sm primary" onclick="openAlbumModal()">添加</button>
+        </div>
+        <div class="article-table-wrap">
+        <table class="table">
+          <thead><tr>
+            <th><input type="checkbox" id="albumCheckAll" onchange="toggleCheckAll('album')"></th>
+            <th>名称</th><th>相册分类</th><th>封面</th><th>图片数量</th><th>排序</th><th>手机端是否显示</th><th>创建时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="albumList"></tbody>
+        </table>
+        </div>
+        <div class="pager" id="albumPager"></div>
+      </div>
+
+      <!-- 相册分类 -->
+      <div id="tab-album-category" class="article-pane">
+        <div class="article-toolbar">
+          <input id="albumCatKw" class="input" placeholder="分类名称">
+          <button class="btn sm" onclick="loadAlbumCategories(1)">查询</button>
+          <span class="spacer"></span>
+          <button class="btn sm danger" onclick="batchDeleteAlbumCategories()">批量删除</button>
+          <button class="btn sm primary" onclick="openAlbumCategoryModal()">添加</button>
+        </div>
+        <div class="article-table-wrap">
+        <table class="table">
+          <thead><tr>
+            <th><input type="checkbox" id="albumCatCheckAll" onchange="toggleCheckAll('albumCat')"></th>
+            <th>名称</th><th>图标</th><th>排序</th><th>手机端是否显示</th><th>创建时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="albumCatList"></tbody>
+        </table>
+        </div>
+        <div class="pager" id="albumCatPager"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 相册图片管理 -->
+  <div id="albumImagePanel" class="panel hidden">
+    <div class="card">
+      <style>
+        .album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px;padding:16px 0}
+        .album-item{position:relative;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;cursor:pointer;transition:box-shadow .15s}
+        .album-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.08)}
+        .album-item img{width:100%;height:120px;object-fit:cover;display:block}
+        .album-item .ai-name{padding:6px 8px;font-size:12px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .album-item .ai-check{position:absolute;top:6px;left:6px;z-index:2}
+        .album-item .ai-cover{position:absolute;top:6px;right:6px;background:var(--primary);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px;z-index:2}
+      </style>
+      <div class="article-toolbar" style="align-items:center">
+        <button class="btn sm" onclick="backToAlbumList()">← 返回相册列表</button>
+        <span id="albumImageTitle" style="font-weight:600;margin-left:12px">相册图片</span>
+      </div>
+      <div class="article-toolbar">
+        <button class="btn sm primary" onclick="uploadAlbumImages()">上传图片</button>
+        <button class="btn sm danger" onclick="batchDeleteAlbumImages()">批量删除</button>
+        <button class="btn sm" onclick="setCoverBatch()">设为封面</button>
+        <button class="btn sm" onclick="moveAlbumImages()">移动到其他相册</button>
+        <span class="spacer"></span>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px"><input type="checkbox" id="albumImgCheckAll" onchange="toggleCheckAll('albumImg')"> 全选</label>
+      </div>
+      <div id="albumImageGrid" class="album-grid"></div>
+      <div class="pager" id="albumImagePager"></div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑相册弹窗 -->
+  <div id="albumModal" class="modal">
+    <div class="modal-card" style="max-width:520px">
+      <div class="modal-head"><span id="albumModalTitle">添加相册</span><button class="modal-close" onclick="closeAlbumModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-field"><label>相册名称 <span class="req">*</span></label><input id="albumName" class="input"></div>
+        <div class="a-field"><label>相册分类 <span class="req">*</span></label><select id="albumCategory" class="input"><option value="0">请选择</option></select></div>
+        <div class="a-field"><label>排序</label><input id="albumSort" type="number" class="input" value="0"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAlbumModal()">取消</button>
+        <button class="btn primary" onclick="saveAlbum()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑相册分类弹窗 -->
+  <div id="albumCategoryModal" class="modal">
+    <div class="modal-card" style="max-width:420px">
+      <div class="modal-head"><span id="albumCategoryModalTitle">添加相册分类</span><button class="modal-close" onclick="closeAlbumCategoryModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-field"><label>分类名称 <span class="req">*</span></label><input id="albumCatName" class="input" placeholder="分类名称"></div>
+        <div class="a-field"><label>排序</label><input id="albumCatSort" type="number" class="input" value="0"></div>
+        <div class="a-field"><label>图标</label>
+          <div class="a-icon-uploader uploader" onclick="document.getElementById('albumCatIconInput').click()">
+            <div id="albumCatIconPreview" class="uploader-box">+</div>
+          </div>
+          <input id="albumCatIconInput" type="file" accept="image/*" hidden onchange="uploadAlbumCatIcon()">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAlbumCategoryModal()">取消</button>
+        <button class="btn primary" onclick="saveAlbumCategory()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 移动到其他相册弹窗 -->
+  <div id="albumMoveModal" class="modal">
+    <div class="modal-card" style="max-width:420px">
+      <div class="modal-head"><span>移动到其他相册</span><button class="modal-close" onclick="closeAlbumMoveModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-field"><label>目标相册</label><select id="albumMoveTarget" class="input"><option value="0">请选择</option></select></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAlbumMoveModal()">取消</button>
+        <button class="btn primary" onclick="confirmMoveAlbumImages()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改图片名称弹窗 -->
+  <div id="albumImageRenameModal" class="modal">
+    <div class="modal-card" style="max-width:420px;border-radius:16px">
+      <div class="modal-head"><span>修改图片名称</span><button class="modal-close" onclick="closeAlbumImageRenameModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-field" style="margin-bottom:0">
+          <label>图片名称</label>
+          <input type="text" id="albumImageRenameInput" class="form-input" placeholder="请输入图片名称" onkeydown="if(event.key==='Enter')confirmAlbumImageRename()">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeAlbumImageRenameModal()">取消</button>
+        <button class="btn primary" onclick="confirmAlbumImageRename()">确定</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 添加/编辑文章弹窗 -->
   <div id="articleModal" class="modal">
@@ -4074,48 +4255,55 @@
       <div class="modal-body">
         <div class="a-modal-grid">
           <div class="a-col">
-            <div class="a-field"><label>文章标题 <span class="req">*</span></label><input id="aTitle" class="input"></div>
-            <div class="a-field"><label>文章分类 <span class="req">*</span></label><select id="aCategory" class="input"></select></div>
-            <div class="a-field"><label>简介</label><input id="aIntro" class="input"></div>
-            <div class="a-field"><label>作者</label><input id="aAuthor" class="input"></div>
-            <div class="a-field"><label>来源</label><input id="aSource" class="input"></div>
-            <div class="a-field"><label>阅读量</label><input id="aViews" type="number" class="input" value="0"></div>
-            <div class="a-field"><label>文章关键字</label><input id="aKeywords" class="input"></div>
-            <div class="a-field"><label>外部链接</label><input id="aLink" class="input"></div>
-            <div class="a-field"><label>是否推荐</label><div class="radio"><label><input type="radio" name="aRecommend" value="1">推荐</label><label><input type="radio" name="aRecommend" value="0" checked>不推荐</label></div></div>
+            <div class="a-section-title">基础信息</div>
+            <div class="a-field"><label>文章标题 <span class="req">*</span></label><input id="aTitle" class="input" placeholder="请输入文章标题"></div>
+            <div class="a-field"><label>文章分类 <span class="req">*</span></label><select id="aCategory" class="input"><option value="0">请选择分类</option></select></div>
+            <div class="a-field"><label>简介</label><textarea id="aIntro" class="input" rows="3" placeholder="简要描述文章内容，用于列表展示"></textarea></div>
+            <div class="a-form-row">
+              <div class="a-field"><label>作者</label><input id="aAuthor" class="input" placeholder="作者姓名"></div>
+              <div class="a-field"><label>来源</label><input id="aSource" class="input" placeholder="文章来源"></div>
+            </div>
+            <div class="a-form-row">
+              <div class="a-field"><label>阅读量</label><input id="aViews" type="number" class="input" value="0"></div>
+              <div class="a-field"><label>文章关键字</label><input id="aKeywords" class="input" placeholder="用逗号分隔"></div>
+            </div>
+            <div class="a-form-row">
+              <div class="a-field"><label>外部链接</label><input id="aLink" class="input" placeholder="https://"></div>
+              <div class="a-field"><label>是否推荐</label><div class="radio-group"><label class="radio"><input type="radio" name="aRecommend" value="1">推荐</label><label class="radio"><input type="radio" name="aRecommend" value="0" checked>不推荐</label></div></div>
+            </div>
           </div>
           <div class="a-side">
             <div class="a-side-title">封面与展示</div>
-            <div class="a-field"><label>显示模式</label><div class="radio"><label><input type="radio" name="aDisplayMode" value="native" checked>原生</label><label><input type="radio" name="aDisplayMode" value="webview">webview</label></div></div>
+            <div class="a-field"><label>显示模式</label><div class="radio-group"><label class="radio"><input type="radio" name="aDisplayMode" value="native" checked>原生</label><label class="radio"><input type="radio" name="aDisplayMode" value="webview">Webview</label></div></div>
             <div class="a-field"><label>视频类型</label>
               <select id="aVideoType" class="input">
                 <option value="none">无</option><option value="mp4">mp4</option><option value="tencent">腾讯</option><option value="douyin">抖音</option><option value="weishi">微视</option>
               </select>
             </div>
             <div class="a-field"><label>文章封面</label>
-              <div class="a-cover-uploader uploader" onclick="document.getElementById('aCoverInput').click()">
+              <div class="a-article-cover uploader" onclick="document.getElementById('aCoverInput').click()">
                 <div id="aCoverPreview" class="uploader-box">+</div>
               </div>
               <input id="aCoverInput" type="file" accept="image/*" hidden onchange="uploadArticleCover()">
               <div class="a-hint">建议尺寸 750×420，封面将展示在文章列表与详情页顶部。</div>
             </div>
           </div>
-        </div>
-        <div class="a-full">
-          <label class="a-content-label">内容</label>
-          <div class="editor">
-            <div class="editor-bar">
-              <button type="button" onclick="editorCmd('bold')"><b>B</b></button>
-              <button type="button" onclick="editorCmd('italic')"><i>I</i></button>
-              <button type="button" onclick="editorCmd('underline')"><u>U</u></button>
-              <button type="button" onclick="editorCmd('insertUnorderedList')">• 列表</button>
-              <button type="button" onclick="editorCmd('createLink')">🔗 链接</button>
+          <div class="a-full">
+            <label class="a-content-label">内容</label>
+            <div class="editor">
+              <div class="editor-bar">
+                <button type="button" onclick="editorCmd('bold')"><b>B</b></button>
+                <button type="button" onclick="editorCmd('italic')"><i>I</i></button>
+                <button type="button" onclick="editorCmd('underline')"><u>U</u></button>
+                <button type="button" onclick="editorCmd('insertUnorderedList')">• 列表</button>
+                <button type="button" onclick="editorCmd('createLink')">🔗 链接</button>
+              </div>
+              <div id="aContent" class="editor-body" contenteditable="true"></div>
             </div>
-            <div id="aContent" class="editor-body" contenteditable="true"></div>
           </div>
         </div>
       </div>
-      <div class="modal-foot"><button class="btn sm" onclick="closeArticleModal()">取消</button><button class="btn sm primary" onclick="saveArticle()">确定</button></div>
+      <div class="modal-foot"><button class="btn sm gray" onclick="closeArticleModal()">取消</button><button class="btn sm primary" onclick="saveArticle()">确定</button></div>
     </div>
   </div>
 
@@ -4126,15 +4314,16 @@
       <div class="modal-body">
         <div class="a-modal-grid">
           <div class="a-col">
-            <div class="a-field"><label>分类名称 <span class="req">*</span></label><input id="acName" class="input"></div>
-            <div class="a-field"><label>上级分类</label><select id="acParent" class="input"></select></div>
+            <div class="a-section-title">分类信息</div>
+            <div class="a-field"><label>分类名称 <span class="req">*</span></label><input id="acName" class="input" placeholder="请输入分类名称"></div>
+            <div class="a-field"><label>上级分类</label><select id="acParent" class="input"><option value="0">顶级分类</option></select></div>
             <div class="a-field"><label>排序</label><input id="acSort" type="number" class="input" value="0"></div>
-            <div class="a-field"><label>是否启用</label><div class="radio"><label><input type="radio" name="acStatus" value="1" checked>启用</label><label><input type="radio" name="acStatus" value="0">禁用</label></div></div>
+            <div class="a-field"><label>是否启用</label><div class="radio-group"><label class="radio"><input type="radio" name="acStatus" value="1" checked>启用</label><label class="radio"><input type="radio" name="acStatus" value="0">禁用</label></div></div>
           </div>
           <div class="a-side">
             <div class="a-side-title">分类封面</div>
             <div class="a-field"><label>封面图片</label>
-              <div class="a-cover-uploader uploader" onclick="document.getElementById('acCoverInput').click()">
+              <div class="a-category-cover uploader" onclick="document.getElementById('acCoverInput').click()">
                 <div id="acCoverPreview" class="uploader-box">+</div>
               </div>
               <input id="acCoverInput" type="file" accept="image/*" hidden onchange="uploadArticleCategoryCover()">
@@ -4143,7 +4332,7 @@
           </div>
         </div>
       </div>
-      <div class="modal-foot"><button class="btn sm" onclick="closeArticleCategoryModal()">取消</button><button class="btn sm primary" onclick="saveArticleCategory()">确定</button></div>
+      <div class="modal-foot"><button class="btn sm gray" onclick="closeArticleCategoryModal()">取消</button><button class="btn sm primary" onclick="saveArticleCategory()">确定</button></div>
     </div>
   </div>
 
@@ -4156,7 +4345,7 @@
       <span class="chip" data-range="last7">最近7天</span>
       <span class="chip" data-range="last30">最近30天</span>
       <span class="chip" data-range="custom">自定义</span>
-      <input type="date" id="overviewStart"><span>至</span><input type="date" id="overviewEnd">
+      <input type="date" id="overviewStart" class="form-input" style="width:150px"><span>至</span><input type="date" id="overviewEnd" class="form-input" style="width:150px">
       <button class="btn sm" onclick="loadOverviewStats()">查询</button>
       <span class="note">说明：自定义时间搜索最大支持30天</span>
     </div>
@@ -4175,7 +4364,7 @@
       <span class="chip" data-range="last7">最近7天</span>
       <span class="chip" data-range="last30">最近30天</span>
       <span class="chip" data-range="custom">自定义</span>
-      <input type="date" id="tradeStart"><span>至</span><input type="date" id="tradeEnd">
+      <input type="date" id="tradeStart" class="form-input" style="width:150px"><span>至</span><input type="date" id="tradeEnd" class="form-input" style="width:150px">
       <button class="btn sm" onclick="loadTradeStats()">查询</button>
       <span class="note">说明：自定义时间搜索最大支持30天</span>
     </div>
@@ -4194,8 +4383,8 @@
       <span class="chip" data-range="last7">最近7天</span>
       <span class="chip" data-range="last30">最近30天</span>
       <span class="chip" data-range="custom">自定义</span>
-      <input type="date" id="goodsStart"><span>至</span><input type="date" id="goodsEnd">
-      <input type="text" id="goodsKeyword" placeholder="商品名称" style="width:160px">
+      <input type="date" id="goodsStart" class="form-input" style="width:150px"><span>至</span><input type="date" id="goodsEnd" class="form-input" style="width:150px">
+      <input type="text" id="goodsKeyword" class="form-input" placeholder="商品名称" style="width:180px">
       <button class="btn sm" onclick="loadGoodsStats()">搜索</button>
       <button class="btn sm outline" onclick="toast('导出功能开发中')">导出</button>
       <span class="note">说明：自定义时间搜索最大支持30天，统计的是指定时间内用户浏览过的商品</span>
@@ -4222,7 +4411,7 @@
       <span class="chip" data-range="last7">最近7天</span>
       <span class="chip" data-range="last30">最近30天</span>
       <span class="chip" data-range="custom">自定义</span>
-      <input type="date" id="webStart"><span>至</span><input type="date" id="webEnd">
+      <input type="date" id="webStart" class="form-input" style="width:150px"><span>至</span><input type="date" id="webEnd" class="form-input" style="width:150px">
       <button class="btn sm" onclick="loadWebStats()">查询</button>
       <span class="note">说明：自定义时间搜索最大支持30天</span>
     </div>
@@ -4251,7 +4440,7 @@
       <span class="chip" data-range="last7">最近7天</span>
       <span class="chip" data-range="last30">最近30天</span>
       <span class="chip" data-range="custom">自定义</span>
-      <input type="date" id="summaryStart"><span>至</span><input type="date" id="summaryEnd">
+      <input type="date" id="summaryStart" class="form-input" style="width:150px"><span>至</span><input type="date" id="summaryEnd" class="form-input" style="width:150px">
       <button class="btn sm" onclick="loadSummaryStats()">查询</button>
       <button class="btn sm outline" onclick="toast('导出功能开发中')">导出</button>
       <span class="note">说明：自定义时间搜索最大支持30天</span>
@@ -4270,6 +4459,33 @@
   </div>
 
   <div id="toast" class="toast"></div>
+
+  <!-- 通用确认弹窗 -->
+  <div id="commonConfirmModal" class="modal">
+    <div class="modal-card" style="max-width:400px;text-align:center;padding:0">
+      <div class="confirm-icon">!</div>
+      <div class="confirm-title" id="confirmTitle">提示</div>
+      <div class="confirm-msg" id="confirmMsg"></div>
+      <div class="confirm-foot">
+        <button class="btn gray" id="confirmCancel">取消</button>
+        <button class="btn primary" id="confirmOk">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 通用输入弹窗 -->
+  <div id="commonInputModal" class="modal">
+    <div class="modal-card" style="max-width:420px;border-radius:16px">
+      <div class="modal-head"><span id="inputTitle">输入</span><button class="modal-close" onclick="closeInputModal()">×</button></div>
+      <div class="modal-body" style="padding:22px 20px 4px;text-align:left">
+        <input type="text" id="inputField" class="form-input" placeholder="">
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeInputModal()">取消</button>
+        <button class="btn primary" id="inputOk">确定</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const BASE='/admin';
@@ -4373,7 +4589,7 @@
       ]},
       {key:'content',label:'内容',icon:ICONS.content,children:[
         {key:'article',label:'文章管理',icon:ICONS.fileText,panel:'articlePanel',default:true},
-        {key:'album',label:'相册管理',icon:ICONS.images},
+        {key:'album',label:'相册管理',icon:ICONS.images,panel:'albumPanel'},
         {key:'iframe',label:'内嵌网页',icon:ICONS.link},
         {key:'miniapp',label:'跳转小程序',icon:ICONS.externalLink}
       ]},
@@ -4498,6 +4714,7 @@
       if(panelId==='webStatsPanel') loadWebStatsPanel();
       if(panelId==='summaryStatsPanel') loadSummaryStatsPanel();
       if(panelId==='memberPanel') loadMembers();
+      if(panelId==='albumPanel') loadAlbums(1);
       if(panelId==='memberGroupPanel') loadMemberGroups();
       window.scrollTo(0,0);
     }
@@ -4825,10 +5042,10 @@
       editor.addEventListener('keyup',saveRange);
       const restore=()=>{if(range){editor.focus();const s=window.getSelection();s.removeAllRanges();s.addRange(range);}};
       const exec=(cmd,val=null)=>{restore();try{document.execCommand(cmd,false,val);}catch(e){}};
-      toolbar.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
+      toolbar.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',async()=>{
         const cmd=b.dataset.cmd,val=b.dataset.val;
         if(cmd==='source'){toggleSource();return;}
-        if(cmd==='link'){const url=prompt('链接地址','https://');if(url)exec('createLink',url);return;}
+        if(cmd==='link'){const url=await promptDialog('链接地址','https://');if(url)exec('createLink',url);return;}
         if(cmd==='image'){pickImage();return;}
         exec(cmd,val);
       }));
@@ -4881,7 +5098,7 @@
     }
 
     async function deleteMember(id){
-      if(!confirm('确定删除该会员？删除后将从列表中隐藏。'))return;
+      if(!(await confirmDialog('确定删除该会员？删除后将从列表中隐藏。')))return;
       const d=await fetchA(`${BASE}/members/${id}/logout`,{method:'POST',body:{action:'pass'}});
       if(d.code!==0){toast(d.msg||'操作失败');return;}
       toast('已删除');loadMembers();
@@ -4953,13 +5170,13 @@
     async function batchDeleteMemberGroups(){
       const ids=[...document.querySelectorAll('.mg-check:checked')].map(c=>c.value);
       if(!ids.length){toast('请先选择要删除的分组');return;}
-      if(!confirm(`确定删除选中的 ${ids.length} 个分组吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${ids.length} 个分组吗？`)))return;
       const d=await fetchA(`${BASE}/member_groups/batch_delete`,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadMemberGroups();
     }
     async function deleteMemberGroup(id,name){
-      if(!confirm(`确定删除分组「${name}」吗？`))return;
+      if(!(await confirmDialog(`确定删除分组「${name}」吗？`)))return;
       const d=await fetchA(`${BASE}/member_groups/${id}/delete`,{method:'POST'});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadMemberGroups();
@@ -5399,7 +5616,7 @@
     }
     function toggleSpecSelected(idx){gState.specs[idx].selected=!gState.specs[idx].selected;renderSpecMgmtTable();syncSkus();}
     function moveSpecMgmtRow(idx,dir){const n=idx+dir;if(n<0||n>=gState.specs.length)return;[gState.specs[idx],gState.specs[n]]=[gState.specs[n],gState.specs[idx]];renderSpecMgmtTable();syncSkus();}
-    function deleteSpecMgmtRow(idx){if(!confirm('确定删除该规格？'))return;gState.specs.splice(idx,1);renderSpecMgmtTable();syncSkus();}
+    async function deleteSpecMgmtRow(idx){if(!(await confirmDialog('确定删除该规格？')))return;gState.specs.splice(idx,1);renderSpecMgmtTable();syncSkus();}
 
     function openSpecValueModal(idx){
       gState.editingSpecIdx=(typeof idx==='number')?idx:-1;
@@ -5493,7 +5710,7 @@
     }
     function toggleAttrSelected(idx){gState.attrs[idx].selected=!gState.attrs[idx].selected;renderAttrMgmtTable();}
     function moveAttrMgmtRow(idx,dir){const n=idx+dir;if(n<0||n>=gState.attrs.length)return;[gState.attrs[idx],gState.attrs[n]]=[gState.attrs[n],gState.attrs[idx]];renderAttrMgmtTable();}
-    function deleteAttrMgmtRow(idx){if(!confirm('确定删除该属性？'))return;gState.attrs.splice(idx,1);renderAttrMgmtTable();}
+    async function deleteAttrMgmtRow(idx){if(!(await confirmDialog('确定删除该属性？')))return;gState.attrs.splice(idx,1);renderAttrMgmtTable();}
 
     function openAttrValueModal(idx){
       gState.editingAttrIdx=(typeof idx==='number')?idx:-1;
@@ -5563,14 +5780,14 @@
       }
       rteUpdateActive();
     }
-    function rteInsertLink(){
+    async function rteInsertLink(){
       restoreDetailRange();
-      const url=prompt('请输入链接地址：','https://');
+      const url=await promptDialog('请输入链接地址：','https://');
       if(url)rteExec('createLink',url);
     }
-    function rteInsertTable(){
-      const cols=parseInt(prompt('列数',3),10)||3;
-      const rows=parseInt(prompt('行数',3),10)||3;
+    async function rteInsertTable(){
+      const cols=parseInt(await promptDialog('列数','3'),10)||3;
+      const rows=parseInt(await promptDialog('行数','3'),10)||3;
       let html='<table><tbody>';
       for(let i=0;i<rows;i++){html+='<tr>';for(let j=0;j<cols;j++){html+='<td> </td>';}html+='</tr>';}
       html+='</tbody></table><p><br></p>';
@@ -5617,7 +5834,7 @@
       input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url){restoreDetailRange();document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}}};
       input.click();
     }
-    function addMessageField(){const name=prompt('留言字段名称');if(name)document.getElementById('gMessage').value=name;}
+    async function addMessageField(){const name=await promptDialog('留言字段名称');if(name)document.getElementById('gMessage').value=name;}
 
     async function editGoods(id){
       const d=await fetchA(`${BASE}/goods/${id}`);
@@ -5735,7 +5952,7 @@
       if(d.code===0){toast('保存成功');closeGoodsModal();loadGoods();}else{toast(d.msg);}
     }
     async function removeGoods(id){
-      if(!confirm('确认删除该商品？'))return;
+      if(!(await confirmDialog('确认删除该商品？')))return;
       const d=await fetchA(`${BASE}/goods/${id}`,{method:'DELETE'});
       if(d.code===0){toast('删除成功');loadGoods();}else{toast(d.msg);}
     }
@@ -5818,7 +6035,7 @@
       loadGoodsSpecs();
     }
     async function deleteGoodsSpec(id,name){
-      if(!confirm(`确定删除规格「${name}」吗？`))return;
+      if(!(await confirmDialog(`确定删除规格「${name}」吗？`)))return;
       const d=await fetchA(`${BASE}/goods_specs/${id}/delete`,{method:'POST'});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadGoodsSpecs();
@@ -5927,7 +6144,7 @@
       loadGoodsAttrs();
     }
     async function deleteGoodsAttr(id,name){
-      if(!confirm(`确定删除属性「${name}」吗？`))return;
+      if(!(await confirmDialog(`确定删除属性「${name}」吗？`)))return;
       const d=await fetchA(`${BASE}/goods_attrs/${id}/delete`,{method:'POST'});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadGoodsAttrs();
@@ -6006,7 +6223,7 @@
       // 左侧：共 X 条 + 每页条数
       const info=document.createElement('div');info.className='pager-info';
       info.innerHTML=`<span>共 ${total} 条</span>
-        <select onchange="changeCategoryPageSize(this.value)">
+        <select class="form-select" onchange="changeCategoryPageSize(this.value)" style="width:auto;padding:5px 26px 5px 10px;font-size:12px">
           <option value="10" ${size==10?'selected':''}>10条/页</option>
           <option value="20" ${size==20?'selected':''}>20条/页</option>
           <option value="50" ${size==50?'selected':''}>50条/页</option>
@@ -6117,7 +6334,7 @@
       if(d.code===0){toast('保存成功');closeCategoryDialog();loadCategoriesAdmin();loadCategories();}else{toast(d.msg);}
     }
     async function removeCategory(id){
-      if(!confirm('确认删除该分类？'))return;
+      if(!(await confirmDialog('确认删除该分类？')))return;
       const d=await fetchA(`${BASE}/categories/${id}`,{method:'DELETE'});
       if(d.code===0){toast('删除成功');loadCategoriesAdmin();loadCategories();}else{toast(d.msg);}
     }
@@ -6238,13 +6455,13 @@
     async function batchDeleteOrders(){
       const ids=getCheckedOrderIds();
       if(!ids.length){toast('请先选择订单');return;}
-      if(!confirm(`确定删除选中的 ${ids.length} 个订单吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${ids.length} 个订单吗？`)))return;
       const d=await fetchA(`${BASE}/orders/batch_delete`,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');clearOrderCheck();loadOrders();
     }
     async function deleteOrder(id,no){
-      if(!confirm(`确定删除订单「${no}」吗？`))return;
+      if(!(await confirmDialog(`确定删除订单「${no}」吗？`)))return;
       const d=await fetchA(`${BASE}/orders/batch_delete`,{method:'POST',body:{ids:[id]}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadOrders();
@@ -6361,7 +6578,7 @@
     async function batchDeleteAftersales(){
       const ids=getCheckedAftersaleIds();
       if(!ids.length){toast('请先选择订单');return;}
-      if(!confirm(`确定删除选中的 ${ids.length} 个售后订单吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${ids.length} 个售后订单吗？`)))return;
       const url=currentAftersaleTab==='recycle'?`${BASE}/orders/batch_delete`:`${BASE}/orders_aftersale/soft_delete`;
       const d=await fetchA(url,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
@@ -6370,13 +6587,13 @@
     async function batchRestoreAftersales(){
       const ids=getCheckedAftersaleIds();
       if(!ids.length){toast('请先选择订单');return;}
-      if(!confirm(`确定恢复选中的 ${ids.length} 个售后订单吗？`))return;
+      if(!(await confirmDialog(`确定恢复选中的 ${ids.length} 个售后订单吗？`)))return;
       const d=await fetchA(`${BASE}/orders_aftersale/restore`,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'恢复失败');return;}
       toast('恢复成功');clearAftersaleCheck();loadAftersales();
     }
     async function deleteAftersale(id,no){
-      if(!confirm(`确定删除售后订单「${no}」吗？`))return;
+      if(!(await confirmDialog(`确定删除售后订单「${no}」吗？`)))return;
       const d=await fetchA(`${BASE}/orders_aftersale/soft_delete`,{method:'POST',body:{ids:[id]}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadAftersales();
@@ -6480,7 +6697,7 @@
         <button ${page>=(last||1)?'disabled':''} onclick="${pageVar}++;loadCards()">下一页</button>`;
     }
     async function voidCard(id){
-      if(!confirm('确定作废该卡券吗？'))return;
+      if(!(await confirmDialog('确定作废该卡券吗？')))return;
       const d=await fetchA(`${BASE}/cards/${id}/void`,{method:'POST'});
       if(d.code!==0){toast(d.msg||'作废失败');return;}
       toast('作废成功');loadCardList();
@@ -6545,7 +6762,7 @@
     async function batchToggleReviewHidden(){
       const ids=getCheckedReviewIds();
       if(!ids.length){toast('请先选择评论');return;}
-      if(!confirm('确定切换所选评论的显示/隐藏状态吗？'))return;
+      if(!(await confirmDialog('确定切换所选评论的显示/隐藏状态吗？')))return;
       const d=await fetchA(`${BASE}/reviews/batch_toggle_hidden`,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'操作失败');return;}
       toast('操作成功');clearReviewCheck();loadReviews();
@@ -6553,13 +6770,13 @@
     async function batchDeleteReviews(){
       const ids=getCheckedReviewIds();
       if(!ids.length){toast('请先选择评论');return;}
-      if(!confirm('确定删除所选评论吗？'))return;
+      if(!(await confirmDialog('确定删除所选评论吗？')))return;
       const d=await fetchA(`${BASE}/reviews/batch_delete`,{method:'POST',body:{ids}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');clearReviewCheck();loadReviews();
     }
     async function deleteReview(id){
-      if(!confirm('确定删除该评论吗？'))return;
+      if(!(await confirmDialog('确定删除该评论吗？')))return;
       const d=await fetchA(`${BASE}/reviews/batch_delete`,{method:'POST',body:{ids:[id]}});
       if(d.code!==0){toast(d.msg||'删除失败');return;}
       toast('删除成功');loadReviews();
@@ -7189,10 +7406,10 @@
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
-    function delRecommendMod(idx){
+    async function delRecommendMod(idx){
       const c=designConfig.components[idx];
       if(!c||c.type!=='goods_group')return;
-      if(!confirm('确定删除「'+(c.props.title||'精选推荐')+'」吗？'))return;
+      if(!(await confirmDialog('确定删除「'+(c.props.title||'精选推荐')+'」吗？')))return;
       designConfig.components.splice(idx,1);
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
@@ -7740,14 +7957,14 @@
     }
     function togglePickupCheckAll(cb){document.querySelectorAll('.pp-check').forEach(c=>c.checked=cb.checked);}
     function togglePickupPointEnabled(idx,v){deliveryData.pickup.points[idx].enabled=v;saveDeliveryPickup();renderPickupPoints();}
-    function deletePickupPoint(idx){
-      if(!confirm('确定删除该自提点吗？'))return;
+    async function deletePickupPoint(idx){
+      if(!(await confirmDialog('确定删除该自提点吗？')))return;
       deliveryData.pickup.points.splice(idx,1);saveDeliveryPickup();renderPickupPoints();
     }
-    function batchDeletePickupPoints(){
+    async function batchDeletePickupPoints(){
       const idxs=Array.from(document.querySelectorAll('.pp-check:checked')).map(c=>Number(c.dataset.idx)).sort((a,b)=>b-a);
       if(!idxs.length){toast('请先勾选要删除的自提点');return;}
-      if(!confirm(`确定删除选中的 ${idxs.length} 个自提点吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${idxs.length} 个自提点吗？`)))return;
       idxs.forEach(i=>deliveryData.pickup.points.splice(i,1));
       saveDeliveryPickup();renderPickupPoints();document.getElementById('pickupCheckAll').checked=false;
     }
@@ -7819,15 +8036,15 @@
       deliveryData.express.templates.forEach((t,i)=>t.is_default=(i===idx));
       saveDeliveryExpress();renderDeliveryTemplates();
     }
-    function deleteDeliveryTemplate(idx){
-      if(!confirm('确定删除该模板吗？'))return;
+    async function deleteDeliveryTemplate(idx){
+      if(!(await confirmDialog('确定删除该模板吗？')))return;
       deliveryData.express.templates.splice(idx,1);
       saveDeliveryExpress();renderDeliveryTemplates();
     }
-    function batchDeleteDeliveryTemplates(){
+    async function batchDeleteDeliveryTemplates(){
       const idxs=Array.from(document.querySelectorAll('.dt-check:checked')).map(c=>Number(c.dataset.idx)).sort((a,b)=>b-a);
       if(!idxs.length){toast('请先勾选要删除的模板');return;}
-      if(!confirm(`确定删除选中的 ${idxs.length} 个模板吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${idxs.length} 个模板吗？`)))return;
       idxs.forEach(i=>deliveryData.express.templates.splice(i,1));
       saveDeliveryExpress();renderDeliveryTemplates();
     }
@@ -7948,14 +8165,14 @@
       deliveryData.local.rules.forEach((r,i)=>r.is_default=(i===idx));
       saveDeliveryLocal();renderLocalRules();
     }
-    function deleteLocalRule(idx){
-      if(!confirm('确定删除该同城配送规则吗？'))return;
+    async function deleteLocalRule(idx){
+      if(!(await confirmDialog('确定删除该同城配送规则吗？')))return;
       deliveryData.local.rules.splice(idx,1);saveDeliveryLocal();renderLocalRules();
     }
-    function batchDeleteLocalRules(){
+    async function batchDeleteLocalRules(){
       const idxs=Array.from(document.querySelectorAll('.lr-check:checked')).map(c=>Number(c.dataset.idx)).sort((a,b)=>b-a);
       if(!idxs.length){toast('请先勾选要删除的规则');return;}
-      if(!confirm(`确定删除选中的 ${idxs.length} 个规则吗？`))return;
+      if(!(await confirmDialog(`确定删除选中的 ${idxs.length} 个规则吗？`)))return;
       idxs.forEach(i=>deliveryData.local.rules.splice(i,1));
       saveDeliveryLocal();renderLocalRules();document.getElementById('localCheckAll').checked=false;
     }
@@ -8355,10 +8572,10 @@
       fillBottomNavForm(idx);
     }
 
-    function pickBottomNavLink(){
-      const type=prompt('链接类型：page / goods / category / activity','page');
+    async function pickBottomNavLink(){
+      const type=await promptDialog('链接类型：page / goods / category / activity','page');
       if(!type)return;
-      const id=prompt('链接目标 ID：','home');
+      const id=await promptDialog('链接目标 ID：','home');
       if(id===null)return;
       document.getElementById('bnLinkType').value=type;
       document.getElementById('bnLinkId').value=id;
@@ -8478,18 +8695,18 @@
       document.querySelectorAll('.'+prefix+'-check').forEach(c=>c.checked=document.getElementById(prefix+'CheckAll').checked);
     }
 
-    function batchDeleteArticles(){
+    async function batchDeleteArticles(){
       const ids=[...document.querySelectorAll('.a-check:checked')].map(c=>+c.value);
       if(!ids.length){toast('请先选择文章');return;}
-      if(!confirm('确定删除选中的 '+ids.length+' 篇文章？')) return;
+      if(!(await confirmDialog('确定删除选中的 '+ids.length+' 篇文章？'))) return;
       fetchA(`${BASE}/articles/batch_delete`,{method:'POST',body:{ids}}).then(r=>{
         if(r.code!==0){toast(r.msg||'删除失败');return;}
         toast('已删除');loadArticles(1);
       });
     }
 
-    function deleteArticle(id){
-      if(!confirm('确定删除该文章？')) return;
+    async function deleteArticle(id){
+      if(!(await confirmDialog('确定删除该文章？'))) return;
       fetchA(`${BASE}/articles/${id}/delete`,{method:'POST',body:{}}).then(r=>{
         if(r.code!==0){toast(r.msg||'删除失败');return;}
         toast('已删除');loadArticles(aPage);
@@ -8654,8 +8871,8 @@
         loadArticleCategories(1);
       });
     }
-    function deleteArticleCategory(id){
-      if(!confirm('确定删除该分类？')) return;
+    async function deleteArticleCategory(id){
+      if(!(await confirmDialog('确定删除该分类？'))) return;
       fetchA(`${BASE}/article_categories/${id}/delete`,{method:'POST',body:{}}).then(r=>{
         if(r.code!==0){toast(r.msg||'删除失败');return;}
         toast('已删除');loadArticleCategories(1);
@@ -8683,9 +8900,285 @@
       });
     }
 
-    function editorCmd(cmd){
+    /* ===================== 相册管理 ===================== */
+    let albumPage=1, albumCatPage=1, albumImgPage=1, albumEditingId=0, albumCatEditingId=0, albumCatIconUrl='', currentAlbumId=0, currentAlbumImageIds=[], currentRenameImageId=0;
+
+    function switchAlbumTab(tab){
+      document.querySelectorAll('#albumPanel .article-tab').forEach(t=>{
+        t.classList.toggle('active', t.dataset.tab===tab);
+      });
+      document.querySelectorAll('#albumPanel .article-pane').forEach(p=>{
+        p.classList.toggle('active', p.id==='tab-'+tab);
+      });
+      if(tab==='album-list'){ loadAlbumCategorySelect('albumCatFilter',0); loadAlbums(1); }
+      if(tab==='album-category') loadAlbumCategories(1);
+    }
+
+    function loadAlbums(page){
+      albumPage = page || 1;
+      const kw = document.getElementById('albumKw').value.trim();
+      const catId = document.getElementById('albumCatFilter').value;
+      fetchA(`${BASE}/albums?page=${albumPage}&page_size=10&keyword=${encodeURIComponent(kw)}&category_id=${catId}&status=-1`).then(r=>{
+        if(r.code!==0){toast(r.msg||'加载失败');return;}
+        const list = r.data.list || [];
+        const tb = document.getElementById('albumList');
+        tb.innerHTML = list.length ? list.map(a=>`
+          <tr>
+            <td><input type="checkbox" class="album-check" value="${a.id}"></td>
+            <td>${escapeHtml(a.name)}</td>
+            <td>${escapeHtml(a.category_name||'')}</td>
+            <td>${a.cover_image?`<img src="${a.cover_image}" style="width:64px;height:36px;object-fit:cover;border-radius:4px" alt="">`:'<span class="muted">—</span>'}</td>
+            <td>${a.image_count||0}</td>
+            <td>${a.sort||0}</td>
+            <td><label class="switch"><input type="checkbox" ${a.status?'checked':''} onchange="toggleAlbumStatus(${a.id},this.checked?1:0)"><span class="slider"></span></label></td>
+            <td>${a.created_at||'—'}</td>
+            <td><div class="a-actions">
+              <button class="btn sm" onclick="openAlbumModal(${a.id})">编辑</button>
+              <button class="btn sm" onclick="manageAlbumImages(${a.id},&quot;${escapeHtml(a.name)}&quot;)">管理</button>
+              <button class="btn sm danger" onclick="deleteAlbum(${a.id})">删除</button>
+            </div></td>
+          </tr>`).join('') : '<tr><td colspan="9" class="empty">暂无相册</td></tr>';
+        renderPager('albumPager', r.data.pagination, loadAlbums);
+      }).catch(e=>toast(e.message||'加载失败'));
+    }
+
+    function openAlbumModal(id){
+      albumEditingId = id || 0;
+      document.getElementById('albumModalTitle').textContent = id ? '编辑相册' : '添加相册';
+      document.getElementById('albumName').value = '';
+      document.getElementById('albumSort').value = '0';
+      loadAlbumCategorySelect('albumCategory', 0);
+      if(id){
+        fetchA(`${BASE}/albums/${id}`).then(r=>{
+          if(r.code!==0){toast(r.msg||'加载失败');return;}
+          const a = r.data;
+          document.getElementById('albumName').value = a.name || '';
+          document.getElementById('albumSort').value = a.sort || 0;
+          document.getElementById('albumCategory').value = a.category_id || 0;
+        });
+      }
+      document.getElementById('albumModal').classList.add('show');
+    }
+
+    function closeAlbumModal(){ document.getElementById('albumModal').classList.remove('show'); }
+
+    function saveAlbum(){
+      const name = document.getElementById('albumName').value.trim();
+      const categoryId = document.getElementById('albumCategory').value;
+      if(!name){toast('相册名称不能为空');return;}
+      if(!categoryId || categoryId==='0'){toast('请选择相册分类');return;}
+      const body = {name, category_id:+categoryId, sort:+document.getElementById('albumSort').value||0, status:1};
+      fetchA(albumEditingId?`${BASE}/albums/${albumEditingId}/save`:`${BASE}/albums`, {method:'POST', body}).then(r=>{
+        if(r.code!==0){toast(r.msg||'保存失败');return;}
+        toast('已保存'); closeAlbumModal(); loadAlbums(albumPage);
+      });
+    }
+
+    async function deleteAlbum(id){ if(!(await confirmDialog('确定删除该相册？')))return; fetchA(`${BASE}/albums/${id}/delete`,{method:'POST',body:{}}).then(r=>{ if(r.code!==0){toast(r.msg||'删除失败');return;} toast('已删除'); loadAlbums(albumPage); }); }
+    async function batchDeleteAlbums(){ const ids=[...document.querySelectorAll('.album-check:checked')].map(c=>+c.value); if(!ids.length){toast('请先选择');return;} if(!(await confirmDialog('确定删除选中的 '+ids.length+' 个相册？')))return; fetchA(`${BASE}/albums/batch_delete`,{method:'POST',body:{ids}}).then(r=>{ if(r.code!==0){toast(r.msg||'删除失败');return;} toast('已删除'); loadAlbums(1); }); }
+    function toggleAlbumStatus(id,val){ fetchA(`${BASE}/albums/${id}/status`,{method:'POST',body:{status:val}}).then(r=>{ if(r.code!==0){toast(r.msg||'操作失败');return;} loadAlbums(albumPage); }); }
+
+    function loadAlbumCategories(page){
+      albumCatPage = page || 1;
+      const kw = document.getElementById('albumCatKw').value.trim();
+      fetchA(`${BASE}/album_categories?page=${albumCatPage}&page_size=20&keyword=${encodeURIComponent(kw)}`).then(r=>{
+        if(r.code!==0){toast(r.msg||'加载失败');return;}
+        const list = r.data.list || [];
+        const tb = document.getElementById('albumCatList');
+        tb.innerHTML = list.length ? list.map(c=>`
+          <tr>
+            <td><input type="checkbox" class="albumCat-check" value="${c.id}"></td>
+            <td>${escapeHtml(c.name)}</td>
+            <td>${c.icon?`<img src="${c.icon}" style="width:40px;height:40px;object-fit:cover;border-radius:4px" alt="">`:'<span class="muted">—</span>'}</td>
+            <td>${c.sort||0}</td>
+            <td><label class="switch"><input type="checkbox" ${c.status?'checked':''} onchange="toggleAlbumCatStatus(${c.id},this.checked?1:0)"><span class="slider"></span></label></td>
+            <td>${c.created_at||'—'}</td>
+            <td><div class="a-actions"><button class="btn sm" onclick="openAlbumCategoryModal(${c.id})">编辑</button><button class="btn sm danger" onclick="deleteAlbumCategory(${c.id})">删除</button></div></td>
+          </tr>`).join('') : '<tr><td colspan="7" class="empty">暂无分类</td></tr>';
+        renderPager('albumCatPager', r.data.pagination, loadAlbumCategories);
+      }).catch(e=>toast(e.message||'加载失败'));
+    }
+
+    function openAlbumCategoryModal(id){
+      albumCatEditingId = id || 0;
+      document.getElementById('albumCategoryModalTitle').textContent = id ? '编辑相册分类' : '添加相册分类';
+      document.getElementById('albumCatName').value = '';
+      document.getElementById('albumCatSort').value = '0';
+      albumCatIconUrl = '';
+      const p = document.getElementById('albumCatIconPreview');
+      p.textContent = '+'; p.style.backgroundImage = '';
+      if(id){
+        fetchA(`${BASE}/album_categories/${id}`).then(r=>{
+          if(r.code!==0){toast(r.msg||'加载失败');return;}
+          const c = r.data;
+          document.getElementById('albumCatName').value = c.name || '';
+          document.getElementById('albumCatSort').value = c.sort || 0;
+          albumCatIconUrl = c.icon || '';
+          if(albumCatIconUrl){ p.textContent=''; p.style.backgroundImage=`url(${albumCatIconUrl})`; }
+        });
+      }
+      document.getElementById('albumCategoryModal').classList.add('show');
+    }
+
+    function closeAlbumCategoryModal(){ document.getElementById('albumCategoryModal').classList.remove('show'); }
+
+    async function uploadAlbumCatIcon(){
+      const input = document.getElementById('albumCatIconInput');
+      if(!input.files[0]) return;
+      const url = await uploadToServer(input.files[0],'image');
+      if(url){ albumCatIconUrl=url; const p=document.getElementById('albumCatIconPreview'); p.textContent=''; p.style.backgroundImage=`url(${url})`; }
+    }
+
+    function saveAlbumCategory(){
+      const name = document.getElementById('albumCatName').value.trim();
+      if(!name){toast('分类名称不能为空');return;}
+      const body = {name, sort:+document.getElementById('albumCatSort').value||0, icon:albumCatIconUrl, status:1};
+      fetchA(albumCatEditingId?`${BASE}/album_categories/${albumCatEditingId}/save`:`${BASE}/album_categories`, {method:'POST', body}).then(r=>{
+        if(r.code!==0){toast(r.msg||'保存失败');return;}
+        toast('已保存'); closeAlbumCategoryModal(); loadAlbumCategories(albumCatPage);
+      });
+    }
+
+    async function deleteAlbumCategory(id){ if(!(await confirmDialog('确定删除该分类？')))return; fetchA(`${BASE}/album_categories/${id}/delete`,{method:'POST',body:{}}).then(r=>{ if(r.code!==0){toast(r.msg||'删除失败');return;} toast('已删除'); loadAlbumCategories(albumCatPage); }); }
+    async function batchDeleteAlbumCategories(){ const ids=[...document.querySelectorAll('.albumCat-check:checked')].map(c=>+c.value); if(!ids.length){toast('请先选择');return;} if(!(await confirmDialog('确定删除选中的 '+ids.length+' 个分类？')))return; fetchA(`${BASE}/album_categories/batch_delete`,{method:'POST',body:{ids}}).then(r=>{ if(r.code!==0){toast(r.msg||'删除失败');return;} toast('已删除'); loadAlbumCategories(1); }); }
+    function toggleAlbumCatStatus(id,val){ fetchA(`${BASE}/album_categories/${id}/status`,{method:'POST',body:{status:val}}).then(r=>{ if(r.code!==0){toast(r.msg||'操作失败');return;} loadAlbumCategories(albumCatPage); }); }
+
+    function loadAlbumCategorySelect(selectId, selectedId){
+      fetchA(`${BASE}/album_categories/all`).then(r=>{
+        if(r.code!==0) return;
+        const sel = document.getElementById(selectId);
+        if(!sel) return;
+        const cur = sel.value;
+        sel.innerHTML = '<option value="0">请选择</option>' + (r.data||[]).map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+        sel.value = selectedId || cur || '0';
+      });
+    }
+
+    function loadAlbumSelect(selectId, selectedId){
+      fetchA(`${BASE}/albums/all`).then(r=>{
+        if(r.code!==0) return;
+        const sel = document.getElementById(selectId);
+        if(!sel) return;
+        sel.innerHTML = '<option value="0">请选择</option>' + (r.data||[]).map(a=>`<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+        if(selectedId) sel.value = selectedId;
+      });
+    }
+
+    function manageAlbumImages(id,name){
+      currentAlbumId = id;
+      document.getElementById('albumImageTitle').textContent = (name||'相册') + ' 图片管理';
+      const panel = document.getElementById('albumImagePanel');
+      const content = document.querySelector('.content');
+      if(content && !content.contains(panel)) content.appendChild(panel);
+      document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+      panel.classList.remove('hidden');
+      window.scrollTo(0,0);
+      loadAlbumImages(1);
+    }
+
+    function backToAlbumList(){
+      const panel = document.getElementById('albumPanel');
+      const content = document.querySelector('.content');
+      if(content && !content.contains(panel)) content.appendChild(panel);
+      document.getElementById('albumImagePanel').classList.add('hidden');
+      panel.classList.remove('hidden');
+      loadAlbums(albumPage);
+    }
+
+    function loadAlbumImages(page){
+      albumImgPage = page || 1;
+      fetchA(`${BASE}/album_images?album_id=${currentAlbumId}&page=${albumImgPage}&page_size=30`).then(r=>{
+        if(r.code!==0){toast(r.msg||'加载失败');return;}
+        const list = r.data.list || [];
+        const grid = document.getElementById('albumImageGrid');
+        grid.innerHTML = list.length ? list.map(img=>`
+          <div class="album-item">
+            <input type="checkbox" class="albumImg-check" value="${img.id}" style="position:absolute;top:6px;left:6px;z-index:2">
+            <img src="${img.image_url}" alt="" onclick="renameAlbumImagePrompt(${img.id},&quot;${escapeHtml(img.name||'')}&quot;)">
+            <div class="ai-name" title="${escapeHtml(img.name||'')}">${escapeHtml(img.name||'未命名')}</div>
+            ${img.is_cover?'<span class="ai-cover">封面</span>':''}
+          </div>`).join('') : '<div class="empty" style="grid-column:1/-1">暂无图片</div>';
+        renderPager('albumImagePager', r.data.pagination, loadAlbumImages);
+      }).catch(e=>toast(e.message||'加载失败'));
+    }
+
+    function uploadAlbumImages(){
+      const input=document.createElement('input'); input.type='file'; input.accept='image/*'; input.multiple=true;
+      input.onchange=()=>{
+        const files=Array.from(input.files);
+        if(!files.length) return;
+        let pending=files.length, success=0;
+        files.forEach(f=>{
+          uploadToServer(f,'image').then(url=>{
+            if(!url) throw new Error('上传失败');
+            return fetchA(`${BASE}/album_images/upload`,{method:'POST',body:{album_id:currentAlbumId,image_url:url,name:f.name}});
+          }).then(()=>{ success++; pending--; if(pending===0){ toast('上传完成 '+success+' 张'); loadAlbumImages(1); } })
+          .catch(e=>{ pending--; toast(e.message||'上传失败'); if(pending===0) loadAlbumImages(1); });
+        });
+      };
+      input.click();
+    }
+
+    async function batchDeleteAlbumImages(){
+      const ids=[...document.querySelectorAll('.albumImg-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请先选择图片');return;}
+      if(!(await confirmDialog('确定删除选中的 '+ids.length+' 张图片？')))return;
+      fetchA(`${BASE}/album_images/batch_delete`,{method:'POST',body:{ids}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'删除失败');return;}
+        toast('已删除'); loadAlbumImages(albumImgPage);
+      });
+    }
+
+    function setCoverBatch(){
+      const ids=[...document.querySelectorAll('.albumImg-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请选择一张图片设为封面');return;}
+      const id=ids[0];
+      fetchA(`${BASE}/album_images/set_cover`,{method:'POST',body:{id,album_id:currentAlbumId}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'设置失败');return;}
+        toast('已设为封面'); loadAlbumImages(albumImgPage);
+      });
+    }
+
+    function moveAlbumImages(){
+      const ids=[...document.querySelectorAll('.albumImg-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请先选择图片');return;}
+      currentAlbumImageIds = ids;
+      loadAlbumSelect('albumMoveTarget', 0);
+      document.getElementById('albumMoveModal').classList.add('show');
+    }
+
+    function closeAlbumMoveModal(){ document.getElementById('albumMoveModal').classList.remove('show'); }
+
+    function confirmMoveAlbumImages(){
+      const targetId = +document.getElementById('albumMoveTarget').value;
+      if(!targetId){toast('请选择目标相册');return;}
+      fetchA(`${BASE}/album_images/move_album`,{method:'POST',body:{ids:currentAlbumImageIds,target_album_id:targetId}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'移动失败');return;}
+        toast('已移动'); closeAlbumMoveModal(); loadAlbumImages(albumImgPage);
+      });
+    }
+
+    function renameAlbumImagePrompt(id, oldName){
+      currentRenameImageId = id;
+      const input = document.getElementById('albumImageRenameInput');
+      input.value = oldName || '';
+      document.getElementById('albumImageRenameModal').classList.add('show');
+      setTimeout(()=>input.focus(), 50);
+    }
+    function closeAlbumImageRenameModal(){ document.getElementById('albumImageRenameModal').classList.remove('show'); currentRenameImageId=0; }
+    function confirmAlbumImageRename(){
+      const name = document.getElementById('albumImageRenameInput').value.trim();
+      if(!name){toast('请输入图片名称'); return;}
+      if(!currentRenameImageId){toast('未选择图片'); return;}
+      fetchA(`${BASE}/album_images/rename`,{method:'POST',body:{id:currentRenameImageId,name}}).then(r=>{
+        if(r.code!==0){toast(r.msg||'重命名失败');return;}
+        toast('已保存'); closeAlbumImageRenameModal(); loadAlbumImages(albumImgPage);
+      });
+    }
+
+    async function editorCmd(cmd){
       document.getElementById('aContent').focus();
-      if(cmd==='createLink'){ const url=prompt('输入链接地址'); if(url) document.execCommand('createLink',false,url); return; }
+      if(cmd==='createLink'){ const url=await promptDialog('输入链接地址'); if(url) document.execCommand('createLink',false,url); return; }
       document.execCommand(cmd,false,null);
     }
 
@@ -8710,6 +9203,44 @@
         }
       }
     })();
+
+    /* 通用确认弹窗：替代原生 confirm */
+    let _confirmResolve=null;
+    function confirmDialog(msg, opts={}){
+      return new Promise(resolve=>{
+        _confirmResolve=resolve;
+        document.getElementById('confirmMsg').textContent=msg;
+        document.getElementById('confirmTitle').textContent=opts.title||'提示';
+        const okBtn=document.getElementById('confirmOk');
+        okBtn.textContent=opts.okText||'确定';
+        okBtn.className='btn '+(opts.okClass||'primary');
+        const cancelBtn=document.getElementById('confirmCancel');
+        cancelBtn.textContent=opts.cancelText||'取消';
+        document.getElementById('commonConfirmModal').classList.add('show');
+      });
+    }
+    function closeConfirmModal(){document.getElementById('commonConfirmModal').classList.remove('show');if(_confirmResolve){_confirmResolve(false);_confirmResolve=null;}}
+    function confirmOkClick(){document.getElementById('commonConfirmModal').classList.remove('show');if(_confirmResolve){_confirmResolve(true);_confirmResolve=null;}}
+    document.getElementById('confirmCancel').onclick=closeConfirmModal;
+    document.getElementById('confirmOk').onclick=confirmOkClick;
+
+    /* 通用输入弹窗：替代原生 prompt */
+    let _inputResolve=null;
+    function promptDialog(msg, def='', opts={}){
+      return new Promise(resolve=>{
+        _inputResolve=resolve;
+        document.getElementById('inputTitle').textContent=opts.title||msg;
+        const f=document.getElementById('inputField');
+        f.value=def||'';
+        f.placeholder=opts.placeholder||'';
+        document.getElementById('commonInputModal').classList.add('show');
+        setTimeout(()=>f.focus(),50);
+      });
+    }
+    function closeInputModal(){document.getElementById('commonInputModal').classList.remove('show');if(_inputResolve){_inputResolve(null);_inputResolve=null;}}
+    function inputOkClick(){const v=document.getElementById('inputField').value.trim();document.getElementById('commonInputModal').classList.remove('show');if(_inputResolve){_inputResolve(v);_inputResolve=null;}}
+    document.getElementById('inputOk').onclick=inputOkClick;
+    document.getElementById('inputField').addEventListener('keydown',e=>{if(e.key==='Enter')inputOkClick();});
   </script>
 
   <div id="navModal" class="modal-backdrop" onclick="if(event.target===this) closeNavConfig()">
