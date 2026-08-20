@@ -11,6 +11,15 @@
 
 ---
 
+### v0.1.29 · 2026-08-20 · 新增跳转小程序管理模块
+**范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/controller/admin/MiniApp.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_mini_apps.php`）。
+
+**新增跳转小程序管理**
+- 后台「内容 > 跳转小程序」：支持微信 / 百度 / 支付宝 / 字节跳动四个平台 tab 切换，列表展示小程序名称、APPID、跳转地址、排序、手机端是否显示、创建时间、操作。
+- 列表功能：关键词筛选、分页、批量删除、状态开关切换；添加 / 编辑弹窗含名称、APPID、跳转地址，关闭按钮沿用全局 28px 圆形×样式。
+- 后端：`MiniApp` 控制器（列表 / 详情 / 保存 / 删除 / 批量删除 / 状态切换），`route/app.php` 注册 `/admin/mini_apps` 相关路由。
+- 数据库：幂等迁移 `apply_mini_apps.php` 新建 `mini_apps` 表（含 platform、name、appid、path、sort、status、created_at 字段）。
+
 ### v0.1.28 · 2026-08-20 · 后台 UI 统一美化整改 + 新增相册管理模块
 **范围**：运营后台 UI（`server/public/admin.html`）、相册 API（`server/app/controller/admin/Album.php`、`AlbumCategory.php`、`AlbumImage.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_albums.php`）、工程配置（`.gitignore`）。
 

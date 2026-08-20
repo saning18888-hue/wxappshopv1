@@ -4180,6 +4180,36 @@
     </div>
   </div>
 
+  <!-- 跳转小程序管理 -->
+  <div id="miniappPanel" class="panel hidden">
+    <div class="card">
+      <div class="article-tabs">
+        <button class="article-tab active" data-platform="wechat" onclick="switchMiniAppTab('wechat')">微信</button>
+        <button class="article-tab" data-platform="baidu" onclick="switchMiniAppTab('baidu')">百度</button>
+        <button class="article-tab" data-platform="alipay" onclick="switchMiniAppTab('alipay')">支付宝</button>
+        <button class="article-tab" data-platform="bytedance" onclick="switchMiniAppTab('bytedance')">字节跳动</button>
+      </div>
+      <div class="article-pane active">
+        <div class="article-toolbar">
+          <input id="miniappKw" class="input" placeholder="关键词筛选">
+          <span class="spacer"></span>
+          <button class="btn sm danger" onclick="batchDeleteMiniApps()">批量删除</button>
+          <button class="btn sm primary" onclick="openMiniAppModal()">添加</button>
+        </div>
+        <div class="article-table-wrap">
+        <table class="table">
+          <thead><tr>
+            <th><input type="checkbox" id="miniappCheckAll" onchange="toggleCheckAll('miniapp')"></th>
+            <th>小程序名称</th><th>APPID</th><th>跳转地址</th><th>排序</th><th>手机端是否显示</th><th>创建时间</th><th>操作</th>
+          </tr></thead>
+          <tbody id="miniappList"></tbody>
+        </table>
+        </div>
+        <div class="pager" id="miniappPager"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- 添加/编辑相册弹窗 -->
   <div id="albumModal" class="modal">
     <div class="modal-card" style="max-width:520px">
@@ -4487,6 +4517,22 @@
     </div>
   </div>
 
+  <!-- 添加/编辑跳转小程序弹窗 -->
+  <div id="miniappModal" class="modal">
+    <div class="modal-card" style="max-width:480px;border-radius:16px">
+      <div class="modal-head"><span id="miniappModalTitle">添加</span><button class="modal-close" onclick="closeMiniAppModal()">×</button></div>
+      <div class="modal-body">
+        <div class="a-field"><label>名称 <span class="req">*</span></label><input id="miniappName" class="input" placeholder="名称"></div>
+        <div class="a-field"><label>APPID <span class="req">*</span></label><input id="miniappAppid" class="input" placeholder="APPID"></div>
+        <div class="a-field"><label>跳转地址</label><input id="miniappPath" class="input" placeholder="跳转地址"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeMiniAppModal()">取消</button>
+        <button class="btn primary" onclick="saveMiniApp()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const BASE='/admin';
     const token=()=>localStorage.getItem('admin_token')||'';
@@ -4591,7 +4637,7 @@
         {key:'article',label:'文章管理',icon:ICONS.fileText,panel:'articlePanel',default:true},
         {key:'album',label:'相册管理',icon:ICONS.images,panel:'albumPanel'},
         {key:'iframe',label:'内嵌网页',icon:ICONS.link},
-        {key:'miniapp',label:'跳转小程序',icon:ICONS.externalLink}
+        {key:'miniapp',label:'跳转小程序',icon:ICONS.externalLink,panel:'miniappPanel'}
       ]},
       {key:'system',label:'系统',icon:ICONS.system,children:[
         {key:'site',label:'站点设置',icon:ICONS.settings,default:true},
@@ -4715,6 +4761,7 @@
       if(panelId==='summaryStatsPanel') loadSummaryStatsPanel();
       if(panelId==='memberPanel') loadMembers();
       if(panelId==='albumPanel') loadAlbums(1);
+      if(panelId==='miniappPanel') loadMiniApps(1);
       if(panelId==='memberGroupPanel') loadMemberGroups();
       window.scrollTo(0,0);
     }
@@ -8901,7 +8948,7 @@
     }
 
     /* ===================== 相册管理 ===================== */
-    let albumPage=1, albumCatPage=1, albumImgPage=1, albumEditingId=0, albumCatEditingId=0, albumCatIconUrl='', currentAlbumId=0, currentAlbumImageIds=[], currentRenameImageId=0;
+    let albumPage=1, albumCatPage=1, albumImgPage=1, albumEditingId=0, albumCatEditingId=0, albumCatIconUrl='', currentAlbumId=0, currentAlbumImageIds=[], currentRenameImageId=0, miniappPage=1, miniappEditingId=0, miniappPlatform='wechat';
 
     function switchAlbumTab(tab){
       document.querySelectorAll('#albumPanel .article-tab').forEach(t=>{
@@ -9174,6 +9221,89 @@
         if(r.code!==0){toast(r.msg||'重命名失败');return;}
         toast('已保存'); closeAlbumImageRenameModal(); loadAlbumImages(albumImgPage);
       });
+    }
+
+    /* 跳转小程序 */
+    function switchMiniAppTab(platform){
+      miniappPlatform=platform;
+      document.querySelectorAll('#miniappPanel .article-tab').forEach(b=>{
+        b.classList.toggle('active', b.dataset.platform===platform);
+      });
+      miniappPage=1;
+      loadMiniApps();
+    }
+    async function loadMiniApps(page=miniappPage){
+      const kw=encodeURIComponent(document.getElementById('miniappKw').value);
+      const r=await fetchA(`${BASE}/mini_apps?page=${page}&page_size=10&platform=${miniappPlatform}&keyword=${kw}`);
+      if(!r)return;
+      miniappPage=page;
+      renderMiniApps(r.data.list||[]);
+      renderPager('miniappPager', r.data.pagination, loadMiniApps);
+    }
+    function renderMiniApps(list){
+      const tbody=document.getElementById('miniappList'); tbody.innerHTML='';
+      document.getElementById('miniappCheckAll').checked=false;
+      if(!list.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:40px 0">暂无数据</td></tr>';return;}
+      list.forEach(row=>{
+        tbody.innerHTML+=`<tr>
+          <td><input type="checkbox" value="${row.id}" class="miniapp-check"></td>
+          <td>${escapeHtml(row.name)}</td>
+          <td>${escapeHtml(row.appid)}</td>
+          <td>${escapeHtml(row.path||'')}</td>
+          <td>${row.sort}</td>
+          <td><label class="switch"><input type="checkbox" ${row.status==1?'checked':''} onchange="toggleMiniAppStatus(${row.id},this.checked?1:0)"><span></span></label></td>
+          <td>${row.created_at||''}</td>
+          <td>
+            <button class="btn sm" onclick="openMiniAppModal(${row.id})">修改</button>
+            <button class="btn sm danger" onclick="deleteMiniApp(${row.id})">删除</button>
+          </td>
+        </tr>`;
+      });
+    }
+    function openMiniAppModal(id=0){
+      miniappEditingId=id;
+      document.getElementById('miniappModalTitle').textContent=id?'修改':'添加';
+      document.getElementById('miniappName').value='';
+      document.getElementById('miniappAppid').value='';
+      document.getElementById('miniappPath').value='';
+      if(id){
+        fetchA(`${BASE}/mini_apps/${id}`).then(r=>{
+          if(!r)return;
+          const d=r.data;
+          document.getElementById('miniappName').value=d.name||'';
+          document.getElementById('miniappAppid').value=d.appid||'';
+          document.getElementById('miniappPath').value=d.path||'';
+        });
+      }
+      document.getElementById('miniappModal').classList.add('show');
+    }
+    function closeMiniAppModal(){document.getElementById('miniappModal').classList.remove('show');miniappEditingId=0;}
+    async function saveMiniApp(){
+      const name=document.getElementById('miniappName').value.trim();
+      const appid=document.getElementById('miniappAppid').value.trim();
+      if(!name||!appid){toast('名称和 APPID 不能为空');return;}
+      const body={name:name,appid:appid,path:document.getElementById('miniappPath').value.trim(),platform:miniappPlatform,sort:0,status:1};
+      let url=`${BASE}/mini_apps`, method='POST';
+      if(miniappEditingId){url=`${BASE}/mini_apps/${miniappEditingId}/save`;}
+      const r=await fetchA(url,{method,body});
+      if(!r)return;
+      toast('保存成功'); closeMiniAppModal(); loadMiniApps();
+    }
+    async function deleteMiniApp(id){
+      if(!(await confirmDialog('确定删除该小程序？')))return;
+      const r=await fetchA(`${BASE}/mini_apps/${id}/delete`,{method:'POST',body:{}});
+      if(!r)return; toast('删除成功'); loadMiniApps();
+    }
+    async function batchDeleteMiniApps(){
+      const ids=[...document.querySelectorAll('.miniapp-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请选择要删除的记录');return;}
+      if(!(await confirmDialog('确定批量删除选中的 '+ids.length+' 条记录？')))return;
+      const r=await fetchA(`${BASE}/mini_apps/batch_delete`,{method:'POST',body:{ids:ids}});
+      if(!r)return; toast('批量删除成功'); loadMiniApps();
+    }
+    async function toggleMiniAppStatus(id,status){
+      const r=await fetchA(`${BASE}/mini_apps/${id}/status`,{method:'POST',body:{status:status}});
+      if(!r)return; toast('状态更新成功');
     }
 
     async function editorCmd(cmd){

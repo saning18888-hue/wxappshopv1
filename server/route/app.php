@@ -187,4 +187,14 @@ Route::group('admin', function () {
     Route::post('album_images/set_cover', 'admin.AlbumImage/setCover');
     Route::post('album_images/move_album', 'admin.AlbumImage/moveAlbum');
     Route::post('album_images/rename', 'admin.AlbumImage/rename');
+
+    // 跳转小程序
+    Route::get('mini_apps', 'admin.MiniApp/index');
+    Route::get('mini_apps/all', 'admin.MiniApp/all');
+    Route::get('mini_apps/:id', 'admin.MiniApp/info');
+    Route::post('mini_apps', 'admin.MiniApp/save');
+    Route::post('mini_apps/:id/save', 'admin.MiniApp/save');
+    Route::post('mini_apps/:id/delete', 'admin.MiniApp/remove');
+    Route::post('mini_apps/batch_delete', 'admin.MiniApp/batchDelete');
+    Route::post('mini_apps/:id/status', 'admin.MiniApp/toggleStatus');
 });
