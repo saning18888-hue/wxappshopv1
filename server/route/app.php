@@ -120,6 +120,7 @@ Route::group('admin', function () {
     // 基础设置
     Route::get('settings', 'admin.Settings/get');
     Route::post('settings', 'admin.Settings/save');
+    Route::post('settings/attachment_test', 'admin.Settings/attachmentTest');
 
     // 会员管理
     Route::get('members', 'admin.Member/index');

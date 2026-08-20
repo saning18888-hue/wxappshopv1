@@ -262,6 +262,17 @@
     .pager-pages button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
     .pager-pages button:disabled{opacity:.5;cursor:not-allowed;border-color:var(--border);color:var(--text-muted)}
     .pager-pages button:not(:disabled):hover{border-color:var(--primary);color:var(--primary)}
+    .attach-modes{display:flex;flex-wrap:wrap;gap:16px;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:18px}
+    .attach-modes .radio-label{font-weight:500;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;transition:all .12s}
+    .attach-modes .radio-label:has(input:checked){border-color:var(--primary);background:rgba(59,130,246,.06)}
+    .attach-modes .radio-label:hover{border-color:var(--primary)}
+    .tag.recommend{font-size:12px;color:#fff;background:var(--primary);padding:2px 8px;border-radius:4px;margin-left:6px;white-space:nowrap}
+    .attach-tip{padding:14px 16px;border-radius:var(--radius);margin-bottom:16px;font-size:13px;line-height:1.6}
+    .attach-tip.local{background:#f5f7fa;color:var(--text-secondary)}
+    .attach-tip.qiniu{background:#e8f5e9;color:var(--text)}
+    .attach-tip.tencent{background:#e8f5e9;color:var(--text)}
+    .radio-inline{font-size:13px;color:var(--text);display:inline-flex;align-items:center;gap:4px;margin-right:16px;cursor:pointer}
+    .radio-inline input[type=radio]{margin:0}
     .pager-pages button.active:not(:disabled):hover{color:#fff;background:var(--primary-700)}
     .pager-ellipsis{padding:0 4px;color:var(--text-muted);user-select:none}
     .pager-goto{display:flex;align-items:center;gap:6px}
@@ -2419,6 +2430,95 @@
             </table>
             </div>
             <div class="pager" id="logPager"></div>
+          </div>
+        </div>
+
+        <!-- 附件设置 -->
+        <div id="attachPanel" class="panel hidden setting-panel">
+          <div class="setting-wrap">
+            <div class="section-title">远程附件</div>
+            <div class="setting-card">
+              <div class="attach-modes">
+                <label class="radio-label"><input type="radio" name="attachMode" value="local" onchange="switchAttachMode('local')"> <span>系统默认</span></label>
+                <label class="radio-label"><input type="radio" name="attachMode" value="ftp" onchange="switchAttachMode('ftp')"> <span>FTP服务器</span></label>
+                <label class="radio-label"><input type="radio" name="attachMode" value="aliyun" onchange="switchAttachMode('aliyun')"> <span>阿里云OSS</span><span class="tag recommend">推荐，快速稳定</span></label>
+                <label class="radio-label"><input type="radio" name="attachMode" value="qiniu" onchange="switchAttachMode('qiniu')"> <span>七牛云储存</span><span class="tag recommend">推荐，快速稳定</span></label>
+                <label class="radio-label"><input type="radio" name="attachMode" value="tencent" onchange="switchAttachMode('tencent')"> <span>腾讯云储存</span><span class="tag recommend">推荐，快速稳定</span></label>
+              </div>
+
+              <!-- 系统默认 -->
+              <div class="attach-pane" data-pane="local">
+                <div class="attach-tip">使用系统默认上传方式，附件将保存在本机服务器。</div>
+              </div>
+
+              <!-- FTP -->
+              <div class="attach-pane hidden" data-pane="ftp">
+                <div class="form-row">
+                  <label class="form-label">启用SSL连接</label>
+                  <div class="form-control">
+                    <label class="radio-inline"><input type="radio" name="ftp_ssl" value="1"> 是</label>
+                    <label class="radio-inline"><input type="radio" name="ftp_ssl" value="0" checked> 否</label>
+                    <div class="form-hint">注意：选择是后，FTP 服务器必须开启了 SSL，一般情况选择否即可</div>
+                  </div>
+                </div>
+                <div class="form-row"><label class="form-label">FTP服务器地址</label><div class="form-control"><input type="text" class="form-input wide" data-attach="ftp.host" placeholder="请输入FTP服务器地址"><div class="form-hint">可以是 FTP 服务器的 IP 地址或域名</div></div></div>
+                <div class="form-row"><label class="form-label">FTP服务器端口</label><div class="form-control"><input type="number" class="form-input wide" data-attach="ftp.port" placeholder="21"><div class="form-hint">默认为21</div></div></div>
+                <div class="form-row"><label class="form-label">FTP账号</label><div class="form-control"><input type="text" class="form-input wide" data-attach="ftp.user" placeholder=""><div class="form-hint">该账号必须具有以下权限：读取文件、写入文件、删除文件、创建目录、子目录继承</div></div></div>
+                <div class="form-row"><label class="form-label">FTP密码</label><div class="form-control"><input type="password" class="form-input wide" data-attach="ftp.password" placeholder=""><div class="form-hint">基于安全考虑将只显示 FTP 密码的第一位和最后一位，中间显示八个*号</div></div></div>
+                <div class="form-row">
+                  <label class="form-label">被动模式(pasv)连接</label>
+                  <div class="form-control">
+                    <label class="radio-inline"><input type="radio" name="ftp_pasv" value="1" checked> 是</label>
+                    <label class="radio-inline"><input type="radio" name="ftp_pasv" value="0"> 否</label>
+                    <div class="form-hint">一般情况下非被动模式即可，如果存在上传失败问题，可尝试打开此设置</div>
+                  </div>
+                </div>
+                <div class="form-row"><label class="form-label">远程附件目录</label><div class="form-control"><input type="text" class="form-input wide" data-attach="ftp.remote_dir" placeholder=""><div class="form-hint">远程附件目录的绝对路径或相对于 FTP 主目录的相对路径，结尾不要加斜杠“/”，例如：/attachment</div></div></div>
+                <div class="form-row"><label class="form-label">远程访问URI</label><div class="form-control"><input type="text" class="form-input wide" data-attach="ftp.remote_url" placeholder=""><div class="form-hint">支持 HTTP 和 FTP 协议，结尾不要加斜杠“/”；例如：http://mydomin.com/attachment 如果使用 FTP 协议，FTP 服务器必须支持 PASV 模式，为了安全起见，使用 FTP 连接的帐号不要设置可写权限和列表权限</div></div></div>
+                <div class="form-row"><label class="form-label">FTP传输超时时间</label><div class="form-control"><input type="number" class="form-input wide" data-attach="ftp.timeout" placeholder=""><div class="form-hint">单位：秒，0为服务器默认</div></div></div>
+              </div>
+
+              <!-- 阿里云OSS -->
+              <div class="attach-pane hidden" data-pane="aliyun">
+                <div class="form-row"><label class="form-label">Access Key ID</label><div class="form-control"><input type="text" class="form-input wide" data-attach="aliyun.access_key_id" placeholder=""><div class="form-hint">Access Key ID是您访问阿里云API的密钥，具有该账户完全的权限，请您妥善保管。</div></div></div>
+                <div class="form-row"><label class="form-label">Access Key Secret</label><div class="form-control"><input type="password" class="form-input wide" data-attach="aliyun.access_key_secret" placeholder=""><div class="form-hint">Access Key Secret是您访问阿里云API的密钥，具有该账户完全的权限，请您妥善保管。（填写完Access Key ID 和 Access Key Secret 后请选择bucket)</div></div></div>
+                <div class="form-row">
+                  <label class="form-label">内网上传</label>
+                  <div class="form-control">
+                    <label class="radio-inline"><input type="radio" name="aliyun_internal" value="1"> 是</label>
+                    <label class="radio-inline"><input type="radio" name="aliyun_internal" value="0" checked> 否</label>
+                    <div class="form-hint">如果此站点使用的是阿里云ecs服务器，并且服务器与bucket在同一地区（如：同在华北一区），您可以选择通过内网上传的方式上传附件，以加快上传速度、节省带宽</div>
+                  </div>
+                </div>
+                <div class="form-row"><label class="form-label">Bucket</label><div class="form-control"><input type="text" class="form-input wide" data-attach="aliyun.bucket" placeholder="请先设置access Key ID和Key Secret"><div class="form-hint">请保证bucket为可公共读取的</div></div></div>
+                <div class="form-row"><label class="form-label">自定义URL</label><div class="form-control"><input type="text" class="form-input wide" data-attach="aliyun.custom_url" placeholder="默认url不用填写"><div class="form-hint">阿里云OSS支持用户自定义访问域名，如果自定义了URL则用自定义的URL，如果未自定义，则用系统生成出来的URL。注：自定义url开头加http://或https://结尾不加‘/’例：http://abc.com</div></div></div>
+              </div>
+
+              <!-- 七牛云 -->
+              <div class="attach-pane hidden" data-pane="qiniu">
+                <div class="attach-tip qiniu">七牛云储存</div>
+                <div class="form-row"><label class="form-label">Accesskey</label><div class="form-control"><input type="text" class="form-input wide" data-attach="qiniu.access_key" placeholder=""><div class="form-hint">用于签名的公钥</div></div></div>
+                <div class="form-row"><label class="form-label">Secretkey</label><div class="form-control"><input type="password" class="form-input wide" data-attach="qiniu.secret_key" placeholder=""><div class="form-hint">用于签名的公钥</div></div></div>
+                <div class="form-row"><label class="form-label">Bucket</label><div class="form-control"><input type="text" class="form-input wide" data-attach="qiniu.bucket" placeholder=""><div class="form-hint">请保证bucket为可公共读取的</div></div></div>
+                <div class="form-row"><label class="form-label">Url</label><div class="form-control"><input type="text" class="form-input wide" data-attach="qiniu.url" placeholder=""><div class="form-hint">七牛支持用户自定义访问域名。注：url开头加http://或https://结尾不加‘/’例：http://abc.com</div></div></div>
+              </div>
+
+              <!-- 腾讯云 -->
+              <div class="attach-pane hidden" data-pane="tencent">
+                <div class="attach-tip tencent">腾讯云储存</div>
+                <div class="form-row"><label class="form-label">APPID</label><div class="form-control"><input type="text" class="form-input wide" data-attach="tencent.app_id" placeholder=""><div class="form-hint">APPID 是您项目的唯一ID</div></div></div>
+                <div class="form-row"><label class="form-label">SecretID</label><div class="form-control"><input type="text" class="form-input wide" data-attach="tencent.secret_id" placeholder=""><div class="form-hint">SecretID 是您项目的安全秘钥，具有该账户完全的权限，请妥善保管</div></div></div>
+                <div class="form-row"><label class="form-label">SecretKEY</label><div class="form-control"><input type="password" class="form-input wide" data-attach="tencent.secret_key" placeholder=""><div class="form-hint">请保证bucket为可公共读取的</div></div></div>
+                <div class="form-row"><label class="form-label">Bucket</label><div class="form-control"><input type="text" class="form-input wide" data-attach="tencent.bucket" placeholder=""><div class="form-hint">请保证bucket为可公共读取的</div></div></div>
+                <div class="form-row"><label class="form-label">bucket所在区域</label><div class="form-control"><select class="form-input wide" data-attach="tencent.region"><option value="">无</option><option value="ap-beijing">北京</option><option value="ap-shanghai">上海</option><option value="ap-guangzhou">广州</option><option value="ap-chengdu">成都</option><option value="ap-chongqing">重庆</option><option value="ap-singapore">新加坡</option><option value="ap-hongkong">香港</option><option value="na-siliconvalley">硅谷</option><option value="na-toronto">多伦多</option><option value="ap-mumbai">孟买</option><option value="ap-seoul">首尔</option><option value="ap-tokyo">东京</option></select><div class="form-hint">选择bucket对应的区域，如果没有选择无</div></div></div>
+                <div class="form-row"><label class="form-label">Url</label><div class="form-control"><input type="text" class="form-input wide" data-attach="tencent.url" placeholder=""><div class="form-hint">腾讯云支持用户自定义访问域名。注：url开头加http://或https://结尾不加‘/’例：http://abc.com</div></div></div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn-submit" onclick="saveAttachmentSettings()">保存配置</button>
+                <button class="btn primary" onclick="testAttachmentSettings()">测试配置(无需保存)</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -4743,7 +4843,7 @@
       {key:'system',label:'系统',icon:ICONS.system,children:[
         {key:'site',label:'站点设置',icon:ICONS.settings,panel:'sitePanel',default:true},
         {key:'log',label:'操作日志',icon:ICONS.clock,panel:'logPanel'},
-        {key:'attach',label:'附件设置',icon:ICONS.paperclip},
+        {key:'attach',label:'附件设置',icon:ICONS.paperclip,panel:'attachPanel'},
         {key:'sms',label:'短信管理',icon:ICONS.message},
         {key:'permission',label:'权限管理',icon:ICONS.shield,children:[
           {key:'group',label:'用户组'},
@@ -4854,6 +4954,7 @@
       if(panelId==='basePanel') loadSettings();
       if(panelId==='sitePanel') loadSiteSettings();
       if(panelId==='logPanel') loadOperationLogs(1);
+      if(panelId==='attachPanel') loadAttachmentSettings();
       if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
@@ -8906,6 +9007,76 @@
       const r=await fetchA(`${BASE}/operation_logs/delete_by_time`,{method:'POST',body:{type:(start||end)?'range':'all',time_start:start,time_end:end}});
       if(r.code!==0){toast(r.msg||'删除失败');return;}
       toast('删除成功'); loadOperationLogs();
+    }
+
+    /* ===================== 附件设置 ===================== */
+    const attachDefaults={
+      mode:'local',
+      ftp:{ssl:0,host:'',port:21,user:'',password:'',pasv:1,remote_dir:'',remote_url:'',timeout:0},
+      aliyun:{access_key_id:'',access_key_secret:'',internal:0,bucket:'',custom_url:''},
+      qiniu:{access_key:'',secret_key:'',bucket:'',url:''},
+      tencent:{app_id:'',secret_id:'',secret_key:'',bucket:'',region:'',url:''}
+    };
+    let attachData={};
+    function deepMerge(a,b){
+      const o=JSON.parse(JSON.stringify(a||{}));
+      for(const k in b){ if(b[k]!==null&&typeof b[k]==='object'&&!Array.isArray(b[k])) o[k]=deepMerge(o[k],b[k]); else if(b[k]!==undefined) o[k]=b[k]; }
+      return o;
+    }
+    async function loadAttachmentSettings(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      attachData=deepMerge(attachDefaults,d.data?.attachment||{});
+      const m=attachData.mode||'local';
+      const r=document.querySelector(`#attachPanel input[name="attachMode"][value="${m}"]`);
+      if(r) r.checked=true;
+      switchAttachMode(m);
+      // 普通输入框
+      document.querySelectorAll('#attachPanel [data-attach]').forEach(el=>{
+        const path=el.dataset.attach.split('.');
+        let v=attachData;
+        for(const p of path) v=v?.[p];
+        if(v!==undefined) el.value=v;
+      });
+      // radio 组
+      const radioMap={'ftp_ssl':['ftp','ssl'],'ftp_pasv':['ftp','pasv'],'aliyun_internal':['aliyun','internal']};
+      for(const [name,[sec,key]] of Object.entries(radioMap)){
+        const v=attachData[sec]?.[key];
+        document.querySelectorAll(`#attachPanel input[name="${name}"]`).forEach(el=>{ el.checked=String(el.value)===String(v); });
+      }
+    }
+    function switchAttachMode(mode){
+      document.querySelectorAll('#attachPanel .attach-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==mode));
+    }
+    function collectAttachmentSettings(){
+      const data=deepMerge(attachDefaults,{
+        mode:(document.querySelector('#attachPanel input[name="attachMode"]:checked')||{}).value||'local'
+      });
+      document.querySelectorAll('#attachPanel [data-attach]').forEach(el=>{
+        const path=el.dataset.attach.split('.');
+        let target=data;
+        for(let i=0;i<path.length-1;i++) target=target[path[i]];
+        target[path[path.length-1]]=el.type==='number'?parseFloat(el.value):el.value;
+      });
+      const radioMap={'ftp_ssl':['ftp','ssl'],'ftp_pasv':['ftp','pasv'],'aliyun_internal':['aliyun','internal']};
+      for(const [name,[sec,key]] of Object.entries(radioMap)){
+        const v=document.querySelector(`#attachPanel input[name="${name}"]:checked`);
+        if(v) data[sec][key]=parseInt(v.value);
+      }
+      return data;
+    }
+    async function saveAttachmentSettings(){
+      const data=collectAttachmentSettings();
+      const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{attachment:data}}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      toast('保存成功');
+      attachData=deepMerge(attachData,data);
+    }
+    async function testAttachmentSettings(){
+      const data=collectAttachmentSettings();
+      const r=await fetchA(`${BASE}/settings/attachment_test`,{method:'POST',body:{attachment:data}});
+      if(r.code!==0){toast(r.msg||'测试失败');return;}
+      toast(r.msg||'连接测试成功');
     }
 
     /* ===================== 文章管理 ===================== */

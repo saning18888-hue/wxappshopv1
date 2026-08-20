@@ -52,6 +52,14 @@ class SettingsService
             'risk_control'       => 'low',       // 风控等级 low / middle / high
             'member_service_agreement'  => '',   // 会员服务协议（富文本）
             'member_privacy_agreement'  => '',   // 会员隐私政策（富文本）
+            // 附件设置
+            'attachment'         => [            // 远程附件配置
+                'mode'   => 'local',             // local/ftp/aliyun/qiniu/tencent
+                'ftp'    => ['ssl'=>0,'host'=>'','port'=>21,'user'=>'','password'=>'','pasv'=>1,'remote_dir'=>'','remote_url'=>'','timeout'=>0],
+                'aliyun' => ['access_key_id'=>'','access_key_secret'=>'','internal'=>0,'bucket'=>'','custom_url'=>''],
+                'qiniu'  => ['access_key'=>'','secret_key'=>'','bucket'=>'','url'=>''],
+                'tencent'=> ['app_id'=>'','secret_id'=>'','secret_key'=>'','bucket'=>'','region'=>'','url'=>''],
+            ],
         ];
     }
 

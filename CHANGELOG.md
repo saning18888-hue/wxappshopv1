@@ -11,6 +11,24 @@
 
 ---
 
+### v0.1.32 · 2026-08-20 · 附件设置（远程附件配置）
+**范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、`server/app/controller/admin/Settings.php`、`server/route/app.php`）。
+
+**附件设置菜单补全**
+- 后台「系统 > 附件设置」绑定独立 `attachPanel`。
+- 远程附件支持 5 种类型切换：系统默认 / FTP服务器 / 阿里云OSS / 七牛云储存 / 腾讯云储存，每种类型展示对应配置表单。
+- 系统默认：提示附件保存在本机服务器。
+- FTP服务器：启用SSL连接、FTP服务器地址/端口、账号、密码、被动模式(pasv)、远程附件目录、远程访问URI、传输超时时间。
+- 阿里云OSS：Access Key ID、Access Key Secret、内网上传开关、Bucket、自定义URL（去掉了原截图中 OSS 工具链接推荐区域）。
+- 七牛云储存：Accesskey、Secretkey、Bucket、Url。
+- 腾讯云储存：APPID、SecretID、SecretKEY、Bucket、bucket所在区域、Url。
+- 底部提供「保存配置」和「测试配置(无需保存)」两个按钮。
+
+**后端**
+- `SettingsService::defaults()` 增加 `attachment` 配置项及各类型的默认值。
+- `SettingsController` 新增 `attachmentTest()` 接口：按当前选中的存储类型校验必填项，并预留真实 SDK 接入注释（当前只做配置格式校验）。
+- `route/app.php` 注册 `POST /admin/settings/attachment_test` 路由。
+
 ### v0.1.31 · 2026-08-20 · 操作日志管理模块 + 自动记录管理员操作
 **范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/controller/admin/OperationLog.php`、`server/app/common/controller/AdminController.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_operation_logs.php`）。
 
