@@ -373,14 +373,15 @@
     #smsConfigForm .form-label{width:170px;flex:none;text-align:left;line-height:1.4}
     #smsConfigForm .form-control{flex:1;min-width:0}
     #smsConfigForm .form-input{width:100%;max-width:none}
-    /* 短信模板弹窗表格：描述列够宽不换行，操作列紧凑，左右留白舒适 */
-    #smsTemplateModal .article-table-wrap th:first-child,#smsTemplateModal .article-table-wrap td:first-child{width:180px;min-width:180px;text-align:left;white-space:normal;padding-left:20px}
-    #smsTemplateModal .article-table-wrap th:nth-child(2),#smsTemplateModal .article-table-wrap td:nth-child(2){width:100%;min-width:300px;white-space:normal;word-break:normal;overflow-wrap:break-word}
-    #smsTemplateModal .article-table-wrap th:nth-child(3),#smsTemplateModal .article-table-wrap td:nth-child(3){width:80px;min-width:80px;text-align:center}
-    #smsTemplateModal .article-table-wrap th:nth-child(4),#smsTemplateModal .article-table-wrap td:nth-child(4){width:260px;min-width:260px;text-align:right;white-space:nowrap;padding-right:20px}
-    #smsTemplateModal .article-table-wrap td{vertical-align:middle}
-    #smsTemplateModal .a-actions{display:inline-flex;flex-wrap:nowrap;align-items:center;gap:10px}
-    #smsTemplateModal .a-actions a[href="javascript:;"]:hover{text-decoration:underline}
+    /* 短信模板弹窗表格：与参考截图一致，全部居中对齐，操作列为蓝色文字链接 */
+    #smsTemplateModal .article-table-wrap th,#smsTemplateModal .article-table-wrap td{text-align:center;vertical-align:middle}
+    #smsTemplateModal .article-table-wrap th:first-child,#smsTemplateModal .article-table-wrap td:first-child{width:140px;min-width:140px;white-space:normal}
+    #smsTemplateModal .article-table-wrap th:nth-child(2),#smsTemplateModal .article-table-wrap td:nth-child(2){width:100%;min-width:260px;white-space:normal;word-break:normal;overflow-wrap:break-word}
+    #smsTemplateModal .article-table-wrap th:nth-child(3),#smsTemplateModal .article-table-wrap td:nth-child(3){width:80px;min-width:80px}
+    #smsTemplateModal .article-table-wrap th:nth-child(4),#smsTemplateModal .article-table-wrap td:nth-child(4){width:200px;min-width:200px;white-space:nowrap}
+    #smsTemplateModal .a-actions{display:inline-flex;flex-wrap:nowrap;align-items:center;justify-content:center;gap:12px}
+    #smsTemplateModal .a-actions a{color:var(--primary);font-size:13px;text-decoration:none}
+    #smsTemplateModal .a-actions a:hover{text-decoration:underline}
     .a-cover{width:56px;height:40px;object-fit:cover;border-radius:8px;background:#f0f0f0;display:block;box-shadow:0 1px 2px rgba(16,24,40,.08)}
     .a-main{min-width:200px}
     .a-title{font-weight:600;color:var(--text);font-size:13.5px;line-height:1.35}
@@ -9342,9 +9343,9 @@
           <td title="${content}">${content.length>50?content.slice(0,50)+'...':content}</td>
           <td><input type="checkbox" class="toggle" id="smsTplEnabled_${key}" ${t.enabled?'checked':''}></td>
           <td class="a-actions">
-            <a href="javascript:;" style="color:var(--primary);text-decoration:none;font-size:13px" onclick="openSmsTemplateCodeDialog('${platform}','${key}')">${codeLabel}</a>
-            <button class="btn sm primary" onclick="testSendSmsTemplate('${platform}','${key}')">发送</button>
-            <button class="btn sm danger" onclick="deleteSmsTemplate('${platform}','${key}')">删除</button>
+            <a href="javascript:;" onclick="openSmsTemplateCodeDialog('${platform}','${key}')">${codeLabel}</a>
+            <a href="javascript:;" onclick="testSendSmsTemplate('${platform}','${key}')">发送</a>
+            <a href="javascript:;" onclick="deleteSmsTemplate('${platform}','${key}')">删除</a>
           </td>
         </tr>`;
       }).join('');
