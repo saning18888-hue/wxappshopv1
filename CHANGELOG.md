@@ -11,6 +11,19 @@
 
 ---
 
+### v0.1.36 · 2026-08-20 · 修复短信配置对齐与模板弹窗显示不全
+**范围**：运营后台 UI（`server/public/admin.html`）。
+
+**问题 1**：短信配置弹窗 label 和输入框「不一样齐」。
+**根因**：`.form-row` 只定义 `display:flex;gap:16px`，没有固定 label 宽度；三个 label 文字长度不同，导致输入框起始位置参差不齐。
+**修复**：新增 `#smsConfigForm .form-label{width:170px;flex:none;text-align:left}` 与 `#smsConfigForm .form-input{width:100%}`，让 label 定宽、输入框在同一垂直线上对齐。
+
+**问题 2**：短信模板弹窗「显示不全」，右侧发送按钮被截断，出现横向滚动条。
+**根因**：弹窗最大宽度只有 760px，操作列仅 200px，放不下「模板ID 输入框 + 发送 + 删除」；同时全局 `.article-table-wrap th:first-child,td:first-child{width:44px}` 被优先应用，进一步挤压可用空间。
+**修复**：弹窗宽度从 760px 放宽到 900px；描述列 110px、状态列 76px、操作列 260px、内容列自适应 max-width:320px；操作列按钮与输入框加水平间距，避免重叠。
+
+---
+
 ### v0.1.35 · 2026-08-20 · 修复短信弹窗背景与模板表格竖排
 **范围**：运营后台 UI（`server/public/admin.html`）。
 
