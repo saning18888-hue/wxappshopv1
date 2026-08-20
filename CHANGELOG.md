@@ -11,6 +11,67 @@
 
 ---
 
+### v0.1.53 · 2026-08-20 · 推送选择改为 3+3+1 三行布局
+**范围**：`server/public/admin.html`。
+
+**问题**：用户反馈「把这些选项排成两行」。7 项中最长 label 为 8 字（商家提现申请提醒），4 列会被自动挤换行。
+**修复**：
+- `.sms-subscribe .radio-inline` 的 `flex-basis` 从 `calc(25% - 11px)` 改为 `calc(33.333% - 10px)`，每行明确放 3 项，7 项自然排成 3+3+1。
+- `#smsModal .field>label` 宽度 96→84px，给推选区多腾 12px。
+- `box-sizing:border-box` 防止 gap/padding 把列宽撑爆。
+- chromium 截图验证：7 项 3 行渲染、label 完整、勾选框小巧、按钮为全局紫色主题。
+
+---
+
+### v0.1.52 · 2026-08-20 · 推送选择改用原生 checkbox + 按钮回退全局紫色主题
+**范围**：`server/public/admin.html`。
+
+**问题**：用户反馈自绘 12px 方框+模拟对勾仍不协调（「把这个破框改了，换个设计方式」），且蓝色 `#409eff` 按钮与全局紫色 `--primary` 设计风格冲突（「按钮颜色跟我之前的设计风格和颜色对起来」）。
+**修复**：
+- 放弃 `appearance:none` 自绘 checkbox，改用浏览器原生 checkbox + `accent-color:var(--primary)`，由浏览器绘制干净小巧的对勾，不再依赖宽度/伪元素 hack。
+- 选中 label 文字变 `var(--primary)` 并加粗（原为 #409eff）。
+- `#smsModal` 底部按钮改用 `var(--primary)/var(--primary-700)`，`.btn.gray` 用系统灰 `#f2f3f5`，与全局按钮一致。
+- chromium 截图验证通过。
+
+---
+
+### v0.1.51 · 2026-08-20 · 弹窗加宽至 620px + 推选区改 flex wrap
+**范围**：`server/public/admin.html`。
+
+**问题**：用户截图指出文字仍截断（「商家订单提醒」被切）、勾选框仍大、推送区贴左。根因是弹窗仅 560px、`.field` 用 flex+`min-width:0`、grid `repeat(2,max-content)` 在窄 flex 容器里被压成 min-content。
+**修复**：
+- `#smsModal .modal-card` 宽度 560→620px。
+- `.sms-subscribe` 从 grid 改为 `flex flex-wrap`，每项 `flex:0 0 calc(50% - 12px)`，不再被父容器压扁。
+- checkbox 13→12px 并加 `box-sizing:border-box`；对勾伪元素重新定位。
+- `#smsModal .field>label` 宽度 90→96px（推选区右移 10px）；移除 v0.1.50 加的 `padding-left:14px`（误伤 input）。
+- 取消按钮 hover 不再变蓝，仅底色 `#fafbfc` 微调。
+- chromium 截图验证：7 项完整、checkbox 小巧、按钮配色正确。
+
+---
+
+### v0.1.50 · 2026-08-20 · 修复 label 截断 + checkbox 再缩 + 字段左内缩
+**范围**：`server/public/admin.html`。
+
+**问题**：用户截图指出文字仍截断、勾选框仍大、红框内字太靠左。
+**修复**：
+- `.sms-subscribe` 列改为 `repeat(2,max-content)` + `width:max-content` + 父级 `flex:0 0 auto`，长 label 不再被截断。
+- checkbox 14→13px 并加 `box-sizing:border-box`。
+- `#smsModal .field` 加 `padding-left:14px`（该方案后被 v0.1.51 撤销，因误伤 input 对齐）。
+- 已附 chromium 截图验证。
+
+---
+
+### v0.1.49 · 2026-08-20 · 推送选择 label 完整显示 + checkbox 缩小
+**范围**：`server/public/admin.html`。
+
+**问题**：用户截图指出文字显示不全（「商家订单提醒」被截断）、选择框太大。
+**修复**：
+- `.sms-subscribe` 列宽由 `repeat(2,minmax(0,1fr))` 改为 `repeat(2,auto)` + `width:fit-content`，列宽由最长 label 自适应。
+- checkbox 16→14px，对勾字号 12→10px。
+- 列间距 24px、行间距 10px，更接近参考图视觉密度。
+
+---
+
 ### v0.1.48 · 2026-08-20 · 修复后台登录失效（v0.1.47 残留数组项致 JS 语法错误）
 **范围**：`server/public/admin.html`。
 
