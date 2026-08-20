@@ -60,6 +60,43 @@ class SettingsService
                 'qiniu'  => ['access_key'=>'','secret_key'=>'','bucket'=>'','url'=>''],
                 'tencent'=> ['app_id'=>'','secret_id'=>'','secret_key'=>'','bucket'=>'','region'=>'','url'=>''],
             ],
+            // 短信设置
+            // 短信服务商配置（按平台独立开关）
+            'sms'                => [
+                'aliyun'  => [
+                    'enabled'           => 0,
+                    'access_key_id'     => '',
+                    'access_key_secret' => '',
+                    'sign_name'         => '',
+                ],
+                'tencent' => [
+                    'enabled' => 0,
+                    'app_id'  => '',
+                    'app_key' => '',
+                    'sign_name' => '',
+                ],
+            ],
+            // 短信模板（阿里云/腾讯云内容变量格式不同）
+            'sms_templates'      => [
+                'aliyun'  => [
+                    'verify_code'     => ['description' => '短信验证码', 'template_id' => '', 'enabled' => 1, 'content' => '您的验证码为：${code}，该验证码5分钟内有效，请勿泄漏于他人！'],
+                    'order_new'       => ['description' => '商家订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您有新的订单待处理，当前状态：${status}，订单摘要：${remark}，请及时处理。'],
+                    'order_refund'    => ['description' => '商家订单退款提醒', 'template_id' => '', 'enabled' => 0, 'content' => '您有新的订单待处理，当前状态：${status}，订单摘要：${remark}，请及时处理。'],
+                    'withdraw'        => ['description' => '商家提现申请提醒', 'template_id' => '', 'enabled' => 0, 'content' => '有新的提现申请待处理，申请人：${name}，金额：${amount}，请及时处理。'],
+                    'group_success'   => ['description' => '商家拼团订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您参与的拼团（${goods_name}）已成团，订单号：${order_sn}。'],
+                    'seckill_success' => ['description' => '商家秒杀订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您参与的秒杀活动（${goods_name}）已成功下单，订单号：${order_sn}。'],
+                    'bargain_success' => ['description' => '商家砍价订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您的砍价商品（${goods_name}）已砍至底价，订单号：${order_sn}。'],
+                ],
+                'tencent' => [
+                    'verify_code'     => ['description' => '短信验证码', 'template_id' => '', 'enabled' => 1, 'content' => '您的验证码{1}，该验证码5分钟内有效，请勿泄漏于他人！！'],
+                    'order_new'       => ['description' => '商家订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您有新的订单待处理，当前状态：{1}，订单摘要：{2}，请及时处理。'],
+                    'order_refund'    => ['description' => '商家订单退款提醒', 'template_id' => '', 'enabled' => 0, 'content' => '您有新的订单待处理，当前状态：{1}，订单摘要：{2}，请及时处理。'],
+                    'withdraw'        => ['description' => '商家提现申请提醒', 'template_id' => '', 'enabled' => 0, 'content' => '有新的提现申请待处理，申请人：{1}，金额：{2}，请及时处理。'],
+                    'group_success'   => ['description' => '商家拼团订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您参与的拼团（{1}）已成团，订单号：{2}。'],
+                    'seckill_success' => ['description' => '商家秒杀订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您参与的秒杀活动（{1}）已成功下单，订单号：{2}。'],
+                    'bargain_success' => ['description' => '商家砍价订单提醒', 'template_id' => '', 'enabled' => 1, 'content' => '您的砍价商品（{1}）已砍至底价，订单号：{2}。'],
+                ],
+            ],
         ];
     }
 

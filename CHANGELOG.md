@@ -11,6 +11,30 @@
 
 ---
 
+### v0.1.33 · 2026-08-20 · 短信管理（单菜单 + 平台开关 + 阿里云/腾讯云独立模板）
+**范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、新建 `server/app/controller/admin/SmsContact.php`、`SmsSendLog.php`、`SmsSend.php`、数据库迁移 `server/database/apply_sms_tables.php`）、路由（`server/route/app.php`）。
+
+**短信管理（按截图重做，去掉原 4 子菜单拆分方案）**
+- 「系统 > 短信管理」为单个菜单，进入后默认展示「短信管理」标签，另含「商家联系人」「发送日志」两个标签。
+- **短信平台列表**：阿里云短信配置、腾讯云短信配置两行，每行含「状态」开关（启用/禁用）与「配置」「商城短信模板」两个按钮。
+  - 「配置」弹窗按平台不同：阿里云填 AccessKeyId / AccessKeySecret / 短信签名；腾讯云填 AppId / AppKey / 短信签名。
+  - 「商城短信模板」弹窗按平台分别维护，阿里云与腾讯云模板内容变量格式不同：
+    - 阿里云：`${code}`、`${status}`、`${remark}`、`${name}`、`${amount}`、`${goods_name}`、`${order_sn}` 等占位符。
+    - 腾讯云：`{1}`、`{2}`、`{3}` 数字占位符。
+  - 每个模板行含「模板ID」输入框、「状态」开关、「发送」（测试）与「删除」按钮，底部「保存」。
+  - 预置 7 种模板：短信验证码、商家订单提醒、商家订单退款提醒、商家提现申请提醒、商家拼团订单提醒、商家秒杀订单提醒、商家砍价订单提醒（阿里云/腾讯云各一套）。
+- **商家联系人**：姓名、手机号、启用状态开关、推送选择（商家订单提醒/退款/提现/表单提交成功/拼团/秒杀/砍价），支持新增、编辑、删除、状态切换、关键词筛选。
+- **发送日志**：记录手机号、模板key、发送内容、结果、短信配置key值（ALI_SMS_CONFIG / TENCENT_SMS_CONFIG）、时间，支持分页与关键词筛选。
+
+**后端**
+- `SettingsService::defaults()` 的 `sms` 改为 `aliyun`/`tencent` 双平台独立结构（各自含 `enabled` + 凭证字段）；`sms_templates` 改为 `aliyun`/`tencent` 两套，每模板含 `template_id`、`enabled`、`content`。
+- 新增数据库表 `sms_contacts`、`sms_send_logs` 及迁移脚本 `database/apply_sms_tables.php`（幂等，含默认店长示例数据）。
+- 新增控制器：`SmsContact.php`（联系人 CRUD / 启用切换）、`SmsSendLog.php`（日志列表）、`SmsSend.php`（单条 `send` / 批量 `batch` 发送，演示模式，按平台解析变量，已预留真实 SDK 接入点）。
+- 新增 `route/app.php` 路由：`/admin/sms_contacts`、`/admin/sms_send_logs`、`/admin/sms_send`、`/admin/sms_send_batch`。
+- 管理员写操作自动写入 `operation_logs`（已有自动记录逻辑）。
+
+---
+
 ### v0.1.32 · 2026-08-20 · 附件设置（远程附件配置）
 **范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、`server/app/controller/admin/Settings.php`、`server/route/app.php`）。
 

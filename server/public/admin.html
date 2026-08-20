@@ -274,6 +274,14 @@
     .radio-inline{font-size:13px;color:var(--text);display:inline-flex;align-items:center;gap:4px;margin-right:16px;cursor:pointer}
     .radio-inline input[type=radio]{margin:0}
     .pager-pages button.active:not(:disabled):hover{color:#fff;background:var(--primary-700)}
+
+    /* ---------- 短信管理 ---------- */
+    .sms-pane{padding:8px 0}
+    .sms-subscribe{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+    .sms-subscribe .radio-inline{align-items:flex-start}
+    #smsModal .field label{display:block;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+    #smsModal .field input[type=text],#smsModal .field input[type=password],#smsModal .field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px}
+    #smsModal .field input:focus,#smsModal .field textarea:focus{border-color:var(--primary)}
     .pager-ellipsis{padding:0 4px;color:var(--text-muted);user-select:none}
     .pager-goto{display:flex;align-items:center;gap:6px}
     .pager-goto input{width:48px;height:30px;border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;font-size:13px;background:#f7f8fa}
@@ -313,6 +321,7 @@
     .toggle:checked{background:var(--primary)}
     .toggle:checked::after{transform:translateX(18px)}
     .radio{display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px;color:var(--text-secondary);cursor:pointer}
+    .required{color:#dc3545;margin-right:3px}
 
     /* ---------- 商品编辑弹窗扩展 ---------- ---------- */
     .modal-card.lg{width:720px;max-width:96vw}
@@ -348,6 +357,13 @@
     .article-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface)}
     .article-table-wrap table{margin:0}
     .article-table-wrap th:first-child,.article-table-wrap td:first-child{width:44px;text-align:center}
+    /* 短信平台列表：避免名称竖排、操作列被挤 */
+    #smsPanel .article-table-wrap th:first-child,#smsPanel .article-table-wrap td:first-child{width:auto;text-align:left}
+    #smsPanel .sms-platform-table th,#smsPanel .sms-platform-table td{white-space:nowrap;vertical-align:middle}
+    #smsPanel .sms-platform-table th:first-child,#smsPanel .sms-platform-table td:first-child{width:180px;min-width:180px}
+    #smsPanel .sms-platform-table th:nth-child(2),#smsPanel .sms-platform-table td:nth-child(2){width:120px;min-width:120px;text-align:center}
+    #smsPanel .sms-platform-table th:nth-child(3),#smsPanel .sms-platform-table td:nth-child(3){width:auto;min-width:260px;text-align:right}
+    #smsPanel .sms-platform-table .btn{margin-left:8px}
     .a-cover{width:56px;height:40px;object-fit:cover;border-radius:8px;background:#f0f0f0;display:block;box-shadow:0 1px 2px rgba(16,24,40,.08)}
     .a-main{min-width:200px}
     .a-title{font-weight:600;color:var(--text);font-size:13.5px;line-height:1.35}
@@ -2518,6 +2534,105 @@
                 <button class="btn-submit" onclick="saveAttachmentSettings()">保存配置</button>
                 <button class="btn primary" onclick="testAttachmentSettings()">测试配置(无需保存)</button>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 短信管理 -->
+        <div id="smsPanel" class="panel hidden">
+          <div class="card">
+            <div class="article-tabs">
+              <div class="article-tab active" data-tab="sms-platform" onclick="switchSmsTab('sms-platform')">短信管理</div>
+              <div class="article-tab" data-tab="sms-contact" onclick="switchSmsTab('sms-contact')">商家联系人</div>
+              <div class="article-tab" data-tab="sms-log" onclick="switchSmsTab('sms-log')">发送日志</div>
+            </div>
+
+            <!-- 短信平台 -->
+            <div class="article-pane active" id="sms-platform-pane">
+              <div class="article-table-wrap">
+                <table class="table sms-platform-table">
+                  <thead><tr><th>短信平台</th><th>状态</th><th style="text-align:right">操作</th></tr></thead>
+                  <tbody id="smsPlatformList"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 商家联系人 -->
+            <div class="article-pane" id="sms-contact-pane">
+              <div class="article-toolbar">
+                <button class="btn sm primary" onclick="openSmsContactDialog()">+ 添加</button>
+                <input id="smsContactKw" class="input" placeholder="关键词筛选" style="width:200px;margin-left:auto">
+                <select id="smsContactEnabled" class="input" style="width:100px">
+                  <option value="">全部状态</option>
+                  <option value="1">启用</option>
+                  <option value="0">禁用</option>
+                </select>
+                <button class="btn sm primary" onclick="loadSmsContacts(1)">查询</button>
+              </div>
+              <div class="article-table-wrap">
+                <table class="table">
+                  <thead><tr><th>姓名</th><th>手机号</th><th>状态</th><th>推送选择</th><th>操作</th></tr></thead>
+                  <tbody id="smsContactList"></tbody>
+                </table>
+              </div>
+              <div class="pager" id="smsContactPager"></div>
+            </div>
+
+            <!-- 发送日志 -->
+            <div class="article-pane" id="sms-log-pane">
+              <div class="article-toolbar">
+                <input id="smsLogKw" class="input" placeholder="手机号 / 模板 / 内容" style="width:220px">
+                <button class="btn sm primary" onclick="loadSmsSendLogs(1)">查询</button>
+              </div>
+              <div class="article-table-wrap">
+                <table class="table">
+                  <thead><tr><th>手机号</th><th>模板key</th><th>发送内容</th><th>结果</th><th>短信配置key值</th><th>时间</th></tr></thead>
+                  <tbody id="smsSendLogList"></tbody>
+                </table>
+              </div>
+              <div class="pager" id="smsSendLogPager"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 短信配置弹窗 -->
+        <div id="smsConfigModal" class="modal hidden">
+          <div class="modal-box" style="max-width:560px">
+            <div class="modal-header"><h3>短信配置</h3><span class="modal-close" onclick="closeSmsConfigModal()">&times;</span></div>
+            <div class="modal-body" id="smsConfigModalBody"></div>
+            <div class="modal-footer">
+              <button class="btn" onclick="closeSmsConfigModal()">取消</button>
+              <button class="btn primary" onclick="saveSmsConfig()">确定</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 短信模板弹窗 -->
+        <div id="smsTemplateModal" class="modal hidden">
+          <div class="modal-box" style="max-width:760px">
+            <div class="modal-header"><h3>短信模板</h3><span class="modal-close" onclick="closeSmsTemplateModal()">&times;</span></div>
+            <div class="modal-body" style="padding:0">
+              <div class="article-table-wrap" style="max-height:520px;overflow:auto">
+                <table class="table">
+                  <thead><tr><th>描述</th><th>内容</th><th>状态</th><th>操作</th></tr></thead>
+                  <tbody id="smsTemplateList"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button class="btn primary" onclick="saveSmsTemplates()">保存</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 通用短信弹窗 -->
+        <div id="smsModal" class="modal hidden">
+          <div class="modal-box" style="max-width:560px">
+            <div class="modal-header"><h3 id="smsModalTitle">编辑</h3><span class="modal-close" onclick="closeSmsModal()">&times;</span></div>
+            <div class="modal-body" id="smsModalBody"></div>
+            <div class="modal-footer">
+              <button class="btn" onclick="closeSmsModal()">取消</button>
+              <button class="btn primary" id="smsModalOk" onclick="">确定</button>
             </div>
           </div>
         </div>
@@ -4844,7 +4959,7 @@
         {key:'site',label:'站点设置',icon:ICONS.settings,panel:'sitePanel',default:true},
         {key:'log',label:'操作日志',icon:ICONS.clock,panel:'logPanel'},
         {key:'attach',label:'附件设置',icon:ICONS.paperclip,panel:'attachPanel'},
-        {key:'sms',label:'短信管理',icon:ICONS.message},
+        {key:'sms',label:'短信管理',icon:ICONS.message,panel:'smsPanel'},
         {key:'permission',label:'权限管理',icon:ICONS.shield,children:[
           {key:'group',label:'用户组'},
           {key:'user',label:'用户列表'},
@@ -4955,6 +5070,7 @@
       if(panelId==='sitePanel') loadSiteSettings();
       if(panelId==='logPanel') loadOperationLogs(1);
       if(panelId==='attachPanel') loadAttachmentSettings();
+      if(panelId==='smsPanel') switchSmsTab('sms-platform');
       if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
@@ -9077,6 +9193,317 @@
       const r=await fetchA(`${BASE}/settings/attachment_test`,{method:'POST',body:{attachment:data}});
       if(r.code!==0){toast(r.msg||'测试失败');return;}
       toast(r.msg||'连接测试成功');
+    }
+
+    /* ===================== 短信管理 ===================== */
+    const smsPlatforms=[
+      {key:'aliyun',name:'阿里云短信配置',fields:[
+        {key:'access_key_id',label:'阿里云AccessKeyId',type:'text',required:true},
+        {key:'access_key_secret',label:'阿里云AccessKeySecret',type:'password',required:true},
+        {key:'sign_name',label:'阿里云短信签名',type:'text',required:true}
+      ]},
+      {key:'tencent',name:'腾讯云短信配置',fields:[
+        {key:'app_id',label:'腾讯云AppId',type:'text',required:true},
+        {key:'app_key',label:'腾讯云AppKey',type:'password',required:true},
+        {key:'sign_name',label:'腾讯云短信签名',type:'text',required:true}
+      ]}
+    ];
+    const smsProviderOptions={aliyun:'阿里云短信',tencent:'腾讯云短信'};
+    const smsTemplateDefaults={
+      aliyun:{
+        verify_code:{description:'短信验证码',template_id:'',enabled:1,content:'您的验证码为：${code}，该验证码5分钟内有效，请勿泄漏于他人！'},
+        order_new:{description:'商家订单提醒',template_id:'',enabled:1,content:'您有新的订单待处理，当前状态：${status}，订单摘要：${remark}，请及时处理。'},
+        order_refund:{description:'商家订单退款提醒',template_id:'',enabled:0,content:'您有新的订单待处理，当前状态：${status}，订单摘要：${remark}，请及时处理。'},
+        withdraw:{description:'商家提现申请提醒',template_id:'',enabled:0,content:'有新的提现申请待处理，申请人：${name}，金额：${amount}，请及时处理。'},
+        group_success:{description:'商家拼团订单提醒',template_id:'',enabled:1,content:'您参与的拼团（${goods_name}）已成团，订单号：${order_sn}。'},
+        seckill_success:{description:'商家秒杀订单提醒',template_id:'',enabled:1,content:'您参与的秒杀活动（${goods_name}）已成功下单，订单号：${order_sn}。'},
+        bargain_success:{description:'商家砍价订单提醒',template_id:'',enabled:1,content:'您的砍价商品（${goods_name}）已砍至底价，订单号：${order_sn}。'}
+      },
+      tencent:{
+        verify_code:{description:'短信验证码',template_id:'',enabled:1,content:'您的验证码{1}，该验证码5分钟内有效，请勿泄漏于他人！！'},
+        order_new:{description:'商家订单提醒',template_id:'',enabled:1,content:'您有新的订单待处理，当前状态：{1}，订单摘要：{2}，请及时处理。'},
+        order_refund:{description:'商家订单退款提醒',template_id:'',enabled:0,content:'您有新的订单待处理，当前状态：{1}，订单摘要：{2}，请及时处理。'},
+        withdraw:{description:'商家提现申请提醒',template_id:'',enabled:0,content:'有新的提现申请待处理，申请人：{1}，金额：{2}，请及时处理。'},
+        group_success:{description:'商家拼团订单提醒',template_id:'',enabled:1,content:'您参与的拼团（{1}）已成团，订单号：{2}。'},
+        seckill_success:{description:'商家秒杀订单提醒',template_id:'',enabled:1,content:'您参与的秒杀活动（{1}）已成功下单，订单号：{2}。'},
+        bargain_success:{description:'商家砍价订单提醒',template_id:'',enabled:1,content:'您的砍价商品（{1}）已砍至底价，订单号：{2}。'}
+      }
+    };
+    const smsSubscribeOptions=[
+      {key:'order_new',label:'商家订单提醒'},
+      {key:'order_refund',label:'商家订单退款提醒'},
+      {key:'withdraw',label:'商家提现申请提醒'},
+      {key:'verify_code',label:'表单提交成功提醒'},
+      {key:'group_success',label:'商家拼团订单提醒'},
+      {key:'seckill_success',label:'商家秒杀订单提醒'},
+      {key:'bargain_success',label:'商家砍价订单提醒'}
+    ];
+    let smsConfigData={aliyun:{enabled:0,access_key_id:'',access_key_secret:'',sign_name:''},tencent:{enabled:0,app_id:'',app_key:'',sign_name:''}};
+    let smsTemplateData={};
+    let smsCurrentPlatform='aliyun';
+    let smsCurrentTab='sms-platform';
+    let smsContactPage=1;
+
+    /* ---------- 短信管理 ---------- */
+    function switchSmsTab(tab){
+      smsCurrentTab=tab;
+      document.querySelectorAll('#smsPanel .article-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+      document.querySelectorAll('#smsPanel .article-pane').forEach(p=>p.classList.toggle('active',p.id===tab+'-pane'));
+      if(tab==='sms-platform') loadSmsPlatforms();
+      else if(tab==='sms-contact') loadSmsContacts(1);
+      else if(tab==='sms-log') loadSmsSendLogs(1);
+    }
+    async function loadSmsPlatforms(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      smsConfigData=deepMerge({aliyun:{enabled:0,access_key_id:'',access_key_secret:'',sign_name:''},tencent:{enabled:0,app_id:'',app_key:'',sign_name:''}},d.data?.sms||{});
+      smsTemplateData=deepMerge({},smsTemplateDefaults,d.data?.sms_templates||{});
+      const tbody=document.getElementById('smsPlatformList');
+      if(!tbody) return;
+      tbody.innerHTML=smsPlatforms.map(p=>{
+        const cfg=smsConfigData[p.key]||{};
+        return `<tr>
+          <td style="white-space:nowrap">${p.name}</td>
+          <td style="text-align:center"><input type="checkbox" class="toggle" ${cfg.enabled?'checked':''} onchange="toggleSmsPlatform('${p.key}',this.checked?1:0)"></td>
+          <td style="text-align:right;white-space:nowrap"><button type="button" class="btn sm primary" onclick="openSmsConfigDialog('${p.key}')">配置</button><button type="button" class="btn sm" onclick="openSmsTemplateDialog('${p.key}')">商城短信模板</button></td>
+        </tr>`;
+      }).join('');
+    }
+    async function toggleSmsPlatform(platform,enabled){
+      const next=deepMerge({},smsConfigData);
+      next[platform].enabled=enabled?1:0;
+      const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms:next}}});
+      if(r.code!==0){toast(r.msg||'操作失败');return;}
+      toast('状态已更新');
+      smsConfigData=next;
+    }
+
+    /* ---------- 短信配置弹窗 ---------- */
+    function openSmsConfigDialog(platform){
+      smsCurrentPlatform=platform;
+      const meta=smsPlatforms.find(p=>p.key===platform);
+      const cfg=smsConfigData[platform]||{};
+      const rows=meta.fields.map(f=>{
+        const val=escapeHtml(cfg[f.key]||'');
+        const required=f.required?'<span class="required">*</span>':'';
+        return `<div class="form-row"><label class="form-label">${required}${f.label}</label><div class="form-control"><input type="${f.type}" class="form-input wide" id="smsCfg_${f.key}" value="${val}" placeholder="请输入${f.label}"></div></div>`;
+      }).join('');
+      document.getElementById('smsConfigModalBody').innerHTML=`<div id="smsConfigForm">${rows}</div>`;
+      document.getElementById('smsConfigModal').classList.remove('hidden');
+    }
+    function closeSmsConfigModal(){document.getElementById('smsConfigModal').classList.add('hidden');}
+    async function saveSmsConfig(){
+      const meta=smsPlatforms.find(p=>p.key===smsCurrentPlatform);
+      const next=deepMerge({},smsConfigData);
+      for(const f of meta.fields){
+        const v=document.getElementById(`smsCfg_${f.key}`).value.trim();
+        if(f.required&&!v){toast(`${f.label}不能为空`);return;}
+        next[smsCurrentPlatform][f.key]=v;
+      }
+      const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms:next}}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      toast('保存成功');
+      smsConfigData=next;
+      closeSmsConfigModal();
+      loadSmsPlatforms();
+    }
+
+    /* ---------- 短信模板弹窗 ---------- */
+    function openSmsTemplateDialog(platform){
+      smsCurrentPlatform=platform;
+      const tpls=smsTemplateData[platform]||smsTemplateDefaults[platform]||{};
+      const tbody=document.getElementById('smsTemplateList');
+      if(!tbody) return;
+      tbody.innerHTML=Object.entries(tpls).map(([key,t])=>{
+        const desc=escapeHtml(t.description||'');
+        const content=escapeHtml(t.content||'');
+        const templateId=escapeHtml(t.template_id||'');
+        return `<tr>
+          <td>${desc}</td>
+          <td title="${content}">${content.length>50?content.slice(0,50)+'...':content}</td>
+          <td><input type="checkbox" class="toggle" id="smsTplEnabled_${key}" ${t.enabled?'checked':''}></td>
+          <td class="a-actions">
+            <input type="text" class="form-input sm" id="smsTplCode_${key}" value="${templateId}" placeholder="模板ID" style="width:120px">
+            <button class="btn sm primary" onclick="testSendSmsTemplate('${platform}','${key}')">发送</button>
+            <button class="btn sm danger" onclick="deleteSmsTemplate('${platform}','${key}')">删除</button>
+          </td>
+        </tr>`;
+      }).join('');
+      document.getElementById('smsTemplateModal').classList.remove('hidden');
+    }
+    function closeSmsTemplateModal(){document.getElementById('smsTemplateModal').classList.add('hidden');}
+    async function saveSmsTemplates(){
+      const next=deepMerge({},smsTemplateData);
+      const tpls=next[smsCurrentPlatform]||{};
+      Object.keys(tpls).forEach(key=>{
+        const enabled=document.getElementById(`smsTplEnabled_${key}`)?.checked?1:0;
+        const code=document.getElementById(`smsTplCode_${key}`)?.value.trim()||'';
+        tpls[key]={...tpls[key],enabled,template_id:code};
+      });
+      const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms_templates:next}}});
+      if(r.code!==0){toast(r.msg||'保存失败');return;}
+      toast('保存成功');
+      smsTemplateData=next;
+      closeSmsTemplateModal();
+    }
+    async function deleteSmsTemplate(platform,key){
+      if(!confirm('确定删除该模板？')) return;
+      const next=deepMerge({},smsTemplateData);
+      if(next[platform]&&next[platform][key]) delete next[platform][key];
+      const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms_templates:next}}});
+      if(r.code!==0){toast(r.msg||'删除失败');return;}
+      toast('删除成功');
+      smsTemplateData=next;
+      openSmsTemplateDialog(platform);
+    }
+    async function testSendSmsTemplate(platform,key){
+      showModal({
+        title:'请输入手机号',
+        body:`<div class="field"><label>手机号</label><input type="text" id="smsTestPhone" placeholder="请输入手机号" class="form-input"></div>`,
+        okText:'确定',
+        onOk:async()=>{
+          const phone=document.getElementById('smsTestPhone').value.trim();
+          if(!/^1\d{10}$/.test(phone)){toast('手机号格式不正确');return false;}
+          const tpl=smsTemplateData[platform]?.[key]||smsTemplateDefaults[platform]?.[key]||{};
+          const params=platform==='aliyun'?{code:'1234',status:'待发货',remark:'测试订单'}:{1:'1234',2:'测试状态',3:'测试摘要'};
+          const r=await fetchA(`${BASE}/sms_send`,{method:'POST',body:{phone,platform,template_key:key,params}});
+          if(r.code!==0){toast(r.msg||'发送失败');return false;}
+          toast('发送成功（演示模式）');
+          closeModal();
+          loadSmsSendLogs(1);
+        }
+      });
+    }
+
+    /* ---------- 商家联系人 ---------- */
+    async function loadSmsContacts(page){
+      smsContactPage=page||1;
+      const kw=document.getElementById('smsContactKw')?.value.trim()||'';
+      const enabled=document.getElementById('smsContactEnabled')?.value||'';
+      const params={page:smsContactPage,size:10};
+      if(kw) params.kw=kw;
+      if(enabled!=='') params.enabled=enabled;
+      const d=await fetchA(`${BASE}/sms_contacts?${new URLSearchParams(params)}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const list=d.data?.list||[];
+      const tbody=document.getElementById('smsContactList');
+      if(!tbody) return;
+      tbody.innerHTML=list.map(c=>{
+        const subs=(c.subscribe||[]).map(s=>{
+          const o=smsSubscribeOptions.find(x=>x.key===s);return o?o.label:s;
+        }).join('、')||'-';
+        return `<tr>
+          <td>${escapeHtml(c.name)}</td>
+          <td>${escapeHtml(c.phone)}</td>
+          <td><input type="checkbox" class="toggle" ${c.enabled?'checked':''} onchange="toggleSmsContact(${c.id},this.checked?1:0)"></td>
+          <td title="${escapeHtml(subs)}">${subs.length>30?subs.slice(0,30)+'...':subs}</td>
+          <td class="a-actions"><button class="btn sm" onclick="openSmsContactDialog(${c.id})">编辑</button><button class="btn sm danger" onclick="deleteSmsContact(${c.id})">删除</button></td>
+        </tr>`;
+      }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--text-muted)">暂无数据</td></tr>';
+      renderPager('smsContactPager',{page:d.data.page||1,last_page:d.data.last_page||1,total:d.data.total||0},loadSmsContacts);
+    }
+    function openSmsContactDialog(id){
+      const editing=(typeof id==='number'||typeof id==='string')?id:0;
+      let row={name:'',phone:'',enabled:1,subscribe:[]};
+      if(editing){
+        const tr=document.querySelector(`#smsContactList button[onclick*="openSmsContactDialog(${editing})"]`)?.closest('tr');
+        if(tr){
+          row.name=tr.children[0].innerText;
+          row.phone=tr.children[1].innerText;
+          const check=tr.querySelector('.toggle');
+          row.enabled=check?.checked?1:0;
+        }
+        // 再次从现有列表变量取订阅
+        const html=tr.innerHTML;
+        // 简单解析：找 td[3] 的 title
+        const subsText=tr.children[3]?.getAttribute('title')||'';
+        row.subscribe=subsText.split('、').map(s=>{const o=smsSubscribeOptions.find(x=>x.label===s);return o?o.key:''}).filter(Boolean);
+      }
+      const subsHtml=smsSubscribeOptions.map(o=>`<label class="radio-inline"><input type="checkbox" name="smsSub" value="${o.key}" ${row.subscribe.includes(o.key)?'checked':''}> ${o.label}</label>`).join('');
+      showModal({
+        title:editing?'编辑':'添加',
+        body:`
+          <div class="field"><label><span class="required">*</span>姓名</label><input type="text" id="smsContactName" value="${escapeHtml(row.name)}" class="form-input"></div>
+          <div class="field"><label><span class="required">*</span>手机号</label><input type="text" id="smsContactPhone" value="${escapeHtml(row.phone)}" class="form-input" maxlength="11"></div>
+          <div class="field"><label>推送选择</label><div class="sms-subscribe">${subsHtml}</div></div>`,
+        okText:'确定',
+        onOk:async()=>{
+          const name=document.getElementById('smsContactName').value.trim();
+          const phone=document.getElementById('smsContactPhone').value.trim();
+          const subscribe=Array.from(document.querySelectorAll('input[name="smsSub"]:checked')).map(el=>el.value);
+          if(!name||!phone){toast('姓名和手机号不能为空');return false;}
+          if(!/^1\d{10}$/.test(phone)){toast('手机号格式不正确');return false;}
+          const method=editing?'PUT':'POST';
+          const url=editing?`${BASE}/sms_contacts/${editing}`:`${BASE}/sms_contacts`;
+          const r=await fetchA(url,{method,body:{name,phone,enabled:editing?(document.querySelector('#smsContactList .toggle:checked')?1:0):1,subscribe}});
+          if(r.code!==0){toast(r.msg||(editing?'保存失败':'新增失败'));return false;}
+          toast(editing?'保存成功':'新增成功');
+          loadSmsContacts(editing?smsContactPage:1);
+          closeModal();
+        }
+      });
+    }
+    async function deleteSmsContact(id){
+      if(!confirm('确定删除该联系人？')) return;
+      const r=await fetchA(`${BASE}/sms_contacts/${id}`,{method:'DELETE'});
+      if(r.code!==0){toast(r.msg||'删除失败');return;}
+      toast('删除成功');
+      loadSmsContacts(smsContactPage);
+    }
+    async function toggleSmsContact(id,enabled){
+      const r=await fetchA(`${BASE}/sms_contacts/${id}/toggle`,{method:'POST',body:{enabled:enabled?1:0}});
+      if(r.code!==0){toast(r.msg||'操作失败');return;}
+      toast('状态已更新');
+    }
+
+    /* ---------- 发送日志 ---------- */
+    async function loadSmsSendLogs(page){
+      const kw=document.getElementById('smsLogKw')?.value.trim()||'';
+      const params={page:page||1,size:10};
+      if(kw) params.kw=kw;
+      const d=await fetchA(`${BASE}/sms_send_logs?${new URLSearchParams(params)}`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const list=d.data?.list||[];
+      const tbody=document.getElementById('smsSendLogList');
+      if(!tbody) return;
+      tbody.innerHTML=list.map(l=>{
+        let res='-';
+        try{const obj=JSON.parse(l.result||'{}');res=obj.Message||JSON.stringify(obj).slice(0,60);}catch(e){res=(l.result||'').slice(0,60);}
+        const content=(l.content||'').slice(0,60);
+        return `<tr>
+          <td>${escapeHtml(l.phone)}</td>
+          <td>${escapeHtml(l.template_key)}</td>
+          <td title="${escapeHtml(l.content||'')}">${escapeHtml(content)}${(l.content||'').length>60?'...':''}</td>
+          <td title="${escapeHtml(l.result||'')}">${escapeHtml(res)}</td>
+          <td>${escapeHtml(l.config_key||'')}</td>
+          <td>${formatTime(l.create_time)}</td>
+        </tr>`;
+      }).join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">暂无数据</td></tr>';
+      renderPager('smsSendLogPager',{page:d.data.page||1,last_page:d.data.last_page||1,total:d.data.total||0},loadSmsSendLogs);
+    }
+
+    /* ---------- 通用弹窗封装 ---------- */
+    let smsModalCb=null;
+    function showModal({title,body,okText='确定',onOk}){
+      const m=document.getElementById('smsModal');
+      document.getElementById('smsModalTitle').innerText=title;
+      document.getElementById('smsModalBody').innerHTML=body;
+      const ok=document.getElementById('smsModalOk');
+      ok.innerText=okText;
+      ok.onclick=async()=>{if(!onOk)return;if(await onOk()!==false) closeModal();};
+      m.classList.remove('hidden');
+    }
+    function closeModal(){
+      document.getElementById('smsModal').classList.add('hidden');
+    }
+    function closeSmsModal(){closeModal();}
+    function escapeHtml(s){
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
+    function formatTime(ts){
+      if(!ts) return '-';
+      const d=new Date(ts*1000);
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
     }
 
     /* ===================== 文章管理 ===================== */

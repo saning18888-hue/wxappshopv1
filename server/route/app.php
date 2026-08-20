@@ -205,4 +205,14 @@ Route::group('admin', function () {
     Route::get('operation_logs/info', 'admin.OperationLog/info');
     Route::post('operation_logs/batch_delete', 'admin.OperationLog/batchDelete');
     Route::post('operation_logs/delete_by_time', 'admin.OperationLog/deleteByTime');
+
+    // 短信管理
+    Route::get('sms_contacts', 'admin.SmsContact/index');
+    Route::post('sms_contacts', 'admin.SmsContact/save');
+    Route::put('sms_contacts/:id', 'admin.SmsContact/update');
+    Route::delete('sms_contacts/:id', 'admin.SmsContact/delete');
+    Route::post('sms_contacts/:id/toggle', 'admin.SmsContact/toggle');
+    Route::get('sms_send_logs', 'admin.SmsSendLog/index');
+    Route::post('sms_send', 'admin.SmsSend/send');
+    Route::post('sms_send_batch', 'admin.SmsSend/batch');
 });
