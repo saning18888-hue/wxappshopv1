@@ -11,6 +11,19 @@
 
 ---
 
+### v0.1.35 · 2026-08-20 · 修复短信弹窗背景与模板表格竖排
+**范围**：运营后台 UI（`server/public/admin.html`）。
+
+**问题 1**：短信配置/模板/通用弹窗看起来「没背景」。
+**根因**：全站弹窗内容容器统一用 `.modal-card`（白底、圆角、阴影），而短信三个弹窗错写成 `.modal-box`，该 class 未定义任何背景样式，导致弹窗背景缺失。
+**修复**：将 `.modal-box` 统一改为 `.modal-card`。
+
+**问题 2**：短信模板弹窗里「描述」列文字竖着排（如「短信验证码」成竖排）。
+**根因**：全局 `.article-table-wrap th:first-child,td:first-child{width:44px;text-align:center}` 被应用到弹窗内表格，且弹窗位于 `#smsPanel` 外部，之前针对 `#smsPanel` 的覆盖未生效；44px 宽度把文字挤成竖排。
+**修复**：新增 `#smsTemplateModal .article-table-wrap ...` 样式，为模板表格四列分别设置合理宽度与对齐，描述列 `white-space:normal`、操作列 `white-space:nowrap`，并垂直居中。
+
+---
+
 ### v0.1.34 · 2026-08-20 · 修复短信弹窗无法打开（按钮「点不动」）
 **范围**：运营后台 UI（`server/public/admin.html`）。
 
