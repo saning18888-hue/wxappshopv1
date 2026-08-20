@@ -11,6 +11,13 @@
 
 ---
 
+### v0.1.27 · 2026-08-20 · 移除 banner 管理模块
+**范围**：运营后台 UI（`server/public/admin.html`）、后端（删除 `server/app/controller/admin/Banner.php`、`server/database/apply_banners.php`、`server/route/app.php` 中的 banner 路由）、数据库（sqlite 中 `banners` 表）。
+**改动**：
+- 移除「内容」菜单的 banner 管理功能：菜单项、列表面板、添加/编辑弹窗、选择链接弹窗及全部 JS 逻辑、全局变量、`switchMenu` 加载分支。
+- 删除后端 Banner 控制器、`banners` 迁移脚本与路由；清理 sqlite 中此前创建的空 `banners` 表（已 drop）。
+- 装修模块（店铺 › 我的模板）的轮播设置 / 魔方导航 / 精选推荐 / 分类导航均保持不变。
+
 ### v0.1.26 · 2026-08-19 · 新增文章管理模块（列表/分类/设置）+ 文章管理 UI 美化 + 项目 UI 设计规范
 **范围**：运营后台 UI（`server/public/admin.html`）、文章 API（`server/app/controller/admin/Article.php`、`ArticleCategory.php`、`Settings.php`、`route/app.php`）、数据库迁移（`server/database/apply_articles.php`）、封面资源（`server/public/uploads/banner/20260819/`）、项目规范（`UI设计规范.md`）。
 **改动**：
