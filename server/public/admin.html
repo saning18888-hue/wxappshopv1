@@ -280,10 +280,11 @@
     .sms-subscribe{display:flex;flex-direction:column;gap:10px}
     .sms-subscribe .radio-inline{display:flex;align-items:center;gap:8px;height:auto;line-height:1.4;white-space:nowrap}
     .sms-subscribe .radio-inline input[type=checkbox]{margin:0;flex:none}
-    #smsModal .field{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-    #smsModal .field label{width:80px;flex:none;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:0;line-height:1.4}
+    #smsModal .field{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+    #smsModal .field label{width:90px;flex:none;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:0;line-height:1.4;padding-top:8px}
     #smsModal .field input[type=text],#smsModal .field input[type=password],#smsModal .field textarea{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px}
     #smsModal .field input:focus,#smsModal .field textarea:focus{border-color:var(--primary)}
+    #smsModal .field .form-static{flex:1;min-width:0;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;white-space:normal;word-break:normal;overflow-wrap:break-word;line-height:1.5}
     #smsModal .field .sms-subscribe{flex:1;min-width:0}
     .pager-ellipsis{padding:0 4px;color:var(--text-muted);user-select:none}
     .pager-goto{display:flex;align-items:center;gap:6px}
@@ -378,10 +379,8 @@
     #smsTemplateModal .article-table-wrap th:nth-child(3),#smsTemplateModal .article-table-wrap td:nth-child(3){width:80px;min-width:80px;text-align:center}
     #smsTemplateModal .article-table-wrap th:nth-child(4),#smsTemplateModal .article-table-wrap td:nth-child(4){width:320px;min-width:320px;text-align:right;white-space:nowrap}
     #smsTemplateModal .article-table-wrap td{vertical-align:middle}
-    #smsTemplateModal .a-actions{display:inline-flex;flex-wrap:nowrap;align-items:center;gap:10px}
-    #smsTemplateModal .a-actions .form-input.sm{width:140px;flex:none;margin-right:0}
-    #smsTemplateModal .a-actions .btn.sm{flex:none;margin-left:0}
-    #smsTemplateModal .a-actions .text-danger{flex:none}
+    #smsTemplateModal .a-actions{display:inline-flex;flex-wrap:nowrap;align-items:center;gap:12px}
+    #smsTemplateModal .a-actions a[href="javascript:;"]:hover{text-decoration:underline}
     .a-cover{width:56px;height:40px;object-fit:cover;border-radius:8px;background:#f0f0f0;display:block;box-shadow:0 1px 2px rgba(16,24,40,.08)}
     .a-main{min-width:200px}
     .a-title{font-weight:600;color:var(--text);font-size:13.5px;line-height:1.35}
@@ -2649,7 +2648,7 @@
             <div class="modal-header"><h3 id="smsModalTitle">编辑</h3><span class="close" onclick="closeSmsModal()">&times;</span></div>
             <div class="modal-body" id="smsModalBody"></div>
             <div class="modal-footer">
-              <button class="btn" onclick="closeSmsModal()">取消</button>
+              <button class="btn gray" onclick="closeSmsModal()">取消</button>
               <button class="btn primary" id="smsModalOk" onclick="">确定</button>
             </div>
           </div>
@@ -9337,12 +9336,13 @@
         const desc=escapeHtml(t.description||'');
         const content=escapeHtml(t.content||'');
         const templateId=escapeHtml(t.template_id||'');
+        const codeLabel=templateId?templateId:'模板ID';
         return `<tr>
           <td>${desc}</td>
           <td title="${content}">${content.length>50?content.slice(0,50)+'...':content}</td>
           <td><input type="checkbox" class="toggle" id="smsTplEnabled_${key}" ${t.enabled?'checked':''}></td>
           <td class="a-actions">
-            <input type="text" class="form-input sm" id="smsTplCode_${key}" value="${templateId}" placeholder="模板ID" style="width:120px">
+            <a href="javascript:;" style="color:var(--primary);text-decoration:none;font-size:13px" onclick="openSmsTemplateCodeDialog('${platform}','${key}')">${codeLabel}</a>
             <button class="btn sm primary" onclick="testSendSmsTemplate('${platform}','${key}')">发送</button>
             <button class="btn sm danger" onclick="deleteSmsTemplate('${platform}','${key}')">删除</button>
           </td>
@@ -9357,14 +9357,36 @@
       const tpls=next[smsCurrentPlatform]||{};
       Object.keys(tpls).forEach(key=>{
         const enabled=document.getElementById(`smsTplEnabled_${key}`)?.checked?1:0;
-        const code=document.getElementById(`smsTplCode_${key}`)?.value.trim()||'';
-        tpls[key]={...tpls[key],enabled,template_id:code};
+        tpls[key]={...tpls[key],enabled};
       });
       const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms_templates:next}}});
       if(r.code!==0){toast(r.msg||'保存失败');return;}
       toast('保存成功');
       smsTemplateData=next;
       closeSmsTemplateModal();
+    }
+    function openSmsTemplateCodeDialog(platform,key){
+      const tpl=smsTemplateData[platform]?.[key]||smsTemplateDefaults[platform]?.[key]||{};
+      showModal({
+        title:'编辑',
+        body:`<div class="field"><label>描述</label><div class="form-static" style="padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px">${escapeHtml(tpl.description||'')}</div></div>
+          <div class="field"><label>内容</label><div class="form-static" style="padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;white-space:normal;word-break:normal;overflow-wrap:break-word">${escapeHtml(tpl.content||'')}</div></div>
+          <div class="field"><label><span class="req">*</span>模板code</label><input type="text" class="form-input" id="smsTplCodeInput" value="${escapeHtml(tpl.template_id||'')}" placeholder="请输入模板code"></div>`,
+        okText:'确定',
+        onOk:async()=>{
+          const code=document.getElementById('smsTplCodeInput').value.trim();
+          if(!code){toast('请输入模板code');return false;}
+          const next=deepMerge({},smsTemplateData);
+          if(!next[platform]) next[platform]={};
+          if(!next[platform][key]) next[platform][key]={...tpl};
+          next[platform][key]={...next[platform][key],template_id:code};
+          const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms_templates:next}}});
+          if(r.code!==0){toast(r.msg||'保存失败');return false;}
+          toast('保存成功');
+          smsTemplateData=next;
+          openSmsTemplateDialog(platform);
+        }
+      });
     }
     async function deleteSmsTemplate(platform,key){
       if(!confirm('确定删除该模板？')) return;
