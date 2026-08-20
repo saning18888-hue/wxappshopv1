@@ -813,8 +813,8 @@
     .modal-backdrop.show .modal-panel{transform:translateY(0)}
     .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
     .modal-head h4,.modal-head span[id$="ModalTitle"]{font-size:15px;font-weight:600;color:var(--text)}
-    .modal-head .close,.modal-head .modal-close{width:28px;height:28px;border-radius:50%;border:0;background:#f2f3f5;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:18px;line-height:1;padding:0}
-    .modal-head .close:hover,.modal-head .modal-close:hover{background:#eee;color:var(--text)}
+    .modal-head .close{width:28px;height:28px;border-radius:50%;border:0;background:#f2f3f5;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:18px;line-height:1;padding:0}
+    .modal-head .close:hover{background:#eee;color:var(--text)}
     .modal-body{padding:20px}
     .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:#fafbfc}
     .modal-foot .btn.gray{background:#f2f3f5;color:#6b7280;border:1px solid #e6e8eb;transition:all .12s}
@@ -4536,7 +4536,7 @@
   <!-- 添加/编辑相册弹窗 -->
   <div id="albumModal" class="modal">
     <div class="modal-card" style="max-width:520px">
-      <div class="modal-head"><span id="albumModalTitle">添加相册</span><button class="modal-close" onclick="closeAlbumModal()">×</button></div>
+      <div class="modal-head"><span id="albumModalTitle">添加相册</span><button class="close" onclick="closeAlbumModal()">×</button></div>
       <div class="modal-body">
         <div class="a-field"><label>相册名称 <span class="req">*</span></label><input id="albumName" class="input"></div>
         <div class="a-field"><label>相册分类 <span class="req">*</span></label><select id="albumCategory" class="input"><option value="0">请选择</option></select></div>
@@ -4552,7 +4552,7 @@
   <!-- 添加/编辑相册分类弹窗 -->
   <div id="albumCategoryModal" class="modal">
     <div class="modal-card" style="max-width:420px">
-      <div class="modal-head"><span id="albumCategoryModalTitle">添加相册分类</span><button class="modal-close" onclick="closeAlbumCategoryModal()">×</button></div>
+      <div class="modal-head"><span id="albumCategoryModalTitle">添加相册分类</span><button class="close" onclick="closeAlbumCategoryModal()">×</button></div>
       <div class="modal-body">
         <div class="a-field"><label>分类名称 <span class="req">*</span></label><input id="albumCatName" class="input" placeholder="分类名称"></div>
         <div class="a-field"><label>排序</label><input id="albumCatSort" type="number" class="input" value="0"></div>
@@ -4573,7 +4573,7 @@
   <!-- 移动到其他相册弹窗 -->
   <div id="albumMoveModal" class="modal">
     <div class="modal-card" style="max-width:420px">
-      <div class="modal-head"><span>移动到其他相册</span><button class="modal-close" onclick="closeAlbumMoveModal()">×</button></div>
+      <div class="modal-head"><span>移动到其他相册</span><button class="close" onclick="closeAlbumMoveModal()">×</button></div>
       <div class="modal-body">
         <div class="a-field"><label>目标相册</label><select id="albumMoveTarget" class="input"><option value="0">请选择</option></select></div>
       </div>
@@ -4587,7 +4587,7 @@
   <!-- 修改图片名称弹窗 -->
   <div id="albumImageRenameModal" class="modal">
     <div class="modal-card" style="max-width:420px;border-radius:16px">
-      <div class="modal-head"><span>修改图片名称</span><button class="modal-close" onclick="closeAlbumImageRenameModal()">×</button></div>
+      <div class="modal-head"><span>修改图片名称</span><button class="close" onclick="closeAlbumImageRenameModal()">×</button></div>
       <div class="modal-body">
         <div class="a-field" style="margin-bottom:0">
           <label>图片名称</label>
@@ -4604,7 +4604,7 @@
   <!-- 添加/编辑文章弹窗 -->
   <div id="articleModal" class="modal">
     <div class="modal-card">
-      <div class="modal-head"><span id="articleModalTitle">添加文章</span><button class="modal-close" onclick="closeArticleModal()">×</button></div>
+      <div class="modal-head"><span id="articleModalTitle">添加文章</span><button class="close" onclick="closeArticleModal()">×</button></div>
       <div class="modal-body">
         <div class="a-modal-grid">
           <div class="a-col">
@@ -4663,7 +4663,7 @@
   <!-- 添加/编辑文章分类弹窗 -->
   <div id="articleCategoryModal" class="modal">
     <div class="modal-card">
-      <div class="modal-head"><span id="articleCategoryModalTitle">添加文章分类</span><button class="modal-close" onclick="closeArticleCategoryModal()">×</button></div>
+      <div class="modal-head"><span id="articleCategoryModalTitle">添加文章分类</span><button class="close" onclick="closeArticleCategoryModal()">×</button></div>
       <div class="modal-body">
         <div class="a-modal-grid">
           <div class="a-col">
@@ -4829,7 +4829,7 @@
   <!-- 通用输入弹窗 -->
   <div id="commonInputModal" class="modal">
     <div class="modal-card" style="max-width:420px;border-radius:16px">
-      <div class="modal-head"><span id="inputTitle">输入</span><button class="modal-close" onclick="closeInputModal()">×</button></div>
+      <div class="modal-head"><span id="inputTitle">输入</span><button class="close" onclick="closeInputModal()">×</button></div>
       <div class="modal-body" style="padding:22px 20px 4px;text-align:left">
         <input type="text" id="inputField" class="form-input" placeholder="">
       </div>
@@ -4843,7 +4843,7 @@
   <!-- 添加/编辑跳转小程序弹窗 -->
   <div id="miniappModal" class="modal">
     <div class="modal-card" style="max-width:480px;border-radius:16px">
-      <div class="modal-head"><span id="miniappModalTitle">添加</span><button class="modal-close" onclick="closeMiniAppModal()">×</button></div>
+      <div class="modal-head"><span id="miniappModalTitle">添加</span><button class="close" onclick="closeMiniAppModal()">×</button></div>
       <div class="modal-body">
         <div class="a-field"><label>名称 <span class="req">*</span></label><input id="miniappName" class="input" placeholder="名称"></div>
         <div class="a-field"><label>APPID <span class="req">*</span></label><input id="miniappAppid" class="input" placeholder="APPID"></div>
@@ -4859,7 +4859,7 @@
   <!-- 操作日志详情弹窗 -->
   <div id="logDetailModal" class="modal">
     <div class="modal-card" style="max-width:560px">
-      <div class="modal-head"><span>操作详情</span><button class="modal-close" onclick="closeLogDetail()">×</button></div>
+      <div class="modal-head"><span>操作详情</span><button class="close" onclick="closeLogDetail()">×</button></div>
       <div class="modal-body" id="logDetailBody"></div>
       <div class="modal-footer">
         <button class="btn gray" onclick="closeLogDetail()">关闭</button>

@@ -41,6 +41,19 @@
 - 编辑弹窗用两栏 `.a-modal-grid`（1.5fr / 1fr）：左主表单，右 `.a-side` 封面与展示（主色浅底卡片）。
 - 内容编辑器 `.a-full` 跨整行；窄屏（≤680px）退化为单栏。
 
+### 5.1 弹窗关闭按钮（统一规范，所有弹窗必须遵循）
+
+> 所有弹窗（`.modal-card` / 旧版 `.modal-head` 结构）的右上角关闭按钮，**统一使用圆形灰底 × 样式**，class 固定为 `close`，不要使用 `modal-close` 等其它类名，也不要用裸 `×` 文本。
+
+- 结构：弹窗头部放 `<span class="close" onclick="closeXxx()">&times;</span>`（`&times;` 即 ×）。
+- 样式（已在 `admin.html` 的 `.modal-header .close` 定义，全站复用，**禁止重复写死，直接复用该类**）：
+  - 尺寸 `28px × 28px`，`border-radius:50%`，`border:0`
+  - 背景 `background:#f2f3f5`（中性浅灰，非主题变量的极个别允许值之一）
+  - 文字色 `color:var(--text-secondary)`，字号 `18px`，`line-height:1`，Flex 居中
+  - 光标 `cursor:pointer`，`transition:all .15s`
+  - hover：`background:#eee;color:var(--text)`（轻微加深 + 文字转深）
+- 位置：弹窗头部 flex 布局右侧（`justify-content:space-between`），与标题同行。
+
 ## 6. 颜色与一致性
 
 - 只用主题变量，禁止写死灰/蓝值（除极个别 hover 边框 `#c4c8d4` 等中性灰）。
@@ -54,4 +67,5 @@
 - [ ] 二选一项是否用了分段控件而非裸 radio？
 - [ ] hover / focus 态是否齐全？
 - [ ] 颜色是否全部来自主题变量？
+- [ ] 弹窗关闭按钮是否统一为圆形灰底 `class="close"`，无裸 `×` / 无 `modal-close`？
 - [ ] 改完 JS 后用 `node --check` 校验脚本，避免整页挂掉。
