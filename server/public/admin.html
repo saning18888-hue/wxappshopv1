@@ -277,11 +277,11 @@
 
     /* ---------- 短信管理 ---------- */
     .sms-pane{padding:8px 0}
-    .sms-subscribe{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-    .sms-subscribe .radio-inline{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;line-height:1.4;color:#606266;white-space:nowrap;overflow:hidden}
-    .sms-subscribe .radio-inline input[type=checkbox]{appearance:none;-webkit-appearance:none;-moz-appearance:none;width:16px;height:16px;border:1px solid #dcdfe6;border-radius:3px;outline:none;cursor:pointer;position:relative;flex:none;background:#fff;transition:all .15s;margin:0}
+    .sms-subscribe{display:grid;grid-template-columns:repeat(2,auto);column-gap:24px;row-gap:10px;justify-content:start;width:fit-content;max-width:100%}
+    .sms-subscribe .radio-inline{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;line-height:1.4;color:#606266;white-space:nowrap}
+    .sms-subscribe .radio-inline input[type=checkbox]{appearance:none;-webkit-appearance:none;-moz-appearance:none;width:14px;height:14px;border:1px solid #dcdfe6;border-radius:2px;outline:none;cursor:pointer;position:relative;flex:none;background:#fff;transition:all .15s;margin:0}
     .sms-subscribe .radio-inline input[type=checkbox]:checked{background:#409eff;border-color:#409eff}
-    .sms-subscribe .radio-inline input[type=checkbox]:checked::after{content:'✓';color:#fff;position:absolute;left:3px;top:-1px;font-size:12px;line-height:15px}
+    .sms-subscribe .radio-inline input[type=checkbox]:checked::after{content:'✓';color:#fff;position:absolute;left:2px;top:-2px;font-size:10px;line-height:13px;font-weight:700}
     .sms-subscribe .radio-inline input[type=checkbox]:checked + span{color:#409eff}
     .sms-subscribe .radio-inline span{transition:color .15s}
     #smsModal .field{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
