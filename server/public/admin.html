@@ -2332,6 +2332,70 @@
           </div>
         </div>
 
+        <!-- 站点设置 -->
+        <div id="sitePanel" class="panel hidden setting-panel">
+          <div class="setting-wrap">
+            <div class="bs-tabs">
+              <div class="bs-tab active" data-tab="sitebasic" onclick="switchSiteTab('sitebasic')">基础设置</div>
+              <div class="bs-tab" data-tab="sitedomain" onclick="switchSiteTab('sitedomain')">域名校验</div>
+            </div>
+            <div class="setting-card">
+              <!-- 基础设置 -->
+              <div class="site-pane" data-pane="sitebasic">
+                <div class="section-title">站点设置</div>
+
+                <div class="form-row">
+                  <label class="form-label">站点图标</label>
+                  <div class="form-control">
+                    <div class="upload-preview" style="width:100px;height:100px" id="siteIconPreview" onclick="document.getElementById('siteIconFile').click()">
+                      <span class="plus">+</span>
+                    </div>
+                    <input type="file" id="siteIconFile" accept="image/*" style="display:none" onchange="onSiteIconSelected(this)">
+                    <div class="form-hint">推荐尺寸 100×100，比例 1:1</div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">站点名称</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" id="siteNameInput" placeholder="站点名称">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <label class="form-label">后台版权信息</label>
+                  <div class="form-control">
+                    <input type="text" class="form-input" id="siteCopyrightInput" placeholder="后台版权信息">
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveSiteSettings()">确定</button>
+                </div>
+              </div>
+
+              <!-- 域名校验 -->
+              <div class="site-pane hidden" data-pane="sitedomain">
+                <div class="section-title">域名校验</div>
+                <div class="form-row">
+                  <label class="form-label">域名校验文件</label>
+                  <div class="form-control">
+                    <input type="file" id="domainVerifyFile" accept=".txt" style="display:none" onchange="onDomainVerifySelected(this)">
+                    <button class="btn primary" type="button" onclick="document.getElementById('domainVerifyFile').click()">文件上传</button>
+                    <div class="form-hint" style="margin-top:8px">
+                      若文件上传后，校验仍不通过，请确认服务器上该文件是否存在，请以服务器为准。<br>
+                      当前文件：<span id="domainVerifyFileName" style="color:var(--text)">未上传</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn-submit" onclick="saveDomainVerify()">确定</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 店铺设置 -->
         <div id="shopPanel" class="panel hidden setting-panel">
           <div class="setting-wrap">
@@ -4640,7 +4704,7 @@
         {key:'miniapp',label:'跳转小程序',icon:ICONS.externalLink,panel:'miniappPanel'}
       ]},
       {key:'system',label:'系统',icon:ICONS.system,children:[
-        {key:'site',label:'站点设置',icon:ICONS.settings,default:true},
+        {key:'site',label:'站点设置',icon:ICONS.settings,panel:'sitePanel',default:true},
         {key:'log',label:'操作日志',icon:ICONS.clock},
         {key:'attach',label:'附件设置',icon:ICONS.paperclip},
         {key:'sms',label:'短信管理',icon:ICONS.message},
@@ -4751,6 +4815,7 @@
       if(panelId==='layoutPanel') loadLayout();
       if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='basePanel') loadSettings();
+      if(panelId==='sitePanel') loadSiteSettings();
       if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
@@ -7730,6 +7795,77 @@
     function switchBaseTab(tab){
       document.querySelectorAll('.bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
       document.querySelectorAll('.bs-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==tab));
+    }
+
+    /* ===== 站点设置 ===== */
+    const siteDefaults={
+      store_logo:'',
+      store_name:'',
+      admin_copyright:'',
+      domain_verify_file:''
+    };
+    let siteData={};
+    async function loadSiteSettings(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      siteData=Object.assign({},siteDefaults,d.data||{});
+      document.getElementById('siteNameInput').value=siteData.store_name||'';
+      document.getElementById('siteCopyrightInput').value=siteData.admin_copyright||'';
+      updateSiteIconPreview();
+      updateDomainVerifyFileName();
+      switchSiteTab('sitebasic');
+    }
+    function switchSiteTab(tab){
+      document.querySelectorAll('#sitePanel .bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));
+      document.querySelectorAll('#sitePanel .site-pane').forEach(el=>el.classList.toggle('hidden',el.dataset.pane!==tab));
+    }
+    function updateSiteIconPreview(){
+      const box=document.getElementById('siteIconPreview');
+      if(!box)return;
+      box.innerHTML=siteData.store_logo?`<img src="${siteData.store_logo}" alt="">`:'<span class="plus">+</span>';
+    }
+    function onSiteIconSelected(fileEl){
+      const file=fileEl.files[0];
+      if(!file)return;
+      const reader=new FileReader();
+      reader.onload=evt=>{ siteData.store_logo=evt.target.result; updateSiteIconPreview(); };
+      reader.readAsDataURL(file);
+      fileEl.value='';
+    }
+    function updateDomainVerifyFileName(){
+      const el=document.getElementById('domainVerifyFileName');
+      if(el) el.textContent=siteData.domain_verify_file?('已上传：'+siteData.domain_verify_file):'未上传';
+    }
+    async function saveSiteSettings(){
+      const payload={
+        store_name:document.getElementById('siteNameInput').value.trim(),
+        store_logo:siteData.store_logo||'',
+        admin_copyright:document.getElementById('siteCopyrightInput').value.trim()
+      };
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      siteData=Object.assign({},siteData,d.data||{});
+      toast('已保存');
+    }
+    async function onDomainVerifySelected(fileEl){
+      const file=fileEl.files[0];
+      if(!file)return;
+      const fd=new FormData(); fd.append('file',file);
+      const r=await fetch(`${BASE}/upload/domain_verify`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+      const d=await r.json();
+      if(d.code!==0){toast(d.msg||'上传失败');return;}
+      siteData.domain_verify_file=d.data.file||'';
+      updateDomainVerifyFileName();
+      toast('校验文件已上传');
+      fileEl.value='';
+    }
+    async function saveDomainVerify(){
+      const payload={domain_verify_file:siteData.domain_verify_file||''};
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      siteData=Object.assign({},siteData,d.data||{});
+      updateDomainVerifyFileName();
+      toast('已保存');
     }
 
     /* ===== 店铺设置 ===== */

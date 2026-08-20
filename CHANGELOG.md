@@ -11,6 +11,20 @@
 
 ---
 
+### v0.1.30 · 2026-08-20 · 站点设置补全（独立面板：基础信息 + 域名校验）
+**范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、`server/app/controller/admin/Upload.php`、`server/route/app.php`）。
+
+**站点设置菜单补全**
+- 新建独立 `sitePanel`，与原来的 `basePanel`（基础设置）彻底分离。
+- 左侧「系统 > 站点设置」菜单绑定到 `sitePanel`，打开后显示：
+  - 基础设置：站点图标上传（100×100，1:1）、站点名称、后台版权信息；
+  - 域名校验：`.txt` 校验文件上传并保存到 `public/` 根目录。
+
+**后端**
+- `SettingsService::defaults()` 增加 `store_name`、`store_logo`、`admin_copyright`、`domain_verify_file` 默认值。
+- `Upload.php` 新增 `domainVerify()` 方法，仅允许 `.txt` 文件，保存到 `public/` 根目录，并做路径遍历防护。
+- `route/app.php` 注册 `POST /admin/upload/domain_verify` 路由。
+
 ### v0.1.29 · 2026-08-20 · 新增跳转小程序管理模块
 **范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/controller/admin/MiniApp.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_mini_apps.php`）。
 

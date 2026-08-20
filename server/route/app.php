@@ -72,6 +72,7 @@ Route::group('admin', function () {
     Route::post('upload/image', 'admin.Upload/image');
     Route::post('upload/banner_image', 'admin.Upload/bannerImage');
     Route::post('upload/video', 'admin.Upload/video');
+    Route::post('upload/domain_verify', 'admin.Upload/domainVerify');
     Route::get('orders', 'admin.Order/index');
     Route::get('orders/:id', 'admin.Order/detail');
     Route::post('orders/:id/save', 'admin.Order/save');

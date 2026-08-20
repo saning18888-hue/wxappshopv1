@@ -89,4 +89,35 @@ class Upload extends AdminController
         $url = request()->domain() . '/' . $rel;
         return $this->ok(['url' => $url, 'path' => $rel]);
     }
+
+    /**
+     * 域名校验文件上传（用于微信小程序 / 百度等域名校验）
+     * 文件上传到 public/ 根目录，保留原文件名
+     */
+    public function domainVerify()
+    {
+        $file = request()->file('file');
+        if (empty($file)) {
+            return $this->fail('请选择校验文件');
+        }
+
+        $info = $file->getInfo();
+        $name = $info['name'] ?? '';
+        if (!preg_match('/^\w+\.txt$/i', $name)) {
+            return $this->fail('仅支持 .txt 格式的校验文件');
+        }
+
+        $saveName = str_replace(['\\', '/', '..'], '', $name);
+        $publicPath = app()->getRootPath() . 'public' . DIRECTORY_SEPARATOR;
+        if (!is_dir($publicPath)) {
+            return $this->fail('站点根目录不存在');
+        }
+
+        $target = $publicPath . $saveName;
+        if (!move_uploaded_file($info['tmp_name'], $target)) {
+            return $this->fail('上传失败，请检查目录写入权限');
+        }
+
+        return $this->ok(['file' => $saveName, 'url' => '/' . $saveName]);
+    }
 }
