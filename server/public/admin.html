@@ -9290,8 +9290,9 @@
       }).join('');
       document.getElementById('smsConfigModalBody').innerHTML=`<div id="smsConfigForm">${rows}</div>`;
       document.getElementById('smsConfigModal').classList.remove('hidden');
+      document.getElementById('smsConfigModal').classList.add('show');
     }
-    function closeSmsConfigModal(){document.getElementById('smsConfigModal').classList.add('hidden');}
+    function closeSmsConfigModal(){document.getElementById('smsConfigModal').classList.remove('show');document.getElementById('smsConfigModal').classList.add('hidden');}
     async function saveSmsConfig(){
       const meta=smsPlatforms.find(p=>p.key===smsCurrentPlatform);
       const next=deepMerge({},smsConfigData);
@@ -9330,8 +9331,9 @@
         </tr>`;
       }).join('');
       document.getElementById('smsTemplateModal').classList.remove('hidden');
+      document.getElementById('smsTemplateModal').classList.add('show');
     }
-    function closeSmsTemplateModal(){document.getElementById('smsTemplateModal').classList.add('hidden');}
+    function closeSmsTemplateModal(){document.getElementById('smsTemplateModal').classList.remove('show');document.getElementById('smsTemplateModal').classList.add('hidden');}
     async function saveSmsTemplates(){
       const next=deepMerge({},smsTemplateData);
       const tpls=next[smsCurrentPlatform]||{};
@@ -9492,8 +9494,10 @@
       ok.innerText=okText;
       ok.onclick=async()=>{if(!onOk)return;if(await onOk()!==false) closeModal();};
       m.classList.remove('hidden');
+      m.classList.add('show');
     }
     function closeModal(){
+      document.getElementById('smsModal').classList.remove('show');
       document.getElementById('smsModal').classList.add('hidden');
     }
     function closeSmsModal(){closeModal();}

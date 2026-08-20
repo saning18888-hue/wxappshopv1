@@ -11,6 +11,15 @@
 
 ---
 
+### v0.1.34 · 2026-08-20 · 修复短信弹窗无法打开（按钮「点不动」）
+**范围**：运营后台 UI（`server/public/admin.html`）。
+
+**问题**：「短信管理」平台列表里的「配置」「商城短信模板」按钮、模板弹窗内「测试发送」、以及联系人「添加/编辑」弹窗点击无反应（看起来像按钮点不动）。
+**根因**：`.modal` 基础样式为 `display:none`，全站弹窗靠增加 `show` 类显示；而短信相关的三个弹窗（`smsConfigModal` / `smsTemplateModal` / 通用 `smsModal`）只移除了 `hidden` 类，移除后仍是 `display:none`，弹窗从未真正显示。
+**修复**：三个短信弹窗的打开逻辑统一改为 `classList.add('show')`、关闭逻辑改为 `classList.remove('show')`，与后台其余弹窗保持一致。
+
+---
+
 ### v0.1.33 · 2026-08-20 · 短信管理（单菜单 + 平台开关 + 阿里云/腾讯云独立模板）
 **范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、新建 `server/app/controller/admin/SmsContact.php`、`SmsSendLog.php`、`SmsSend.php`、数据库迁移 `server/database/apply_sms_tables.php`）、路由（`server/route/app.php`）。
 
