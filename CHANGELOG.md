@@ -11,6 +11,18 @@
 
 ---
 
+### v0.1.45 · 2026-08-20 · 补全短信模板为 22 条完整预置
+**范围**：`server/app/service/SettingsService.php`、`server/public/admin.html`。
+
+**问题**：用户反馈「我给你的文字模板就这点？？？」，指出模板数量不对。核对 `计划/2.系统/4短信模板/*.txt`：阿里云、腾讯云各 **22 条**（短信验证码、商家订单/秒杀/拼团/砍价/积分/预约/退款/提现、表单提交、会员各类型订单、库存预警、佣金提现到账、发货、派单、支付成功、全渠道抽奖等），而此前代码只预置了 7 条且内容与模板文件不一致。
+**修复**：
+- `SettingsService::defaults()` 的 `sms_templates` 补全为阿里云 / 腾讯云各 22 条，内容、变量格式严格按用户提供的 txt（阿里云 `${var}`、腾讯云 `{n}`）。
+- 同步前端 `admin.html` 的 `smsTemplateDefaults`，键名与后端一致（`order_seckill`/`order_group`/`order_bargain`/`order_points`/`order_reserve`/`withdraw_apply`/`form_submit`/`member_*`/`stock_warning`/`commission_withdraw`/`member_shipped`/`dispatch`/`pay_success`/`lottery`）。
+- `smsSubscribeOptions`（联系人推送选择）同步扩展到全部 22 项。
+- 将本地数据库中已保存的旧 7 条 `sms_templates` 重置为完整 22 条（临时引导脚本执行后已删除），已验证接口返回 `aliyun=22 tencent=22`。
+
+---
+
 ### v0.1.44 · 2026-08-20 · 短信模板表格改为全列居中 + 操作列文字链接
 **范围**：运营后台 UI（`server/public/admin.html`）。
 
