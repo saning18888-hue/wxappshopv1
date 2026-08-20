@@ -11,6 +11,24 @@
 
 ---
 
+### v0.1.31 · 2026-08-20 · 操作日志管理模块 + 自动记录管理员操作
+**范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/controller/admin/OperationLog.php`、`server/app/common/controller/AdminController.php`、`server/route/app.php`）、数据库迁移（`server/database/apply_operation_logs.php`）。
+
+**操作日志管理**
+- 后台「系统 > 操作日志」：绑定独立 `logPanel`，列表展示账号、姓名、角色、操作、IP、操作时间、详情。
+- 列表支持：起止时间筛选、账号/姓名/操作关键词查询、分页、批量删除、按时间段删除。
+- 详情弹窗：完整展示账号、姓名、角色、操作、请求方法、请求路径、IP、操作时间、参数。
+
+**自动记录管理员操作**
+- 所有非 GET 请求（POST/PUT/DELETE/PATCH）在 `AdminController` 鉴权成功后自动写入 `operation_logs`。
+- 操作描述自动推断模块（商品、订单、会员、相册、跳转小程序、站点设置、上传等）和动作类型（删除/编辑/操作）。
+- 登录接口本身不记录；日志管理自身的写操作不记录，避免噪声。
+
+**后端**
+- 新建 `OperationLog` 控制器：列表、详情、批量删除、按时间段删除。
+- 注册路由：`GET /admin/operation_logs`、`GET /admin/operation_logs/info`、`POST /admin/operation_logs/batch_delete`、`POST /admin/operation_logs/delete_by_time`。
+- 数据库迁移：`apply_operation_logs.php` 幂等新建 `operation_logs` 表（SQLite 兼容）并建立索引。
+
 ### v0.1.30 · 2026-08-20 · 站点设置补全（独立面板：基础信息 + 域名校验）
 **范围**：运营后台 UI（`server/public/admin.html`）、后端 API（`server/app/service/SettingsService.php`、`server/app/controller/admin/Upload.php`、`server/route/app.php`）。
 

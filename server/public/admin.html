@@ -2396,6 +2396,32 @@
           </div>
         </div>
 
+        <!-- 操作日志 -->
+        <div id="logPanel" class="panel hidden">
+          <div class="card">
+            <div class="article-toolbar">
+              <input type="date" id="logStart" class="input" title="开始时间">
+              <span class="muted">至</span>
+              <input type="date" id="logEnd" class="input" title="结束时间">
+              <input id="logKw" class="input" placeholder="账号 / 姓名 / 操作" style="width:200px">
+              <button class="btn sm primary" onclick="loadOperationLogs(1)">查询</button>
+              <span class="spacer"></span>
+              <button class="btn sm danger" onclick="batchDeleteLogs()">批量删除</button>
+              <button class="btn sm" onclick="deleteLogsByTime()">删除</button>
+            </div>
+            <div class="article-table-wrap">
+            <table class="table">
+              <thead><tr>
+                <th><input type="checkbox" id="logCheckAll" onchange="toggleCheckAll('log')"></th>
+                <th>账号</th><th>姓名</th><th>角色</th><th>操作</th><th>IP</th><th>操作时间</th><th>详情</th>
+              </tr></thead>
+              <tbody id="logList"></tbody>
+            </table>
+            </div>
+            <div class="pager" id="logPager"></div>
+          </div>
+        </div>
+
         <!-- 店铺设置 -->
         <div id="shopPanel" class="panel hidden setting-panel">
           <div class="setting-wrap">
@@ -4597,6 +4623,17 @@
     </div>
   </div>
 
+  <!-- 操作日志详情弹窗 -->
+  <div id="logDetailModal" class="modal">
+    <div class="modal-card" style="max-width:560px">
+      <div class="modal-head"><span>操作详情</span><button class="modal-close" onclick="closeLogDetail()">×</button></div>
+      <div class="modal-body" id="logDetailBody"></div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeLogDetail()">关闭</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const BASE='/admin';
     const token=()=>localStorage.getItem('admin_token')||'';
@@ -4705,7 +4742,7 @@
       ]},
       {key:'system',label:'系统',icon:ICONS.system,children:[
         {key:'site',label:'站点设置',icon:ICONS.settings,panel:'sitePanel',default:true},
-        {key:'log',label:'操作日志',icon:ICONS.clock},
+        {key:'log',label:'操作日志',icon:ICONS.clock,panel:'logPanel'},
         {key:'attach',label:'附件设置',icon:ICONS.paperclip},
         {key:'sms',label:'短信管理',icon:ICONS.message},
         {key:'permission',label:'权限管理',icon:ICONS.shield,children:[
@@ -4816,6 +4853,7 @@
       if(panelId==='bottomNavPanel') loadBottomNav();
       if(panelId==='basePanel') loadSettings();
       if(panelId==='sitePanel') loadSiteSettings();
+      if(panelId==='logPanel') loadOperationLogs(1);
       if(panelId==='shopPanel') loadShopSettings();
       if(panelId==='deliveryPanel') loadDeliverySettings();
       if(panelId==='overviewPanel') loadOverviewStats();
@@ -8801,6 +8839,73 @@
       if(r.code!==0){toast(r.msg||'保存失败');return;}
       const p=await fetchA(`${BASE}/design/bottom_nav/publish`,{method:'POST',body:{}});
       toast(p.code===0?'发布成功':(p.msg||'发布失败'));
+    }
+
+    /* ===================== 操作日志 ===================== */
+    let logPage=1;
+
+    async function loadOperationLogs(page=logPage){
+      logPage=page;
+      const kw=encodeURIComponent(document.getElementById('logKw').value.trim());
+      const start=document.getElementById('logStart').value;
+      const end=document.getElementById('logEnd').value;
+      const r=await fetchA(`${BASE}/operation_logs?page=${page}&page_size=10&keyword=${kw}&time_start=${start}&time_end=${end}`);
+      if(r.code!==0){toast(r.msg||'加载失败');return;}
+      renderOperationLogs(r.data.list||[]);
+      renderPager('logPager', r.data.pagination, loadOperationLogs);
+    }
+    function renderOperationLogs(list){
+      const tbody=document.getElementById('logList'); tbody.innerHTML='';
+      document.getElementById('logCheckAll').checked=false;
+      if(!list.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text-secondary);padding:40px 0">暂无数据</td></tr>';return;}
+      list.forEach(row=>{
+        const t=row.create_time?new Date(row.create_time*1000).toLocaleString():'-';
+        tbody.innerHTML+=`<tr>
+          <td><input type="checkbox" value="${row.id}" class="log-check"></td>
+          <td>${escapeHtml(row.admin_user)}</td>
+          <td>${escapeHtml(row.admin_name)}</td>
+          <td>${escapeHtml(row.role)}</td>
+          <td>${escapeHtml(row.action)}</td>
+          <td>${escapeHtml(row.ip)}</td>
+          <td>${t}</td>
+          <td><button class="btn sm" onclick="openLogDetail(${row.id})">详情</button></td>
+        </tr>`;
+      });
+    }
+    async function openLogDetail(id){
+      const r=await fetchA(`${BASE}/operation_logs/info?id=${id}`);
+      if(r.code!==0){toast(r.msg||'加载失败');return;}
+      const d=r.data;
+      const t=d.create_time?new Date(d.create_time*1000).toLocaleString():'-';
+      document.getElementById('logDetailBody').innerHTML=`
+        <div class="form-row"><label class="form-label">账号</label><div class="form-control">${escapeHtml(d.admin_user)}</div></div>
+        <div class="form-row"><label class="form-label">姓名</label><div class="form-control">${escapeHtml(d.admin_name)}</div></div>
+        <div class="form-row"><label class="form-label">角色</label><div class="form-control">${escapeHtml(d.role)}</div></div>
+        <div class="form-row"><label class="form-label">操作</label><div class="form-control">${escapeHtml(d.action)}</div></div>
+        <div class="form-row"><label class="form-label">请求方法</label><div class="form-control">${escapeHtml(d.method)}</div></div>
+        <div class="form-row"><label class="form-label">请求路径</label><div class="form-control">${escapeHtml(d.url)}</div></div>
+        <div class="form-row"><label class="form-label">IP</label><div class="form-control">${escapeHtml(d.ip)}</div></div>
+        <div class="form-row"><label class="form-label">操作时间</label><div class="form-control">${t}</div></div>
+        <div class="form-row"><label class="form-label">参数</label><div class="form-control"><pre style="white-space:pre-wrap;word-break:break-all;max-height:200px;overflow:auto;margin:0">${escapeHtml(d.param||'')}</pre></div></div>`;
+      document.getElementById('logDetailModal').classList.add('show');
+    }
+    function closeLogDetail(){document.getElementById('logDetailModal').classList.remove('show');}
+    async function batchDeleteLogs(){
+      const ids=[...document.querySelectorAll('.log-check:checked')].map(c=>+c.value);
+      if(!ids.length){toast('请选择要删除的记录');return;}
+      if(!(await confirmDialog('确定批量删除选中的 '+ids.length+' 条日志？')))return;
+      const r=await fetchA(`${BASE}/operation_logs/batch_delete`,{method:'POST',body:{ids}});
+      if(r.code!==0){toast(r.msg||'删除失败');return;}
+      toast('删除成功'); loadOperationLogs();
+    }
+    async function deleteLogsByTime(){
+      const start=document.getElementById('logStart').value;
+      const end=document.getElementById('logEnd').value;
+      const msg=(start||end)?`确定删除 ${start||'最早'} 至 ${end||'现在'} 的日志？`:'确定删除全部日志？';
+      if(!(await confirmDialog(msg)))return;
+      const r=await fetchA(`${BASE}/operation_logs/delete_by_time`,{method:'POST',body:{type:(start||end)?'range':'all',time_start:start,time_end:end}});
+      if(r.code!==0){toast(r.msg||'删除失败');return;}
+      toast('删除成功'); loadOperationLogs();
     }
 
     /* ===================== 文章管理 ===================== */

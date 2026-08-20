@@ -198,4 +198,10 @@ Route::group('admin', function () {
     Route::post('mini_apps/:id/delete', 'admin.MiniApp/remove');
     Route::post('mini_apps/batch_delete', 'admin.MiniApp/batchDelete');
     Route::post('mini_apps/:id/status', 'admin.MiniApp/toggleStatus');
+
+    // 操作日志
+    Route::get('operation_logs', 'admin.OperationLog/index');
+    Route::get('operation_logs/info', 'admin.OperationLog/info');
+    Route::post('operation_logs/batch_delete', 'admin.OperationLog/batchDelete');
+    Route::post('operation_logs/delete_by_time', 'admin.OperationLog/deleteByTime');
 });
