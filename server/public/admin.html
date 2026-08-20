@@ -277,19 +277,19 @@
 
     /* ---------- 短信管理 ---------- */
     .sms-pane{padding:8px 0}
-    .sms-subscribe{display:grid;grid-template-columns:repeat(2,auto);column-gap:24px;row-gap:10px;justify-content:start;width:fit-content;max-width:100%}
+    .sms-subscribe{display:grid;grid-template-columns:repeat(2,max-content);column-gap:24px;row-gap:10px;justify-content:start;width:max-content;max-width:100%}
     .sms-subscribe .radio-inline{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;line-height:1.4;color:#606266;white-space:nowrap}
-    .sms-subscribe .radio-inline input[type=checkbox]{appearance:none;-webkit-appearance:none;-moz-appearance:none;width:14px;height:14px;border:1px solid #dcdfe6;border-radius:2px;outline:none;cursor:pointer;position:relative;flex:none;background:#fff;transition:all .15s;margin:0}
+    .sms-subscribe .radio-inline input[type=checkbox]{appearance:none;-webkit-appearance:none;-moz-appearance:none;width:13px;height:13px;border:1px solid #dcdfe6;border-radius:2px;outline:none;cursor:pointer;position:relative;flex:none;background:#fff;transition:all .15s;margin:0;box-sizing:border-box}
     .sms-subscribe .radio-inline input[type=checkbox]:checked{background:#409eff;border-color:#409eff}
-    .sms-subscribe .radio-inline input[type=checkbox]:checked::after{content:'✓';color:#fff;position:absolute;left:2px;top:-2px;font-size:10px;line-height:13px;font-weight:700}
+    .sms-subscribe .radio-inline input[type=checkbox]:checked::after{content:'✓';color:#fff;position:absolute;left:1px;top:-3px;font-size:10px;line-height:13px;font-weight:700}
     .sms-subscribe .radio-inline input[type=checkbox]:checked + span{color:#409eff}
     .sms-subscribe .radio-inline span{transition:color .15s}
-    #smsModal .field{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+    #smsModal .field{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding-left:14px}
     #smsModal .field label{width:90px;flex:none;font-size:13px;font-weight:500;color:var(--text-secondary);margin-bottom:0;line-height:1.4;padding-top:8px}
     #smsModal .field input[type=text],#smsModal .field input[type=password],#smsModal .field textarea{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px}
     #smsModal .field input:focus,#smsModal .field textarea:focus{border-color:var(--primary)}
     #smsModal .field .form-static{flex:1;min-width:0;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;white-space:normal;word-break:normal;overflow-wrap:break-word;line-height:1.5}
-    #smsModal .field .sms-subscribe{flex:1;min-width:0}
+    #smsModal .field .sms-subscribe{flex:0 0 auto;min-width:0}
     /* 联系人弹窗按钮统一为参考图蓝色主题 */
     #smsModal .btn{background:#409eff;color:#fff}
     #smsModal .btn:hover{background:#66b1ff}
