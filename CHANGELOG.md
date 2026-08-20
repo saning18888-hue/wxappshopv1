@@ -11,6 +11,19 @@
 
 ---
 
+### v0.1.39 · 2026-08-20 · 修复联系人复选框竖排与关闭按钮样式统一
+**范围**：运营后台 UI（`server/public/admin.html`）。
+
+**问题 1**：联系人编辑弹窗推送选择里的文字又竖起来了。
+**根因**：`.sms-subscribe .radio-inline` 虽然改成 flex，但没有禁止文本换行；当弹窗实际宽度被 `.modal-card{width:640px}` 默认限制时，label 文本被挤压成竖排。
+**修复**：给 `.sms-subscribe .radio-inline` 加 `white-space:nowrap`；把 `#smsModal .modal-card` 行内样式由 `max-width:560px` 改为 `width:560px;max-width:98vw`，避免被默认 640px 宽度影响。
+
+**问题 2**：短信弹窗关闭按钮样式与其它弹窗不一致。
+**根因**：短信三个弹窗的关闭按钮用了 `class="modal-close"`，而全站其它弹窗统一用 `class="close"`；`.modal-header .close` 已有圆角灰底样式，`.modal-close` 不生效。
+**修复**：`smsConfigModal` / `smsTemplateModal` / `smsModal` 的关闭按钮全部改为 `class="close"`。
+
+---
+
 ### v0.1.38 · 2026-08-20 · 修复模板弹窗宽度与联系人复选框布局
 **范围**：运营后台 UI（`server/public/admin.html`）。
 
