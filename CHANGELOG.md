@@ -11,6 +11,17 @@
 
 ---
 
+### v0.1.48 · 2026-08-20 · 修复后台登录失效（v0.1.47 残留数组项致 JS 语法错误）
+**范围**：`server/public/admin.html`。
+
+**问题**：用户反馈「后台又没法登录了」。排查发现后端登录接口正常（`POST /admin/login` 返回 token），根因是 v0.1.47 精简 `smsSubscribeOptions` 时仅替换了前 15 行，数组尾部残留 `member_reserve`、`stock_warning`、`commission_withdraw`、`member_shipped`、`dispatch`、`pay_success`、`lottery` 等 7 行，且上一项 `order_bargain` 末尾缺少逗号，导致整个内嵌 `<script>` 编译报 `Unexpected token '{'`（`new vm.Script` 定位到 admin-inline.js:4419），整页 JS 失效、`login()` 未定义、登录按钮无响应。
+**修复**：
+- 删除 `smsSubscribeOptions` 数组尾部残留的 7 项，恢复为参考图一致的 7 项数组语法。
+- `node` 全量编译内嵌 script 验证通过（1/1），端到端验证 `POST /admin/login` → token → `GET /admin/goods` 均返回 `code=0`。
+- 补充约定：精简/重构内嵌 JS 数组后必须用 `node -e "new vm.Script(...)"` 做一次全量语法校验再提交。
+
+---
+
 ### v0.1.47 · 2026-08-20 · 联系人推送选择严格对齐参考图文字与顺序
 **范围**：`server/public/admin.html`。
 
