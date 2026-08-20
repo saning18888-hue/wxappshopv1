@@ -278,14 +278,14 @@
     /* ---------- 短信管理 ---------- */
     .sms-pane{padding:8px 0}
     /* 推送选择：使用浏览器原生 checkbox + accent-color（与系统其他弹窗色调一致） */
-    .sms-subscribe{display:flex;flex-wrap:wrap;gap:10px 22px;align-content:start;width:100%;padding-top:4px}
-    .sms-subscribe .radio-inline{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;line-height:1.4;color:var(--text-secondary);white-space:nowrap;user-select:none;flex:0 0 calc(50% - 11px)}
+    .sms-subscribe{display:flex;flex-wrap:wrap;gap:10px 14px;align-content:start;width:100%;padding-top:4px}
+    .sms-subscribe .radio-inline{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;line-height:1.4;color:var(--text-secondary);white-space:nowrap;user-select:none;flex:0 0 calc(33.333% - 10px);box-sizing:border-box}
     .sms-subscribe .radio-inline input[type=checkbox]{width:14px;height:14px;margin:0;flex:none;cursor:pointer;accent-color:var(--primary);vertical-align:middle}
     .sms-subscribe .radio-inline input[type=checkbox]:checked + span{color:var(--primary);font-weight:500}
     .sms-subscribe .radio-inline span{transition:color .15s}
     /* 联系人弹窗：按钮统一使用系统主色（紫色），与全局 .btn 风格一致 */
     #smsModal .field{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
-    #smsModal .field>label{width:96px;flex:none;padding-top:8px;font-size:13px;font-weight:500;color:var(--text-secondary);line-height:1.4}
+    #smsModal .field>label{width:84px;flex:none;padding-top:8px;font-size:13px;font-weight:500;color:var(--text-secondary);line-height:1.4}
     #smsModal .field>input[type=text],#smsModal .field>input[type=password],#smsModal .field>textarea{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px;background:#f7f8fa;box-sizing:border-box}
     #smsModal .field>input:focus,#smsModal .field>textarea:focus{border-color:var(--primary)}
     #smsModal .field>.form-static{flex:1;min-width:0;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);font-size:13px;white-space:normal;word-break:normal;overflow-wrap:break-word;line-height:1.5}
