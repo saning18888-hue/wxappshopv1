@@ -11,6 +11,18 @@
 
 ---
 
+### v0.1.56 · 2026-08-21 · 计划/ 目录移出版本库 + 中文编码规范强化
+**范围**：`.gitignore`、`RELEASE.md`、`CHANGELOG.md`、`计划/`（从 git 移除，本地保留）。
+
+**背景**：用户要求「计划文件夹里的所有文件都不进 GitHub」；同时发现 Windows 下中文编码坑导致 `计划/` 被提交进仓库、gitignore 中文规则失效。
+**改动**：
+- **`计划/` 目录（55 个文件）从 git 索引移除**（`git rm -r --cached`，本地文件完整保留），配合 `.gitignore` 新增 `/计划/` 规则，使参考截图目录不再进入 GitHub。
+- **中文编码规范写入 `RELEASE.md` 踩坑 #1（强化）**：所有含中文文本文件必须 UTF-8 无 BOM；禁止 `git commit -m "中文"`（改用 UTF-8 无 BOM 文件 + `-F`，或 `chcp 65001`，或配置 `i18n.*`）；含中文路径/规则勿用 PowerShell 管道传参给 git（编码错乱误判）；推送前自检 `git log -1 --pretty=%s` 与 `git show HEAD --name-only`。
+- **`RELEASE.md` 新增踩坑 #12**：`.gitignore` 对已跟踪文件无效，移除已提交目录须 `git rm -r --cached` + gitignore 规则。
+- **实现细节**：由于 PowerShell 向 git 传中文参数会 GBK 双重编码导致 pathspec 匹配失败，实际用 Python 脚本从 git 索引精确取 `计划/` 路径后执行 `git rm --cached`，规避编码坑。
+
+---
+
 ### v0.1.55 · 2026-08-21 · 文档治理：合并设计规范 + 换机交接文档重构 + README 全面更新
 **范围**：`README.md`、`RELEASE.md`、`UI设计规范.md`、`计划/UI设计规范.md`、`server/README.md`、`miniprogram/README.md`、`CHANGELOG.md`。
 

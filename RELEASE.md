@@ -116,7 +116,11 @@ php think run -H 127.0.0.1 -p 8899                                       # 启�
 
 ## 六、踩坑记录（换机必看）
 
-1. **Windows 下 `git commit -m "中文"` 会乱码**：PowerShell GBK 代码页会把中文字面量双重编码，message 变 `璁㈠崟...`。规范做法：① 中文 message 写入 **UTF-8 无 BOM** 文件后用 `git commit -F 文件.txt`；或 ② 提交前 `chcp 65001` 切 UTF-8；或 ③ 配置 `i18n.commitEncoding=utf-8`。**推送前自检**：`git log -1 --pretty=%s` 若显示非中文即为乱码，`--amend` 修正后再 push。
+1. **中文编码规范（强制，否则提交到 GitHub 全是乱码）**：Windows 下 PowerShell 默认 GBK 代码页，会把中文字面量/路径双重编码，导致 commit message、文件名、`.gitignore` 中文规则全部变成 `璁㈠崟...` 之类 mojibake。**硬性要求**：
+   - **一切含中文的文本文件（`.md` / `.gitignore` / 代码注释 / 文档）必须保存为 UTF-8 无 BOM**（BOM 会被 git 当字符吞掉，中文 gitignore 规则直接失效）。
+   - **禁止 `git commit -m "中文"`**：中文 message 必须先写入 UTF-8 无 BOM 文件，再 `git commit -F 文件.txt`；或提交前 `chcp 65001`；或配置 `i18n.commitEncoding=utf-8` + `i18n.logOutputEncoding=utf-8`。
+   - **含中文路径/规则时勿用 PowerShell 管道传参给 git**（编码错乱导致误判，如 `git ls-files | Select-String "计划"` 查不到、`check-ignore` 误报）——用 `git add -A -n`、`git diff-tree --name-status` 等不依赖中文参数的校验方式。
+   - **推送前自检**：`git log -1 --pretty=%s` 若显示非中文即乱码；`git show HEAD --name-only` 检查含中文的文件名是否正常。有乱码必须修正后再 push。
 2. **CHANGELOG 与 git tag 必须同步**：每次打 tag 都要同步更新 CHANGELOG，否则版本号对不上（曾因 v0.1.49~53 漏记导致顶部版本落后于 tag）。
 3. **后台内嵌 JS 语法错误会整页崩**：`admin.html` 的 `<script>` 内嵌全部业务 JS。改动后必须校验：`node -e "new (require('vm').Script)(<script内容>)"`（曾因精简数组残留项导致 `Unexpected token '{'`，登录按钮直接失效）。**改完 JS 强制校验**。
 4. **推送选择 checkbox 反复返工教训**：`appearance:none` 自绘方框 + `::after` 对勾易出现"框太大/对勾偏位/截断"，**统一改用原生 checkbox + `accent-color`**（见 `UI设计规范.md` §5.2）。
@@ -127,6 +131,7 @@ php think run -H 127.0.0.1 -p 8899                                       # 启�
 9. **utils/request.js 与 auth.js 循环依赖**：已改为单向依赖（auth→request），request 内 token 直接 `wx.getStorageSync('wxapp_token')`。
 10. **端口易混淆**：本机历史曾出现过 8080 / 8787 / 8899 三套端口，PHP 内置服务器重启后端口会变。**排查"登录/接口不通"先确认实际监听端口**：`Get-NetTCPConnection -State Listen | Where LocalPort -in 8080,8787,8899`。
 11. **GitHub 凭据**：远程 URL 内嵌 Token（`https://<user>:<token>@github.com/...`）。换新 Token 后 GCM 可能仍发旧凭据报错，用 `git -c credential.helper= push https://<user>:<新token>@github.com/...` 绕过。
+12. **`.gitignore` 对已跟踪文件无效**：`计划/` 等目录若已被 `git add` 进仓库，即使写进 `.gitignore` 也不会自动移除。要让某个已跟踪目录/文件"不进 GitHub"，必须 `git rm -r --cached 计划/`（仅从版本控制移除，本地文件保留）+ `.gitignore` 加规则，再提交。新增的目录应从一开始就进 `.gitignore`。
 
 ---
 
