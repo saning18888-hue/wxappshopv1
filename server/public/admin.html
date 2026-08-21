@@ -1089,6 +1089,36 @@
     #regionPickerModal .select-all-row{display:flex;gap:12px;align-items:center;margin-top:8px;font-size:13px;color:var(--text-secondary)}
     #regionPickerModal .select-all-row label{display:flex;align-items:center;gap:6px;cursor:pointer}
     #regionPickerModal .empty-tip{text-align:center;color:var(--text-muted);padding:30px;font-size:13px}
+
+    /* ===== 插件中心 ===== */
+    .plugins-panel{max-width:1200px}
+    .plugins-header{margin-bottom:20px}
+    .plugins-header h2{font-size:18px;font-weight:600;color:var(--text-primary);margin:0 0 4px}
+    .plugins-header p{font-size:12px;color:var(--text-muted);margin:0}
+    .plugins-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    .plugin-card{display:flex;align-items:center;gap:12px;padding:14px 12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+    .plugin-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.06);border-color:var(--plugin-color)}
+    .plugin-card.locked{background:#f7f8fa;border-color:#e8eaed;cursor:not-allowed}
+    .plugin-card.locked:hover{transform:none;box-shadow:none;border-color:#e8eaed}
+    .plugin-card.locked .plugin-icon{opacity:.55}
+    .plugin-card.locked .plugin-name{color:var(--text-secondary)}
+    .plugin-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--plugin-color);color:#fff;box-shadow:0 3px 10px var(--plugin-shadow)}
+    .plugin-icon svg{width:20px;height:20px;stroke-width:2}
+    .plugin-name{font-size:13px;font-weight:500;color:var(--text-primary);line-height:1.3;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .plugin-lock{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#6b7280;width:16px;height:16px;stroke-width:2}
+    .plugin-card:not(.locked) .plugin-lock{display:none}
+
+    .plugin-card[data-category="all"]       {--plugin-color:var(--primary);--plugin-shadow:rgba(94,106,210,.25)}
+    .plugin-card[data-category="channel"]   {--plugin-color:#7c3aed;--plugin-shadow:rgba(124,58,237,.25)}
+    .plugin-card[data-category="marketing"] {--plugin-color:#ef4444;--plugin-shadow:rgba(239,68,68,.25)}
+    .plugin-card[data-category="member"]    {--plugin-color:#f59e0b;--plugin-shadow:rgba(245,158,11,.25)}
+    .plugin-card[data-category="industry"]  {--plugin-color:#22c55e;--plugin-shadow:rgba(34,197,94,.25)}
+    .plugin-card[data-category="tool"]      {--plugin-color:#3b82f6;--plugin-shadow:rgba(59,130,246,.25)}
+    .plugin-card[data-category="super"]     {--plugin-color:#64748b;--plugin-shadow:rgba(100,116,139,.25)}
+
+    @media (max-width:1100px){.plugins-grid{grid-template-columns:repeat(4,1fr)}}
+    @media (max-width:860px){.plugins-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:640px){.plugins-grid{grid-template-columns:repeat(2,1fr)}}
   </style>
 </head>
 <body>
@@ -3264,6 +3294,15 @@
           </div>
         </div>
 
+        <!-- 插件中心 -->
+        <div id="pluginsPanel" class="panel hidden plugins-panel">
+          <div class="plugins-header">
+            <h2 id="pluginsTitle">全部</h2>
+            <p id="pluginsDesc">全部已上架与待解锁的插件</p>
+          </div>
+          <div id="pluginsGrid" class="plugins-grid"></div>
+        </div>
+
         <!-- 通用占位 -->
         <div id="placeholderPanel" class="panel hidden">
           <div class="card">
@@ -4995,15 +5034,155 @@
         ]}
       ]},
       {key:'plugins',label:'插件',icon:ICONS.plugins,children:[
-        {key:'all',label:'全部',icon:ICONS.grid,default:true},
-        {key:'channel',label:'渠道',icon:ICONS.share},
-        {key:'marketing',label:'营销',icon:ICONS.megaphone},
-        {key:'member',label:'会员',icon:ICONS.users},
-        {key:'industry',label:'行业',icon:ICONS.briefcase},
-        {key:'tool',label:'工具',icon:ICONS.tool},
-        {key:'super',label:'超管',icon:ICONS.userCheck}
+        {key:'all',label:'全部',icon:ICONS.grid,panel:'pluginsPanel',default:true},
+        {key:'channel',label:'渠道',icon:ICONS.share,panel:'pluginsPanel'},
+        {key:'marketing',label:'营销',icon:ICONS.megaphone,panel:'pluginsPanel'},
+        {key:'member',label:'会员',icon:ICONS.users,panel:'pluginsPanel'},
+        {key:'industry',label:'行业',icon:ICONS.briefcase,panel:'pluginsPanel'},
+        {key:'tool',label:'工具',icon:ICONS.tool,panel:'pluginsPanel'},
+        {key:'super',label:'超管',icon:ICONS.userCheck,panel:'pluginsPanel'}
       ]}
     ];
+
+    const PLUGIN_DESC={
+      all:'全部已上架与待解锁的插件',
+      channel:'拓展销售渠道，触达更多买家',
+      marketing:'裂变、拉新、促活，提升转化率',
+      member:'让会员价值更高，留存更久',
+      industry:'覆盖多行业，满足垂直场景',
+      tool:'便捷运营，一店多能',
+      super:'系统级能力与高级配置'
+    };
+
+    const PLUGINS={
+      tool:[
+        {name:'商家助手',icon:'store',locked:true},{name:'预约',icon:'calendar'},{name:'医生挂号',icon:'stethoscope'},{name:'投票',icon:'barChart2'},{name:'表单',icon:'fileText'},
+        {name:'数据收集',icon:'database'},{name:'小票打印',icon:'printer'},{name:'标签打印',icon:'tag'},{name:'快速注册',icon:'userPlus'},{name:'一码多销',icon:'qrCode'},
+        {name:'银联支付',icon:'creditCard',locked:true},{name:'汇聚支付',icon:'creditCard',locked:true},{name:'服务窗支付',icon:'messageSquare'},{name:'易宝支付',icon:'dollarSign',locked:true},{name:'智能获客',icon:'users'},
+        {name:'授权发布',icon:'shield',locked:true},{name:'多门店',icon:'mapPin'},{name:'物流助手',icon:'truck',locked:true},{name:'极光推广',icon:'zap'},{name:'商品采集',icon:'download'},
+        {name:'文章采集',icon:'fileText',locked:true},{name:'视频解析',icon:'video'},{name:'达达配送',icon:'bike'},{name:'扫码付款',icon:'smartphone',locked:true},{name:'当面付',icon:'smartphone',locked:true},
+        {name:'资源管理',icon:'folder'},{name:'消息群发',icon:'send'},{name:'一键WiFi',icon:'wifi'},{name:'企微助手接入',icon:'messageCircle'},{name:'微信扫码核销',icon:'checkSquare'},
+        {name:'统一推送',icon:'bell'},{name:'阿里云物流',icon:'cloud'},{name:'收银台',icon:'monitor',locked:true},{name:'担保分账',icon:'pieChart'},{name:'蜂鸟配送',icon:'navigation'},
+        {name:'美团配送',icon:'navigation2'},{name:'优选推荐',icon:'thumbsUp'},{name:'库存预警',icon:'alertTriangle'},{name:'配送助手',icon:'box'},{name:'区域限购',icon:'map'}
+      ],
+      member:[
+        {name:'会员价格',icon:'tag'},{name:'积分商城',icon:'shoppingBag'},{name:'积分规则',icon:'clipboard'},{name:'会员储值',icon:'wallet'},{name:'会员签到',icon:'checkCircle'},
+        {name:'积分提现',icon:'dollarSign'},{name:'会员卡',icon:'creditCard',locked:true},{name:'礼品卡',icon:'gift',locked:true},{name:'核销卡',icon:'checkSquare',locked:true},{name:'权益卡',icon:'award',locked:true}
+      ],
+      industry:[
+        {name:'知识付费',icon:'book',locked:true},{name:'酒店',icon:'building',locked:true},{name:'房产',icon:'home',locked:true},{name:'教育培训',icon:'graduationCap',locked:true},{name:'装修',icon:'hammer',locked:true},
+        {name:'社区团购',icon:'users',locked:true},{name:'商品批发',icon:'truck',locked:true},{name:'餐厅',icon:'coffee',locked:true},{name:'外卖',icon:'bike',locked:true},{name:'材料',icon:'package',locked:true},
+        {name:'药品',icon:'heartPulse',locked:true},{name:'睿知云',icon:'cloud',locked:true}
+      ],
+      marketing:[
+        {name:'优惠券',icon:'ticket'},{name:'转赠优惠券',icon:'share2'},{name:'发券助手',icon:'mail',locked:true},{name:'核销优惠券',icon:'checkCircle'},{name:'拼团',icon:'users'},
+        {name:'秒杀',icon:'zap'},{name:'砍价',icon:'scissors'},{name:'分销',icon:'gitBranch'},{name:'文章营销',icon:'fileText'},{name:'种草',icon:'heart'},
+        {name:'曝光台',icon:'sun'},{name:'股东分红',icon:'pieChart',locked:true},{name:'区域代理',icon:'map',locked:true},{name:'团队分红',icon:'users',locked:true},{name:'新客有礼',icon:'gift'},
+        {name:'支付有礼',icon:'creditCard'},{name:'短视频',icon:'video'},{name:'微信直播',icon:'video2'},{name:'开屏广告',icon:'image'},{name:'弹窗广告',icon:'layout'},
+        {name:'流量主',icon:'trendingUp'},{name:'兑换码',icon:'hash'},{name:'储值卡',icon:'creditCard'},{name:'超级海报',icon:'image2'},{name:'活动海报',icon:'image3'},
+        {name:'门店佣金',icon:'percent',locked:true},{name:'支付返现',icon:'refreshCcw',locked:true},{name:'分享有礼',icon:'share'},{name:'截流口令',icon:'link'},{name:'扩展链接',icon:'externalLink'},
+        {name:'微信外部跳转',icon:'externalLink2'},{name:'裂变优惠券',icon:'repeat',locked:true},{name:'视频号商城',icon:'playCircle'},{name:'满减活动',icon:'minusCircle'},{name:'大转盘',icon:'rotateCcw'},
+        {name:'摇一摇',icon:'smartphone'},{name:'砸金蛋',icon:'egg'},{name:'翻牌',icon:'grid'},{name:'刮刮乐',icon:'grid'},{name:'会员赠礼',icon:'award',locked:true}
+      ],
+      channel:[
+        {name:'微信小程序',icon:'smartphone'},{name:'微信公众号',icon:'messageCircle'},{name:'H5商城',icon:'globe'},{name:'抖音小程序',icon:'music'},{name:'支付宝小程序',icon:'creditCard'},
+        {name:'百度小程序',icon:'search'},{name:'QQ小程序',icon:'messageSquare'},{name:'App原生',icon:'smartphone2'},{name:'分销渠道',icon:'gitBranch'},{name:'直播渠道',icon:'video'}
+      ],
+      super:[
+        {name:'站点配置',icon:'settings'},{name:'权限管理',icon:'shield'},{name:'操作日志',icon:'clock'},{name:'数据备份',icon:'database'},{name:'系统更新',icon:'refreshCw'},
+        {name:'清理缓存',icon:'trash2'},{name:'队列管理',icon:'list'},{name:'计划任务',icon:'calendar'},{name:'多租户',icon:'users',locked:true},{name:'开发模式',icon:'code'}
+      ]
+    };
+
+    const PLUGIN_ICONS={
+      store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+      calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+      stethoscope:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 0 0-.2.2"/><path d="M8 15v4a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4"/><path d="M10 15v1a2 2 0 0 0 2 2 2 2 0 0 0 2-2v-1"/></svg>',
+      barChart2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+      fileText:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+      database:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+      printer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>',
+      tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
+      userPlus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>',
+      qrCode:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+      creditCard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+      messageSquare:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+      dollarSign:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+      shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      mapPin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+      truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+      zap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+      download:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+      video:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>',
+      bike:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/><path d="M8 14.5v.5"/></svg>',
+      smartphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+      folder:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>',
+      send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>',
+      wifi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+      messageCircle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+      checkSquare:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+      bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+      cloud:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',
+      monitor:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+      pieChart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>',
+      navigation:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>',
+      navigation2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 19 21 12 17 5 21 12 2"/></svg>',
+      thumbsUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>',
+      alertTriangle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+      map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
+      shoppingBag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>',
+      clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>',
+      wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M1 6h22v14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V6z"/><path d="M1 6V4a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v2"/><path d="M19 11h-6"/></svg>',
+      checkCircle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+      gift:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
+      award:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>',
+      book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+      building:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><line x1="9" y1="12" x2="9.01" y2="12"/><line x1="9" y1="16" x2="9.01" y2="16"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="15" y1="16" x2="15.01" y2="16"/></svg>',
+      home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+      graduationCap:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10l-10-6-10 6 10 6 10-6z"/><path d="M6 12v5a6 6 0 0 0 12 0v-5"/></svg>',
+      hammer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 12l-8.5 8.5a2.12 2.12 0 1 1-3-3L12 9"/><path d="M17.5 9.5L22 5l-3-3-4.5 4.5"/><path d="M15 7l3 3"/></svg>',
+      users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      package:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+      coffee:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>',
+      heartPulse:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/><path d="M3.5 12h6l.5-1 2 4.5 2-7 1.5 3.5h5"/></svg>',
+      ticket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/><line x1="9" y1="9" x2="9" y2="15"/><line x1="15" y1="9" x2="15" y2="15"/></svg>',
+      share2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+      mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+      scissors:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>',
+      gitBranch:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>',
+      heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+      sun:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+      video2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
+      image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',
+      layout:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>',
+      trendingUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>',
+      hash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>',
+      image2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>',
+      image3:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M8 16l2.5-2.5 3.5 3.5 4-4"/></svg>',
+      percent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>',
+      refreshCcw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>',
+      share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>',
+      link:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+      externalLink:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>',
+      externalLink2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+      repeat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+      playCircle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>',
+      minusCircle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>',
+      egg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22c4.97 0 9-4.03 9-9 0-4.97-9-13-9-13S3 8.03 3 13c0 4.97 4.03 9 9 9z"/></svg>',
+      grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+      Layers:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
+      music:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+      search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+      smartphone2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+      settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+      clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+      trash2:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
+      list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
+      refreshCw:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+      code:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+      lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'
+    };
 
     let state={first:'overview',second:'dashboard',section:'banner',navEditIdx:-1};
     let expanded=new Set();
@@ -5110,7 +5289,40 @@
       if(panelId==='albumPanel') loadAlbums(1);
       if(panelId==='miniappPanel') loadMiniApps(1);
       if(panelId==='memberGroupPanel') loadMemberGroups();
+      if(panelId==='pluginsPanel') renderPlugins(state.second);
       window.scrollTo(0,0);
+    }
+
+    /* ===== 插件中心 ===== */
+    function renderPlugins(category){
+      const titleEl=document.getElementById('pluginsTitle');
+      const descEl=document.getElementById('pluginsDesc');
+      const grid=document.getElementById('pluginsGrid');
+      const catLabel={all:'全部',channel:'渠道',marketing:'营销',member:'会员',industry:'行业',tool:'工具',super:'超管'}[category]||'全部';
+      titleEl.textContent=catLabel;
+      descEl.textContent=PLUGIN_DESC[category]||PLUGIN_DESC.all;
+
+      let items=[];
+      if(category==='all'){
+        items=Object.keys(PLUGINS).flatMap(k=>PLUGINS[k].map(p=>({...p,category:k})));
+      }else{
+        items=(PLUGINS[category]||[]).map(p=>({...p,category}));
+      }
+
+      grid.innerHTML=items.map(p=>{
+        const icon=PLUGIN_ICONS[p.icon]||PLUGIN_ICONS.grid;
+        const lockSvg=PLUGIN_ICONS.lock;
+        return `<div class="plugin-card ${p.locked?'locked':''}" data-category="${p.category}" onclick="onPluginClick('${p.name}',${p.locked?'true':'false'})">
+          <div class="plugin-icon">${icon}</div>
+          <div class="plugin-name">${escapeHtml(p.name)}</div>
+          <svg class="plugin-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor">${lockSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/)?.[1]||lockSvg}</svg>
+        </div>`;
+      }).join('');
+    }
+
+    function onPluginClick(name,locked){
+      if(locked){toast('该插件暂未开放，敬请期待');return;}
+      toast(`已选择：${name}`);
     }
 
     /* ===== 会员管理 ===== */
