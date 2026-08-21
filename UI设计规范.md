@@ -54,10 +54,20 @@
   - hover：`background:#eee;color:var(--text)`（轻微加深 + 文字转深）
 - 位置：弹窗头部 flex 布局右侧（`justify-content:space-between`），与标题同行。
 
+### 5.2 多选/勾选项（checkbox 规范，v0.1.52 起强制）
+
+> 背景：推送选择等处曾用 `appearance:none` 自绘方框 + `::after` 模拟对勾，导致"框太大 / 对勾偏位 / 截断"反复返工。**统一改用浏览器原生 checkbox + `accent-color`**。
+
+- 结构：`<label class="radio-inline"><input type="checkbox"><span>文案</span></label>`，选中时 `input:checked + span{color:var(--primary)}`。
+- 样式：`width:14px;height:14px;margin:0;flex:none;accent-color:var(--primary)`，**禁止** `appearance:none`、禁止自绘对勾、禁止写死 12px 以下尺寸。
+- 布局：多选项用 `flex flex-wrap`，每项 `flex:0 0 calc(33.333% - 10px)`（每行 3 个；长文案优先保证不截断，不用 `overflow:hidden`）。
+- 参照实现：`admin.html` 的 `.sms-subscribe`（v0.1.53 已定型）。
+
 ## 6. 颜色与一致性
 
 - 只用主题变量，禁止写死灰/蓝值（除极个别 hover 边框 `#c4c8d4` 等中性灰）。
 - 主操作按钮 `.btn.primary` 带轻投影；危险操作用 `.btn.danger`。
+- **后台主色为紫色 `--primary:#5e6ad2`**（Linear 风格）；**小程序端主色为橙色 `#FF6B35`**（见 `app.wxss`）。两端各自遵循本端主题变量，不混用。
 - 小程序端遵循 `app.wxss` 中的主题色与圆角变量，保持两端观感统一。
 
 ## 7. 自检清单（提交前过一遍）
@@ -68,4 +78,5 @@
 - [ ] hover / focus 态是否齐全？
 - [ ] 颜色是否全部来自主题变量？
 - [ ] 弹窗关闭按钮是否统一为圆形灰底 `class="close"`，无裸 `×` / 无 `modal-close`？
+- [ ] 多选/勾选项是否用原生 checkbox + `accent-color:var(--primary)`，无 `appearance:none` 自绘？
 - [ ] 改完 JS 后用 `node --check` 校验脚本，避免整页挂掉。
