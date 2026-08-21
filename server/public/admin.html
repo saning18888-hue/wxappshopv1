@@ -1119,6 +1119,80 @@
     @media (max-width:1100px){.plugins-grid{grid-template-columns:repeat(4,1fr)}}
     @media (max-width:860px){.plugins-grid{grid-template-columns:repeat(3,1fr)}}
     @media (max-width:640px){.plugins-grid{grid-template-columns:repeat(2,1fr)}}
+
+    /* ===== 插件配置页（微信小程序） ===== */
+    .plugin-config-panel{max-width:1200px}
+    .plugin-config-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px}
+    .plugin-config-head .back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:13px}
+    .plugin-config-head .back-btn svg{width:16px;height:16px}
+    .plugin-config-title h2{font-size:18px;font-weight:600;color:var(--text-primary);margin:0 0 4px}
+    .plugin-config-title p{font-size:12px;color:var(--text-muted);margin:0}
+    .plugin-config-title a{color:var(--primary);text-decoration:none}
+    .plugin-config-title a:hover{text-decoration:underline}
+
+    .plugin-config-tabs{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .tab-nav{display:flex;border-bottom:1px solid var(--border);background:#fafbfc}
+    .tab-item{padding:12px 18px;font-size:13px;color:var(--text-secondary);cursor:pointer;white-space:nowrap;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-1px}
+    .tab-item:hover{color:var(--primary)}
+    .tab-item.active{color:var(--primary);border-bottom-color:var(--primary);background:#fff}
+    .tab-body{padding:22px 24px}
+    .tab-pane{display:none}
+    .tab-pane.active{display:block}
+
+    .a-field{margin-bottom:18px}
+    .a-field label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+    .a-field label.required::before{content:'*';color:#ef4444;margin-right:4px}
+    .a-field .input{width:100%;max-width:480px;box-sizing:border-box}
+    .a-field textarea.input{max-width:520px;resize:vertical}
+    .a-field .field-tip{font-size:12px;color:var(--text-muted);margin:6px 0 0}
+    .a-field .field-tip a{color:var(--primary);text-decoration:none}
+    .a-field .field-tip a:hover{text-decoration:underline}
+
+    .radio-group{display:flex;flex-wrap:wrap;gap:14px 20px}
+    .radio-group .radio-inline{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:var(--text-secondary);user-select:none}
+    .radio-group .radio-inline input[type=radio]{width:14px;height:14px;margin:0;flex:none;accent-color:var(--primary)}
+    .radio-group .radio-inline input[type=radio]:checked + span{color:var(--primary);font-weight:500}
+
+    .a-seg{display:inline-flex;gap:4px;padding:4px;background:#f2f3f5;border-radius:8px}
+    .a-seg span{display:flex;align-items:center;gap:6px;padding:6px 14px;font-size:13px;color:var(--text-secondary);cursor:pointer;border-radius:6px;transition:all .15s}
+    .a-seg span.active{background:#fff;color:var(--primary);box-shadow:0 1px 3px rgba(0,0,0,.08);font-weight:500}
+    .a-seg .dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.5}
+
+    .cert-notice{font-size:12px;color:var(--text-muted);line-height:1.8;margin-bottom:18px;padding:12px 14px;background:#fafbfc;border-radius:var(--radius)}
+    .cert-notice p{margin:0}
+    .file-input{max-width:320px;padding:8px 10px}
+    .file-status{display:inline-block;margin-left:10px;font-size:12px;color:var(--text-muted)}
+    .link{color:var(--primary);font-size:13px;text-decoration:none}
+    .link:hover{text-decoration:underline}
+
+    .pay-tags-table{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;max-width:680px;margin-top:10px}
+    .pay-tags-table .table-row{display:grid;grid-template-columns:120px 1fr;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+    .pay-tags-table .table-row:last-child{border-bottom:0}
+    .pay-tags-table .table-row.head{background:#fafbfc;font-weight:500;color:var(--text-secondary)}
+    .pay-tags-table .table-row:not(.head){color:var(--text-primary)}
+    .pay-tags-table .table-row span:first-child{color:var(--text-secondary)}
+
+    .path-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+    .path-toolbar .input.sm{max-width:220px}
+    .path-actions{display:flex;gap:6px}
+    .btn.icon-btn{padding:6px 8px;background:var(--surface);border:1px solid var(--border);color:var(--text-secondary)}
+    .btn.icon-btn svg{width:16px;height:16px}
+    .btn.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
+
+    .data-table{width:100%;border-collapse:collapse;font-size:13px}
+    .data-table th,.data-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle}
+    .data-table th{background:#fafbfc;color:var(--text-secondary);font-weight:500;white-space:nowrap}
+    .data-table td{color:var(--text-primary)}
+    .data-table th:first-child{min-width:90px}
+    .data-table th:nth-child(2){min-width:80px}
+    .data-table td .link{font-size:13px}
+
+    .switch{width:40px;height:22px;position:relative;display:inline-block;cursor:pointer}
+    .switch input{opacity:0;width:0;height:0}
+    .switch-slider{position:absolute;inset:0;background:#d1d5db;border-radius:999px;transition:.15s}
+    .switch-slider::before{content:'';position:absolute;left:2px;top:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+    .switch input:checked + .switch-slider{background:var(--primary)}
+    .switch input:checked + .switch-slider::before{transform:translateX(18px)}
   </style>
 </head>
 <body>
@@ -3303,6 +3377,118 @@
           <div id="pluginsGrid" class="plugins-grid"></div>
         </div>
 
+        <!-- 微信小程序配置 -->
+        <div id="wechatMiniProgramPanel" class="panel hidden plugin-config-panel">
+          <div class="plugin-config-head">
+            <button class="btn gray back-btn" onclick="backToPlugins()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              返回
+            </button>
+            <div class="plugin-config-title">
+              <h2>微信小程序</h2>
+              <p>微信小程序注册及配置，可参考<a href="https://mp.weixin.qq.com/" target="_blank">微信小程序官方文档</a></p>
+            </div>
+          </div>
+          <div class="plugin-config-tabs">
+            <div class="tab-nav" id="wechatMiniTabs">
+              <span class="tab-item active" data-tab="publish" onclick="switchWechatTab('publish')">工具发布</span>
+              <span class="tab-item" data-tab="basic" onclick="switchWechatTab('basic')">基础设置</span>
+              <span class="tab-item" data-tab="pay" onclick="switchWechatTab('pay')">支付配置</span>
+              <span class="tab-item" data-tab="cert" onclick="switchWechatTab('cert')">退款证书</span>
+              <span class="tab-item" data-tab="path" onclick="switchWechatTab('path')">页面路径</span>
+              <span class="tab-item" data-tab="sub" onclick="switchWechatTab('sub')">订阅消息</span>
+            </div>
+            <div class="tab-body">
+              <div class="tab-pane active" id="wechatTab-publish">
+                <div class="a-field"><label>之前小程序版本：<span class="muted">26.052</span></label></div>
+                <div class="a-field"><label class="required">版本号</label><input type="text" class="input" id="wxVersion" placeholder="版本号,仅限数字,小数点"></div>
+                <div class="a-field"><label>版本描述</label><textarea class="input" id="wxVersionDesc" rows="4"></textarea></div>
+                <button class="btn primary" onclick="saveWechatPublish()">提交</button>
+              </div>
+              <div class="tab-pane" id="wechatTab-basic">
+                <div class="a-field"><label class="required">小程序名称</label><input type="text" class="input" id="wxAppName" placeholder="小程序名称"></div>
+                <div class="a-field"><label class="required">APPID</label><input type="text" class="input" id="wxAppId" placeholder="APPID"></div>
+                <div class="a-field"><label class="required">APP_SECRET</label><input type="text" class="input" id="wxAppSecret" placeholder="APP_SECRET"></div>
+                <button class="btn primary" onclick="saveWechatBasic()">确定</button>
+              </div>
+              <div class="tab-pane" id="wechatTab-pay">
+                <div class="a-field"><label>微信支付商户号</label><input type="text" class="input" id="wxMchId" placeholder="微信支付商户号"></div>
+                <div class="a-field"><label>微信支付密钥V2</label><input type="text" class="input" id="wxPayKeyV2" placeholder="微信支付密钥V2"></div>
+                <div class="a-field"><label>微信支付密钥V3</label><input type="text" class="input" id="wxPayKeyV3" placeholder="微信支付密钥V3"><p class="field-tip">如果需要转账到用户零钱，请配置微信支付密钥V3</p></div>
+                <div class="a-field">
+                  <label>验签方式</label>
+                  <div class="radio-group">
+                    <label class="radio-inline"><input type="radio" name="signType" value="platform" checked><span>平台证书</span></label>
+                    <label class="radio-inline"><input type="radio" name="signType" value="pubkey"><span>微信支付公钥</span></label>
+                    <label class="radio-inline"><input type="radio" name="signType" value="both"><span>商户API证书+微信支付公钥</span></label>
+                  </div>
+                </div>
+                <div class="a-field"><label>平台证书序列号</label><input type="text" class="input" id="wxCertSn" placeholder="平台证书序列号"><p class="field-tip">如果需要转账到用户零钱，请配置证书序列号，下载前请先配置好退款证书 <a href="#" onclick="switchWechatTab('cert');return false;">下载微信支付平台证书</a></p></div>
+                <div class="a-field">
+                  <label>订单优惠标记</label>
+                  <p class="field-tip">使用立减与折扣功能时需要的参数，说明详见【微信商户平台】-【产品中心】-【<a href="#">立减与折扣</a>】</p>
+                  <div class="pay-tags-table">
+                    <div class="table-row head"><span>支付类型</span><span>支付标签</span></div>
+                    <div class="table-row"><span>普通商品</span><span>GOODS</span></div>
+                    <div class="table-row"><span>电子卡券</span><span>ELECTRONIC</span></div>
+                    <div class="table-row"><span>会员储值</span><span>CHARGE</span></div>
+                    <div class="table-row"><span>知识付费</span><span>KNOWLEDGE</span></div>
+                    <div class="table-row"><span>酒店</span><span>HOTEL</span></div>
+                    <div class="table-row"><span>砍价</span><span>BARGAIN</span></div>
+                    <div class="table-row"><span>秒杀</span><span>SECKILL</span></div>
+                    <div class="table-row"><span>拼团</span><span>GROUP</span></div>
+                    <div class="table-row"><span>积分</span><span>INTEGRAL</span></div>
+                  </div>
+                </div>
+                <button class="btn primary" onclick="saveWechatPay()">确定</button>
+              </div>
+              <div class="tab-pane" id="wechatTab-cert">
+                <div class="cert-notice">
+                  <p>证书:使用微信退款功能需要上传双向证书。 证书下载方式:</p>
+                  <p>微信商户平台(pay.weixin.qq.com)--&gt;账户中心--&gt;账户设置--&gt;API安全--&gt;证书下载。</p>
+                  <p>我们仅用到apiclient_cert.pem 和 apiclient_key.pem这两个证书</p>
+                </div>
+                <div class="a-field">
+                  <label>是否打开</label>
+                  <div class="a-seg" id="certSwitch">
+                    <span class="active" onclick="toggleCertSwitch(true)"><i class="dot"></i>打开</span>
+                    <span onclick="toggleCertSwitch(false)"><i class="dot"></i>关闭</span>
+                  </div>
+                </div>
+                <div class="a-field"><label>apiclient_cert.pem 证书</label><input type="file" class="input file-input" id="certPem" accept=".pem"><span class="file-status" id="certPemStatus">选择文件</span></div>
+                <div class="a-field"><label>apiclient_key.pem 证书</label><input type="file" class="input file-input" id="certKey" accept=".pem"><span class="file-status" id="certKeyStatus">选择文件</span></div>
+                <div class="a-field"><a href="#" class="link">已配置</a></div>
+                <button class="btn primary" onclick="saveWechatCert()">确定</button>
+              </div>
+              <div class="tab-pane" id="wechatTab-path">
+                <div class="path-toolbar">
+                  <input type="text" class="input sm" id="pathSearch" placeholder="关键词搜索" oninput="renderWechatPaths()">
+                  <div class="path-actions">
+                    <button class="btn icon-btn" title="列表"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+                    <button class="btn icon-btn" title="卡片"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></button>
+                  </div>
+                </div>
+                <div class="article-table-wrap">
+                  <table class="data-table" id="wechatPathTable">
+                    <thead><tr><th>名称</th><th>所属模板</th><th>链接</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane" id="wechatTab-sub">
+                <button class="btn primary sm" onclick="batchConfigSubs()">一键配置</button>
+                <div class="article-table-wrap" style="margin-top:14px">
+                  <table class="data-table" id="wechatSubTable">
+                    <thead><tr><th>标题</th><th>关键词（按顺序）</th><th>是否启用</th><th>模板ID</th><th>操作</th></tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <button class="btn primary" style="margin-top:14px" onclick="saveWechatSubs()">确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 通用占位 -->
         <div id="placeholderPanel" class="panel hidden">
           <div class="card">
@@ -5085,8 +5271,8 @@
         {name:'摇一摇',icon:'smartphone'},{name:'砸金蛋',icon:'egg'},{name:'翻牌',icon:'grid'},{name:'刮刮乐',icon:'grid'},{name:'会员赠礼',icon:'award',locked:true}
       ],
       channel:[
-        {name:'微信小程序',icon:'smartphone'},{name:'微信公众号',icon:'messageCircle'},{name:'H5商城',icon:'globe'},{name:'抖音小程序',icon:'music'},{name:'支付宝小程序',icon:'creditCard'},
-        {name:'百度小程序',icon:'search'},{name:'QQ小程序',icon:'messageSquare'},{name:'App原生',icon:'smartphone2'},{name:'分销渠道',icon:'gitBranch'},{name:'直播渠道',icon:'video'}
+        {name:'微信小程序',icon:'smartphone',target:'wechatMiniProgramPanel'},{name:'微信公众号',icon:'messageCircle',locked:true},{name:'H5商城',icon:'globe',locked:true},{name:'抖音小程序',icon:'music',locked:true},{name:'支付宝小程序',icon:'creditCard',locked:true},
+        {name:'百度小程序',icon:'search',locked:true},{name:'QQ小程序',icon:'messageSquare',locked:true},{name:'App原生',icon:'smartphone2',locked:true},{name:'分销渠道',icon:'gitBranch',locked:true},{name:'直播渠道',icon:'video',locked:true}
       ],
       super:[
         {name:'站点配置',icon:'settings'},{name:'权限管理',icon:'shield'},{name:'操作日志',icon:'clock'},{name:'数据备份',icon:'database'},{name:'系统更新',icon:'refreshCw'},
@@ -5312,7 +5498,8 @@
       grid.innerHTML=items.map(p=>{
         const icon=PLUGIN_ICONS[p.icon]||PLUGIN_ICONS.grid;
         const lockSvg=PLUGIN_ICONS.lock;
-        return `<div class="plugin-card ${p.locked?'locked':''}" data-category="${p.category}" onclick="onPluginClick('${p.name}',${p.locked?'true':'false'})">
+        const target=p.target||'';
+        return `<div class="plugin-card ${p.locked?'locked':''}" data-category="${p.category}" onclick="onPluginClick('${p.name}',${p.locked?'true':'false'},'${target}')">
           <div class="plugin-icon">${icon}</div>
           <div class="plugin-name">${escapeHtml(p.name)}</div>
           <svg class="plugin-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor">${lockSvg.match(/<svg[^>]*>([\s\S]*)<\/svg>/)?.[1]||lockSvg}</svg>
@@ -5320,9 +5507,176 @@
       }).join('');
     }
 
-    function onPluginClick(name,locked){
+    function onPluginClick(name,locked,target){
       if(locked){toast('该插件暂未开放，敬请期待');return;}
+      if(target){
+        document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
+        document.getElementById(target).classList.remove('hidden');
+        if(target==='wechatMiniProgramPanel') initWechatMiniProgram();
+        window.scrollTo(0,0);
+        return;
+      }
       toast(`已选择：${name}`);
+    }
+
+    function backToPlugins(){
+      document.getElementById('wechatMiniProgramPanel').classList.add('hidden');
+      document.getElementById('pluginsPanel').classList.remove('hidden');
+      window.scrollTo(0,0);
+    }
+
+    /* ===== 微信小程序配置 ===== */
+    const WECHAT_PATHS=[
+      {name:'首页',tpl:'--',link:'yb_shopv2/native/tabbar0/index'},
+      {name:'分类',tpl:'--',link:'yb_shopv2/native/tabbar1/index'},
+      {name:'购物车',tpl:'--',link:'yb_shopv2/native/tabbar2/index'},
+      {name:'我的',tpl:'--',link:'yb_shopv2/native/tabbar3/index'},
+      {name:'订单中心',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=订单中心&id=307'},
+      {name:'客服中心',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=客服中心&id=308'},
+      {name:'订单',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=订单&id=309'},
+      {name:'到店自提',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=到店自提&id=304'},
+      {name:'商品分类',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=商品分类&id=305'},
+      {name:'个人中心',tpl:'本地版',link:'yb_shopv2/native/all/index?type=page&type_name=自定义页面&url=&title=个人中心&id=306'},
+      {name:'首页',tpl:'--',link:'yb_shopv2/native/all/index?type=default'},
+      {name:'商品列表',tpl:'--',link:'yb_shopv2/native/all/index?type=goods_list'},
+      {name:'商品详情',tpl:'--',link:'yb_shopv2/native/all/index?type=good_detail&id='},
+      {name:'优惠券列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_coupon_list'},
+      {name:'文章列表',tpl:'--',link:'yb_shopv2/native/all/index?type=article_list'},
+      {name:'文章分类',tpl:'--',link:'yb_shopv2/native/all/index?type=article_class'},
+      {name:'文章详情',tpl:'--',link:'yb_shopv2/native/all/index?type=article&id='},
+      {name:'相册分类',tpl:'--',link:'yb_shopv2/native/all/index?type=image_class'},
+      {name:'相册列表',tpl:'--',link:'yb_shopv2/native/all/index?type=images&id='},
+      {name:'用户中心',tpl:'--',link:'yb_shopv2/native/all/index?type=member'},
+      {name:'我的订单',tpl:'--',link:'yb_shopv2/native/all/index?type=mine_order'},
+      {name:'分销中心',tpl:'--',link:'yb_shopv2/native/all/index?type=page_distribution'},
+      {name:'拼团列表',tpl:'--',link:'yb_shopv2/native/all/index?type=activity_group_list'},
+      {name:'拼团详情',tpl:'--',link:'yb_shopv2/native/all/index?type=group&id='},
+      {name:'砍价列表',tpl:'--',link:'yb_shopv2/native/all/index?type=activity_bargain_list'},
+      {name:'砍价详情',tpl:'--',link:'yb_shopv2/native/all/index?type=bargain&id='},
+      {name:'帮砍详情',tpl:'--',link:'yb_shopv2/native/all/index?type=bargain_detail&id='},
+      {name:'秒杀列表',tpl:'--',link:'yb_shopv2/native/all/index?type=activity_seckill_list'},
+      {name:'秒杀详情',tpl:'--',link:'yb_shopv2/native/all/index?type=seckill&id='},
+      {name:'积分商城',tpl:'--',link:'yb_shopv2/native/all/index?type=integral_mall'},
+      {name:'积分详情',tpl:'--',link:'yb_shopv2/native/all/index?type=integral&id='},
+      {name:'预约列表',tpl:'--',link:'yb_shopv2/native/all/index?type=services_list'},
+      {name:'预约详情',tpl:'--',link:'yb_shopv2/native/all/index?type=services&id='},
+      {name:'短视频列表',tpl:'--',link:'yb_shopv2/native/all/index?type=video_list'},
+      {name:'直播列表',tpl:'--',link:'yb_shopv2/native/all/index?type=live_list'},
+      {name:'直播间',tpl:'--',link:'yb_shopv2/native/all/index?type=live_detail&id='},
+      {name:'专栏列表',tpl:'--',link:'yb_shopv2/native/all/index?type=series_class'},
+      {name:'专栏分类',tpl:'--',link:'yb_shopv2/native/all/index?type=series_list'},
+      {name:'专栏详情',tpl:'--',link:'yb_shopv2/native/all/index?type=series_detail&id='},
+      {name:'我的课程',tpl:'--',link:'yb_shopv2/native/all/index?type=mine_course&id='},
+      {name:'课程分类',tpl:'--',link:'yb_shopv2/native/all/index?type=course_list'},
+      {name:'课程列表',tpl:'--',link:'yb_shopv2/native/all/index?type=course_class'},
+      {name:'课程详情',tpl:'--',link:'yb_shopv2/native/all/index?type=course_detail&id='},
+      {name:'用户储值',tpl:'--',link:'yb_shopv2/native/all/index?type=balance&id='},
+      {name:'签到',tpl:'--',link:'yb_shopv2/native/all/index?type=mine_sign&id='},
+      {name:'会员卡',tpl:'--',link:'yb_shopv2/native/all/index?type=membership&id='},
+      {name:'购物车',tpl:'--',link:'yb_shopv2/native/all/index?type=shop_car&id='},
+      {name:'商品分类',tpl:'--',link:'yb_shopv2/native/all/index?type=page_goods_category_level1_style3&id='},
+      {name:'商品列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_goods_list&id='},
+      {name:'商品详情',tpl:'--',link:'yb_shopv2/native/all/index?type=goods&id='},
+      {name:'预约分类',tpl:'--',link:'yb_shopv2/native/all/index?type=services_class&id='},
+      {name:'多门店',tpl:'--',link:'yb_shopv2/native/all/index?type=page_more_shop&id='},
+      {name:'联系客服',tpl:'--',link:'yb_shopv2/native/all/index?type=chat&id='},
+      {name:'代理中心',tpl:'--',link:'yb_shopv2/native/all/index?type=page_agent_index&id='},
+      {name:'股东中心',tpl:'--',link:'yb_shopv2/native/all/index?type=page_shareholder_index&id='},
+      {name:'队长中心',tpl:'--',link:'yb_shopv2/native/all/index?type=page_captain_center&id='},
+      {name:'直播详情',tpl:'--',link:'yb_shopv2/native/all/index?type=live_detail&id='},
+      {name:'主播入驻',tpl:'--',link:'yb_shopv2/native/all/index?type=live_entry&id='},
+      {name:'满减活动',tpl:'--',link:'yb_shopv2/native/all/index?type=page_full_reduction&id='},
+      {name:'房间列表',tpl:'--',link:'yb_shopv2/native/all/index?type=hotel_room_list&id='},
+      {name:'房间详情',tpl:'--',link:'yb_shopv2/native/all/index?type=hotel_room_detail&id='},
+      {name:'房产列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_building_list&id='},
+      {name:'房产详情',tpl:'--',link:'yb_shopv2/native/all/index?type=building_detail&id='},
+      {name:'户型列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_house_type_list&id='},
+      {name:'户型详情',tpl:'--',link:'yb_shopv2/native/all/index?type=house_type_detail&id='},
+      {name:'置业列表',tpl:'--',link:'yb_shopv2/native/all/index?type=sales_list&id='},
+      {name:'销售详情',tpl:'--',link:'yb_shopv2/native/all/index?type=sales_detail&id='},
+      {name:'案例列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_decorate_list&id='},
+      {name:'案例详情',tpl:'--',link:'yb_shopv2/native/all/index?type=decorate_detail&id='},
+      {name:'装修计算器',tpl:'--',link:'yb_shopv2/native/all/index?type=decorate_counter&id='},
+      {name:'设计师列表',tpl:'--',link:'yb_shopv2/native/all/index?type=page_designer_list&id='},
+      {name:'设计师详情',tpl:'--',link:'yb_shopv2/native/all/index?type=designer_detail&id='},
+      {name:'讲师列表',tpl:'--',link:'yb_shopv2/native/all/index?type=lecturer_list&id='},
+      {name:'讲师详情',tpl:'--',link:'yb_shopv2/native/all/index?type=lecturer_detail&id='},
+      {name:'团长列表',tpl:'--',link:'yb_shopv2/native/all/index?type=more_community&id='},
+      {name:'团长中心',tpl:'--',link:'yb_shopv2/native/all/index?type=page_community_index&id='},
+      {name:'种草列表',tpl:'--',link:'yb_shopv2/native/all/index?type=grass_list&id='},
+      {name:'种草详情',tpl:'--',link:'yb_shopv2/native/all/index?type=grass_detail&id='},
+      {name:'笔记列表',tpl:'--',link:'yb_shopv2/native/all/index?type=note_list&id='},
+      {name:'笔记详情',tpl:'--',link:'yb_shopv2/native/all/index?type=note_detail&id='},
+      {name:'爆料列表',tpl:'--',link:'yb_shopv2/native/all/index?type=fact_list&id='},
+      {name:'爆料详情',tpl:'--',link:'yb_shopv2/native/all/index?type=fact_detail&id='},
+      {name:'我要爆料',tpl:'--',link:'yb_shopv2/native/all/index?type=fact_create&id='},
+      {name:'网页',tpl:'--',link:'yb_shopv2/native/all/index?type=web&id='},
+      {name:'堂食餐品',tpl:'--',link:'yb_shopv2/native/all/index?type=restaurant&mode=1&title=堂食餐品'},
+      {name:'外卖餐品',tpl:'--',link:'yb_shopv2/native/all/index?type=takeout_rest&id='},
+      {name:'大转盘/摇一摇/砸金蛋/翻牌/刮刮乐/老虎机/九宫格/抢福袋',tpl:'--',link:'yb_shopv2/native/all/index?type=l_d&id='}
+    ];
+
+    const WECHAT_SUBS=[
+      {title:'订单提交成功通知',keywords:'温馨提示、待付金额、商品信息、下单时间【请按照关键字顺序设置】',enabled:true,id:'maL3W872pN4zGLD9'},
+      {title:'支付成功通知',keywords:'商品信息、支付金额、支付时间、备注【请按照关键字顺序设置】',enabled:true,id:'3IQkRV5LeD0n4Bu'},
+      {title:'拼团成功通知',keywords:'商品名称、拼团价、成团人数、开团时间、成团时间【请按照关键字顺序设置】',enabled:true,id:'dXScmVMyx5TbJT3'},
+      {title:'砍价成功通知',keywords:'商品名称、砍价金额、砍价时间、备注【请按照关键字顺序设置】',enabled:true,id:'0txMGgrfnW8qnHl'},
+      {title:'发货通知',keywords:'订单商品、店铺名称、发货时间、备注【请按照关键字顺序设置】',enabled:true,id:'INNioHhyRtKq'},
+      {title:'核销成功通知',keywords:'商品名称、核销总额、核销时间【请按照关键字顺序设置】',enabled:true,id:'fxHsm6xEagSUr'},
+      {title:'预约成功通知',keywords:'预约项目、预约时间、电话、地址【请按照关键字顺序设置】',enabled:true,id:'Tj7yyL7s_WwD'},
+      {title:'咨询回复通知',keywords:'回复者、回复内容、回复时间【请按照关键字顺序设置】',enabled:true,id:'JgRsiJikE-e1ou'},
+      {title:'优惠券过期提醒',keywords:'温馨提示、券名称、过期数量【请按照关键字顺序设置】',enabled:false,id:''},
+      {title:'账户余额变动提醒',keywords:'账户类型、变动金额、变动原因、账户余额、时间【请按照关键字顺序设置】',enabled:false,id:''}
+    ];
+
+    function initWechatMiniProgram(){
+      switchWechatTab('publish');
+      renderWechatPaths();
+      renderWechatSubs();
+    }
+
+    function switchWechatTab(tab){
+      document.querySelectorAll('#wechatMiniTabs .tab-item').forEach(el=>el.classList.remove('active'));
+      document.querySelectorAll('#wechatMiniTabs .tab-item[data-tab="'+tab+'"]').forEach(el=>el.classList.add('active'));
+      document.querySelectorAll('#wechatMiniProgramPanel .tab-pane').forEach(el=>el.classList.remove('active'));
+      document.getElementById('wechatTab-'+tab).classList.add('active');
+    }
+
+    function toggleCertSwitch(on){
+      const seg=document.getElementById('certSwitch');
+      Array.from(seg.children).forEach((el,i)=>{
+        el.classList.toggle('active', (on && i===0) || (!on && i===1));
+      });
+    }
+
+    function renderWechatPaths(){
+      const kw=(document.getElementById('pathSearch')?.value||'').trim().toLowerCase();
+      const list=kw?WECHAT_PATHS.filter(p=>p.name.toLowerCase().includes(kw)||p.link.toLowerCase().includes(kw)):WECHAT_PATHS;
+      const tbody=document.querySelector('#wechatPathTable tbody');
+      tbody.innerHTML=list.map(p=>`<tr><td>${escapeHtml(p.name)}</td><td>${escapeHtml(p.tpl)}</td><td>${escapeHtml(p.link)}</td><td><a href="#" class="link" onclick="copyText('${p.link.replace(/'/g,'\\\'')}',event)">复制链接</a></td></tr>`).join('');
+    }
+
+    function renderWechatSubs(){
+      const tbody=document.querySelector('#wechatSubTable tbody');
+      tbody.innerHTML=WECHAT_SUBS.map((s,i)=>`<tr>
+        <td>${escapeHtml(s.title)}</td>
+        <td>${escapeHtml(s.keywords)}</td>
+        <td><label class="switch"><input type="checkbox" ${s.enabled?'checked':''} onchange="WECHAT_SUBS[${i}].enabled=this.checked"><span class="switch-slider"></span></label></td>
+        <td><input type="text" class="input sm" value="${escapeHtml(s.id)}" onchange="WECHAT_SUBS[${i}].id=this.value" placeholder="模板ID"></td>
+        <td><a href="#" class="link" onclick="toast('一键配置: ${escapeHtml(s.title)}');return false;">一键配置</a></td>
+      </tr>`).join('');
+    }
+
+    function batchConfigSubs(){toast('正在批量配置订阅消息模板...');}
+    function saveWechatPublish(){toast('工具发布已保存');}
+    function saveWechatBasic(){toast('基础设置已保存');}
+    function saveWechatPay(){toast('支付配置已保存');}
+    function saveWechatCert(){toast('退款证书已保存');}
+    function saveWechatSubs(){toast('订阅消息已保存');}
+
+    function copyText(text,event){
+      event&&event.preventDefault();
+      navigator.clipboard?.writeText(text).then(()=>toast('已复制')).catch(()=>toast('复制失败'));
     }
 
     /* ===== 会员管理 ===== */
