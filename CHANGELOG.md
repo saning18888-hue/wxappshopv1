@@ -1,3 +1,5 @@
+### v0.1.65 (2026-08-22) ui: redesign overview dashboard to match screenshot (5 metrics, tabs, table, chart)
+
 # 更新日志 CHANGELOG
 
 > **本文件是仓库唯一的版本更新记录源，最新版本在最上方。**
@@ -11,6 +13,7 @@
 
 ---
 
+### v0.1.65 (2026-08-22) ui: redesign overview dashboard to match screenshot
 ### v0.1.63 · 2026-08-22 · 后台内页宽度统一：统一撑满内容区
 
 **范围**：`server/public/admin.html`、`CHANGELOG.md`。
