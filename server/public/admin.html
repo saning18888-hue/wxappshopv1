@@ -48,6 +48,12 @@
     .form-input::placeholder{color:#adb3bc}
     .form-select{cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
     .form-textarea{min-height:80px;resize:vertical;font-family:inherit}
+    /* 统一 .input 原生输入框样式，避免不同面板里出现丑陋默认框 */
+    .input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:border-color .12s,box-shadow .12s,background .12s;font-size:13px;background:#f7f8fa;color:var(--text);box-sizing:border-box}
+    .input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .input::placeholder{color:#adb3bc}
+    .input.sm{padding:7px 10px;font-size:12px;height:32px}
+    .input.lg{padding:12px 14px;font-size:14px}
     /* .field 内的 select/textarea 也统一 */
     .field select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;font-size:13px;background:#f7f8fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;color:var(--text);cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:32px;transition:border-color .12s,box-shadow .12s,background .12s}
     .field select:focus{border-color:var(--primary);background-color:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
@@ -5108,6 +5114,11 @@
     function escapeHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
     function getRadioValue(name){const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:'';}
     function setRadioValue(name,value){document.querySelectorAll(`input[name="${name}"]`).forEach(el=>el.checked=(el.value===value));}
+    function resetContentScroll(){
+      const content=document.querySelector('.content');
+      if(content) content.scrollTop=0;
+      window.scrollTo(0,0);
+    }
 
     /* 菜单配置 */
     const ICONS={
@@ -5476,7 +5487,7 @@
       if(panelId==='miniappPanel') loadMiniApps(1);
       if(panelId==='memberGroupPanel') loadMemberGroups();
       if(panelId==='pluginsPanel') renderPlugins(state.second);
-      window.scrollTo(0,0);
+      resetContentScroll();
     }
 
     /* ===== 插件中心 ===== */
@@ -5510,10 +5521,13 @@
     function onPluginClick(name,locked,target){
       if(locked){toast('该插件暂未开放，敬请期待');return;}
       if(target){
+        const content=document.querySelector('.content');
+        const panel=document.getElementById(target);
         document.querySelectorAll('.panel').forEach(p=>p.classList.add('hidden'));
-        document.getElementById(target).classList.remove('hidden');
+        if(panel && !content.contains(panel)) content.appendChild(panel);
+        panel.classList.remove('hidden');
         if(target==='wechatMiniProgramPanel') initWechatMiniProgram();
-        window.scrollTo(0,0);
+        resetContentScroll();
         return;
       }
       toast(`已选择：${name}`);
@@ -5522,7 +5536,7 @@
     function backToPlugins(){
       document.getElementById('wechatMiniProgramPanel').classList.add('hidden');
       document.getElementById('pluginsPanel').classList.remove('hidden');
-      window.scrollTo(0,0);
+      resetContentScroll();
     }
 
     /* ===== 微信小程序配置 ===== */
@@ -5662,7 +5676,7 @@
         <td>${escapeHtml(s.title)}</td>
         <td>${escapeHtml(s.keywords)}</td>
         <td><label class="switch"><input type="checkbox" ${s.enabled?'checked':''} onchange="WECHAT_SUBS[${i}].enabled=this.checked"><span class="switch-slider"></span></label></td>
-        <td><input type="text" class="input sm" value="${escapeHtml(s.id)}" onchange="WECHAT_SUBS[${i}].id=this.value" placeholder="模板ID"></td>
+        <td><input type="text" class="input sm" value="${escapeHtml(s.id)}" onchange="WECHAT_SUBS[${i}].id=this.value"></td>
         <td><a href="#" class="link" onclick="toast('一键配置: ${escapeHtml(s.title)}');return false;">一键配置</a></td>
       </tr>`).join('');
     }
