@@ -155,37 +155,33 @@
     .badge.red{background:#fff1f0;color:#ff4d4f}
 
     /* Data stats panels */
-    .date-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:22px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .date-filter .chip{padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);background:transparent;border:1px solid transparent;cursor:pointer;transition:all .12s}
-    .date-filter .chip:hover{color:var(--text);background:#f2f3f5}
-    .date-filter .chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-    .date-filter input[type=date]{padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--surface)}
+    .date-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .date-filter .chip{padding:7px 14px;border-radius:6px;font-size:13px;color:var(--text-secondary);background:#f2f3f5;border:1px solid transparent;cursor:pointer;transition:all .12s}
+    .date-filter .chip:hover{background:#e8eaed}
+    .date-filter .chip.active{background:var(--primary);color:#fff}
+    .date-filter input[type=date]{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:#f7f8fa}
     .date-filter .note{font-size:12px;color:var(--text-muted);margin-left:auto}
 
-    .metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:22px}
-    .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;display:flex;align-items:flex-start;gap:14px;transition:all .15s}
-    .metric-card:hover{border-color:var(--primary-200);box-shadow:var(--shadow-md)}
-    .metric-card::before{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent,#5e6ad2)}
-    .metric-card .icon{flex:none;width:42px;height:42px;border-radius:10px;background:#f2f3f5;display:flex;align-items:center;justify-content:center;color:var(--accent,#5e6ad2)}
-    .metric-card .icon svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.8}
-    .metric-card .body{flex:1;min-width:0}
-    .metric-card .label{font-size:12px;color:var(--text-secondary);margin-bottom:5px;font-weight:600}
-    .metric-card .value{font-size:23px;font-weight:700;color:var(--text);letter-spacing:-.5px;font-feature-settings:'cv01','tnum'}
-    .metric-card.pink{--accent:#f062d8}
-    .metric-card.purple{--accent:#7c6cf2}
-    .metric-card.blue{--accent:#409eff}
-    .metric-card.cyan{--accent:#26c6da}
-    .metric-card.orange{--accent:#ffb74d}
-    .metric-card.green{--accent:#66bb6a}
-    .metric-card.red{--accent:#ef5350}
-    .metric-card.teal{--accent:#4db6ac}
+    .metric-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+    .metric-card{border-radius:var(--radius);padding:18px 18px 16px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:transform .15s}
+    .metric-card:hover{transform:translateY(-2px)}
+    .metric-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 60%);pointer-events:none}
+    .metric-card .icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+    .metric-card .icon svg{width:20px;height:20px;stroke:#fff;stroke-width:2}
+    .metric-card .label{font-size:12px;opacity:.92;margin-bottom:6px;font-weight:500}
+    .metric-card .value{font-size:26px;font-weight:700;letter-spacing:-.6px;font-feature-settings:'cv01','tnum'}
+    .metric-card.pink{background:linear-gradient(135deg,#f062d8 0%,#d14fd1 100%)}
+    .metric-card.purple{background:linear-gradient(135deg,#7c6cf2 0%,#6155d9 100%)}
+    .metric-card.blue{background:linear-gradient(135deg,#409eff 0%,#2b7de1 100%)}
+    .metric-card.cyan{background:linear-gradient(135deg,#26c6da 0%,#1aa3b5 100%)}
+    .metric-card.orange{background:linear-gradient(135deg,#ffb74d 0%,#f59e28 100%)}
+    .metric-card.green{background:linear-gradient(135deg,#66bb6a 0%,#43a047 100%)}
+    .metric-card.red{background:linear-gradient(135deg,#ef5350 0%,#d32f2f 100%)}
+    .metric-card.teal{background:linear-gradient(135deg,#4db6ac 0%,#00897b 100%)}
 
     .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px 14px;box-shadow:var(--shadow);margin-bottom:16px}
-    .chart-card .chart-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-    .chart-card h3{font-size:15px;font-weight:650;color:var(--text);margin:0}
-    .chart-card .chart-types{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    .chart-card .chart-types label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;user-select:none}
-    .chart-card .chart-types input[type=checkbox]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer}
+    .chart-card h3{font-size:14px;font-weight:650;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .chart-card h3::before{content:'';width:4px;height:14px;border-radius:2px;background:var(--primary)}
     .chart-wrap{position:relative;height:300px}
 
     .funnel-wrap{display:flex;flex-direction:column;align-items:center;padding:20px 0}
@@ -5033,10 +5029,7 @@
     </div>
     <div class="metric-grid" id="overviewMetrics"></div>
     <div class="chart-card">
-      <div class="chart-header">
-        <h3>趋势图</h3>
-        <div class="chart-types" id="overviewChartTypes"></div>
-      </div>
+      <h3>趋势图</h3>
       <div class="chart-wrap"><canvas id="overviewChart"></canvas></div>
     </div>
   </div>
@@ -6423,10 +6416,8 @@
     function metricCard(label,value,icon,color){
       return `<div class="metric-card ${color}">
         <div class="icon">${icon}</div>
-        <div class="body">
-          <div class="label">${label}</div>
-          <div class="value">${value}</div>
-        </div>
+        <div class="label">${label}</div>
+        <div class="value">${value}</div>
       </div>`;
     }
     function destroyChart(key){if(statsCharts[key]){statsCharts[key].destroy();delete statsCharts[key];}}
@@ -6463,25 +6454,7 @@
       ];
       destroyChart('overview');
       const ctx=document.getElementById('overviewChart').getContext('2d');
-      statsCharts.overview=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{display:false}},y:{type:'linear',display:true,position:'left'},y1:{type:'linear',display:false,position:'right',grid:{display:false}}},plugins:{legend:{display:false}}}});
-      const typesWrap=document.getElementById('overviewChartTypes');
-      if(typesWrap){
-        typesWrap.innerHTML=ds.map((s,i)=>`
-          <label>
-            <input type="checkbox" value="${i}" checked>
-            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.borderColor};margin-right:4px;"></span>
-            ${s.label}
-          </label>`).join('');
-        typesWrap.querySelectorAll('input[type=checkbox]').forEach(cb=>{
-          cb.onchange=e=>{
-            const idx=Number(e.target.value);
-            if(statsCharts.overview){
-              statsCharts.overview.getDatasetMeta(idx).hidden=!e.target.checked;
-              statsCharts.overview.update();
-            }
-          };
-        });
-      }
+      statsCharts.overview=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{display:false}},y:{type:'linear',display:true,position:'left'},y1:{type:'linear',display:false,position:'right',grid:{display:false}}},plugins:{legend:{position:'top'}}}});
     }
 
     /* 交易分析 */
