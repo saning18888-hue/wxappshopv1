@@ -210,3 +210,10 @@
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
 }
+
+/* 广告位（我方广告位） */
+.diy-bannerad{margin:16rpx;}
+.diy-bannerad-title{font-size:31rpx;font-weight:600;color:#111827;padding:8rpx 6rpx 12rpx;letter-spacing:-0.4rpx;}
+.diy-bannerad-grid{display:flex;flex-wrap:wrap;}
+.diy-bannerad-item{box-sizing:border-box;padding:4rpx;}
+.diy-bannerad-img{width:100%;display:block;border-radius:14rpx;background:#f2f3f5;}

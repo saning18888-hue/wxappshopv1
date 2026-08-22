@@ -66,5 +66,17 @@
       </view>
     </view>
 
+    <!-- 广告位（我方广告位） -->
+    <view wx:if="{{c.type === 'banner_ad'}}" class="diy-bannerad">
+      <view class="diy-bannerad-title" wx:if="{{c.props.title}}">{{c.props.title}}</view>
+      <view class="diy-bannerad-grid">
+        <view class="diy-bannerad-item" wx:for="{{c.props.banners}}" wx:for-item="ad" wx:for-index="adi" wx:key="adi"
+          style="width:{{100 / (c.props.columns || 1)}}%"
+          data-link="{{ad.link}}" bindtap="onTapLink">
+          <image class="diy-bannerad-img" src="{{ad.image}}" mode="widthFix" />
+        </view>
+      </view>
+    </view>
+
   </block>
 </view>

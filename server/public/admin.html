@@ -770,6 +770,15 @@
     .mod-sub{font-size:12px;color:var(--text-secondary);margin-top:2px}
     .mod-actions{flex:0 0 auto;display:flex;gap:8px;align-items:center}
 
+    /* 广告位 · 编辑弹窗内的广告图 */
+    .ba-banner{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px}
+    .ba-thumb{position:relative;width:120px;height:80px;flex:0 0 auto;border-radius:8px;overflow:hidden;background:#f2f3f5;display:flex;align-items:center;justify-content:center}
+    .ba-thumb img{width:100%;height:100%;object-fit:cover}
+    .ba-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#b9bcc4;font-size:12px;gap:4px}
+    .ba-upload-overlay{position:absolute;inset:0;cursor:pointer}
+    .ba-upload-overlay input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .ba-fields{flex:1;min-width:0}
+
     .picker-filter{display:flex;gap:16px;align-items:flex-end;margin-bottom:14px}
     .picker-filter .field{flex:1;margin-bottom:0}
     .picker-filter .field select,.picker-filter .field input,.picker-filter .field .btn{height:36px;box-sizing:border-box}
@@ -4760,6 +4769,26 @@
     </div>
   </div>
 
+  <!-- 广告位 · 编辑弹窗 -->
+  <div id="bannerAdModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>编辑广告位</h3><span class="close" onclick="closeBannerAdEditor()">&times;</span></div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="field"><label>广告位名称（仅后端可见）</label><input id="baEditName" placeholder="如：首页顶部广告位"></div>
+          <div class="field"><label>展示标题（首页展示，可空）</label><input id="baEditTitle" placeholder="如：限时特惠"></div>
+        </div>
+        <p class="muted" style="margin:6px 0 12px">添加一张或多张广告图，每张可单独设置跳转；首页按顺序排列展示。</p>
+        <div id="baEditBanners" class="ba-banner-wrap"></div>
+        <button class="btn outline sm" style="margin-top:12px" onclick="addBannerAdBanner()">+ 添加广告图</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn gray" onclick="closeBannerAdEditor()">取消</button>
+        <button class="btn" onclick="saveBannerAdEdit();closeBannerAdEditor()">确定</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== 文章管理 ===================== -->
   <div id="articlePanel" class="panel hidden">
     <div class="card">
@@ -5345,6 +5374,7 @@
       paperclip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
       share:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51 15.42 17.49"/><path d="M15.41 6.51 8.59 10.49"/></svg>',
       megaphone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6c0-1.3.8-2.4 2-2.8"/><path d="M16 8.5v6.8"/></svg>',
+      bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>',
       users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
       briefcase:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
       tool:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
@@ -5363,6 +5393,7 @@
           {key:'goods',label:'精选推荐',icon:ICONS.package,panel:'sectionPanel'},
           {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'},
           {key:'notice',label:'通知公告',icon:ICONS.bell,panel:'sectionPanel'},
+          {key:'bannerad',label:'广告位',icon:ICONS.megaphone,panel:'sectionPanel'},
           {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
@@ -5567,19 +5598,19 @@
     let state={first:'overview',second:'dashboard',section:'banner',navEditIdx:-1};
     let expanded=new Set();
 
-    function findChild(parent,key){
+    function findMenuChain(parent,key){
       for(const c of parent.children){
-        if(c.key===key) return c;
-        if(c.children){ for(const s of c.children){ if(s.key===key) return s; } }
+        if(c.key===key) return [c];
+        if(c.children){ for(const s of c.children){ if(s.key===key) return [c,s]; } }
       }
-      return parent.children[0];
+      return [parent.children[0]];
     }
 
     function renderSidebar(){
       const l1=document.getElementById('l1Nav');
       l1.innerHTML=MENU.map(m=>{
         const active=m.key===state.first?'active':'';
-        return `<div class="l1-item ${active}" onclick="switchMenu('${m.key}')">${m.icon}<span>${m.label}</span></div>`;
+        return `<div class="l1-item ${active}" onclick="switchMenu('${m.key}')">${m.icon||''}<span>${m.label}</span></div>`;
       }).join('');
 
       const parent=MENU.find(m=>m.key===state.first)||MENU[0];
@@ -5596,7 +5627,7 @@
         const click=`switchMenu('${parent.key}','${c.key}')`;
         let html=`<div class="l2-item ${activeClass} ${expandClass}" onclick="${click}">${c.icon||''}<span class="txt">${c.label}</span>${tag}${arrow}</div>`;
         if(hasChildren){
-          const openClass=expanded.has(c.key)||isActive?'open':'';
+          const openClass=expanded.has(c.key)?'open':'';
           html+=`<div class="l2-sub ${openClass}">${c.children.map(s=>{
             const subActive=s.key===state.second?'active':'';
             return `<div class="l2-sub-item ${subActive}" onclick="switchMenu('${parent.key}','${s.key}')">${s.label}</div>`;
@@ -5617,7 +5648,8 @@
         const def=parent.children.find(c=>c.default)||parent.children[0];
         second=def.key;
       }
-      let node=findChild(parent,second);
+      const chain=findMenuChain(parent,second);
+      let node=chain[chain.length-1];
       // 分组项（含子菜单，如「设计装修」）：点击切换折叠/展开；已展开则收起且不切换内容
       if(node.children && node.children.length){
         if(expanded.has(second)){
@@ -5627,12 +5659,8 @@
         }
         expanded.add(second);
       }
-      const path=[];
-      while(node.children && node.children.length){
-        path.push(node.key);
-        node=node.children.find(c=>c.panel)||node.children[0];
-      }
-      path.forEach(k=>expanded.add(k));
+      // 把当前项及其父级都展开，确保子菜单可见
+      chain.forEach(n=>expanded.add(n.key));
       state={first,second:node.key};
       if(node.panel==='sectionPanel') state.section=node.key;
       renderSidebar();
@@ -8348,8 +8376,8 @@
     let designConfig={page:'home',components:[]};
     let catOptionsCache=[];
 
-    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav',notice:'notice'};
-    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航',notice:'通知公告'};
+    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav',notice:'notice',bannerad:'banner_ad'};
+    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航',notice:'通知公告',bannerad:'广告位'};
     function defaultRecommendModules(){
       const arr=[];
       for(let i=1;i<=4;i++){
@@ -8421,7 +8449,7 @@
         }
       });
     }
-    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers,notice:ICONS.bell};
+    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers,notice:ICONS.bell,bannerad:ICONS.megaphone};
     function renderLayout(){
       ensureHomeSections();
       const wrap=document.getElementById('layoutList'); if(!wrap)return;
@@ -8486,7 +8514,7 @@
     }
     function renderSectionForm(){
       const sec=state.section;
-      const comp=getSection(sec);
+      const comp=(sec==='bannerad')?(getBaComps().length?{props:{}}:null):getSection(sec);
       document.getElementById('secTitle').textContent=SECTION_TITLE[sec]+' · 首页模块';
       const form=document.getElementById('secForm');
       const hint=document.getElementById('secHint');
@@ -8498,6 +8526,7 @@
       else if(sec==='goods'){ form.innerHTML=renderGoodsForm(); renderGoodsMods(); }
       else if(sec==='cat') form.innerHTML=renderCatForm();
       else if(sec==='notice') form.innerHTML=renderNoticeForm();
+      else if(sec==='bannerad'){ form.innerHTML=renderBannerAdForm(); renderBannerAdMods(); }
     }
     function linkOpts(link){
       link=link||{type:'goods',id:0};
@@ -8659,6 +8688,121 @@
       h+=`</div>`;
       return h;
     }
+    // ============ 广告位（banner_ad） ============
+    function getBaComps(){ return designConfig.components.filter(c=>c.type==='banner_ad'); }
+    function renderBannerAdForm(){
+      return `<p class="muted" style="margin:0 0 14px">在下方添加「广告位」（我方广告位）。每个广告位可设置名称（仅后端可见，方便识别）与展示标题，并添加多张广告图；首页按顺序排列展示，可拖动排序、可单独下架。</p>
+      <div id="bannerAdMods" class="mod-list"></div>
+      <button class="btn outline" style="margin-top:14px" onclick="addBannerAdSlot()">+ 添加广告位</button>`;
+    }
+    function renderBannerAdMods(){
+      const wrap=document.getElementById('bannerAdMods'); if(!wrap)return;
+      const comps=getBaComps();
+      if(!comps.length){ wrap.innerHTML=`<div class="empty">暂无广告位，点下方「+ 添加广告位」创建。</div>`; return; }
+      wrap.innerHTML=comps.map((c)=>{
+        const gi=designConfig.components.indexOf(c);
+        const bs=(c.props.banners||[]);
+        const hidden=c.props.hidden;
+        return `<div class="mod-row" draggable="true" data-idx="${gi}" ondragstart="baDragStart(event,${gi})" ondragover="baDragOver(event,this)" ondrop="baDrop(event,${gi})">
+          <div class="mod-grip">⋮⋮</div>
+          <div class="mod-info">
+            <div class="mod-name">${escapeHtml(c.props.name||'未命名广告位')}</div>
+            <div class="mod-sub">${bs.length} 张广告图 · ${hidden?'已下架':'在首页'}</div>
+          </div>
+          <div class="mod-actions">
+            <button class="btn sm outline" onclick="openBannerAdEditor(${gi})">编辑</button>
+            <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleBaComp(${gi},this.checked)"><span class="slider"></span></label>
+            <button class="btn sm gray" onclick="delBannerAdSlot(${gi})">删除</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    function toggleBaComp(idx,on){const c=designConfig.components[idx];if(c)c.props.hidden=!on;renderBannerAdMods();}
+    function addBannerAdSlot(){
+      const comps=getBaComps();
+      const sort=(comps.length?Math.max.apply(null,comps.map(c=>c.sort||0)):0)+1;
+      designConfig.components.push({type:'banner_ad',sort:sort,props:{name:'广告位'+(comps.length+1),title:'',columns:1,banners:[]}});
+      renderBannerAdMods();
+    }
+    function delBannerAdSlot(idx){
+      const c=designConfig.components[idx]; if(!c)return;
+      if(!confirm(`确定删除广告位「${c.props.name||''}」？`))return;
+      designConfig.components.splice(idx,1);
+      renderBannerAdMods();
+    }
+    let baDragIdx=null;
+    function baDragStart(e,i){baDragIdx=i;e.dataTransfer.effectAllowed='move';}
+    function baDragOver(e,el){e.preventDefault();el.classList.add('drag-over');}
+    function baDrop(e,i){
+      e.preventDefault();
+      document.querySelectorAll('#bannerAdMods .mod-row').forEach(r=>r.classList.remove('drag-over'));
+      if(baDragIdx===null||baDragIdx===i)return;
+      const arr=designConfig.components;
+      const dc=arr[baDragIdx]; if(!dc)return;
+      arr.splice(baDragIdx,1); arr.splice(i,0,dc);
+      baDragIdx=null; renderBannerAdMods();
+    }
+    let baEditIdx=null;
+    function openBannerAdEditor(idx){
+      baEditIdx=idx;
+      const c=designConfig.components[idx]; if(!c)return;
+      document.getElementById('baEditName').value=c.props.name||'';
+      document.getElementById('baEditTitle').value=c.props.title||'';
+      renderBannerAdBanners();
+      document.getElementById('bannerAdModal').classList.add('show');
+    }
+    function closeBannerAdEditor(){ document.getElementById('bannerAdModal').classList.remove('show'); }
+    function saveBannerAdEdit(){
+      const c=designConfig.components[baEditIdx]; if(!c)return;
+      c.props.name=document.getElementById('baEditName').value.trim()||'未命名广告位';
+      c.props.title=document.getElementById('baEditTitle').value.trim();
+      renderBannerAdMods();
+    }
+    function renderBannerAdBanners(){
+      const c=designConfig.components[baEditIdx]; if(!c)return;
+      const wrap=document.getElementById('baEditBanners'); if(!wrap)return;
+      const bs=(c.props.banners||(c.props.banners=[]));
+      if(!bs.length){ wrap.innerHTML=`<div class="empty" style="padding:24px">暂无广告图，点击下方「+ 添加广告图」。</div>`; return; }
+      wrap.innerHTML=bs.map((b,i)=>{
+        b.link=b.link||{type:'goods',id:0};
+        const preview=b.image
+          ? `<img src="${b.image}" onerror="this.style.display='none'">`
+          : `<div class="ba-placeholder"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>广告图</span></div>`;
+        return `<div class="ba-banner">
+          <div class="ba-thumb">${preview}
+            <label class="ba-upload-overlay"><input type="file" accept="image/*" onchange="uploadBannerAdMedia(this,${i})"></label>
+          </div>
+          <div class="ba-fields">
+            <input class="lin-input" value="${b.image||''}" placeholder="图片地址（选填，留空用上方上传图）" oninput="setBaBanner(${i},'image',this.value)">
+            <div class="lin-form-row" style="margin-top:8px">
+              <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setBaBannerLink(${i},'type',this.value)">${linkOpts(b.link)}</select></div>
+              <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(b.link&&b.link.id!=null)?b.link.id:0}" oninput="setBaBannerLink(${i},'id',this.value)"></div>
+            </div>
+          </div>
+          <button class="btn sm gray" onclick="delBaBanner(${i})">删除</button>
+        </div>`;
+      }).join('');
+    }
+    function setBaBanner(i,field,val){const c=designConfig.components[baEditIdx];if(c)c.props.banners[i][field]=val;}
+    function setBaBannerLink(i,field,val){const c=designConfig.components[baEditIdx];if(!c)return;const b=c.props.banners[i];if(!b.link)b.link={type:'goods',id:0};b.link[field]=field==='id'?(parseInt(val)||0):val;}
+    function addBannerAdBanner(){const c=designConfig.components[baEditIdx];if(!c)return;(c.props.banners=c.props.banners||[]).push({image:'',link:{type:'goods',id:0}});renderBannerAdBanners();}
+    function delBaBanner(i){const c=designConfig.components[baEditIdx];if(!c)return;c.props.banners.splice(i,1);renderBannerAdBanners();}
+    async function uploadBannerAdMedia(el,i){
+      const file=el.files&&el.files[0]; if(!file)return;
+      const fd=new FormData();fd.append('file',file);
+      const url=`${BASE}/upload/banner_image`;
+      const parent=el.closest('.ba-banner'); if(parent)parent.style.opacity='0.6';
+      try{
+        const r=await fetch(url,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+        const d=await r.json();
+        if(d.code===0&&d.data&&d.data.url){
+          const c=designConfig.components[baEditIdx];
+          if(c)c.props.banners[i].image=d.data.url;
+        }else{ alert((d&&d.msg)||'上传失败'); }
+      }catch(e){ alert('上传出错：'+e); }
+      renderBannerAdBanners();
+    }
+
     function colorField(label,val,path){
       return `<label class="color-field">
         <span class="lin-label">${label}</span>

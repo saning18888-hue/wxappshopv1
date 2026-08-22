@@ -1,3 +1,4 @@
+### v0.1.67 (2026-08-22) feat: 广告位模块 + 设计装修折叠按钮修复
 ### v0.1.66 (2026-08-22) feat: 设计装修菜单（通知公告模块 + 折叠/高度修复）
 ### v0.1.65 (2026-08-22) ui: redesign overview dashboard to match screenshot (5 metrics, tabs, table, chart)
 
@@ -11,6 +12,20 @@
 > 3. 提交信息使用英文，或 UTF-8 无 BOM 文件 + `git commit -F`（**禁止 `git commit -m "中文"`**，Windows GBK 会双重编码成乱码，详见 README「提交规范」与 RELEASE.md「关键坑」）。
 > 4. 环境/换机说明见 `RELEASE.md`；本文件只记「改了什么」。
 > 5. 推送：记录写完并 commit 后，`git push origin master --tags`。
+
+---
+
+### v0.1.67 (2026-08-22) feat: 广告位（banner）模块 + 设计装修折叠按钮修复
+
+**范围**：`server/public/admin.html`、`miniprogram/components/diy-render/*`、`CHANGELOG.md`、`README.md`。
+
+**改动**：
+- 新增「广告位（banner）」模块：设计装修菜单新增「广告位」，可添加/编辑/删除/排序多个广告位，每个广告位可设置名称（便于后台识别）、图片、跳转链接。
+- 首页装修可像「精选推荐」一样调用广告位模块，自由插入到首页任意位置。
+- 修复设计装修分组（如「设计装修」本身）折叠按钮无效：子菜单展开状态改为只听从 `expanded` 集合，不再因子项被选中而被强制展开；点击子项自动展开父级路径。
+- 补充通知公告菜单缺失的 `bell` 图标，并给一级菜单图标加 `undefined` 兜底。
+
+**验证**：管理后台「设计装修 → 广告位」可正常增删改与排序；首页装修可调用广告位模块；设计装修分组折叠/展开按钮恢复正常。
 
 ---
 
