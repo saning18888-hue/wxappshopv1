@@ -5835,7 +5835,11 @@
         <td>${escapeHtml(a.expire)}</td>
         <td>${escapeHtml(a.authCode)}</td>
         <td>${escapeHtml(a.created)}</td>
-        <td><a href="#" class="link" onclick="toast('上传设置: ${escapeHtml(a.name)}');return false;">上传设置</a> <a href="#" class="link" onclick="toast('接口授权码: ${escapeHtml(a.name)}');return false;">接口授权码</a></td>
+        <td>
+          <a href="#" class="link" onclick="toast('上传设置: ${escapeHtml(a.name)}');return false;">上传设置</a>
+          <a href="#" class="link" onclick="toast('接口授权码: ${escapeHtml(a.name)}');return false;">接口授权码</a>
+          <a href="#" class="link danger" onclick="deletePlatformApp(${a.id},event)">删除</a>
+        </td>
       </tr>`).join('');
       const checkAll=document.getElementById('platformAppCheckAll');
       if(checkAll) checkAll.checked=PLATFORM_APPS.every(a=>a.checked);
@@ -5876,6 +5880,15 @@
     function togglePlatformAppField(id,field,value){
       const app=PLATFORM_APPS.find(a=>a.id===id);
       if(app){app[field]=value;}
+    }
+
+    function deletePlatformApp(id,event){
+      event&&event.preventDefault();
+      const app=PLATFORM_APPS.find(a=>a.id===id);
+      if(!app) return;
+      if(!confirm('确定删除应用「'+app.name+'」吗？此操作不可恢复。')) return;
+      const idx=PLATFORM_APPS.findIndex(a=>a.id===id);
+      if(idx>-1){PLATFORM_APPS.splice(idx,1);toast('已删除：'+app.name);renderPlatformApps();}
     }
 
     function batchEditUploadSettings(){toast('正在批量修改上传设置...');}
