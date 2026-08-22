@@ -104,7 +104,7 @@
     .l2-item .arrow{width:14px;height:14px;stroke-width:2;transition:transform .2s;margin-left:auto}
     .l2-item.expanded .arrow{transform:rotate(90deg)}
     .l2-sub{padding-left:46px;padding-right:18px;overflow:hidden;max-height:0;transition:max-height .2s ease}
-    .l2-sub.open{max-height:200px}
+    .l2-sub.open{max-height:1000px}
     .l2-sub-item{padding:7px 0;font-size:12px;color:var(--text-muted);cursor:pointer;transition:color .12s}
     .l2-sub-item:hover,.l2-sub-item.active{color:var(--primary)}
 
@@ -892,6 +892,23 @@
     .cat-form-row .seg-item{padding-left:12px;padding-right:12px;display:flex;align-items:center;justify-content:center}
     .cat-source-field{flex:0 0 220px}
     .cat-ids-field{margin-top:6px}
+
+    /* 通知公告表单（Linear 设计语言） */
+    .lin-textarea{width:100%;padding:10px 12px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px;outline:none;font-size:13px;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;line-height:1.6;min-height:64px;resize:vertical;transition:border-color .12s,background .12s,box-shadow .12s}
+    .lin-textarea:focus{background:#fff;border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .lin-textarea::placeholder{color:#adb3bc}
+    .notice-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+    .notice-toolbar-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+    .notice-toolbar .seg{flex-wrap:nowrap}
+    .notice-toolbar .seg-item{white-space:nowrap;flex-shrink:0;flex-basis:auto;flex-grow:0;padding-left:14px;padding-right:14px}
+    .notice-colors{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px}
+    .color-field{display:flex;flex-direction:column;gap:7px}
+    .color-swatch{position:relative;display:inline-flex;align-items:center;height:38px;border:1px solid var(--border);border-radius:8px;background:#f7f8fa;overflow:hidden;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+    .color-swatch:hover{border-color:#c9cde0}
+    .color-swatch:focus-within{border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+    .color-swatch input[type=color]{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;opacity:0;cursor:pointer}
+    .color-swatch::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:22px;border-radius:5px;background:var(--swatch,#fff);box-shadow:inset 0 0 0 1px rgba(0,0,0,.10)}
+    .color-swatch .hex{margin-left:40px;padding-right:12px;font-size:12px;color:var(--text-secondary);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;pointer-events:none;letter-spacing:.3px}
     .lin-multi-select{width:100%;min-height:140px;padding:8px 10px;background:#f7f8fa;border:1px solid #e6e8eb;border-radius:8px;outline:none;font-size:13px;color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;transition:border-color .12s,background .12s,box-shadow .12s}
     .lin-multi-select:focus{background:#fff;border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
     .lin-multi-select option{padding:7px 6px;border-radius:5px;margin-bottom:1px}
@@ -3666,7 +3683,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.27 6.96 12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>
               <h3>模块建设中</h3>
               <p>该功能尚未开放，敬请期待后续版本。</p>
-              <p class="muted">当前已接入：概况、店铺（我的模板）、商品、订单</p>
+              <p class="muted">当前已接入：概况、店铺（设计装修）、商品、订单</p>
             </div>
           </div>
         </div>
@@ -5340,11 +5357,12 @@
         {key:'dashboard',label:'运营概览',icon:ICONS.pieChart,panel:'overviewPanel',default:true}
       ]},
       {key:'shop',label:'店铺',icon:ICONS.shop,children:[
-        {key:'templates',label:'我的模板',icon:ICONS.layout,children:[
+        {key:'templates',label:'设计装修',icon:ICONS.layout,children:[
           {key:'banner',label:'轮播设置',icon:ICONS.image,panel:'sectionPanel',default:true},
           {key:'nav',label:'魔方导航',icon:ICONS.grid,panel:'sectionPanel'},
           {key:'goods',label:'精选推荐',icon:ICONS.package,panel:'sectionPanel'},
           {key:'cat',label:'分类导航',icon:ICONS.layers,panel:'sectionPanel'},
+          {key:'notice',label:'通知公告',icon:ICONS.bell,panel:'sectionPanel'},
           {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'}
         ]},
@@ -5600,6 +5618,15 @@
         second=def.key;
       }
       let node=findChild(parent,second);
+      // 分组项（含子菜单，如「设计装修」）：点击切换折叠/展开；已展开则收起且不切换内容
+      if(node.children && node.children.length){
+        if(expanded.has(second)){
+          expanded.delete(second);
+          renderSidebar();
+          return;
+        }
+        expanded.add(second);
+      }
       const path=[];
       while(node.children && node.children.length){
         path.push(node.key);
@@ -8321,8 +8348,8 @@
     let designConfig={page:'home',components:[]};
     let catOptionsCache=[];
 
-    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav'};
-    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航'};
+    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav',notice:'notice'};
+    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航',notice:'通知公告'};
     function defaultRecommendModules(){
       const arr=[];
       for(let i=1;i<=4;i++){
@@ -8341,7 +8368,8 @@
         {icon:'https://placehold.co/96x96/3867FF/fff?text=拼',text:'拼团',link:{type:'activity',id:3}}
       ]}},
       goods:{type:'goods_group',props:{title:'精选推荐',columns:2,modules:[{id:1,name:'精选推荐',title:'精选推荐',goods:[]}]}},
-      cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}}
+      cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}},
+      notice:{type:'notice',props:{style:'fixed',bg:'#F4F5FF',color:'#5e6ad2',items:[{text:'欢迎光临本商城，新用户注册即送专属优惠券！',link:{type:'none',id:0}}]}}
     };
 
     function getSection(sec){return designConfig.components.find(c=>c.type===SECTION_TYPE[sec])||null;}
@@ -8369,7 +8397,11 @@
     async function loadDesign(){
       const d=await fetchA(`${BASE}/design/home`);
       if(d.code!==0){toast(d.msg);return false;}
-      designConfig=JSON.parse(JSON.stringify(d.data.published_config||{page:'home',components:[]}));
+      const dd=d.data||{};
+      // 优先加载「最新草稿」：保存草稿后再次进入装修页仍能看到上次编辑（含轮播图片），
+      // 否则仅读已发布配置会导致「保存了没用」的错觉。无草稿时退回已发布配置。
+      const src=(dd.draft&&dd.draft.config)?dd.draft.config:(dd.published_config||{page:'home',components:[]});
+      designConfig=JSON.parse(JSON.stringify(src));
       normalizeHomeComponents();
       await ensureCats();
       return true;
@@ -8383,13 +8415,13 @@
       renderLayout();
     }
     function ensureHomeSections(){
-      ['banner','nav','goods','cat'].forEach(sec=>{
+      ['banner','nav','goods','cat','notice'].forEach(sec=>{
         if(!getSection(sec)){
           designConfig.components.push(JSON.parse(JSON.stringify(SECTION_DEFS[sec])));
         }
       });
     }
-    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers};
+    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers,notice:ICONS.bell};
     function renderLayout(){
       ensureHomeSections();
       const wrap=document.getElementById('layoutList'); if(!wrap)return;
@@ -8465,10 +8497,11 @@
       else if(sec==='nav') form.innerHTML=renderNavForm();
       else if(sec==='goods'){ form.innerHTML=renderGoodsForm(); renderGoodsMods(); }
       else if(sec==='cat') form.innerHTML=renderCatForm();
+      else if(sec==='notice') form.innerHTML=renderNoticeForm();
     }
     function linkOpts(link){
       link=link||{type:'goods',id:0};
-      return ['goods','category','activity'].map(t=>`<option value="${t}" ${link.type===t?'selected':''}>${t==='goods'?'商品':t==='category'?'分类':'活动'}</option>`).join('');
+      return ['none','goods','category','activity'].map(t=>`<option value="${t}" ${link.type===t?'selected':''}>${t==='none'?'不跳转':t==='goods'?'商品':t==='category'?'分类':'活动'}</option>`).join('');
     }
     function setItemLink(sec,i,field,val){
       const c=upsertSection(sec);
@@ -8574,6 +8607,70 @@
       }catch(e){alert('上传出错：'+e);}
       renderSectionForm();
     }
+    function renderNoticeForm(){
+      const c=upsertSection('notice');
+      const p=c.props;
+      p.style=p.style||'fixed';
+      p.items=p.items||(p.items=[]);
+      const STYLES=[['fixed','固定'],['marquee','从右往左划入'],['vertical','自上而下滚动']];
+      const DESC={fixed:'静态展示全部公告，不滚动',marquee:'单条跑马灯，从右向左循环滚动',vertical:'逐条纵向滚动轮播'};
+      let h=`<div class="notice-toolbar">
+        <div class="notice-toolbar-left">
+          <span class="cfg-label">滚动样式</span>
+          <div class="seg">
+            ${STYLES.map(([v,t])=>`<button type="button" class="seg-item ${p.style===v?'active':''}" onclick="setNoticeStyle('${v}')">${t}</button>`).join('')}
+          </div>
+        </div>
+        <button class="lin-btn lin-btn-primary" onclick="addNoticeItem()">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+          添加公告
+        </button>
+      </div>`;
+      h+=`<div class="notice-colors">
+        ${colorField('背景色', p.bg||'#F4F5FF', "upsertSection('notice').props.bg")}
+        ${colorField('文字色', p.color||'#5e6ad2', "upsertSection('notice').props.color")}
+      </div>`;
+      h+=`<p class="muted" style="margin:0 0 18px">当前样式：${DESC[p.style]||''}；可添加多条公告，保存草稿并发布后在小程序首页「通知公告」模块展示。</p>`;
+      h+=`<div class="notice-list">`;
+      if(p.items.length===0){
+        h+=`<div class="empty" style="padding:48px 20px">
+          <div style="font-size:38px;margin-bottom:12px">📢</div>
+          <div style="color:var(--text);font-weight:560;margin-bottom:6px;font-size:15px">还没有公告</div>
+          <div>点击右上角「添加公告」发布第一条通知。</div>
+        </div>`;
+      }
+      p.items.forEach((it,i)=>{
+        it.link=it.link||{type:'none',id:0};
+        h+=`<div class="lin-card">
+          <div class="lin-card-head">
+            <div class="lin-card-title"><span class="lin-badge">${i+1}</span><span class="lin-type-pill">公告</span></div>
+            <button class="lin-del" title="删除" onclick="delNoticeItem(${i})"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+          </div>
+          <div class="lin-card-body" style="display:block">
+            <label class="lin-label">公告内容</label>
+            <textarea class="lin-textarea" rows="2" placeholder="请输入公告文字，例如：全场满 199 减 50，点击查看活动详情" oninput="upsertSection('notice').props.items[${i}].text=this.value">${escapeHtml(it.text||'')}</textarea>
+            <div class="lin-form-row" style="margin-top:14px">
+              <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setItemLink('notice',${i},'type',this.value)">${linkOpts(it.link)}</select></div>
+              <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(it.link&&it.link.id)||''}" oninput="setItemLink('notice',${i},'id',this.value)"></div>
+            </div>
+          </div>
+        </div>`;
+      });
+      h+=`</div>`;
+      return h;
+    }
+    function colorField(label,val,path){
+      return `<label class="color-field">
+        <span class="lin-label">${label}</span>
+        <span class="color-swatch" style="--swatch:${val}">
+          <input type="color" value="${val}" oninput="${path}=this.value;this.parentNode.style.setProperty('--swatch',this.value);this.nextElementSibling.textContent=this.value.toUpperCase()">
+          <span class="hex">${val.toUpperCase()}</span>
+        </span>
+      </label>`;
+    }
+    function setNoticeStyle(v){upsertSection('notice').props.style=v;renderSectionForm();}
+    function addNoticeItem(){upsertSection('notice').props.items.push({text:'',link:{type:'none',id:0}});renderSectionForm();}
+    function delNoticeItem(i){upsertSection('notice').props.items.splice(i,1);renderSectionForm();}
     function renderNavForm(){
       const c=upsertSection('nav');
       const items=c.props.items||[];

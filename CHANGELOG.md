@@ -1,3 +1,4 @@
+### v0.1.66 (2026-08-22) feat: 设计装修菜单（通知公告模块 + 折叠/高度修复）
 ### v0.1.65 (2026-08-22) ui: redesign overview dashboard to match screenshot (5 metrics, tabs, table, chart)
 
 # 更新日志 CHANGELOG
@@ -10,6 +11,22 @@
 > 3. 提交信息使用英文，或 UTF-8 无 BOM 文件 + `git commit -F`（**禁止 `git commit -m "中文"`**，Windows GBK 会双重编码成乱码，详见 README「提交规范」与 RELEASE.md「关键坑」）。
 > 4. 环境/换机说明见 `RELEASE.md`；本文件只记「改了什么」。
 > 5. 推送：记录写完并 commit 后，`git push origin master --tags`。
+
+---
+
+### v0.1.66 (2026-08-22) feat: 设计装修菜单 — 通知公告模块 + 折叠/高度修复
+
+**范围**：`server/public/admin.html`、`miniprogram/components/diy-render/*`、`miniprogram/utils/mock.js`、`CHANGELOG.md`、`README.md`。
+
+**改动**：
+- 店铺菜单「我的模板」重命名为「设计装修」。
+- 设计装修新增「通知公告」模块：可发布多条文字公告，样式支持「固定」「从右往左划入」「自上而下滚动」三种。
+- 修复二级子菜单高度被 `max-height:200px` 锁死、设计装修分组下「底部导航」等子项文字显示不全的问题（放宽至 1000px）。
+- 修复设计装修分组项折叠按钮无效的问题：点击分组项可切换展开/收起。
+- DIY 渲染组件（diy-render）补充通知公告等模块的前端渲染。
+- 数据修正：将库内旧的 `127.0.0.1:8080` 轮播图地址批量替换为 `127.0.0.1:8787`。
+
+**验证**：管理后台点击「设计装修」可正常展开/收起，全部子项文字完整显示；首页装修可添加并预览通知公告。
 
 ---
 

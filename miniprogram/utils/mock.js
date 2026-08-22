@@ -116,7 +116,7 @@ function specDesc(sku) {
 
 // 统一路由跳转（根据 link.type）
 function goLink(link) {
-  if (!link) return;
+  if (!link || link.type === 'none') return;
   if (link.type === 'goods') {
     wx.navigateTo({ url: '/pages/goods/detail/detail?id=' + link.id });
   } else if (link.type === 'category') {

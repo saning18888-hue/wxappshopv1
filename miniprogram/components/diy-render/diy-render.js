@@ -52,6 +52,18 @@ Component({
           const cols = (c.props && c.props.columns) || 4;
           return Object.assign({}, c, { catList, colWidth: 100 / cols + '%' });
         }
+        if (c.type === 'notice') {
+          const props = c.props || {};
+          const items = props.items || [];
+          return Object.assign({}, c, {
+            noticeStyle: props.style || 'fixed',
+            bg: props.bg || '#F4F5FF',
+            color: props.color || '#5e6ad2',
+            items,
+            marqueeText: items.map((i) => i.text || '').join('     ◆     '),
+            vItems: items.concat(items),
+          });
+        }
         return c;
       });
       this.setData({ viewList: list });

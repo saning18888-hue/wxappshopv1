@@ -47,5 +47,24 @@
       </view>
     </view>
 
+    <!-- 通知公告 -->
+    <view wx:if="{{c.type === 'notice'}}" class="diy-notice" style="background:{{c.bg}};color:{{c.color}}">
+      <view class="diy-notice-ico">📢</view>
+      <!-- 固定 -->
+      <view wx:if="{{c.noticeStyle === 'fixed'}}" class="diy-notice-fixed">
+        <view wx:for="{{c.items}}" wx:for-item="nt" wx:for-index="ni" wx:key="ni" class="diy-notice-line" data-link="{{nt.link}}" bindtap="onTapLink">{{nt.text}}</view>
+      </view>
+      <!-- 从右往左划入（跑马灯） -->
+      <view wx:elif="{{c.noticeStyle === 'marquee'}}" class="diy-notice-marquee" data-link="{{c.items[0].link}}" bindtap="onTapLink">
+        <view class="diy-notice-marquee-track">{{c.marqueeText}}</view>
+      </view>
+      <!-- 自上而下滚动 -->
+      <view wx:else class="diy-notice-vertical" data-link="{{c.items[0].link}}" bindtap="onTapLink">
+        <view class="diy-notice-vertical-track">
+          <view wx:for="{{c.vItems}}" wx:for-item="nt" wx:for-index="ni" wx:key="ni" class="diy-notice-vline">{{nt.text}}</view>
+        </view>
+      </view>
+    </view>
+
   </block>
 </view>

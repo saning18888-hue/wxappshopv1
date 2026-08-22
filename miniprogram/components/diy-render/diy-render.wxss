@@ -167,3 +167,46 @@
   font-weight: 500;
   letter-spacing: 0.2rpx;
 }
+
+/* 通知公告 */
+.diy-notice {
+  display: flex;
+  align-items: center;
+  margin: 16rpx;
+  padding: 18rpx 22rpx;
+  border-radius: 18rpx;
+  font-size: 25rpx;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 2px 8px rgba(94,106,210,.06);
+}
+.diy-notice-ico {
+  font-size: 24rpx;
+  margin-right: 14rpx;
+  flex-shrink: 0;
+  background: rgba(94,106,210,.10);
+  border-radius: 8rpx;
+  padding: 6rpx 10rpx;
+}
+/* 固定 */
+.diy-notice-fixed { flex: 1; display: flex; flex-direction: column; }
+.diy-notice-line { line-height: 1.6; padding: 4rpx 0; }
+/* 从右往左划入（跑马灯） */
+.diy-notice-marquee { flex: 1; overflow: hidden; white-space: nowrap; }
+.diy-notice-marquee-track {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: noticeLeft 14s linear infinite;
+}
+@keyframes noticeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+/* 自上而下滚动 */
+.diy-notice-vertical { flex: 1; height: 40rpx; overflow: hidden; }
+.diy-notice-vertical-track { animation: noticeUp 8s linear infinite; }
+.diy-notice-vline { height: 40rpx; line-height: 40rpx; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@keyframes noticeUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
