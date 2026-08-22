@@ -140,6 +140,40 @@
     .quick-item svg{width:20px;height:20px;margin-bottom:6px;stroke:var(--primary)}
     .quick-item div{font-size:12px;color:var(--text-secondary);font-weight:500}
 
+    /* 运营概览 */
+    .ov-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:20px}
+    .ov-stat-card{border-radius:var(--radius);padding:16px 18px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow);display:flex;align-items:flex-start;gap:12px;transition:all .15s}
+    .ov-stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+    .ov-stat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18) 0%,rgba(255,255,255,0) 60%);pointer-events:none}
+    .ov-stat-card.pink{background:linear-gradient(135deg,#f062d8 0%,#d14fd1 100%)}
+    .ov-stat-card.purple{background:linear-gradient(135deg,#7c6cf2 0%,#6155d9 100%)}
+    .ov-stat-card.blue{background:linear-gradient(135deg,#409eff 0%,#2b7de1 100%)}
+    .ov-stat-card.orange{background:linear-gradient(135deg,#ffb74d 0%,#f59e28 100%)}
+    .ov-stat-icon{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex:none}
+    .ov-stat-icon svg{width:18px;height:18px;stroke:#fff;stroke-width:2}
+    .ov-stat-body{flex:1;min-width:0}
+    .ov-stat-label{font-size:12px;opacity:.92;font-weight:500;margin-bottom:4px}
+    .ov-stat-value{font-size:22px;font-weight:700;letter-spacing:-.4px;font-feature-settings:'cv01','tnum'}
+    .ov-section{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+    .ov-date-tabs{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:6px;box-shadow:var(--shadow)}
+    .ov-tab{padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all .12s}
+    .ov-tab:hover{background:#f2f3f5}
+    .ov-tab.active{background:var(--primary);color:#fff}
+    .ov-table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:16px;overflow:auto}
+    .ov-table{width:100%;border-collapse:collapse;min-width:640px}
+    .ov-table th{font-size:12px;font-weight:600;color:var(--text-secondary);padding:10px 8px;text-align:center;border-bottom:1px solid var(--border)}
+    .ov-table td{font-size:13px;color:var(--text);padding:12px 8px;text-align:center;border-bottom:1px solid #f0f0f0}
+    .ov-table tr:last-child td{border-bottom:none}
+    .ov-table .row-label{color:var(--text-secondary);font-weight:500;text-align:left;white-space:nowrap}
+    .ov-table .num{font-weight:600}
+    .ov-chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px 14px;box-shadow:var(--shadow)}
+    .ov-chart-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .ov-chart-header h3{font-size:15px;font-weight:650;color:var(--text);margin:0}
+    .ov-chart-types{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .ov-chart-types label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary);cursor:pointer;user-select:none}
+    .ov-chart-types input[type=checkbox]{width:14px;height:14px;accent-color:var(--primary);cursor:pointer}
+    .ov-chart-types .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
     /* Table */
     .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
     table{width:100%;border-collapse:collapse;background:var(--surface)}
@@ -1254,52 +1288,97 @@
       <div class="content">
         <!-- 概况 -->
         <div id="overviewPanel" class="panel hidden">
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="label">今日订单</div>
-              <div class="value" id="ovOrder">-</div>
-              <div class="trend up">↑ 12% 较昨日</div>
-            </div>
-            <div class="stat-card">
-              <div class="label">今日销售额</div>
-              <div class="value" id="ovSale">-</div>
-              <div class="trend up">↑ 8% 较昨日</div>
-            </div>
-            <div class="stat-card">
-              <div class="label">待发货</div>
-              <div class="value" id="ovPending">-</div>
-              <div class="trend warn">需处理</div>
-            </div>
-            <div class="stat-card">
-              <div class="label">在售商品</div>
-              <div class="value" id="ovGoods">-</div>
-              <div class="trend up">↑ 2 新增</div>
-            </div>
-          </div>
-          <div class="card">
-            <h3>快捷入口</h3>
-            <div class="quick-grid">
-              <div class="quick-item" onclick="switchMenu('goods','list')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
-                <div>商品列表</div>
+          <div class="ov-stat-grid">
+            <div class="ov-stat-card pink">
+              <div class="ov-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></div>
+              <div class="ov-stat-body">
+                <div class="ov-stat-label">总金额</div>
+                <div class="ov-stat-value">1572501.29</div>
               </div>
-              <div class="quick-item" onclick="switchMenu('orders','list')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2H9V5Z"/><path d="M9 14h6"/><path d="M9 18h6"/></svg>
-                <div>订单列表</div>
+            </div>
+            <div class="ov-stat-card purple">
+              <div class="ov-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+              <div class="ov-stat-body">
+                <div class="ov-stat-label">总订单</div>
+                <div class="ov-stat-value">16883</div>
               </div>
-              <div class="quick-item" onclick="switchMenu('shop','templates')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-                <div>我的模板</div>
+            </div>
+            <div class="ov-stat-card blue">
+              <div class="ov-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+              <div class="ov-stat-body">
+                <div class="ov-stat-label">待付款</div>
+                <div class="ov-stat-value">0</div>
               </div>
-              <div class="quick-item" onclick="switchMenu('goods','category')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                <div>分类管理</div>
+            </div>
+            <div class="ov-stat-card purple">
+              <div class="ov-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="9" cy="12" r="2"/><circle cx="15" cy="12" r="2"/><path d="M9 12h6"/></svg></div>
+              <div class="ov-stat-body">
+                <div class="ov-stat-label">待发货</div>
+                <div class="ov-stat-value">2</div>
+              </div>
+            </div>
+            <div class="ov-stat-card orange">
+              <div class="ov-stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+              <div class="ov-stat-body">
+                <div class="ov-stat-label">待售后</div>
+                <div class="ov-stat-value">0</div>
               </div>
             </div>
           </div>
-          <div class="card">
-            <h3>最近动态</h3>
-            <p class="muted">暂无最新动态，功能持续完善中。</p>
+
+          <div class="ov-section">
+            <div class="ov-date-tabs">
+              <span class="ov-tab active" data-period="today">今日</span>
+              <span class="ov-tab" data-period="week">本周</span>
+              <span class="ov-tab" data-period="month">本月</span>
+            </div>
+          </div>
+
+          <div class="ov-table-card">
+            <table class="ov-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>新用户数</th>
+                  <th>访问人数</th>
+                  <th>访问人次</th>
+                  <th>打开次数</th>
+                  <th>次均停留时长</th>
+                  <th>跳出率</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="row-label">今日</td>
+                  <td class="num">1</td>
+                  <td class="num">16</td>
+                  <td class="num">170</td>
+                  <td class="num">70</td>
+                  <td class="num">00:00:03</td>
+                  <td class="num">33.00%</td>
+                </tr>
+                <tr>
+                  <td class="row-label">昨日</td>
+                  <td>10</td>
+                  <td>60</td>
+                  <td>791</td>
+                  <td>376</td>
+                  <td>00:00:00</td>
+                  <td>34.00%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="ov-chart-card">
+            <div class="ov-chart-header">
+              <h3>趋势图</h3>
+              <div class="ov-chart-types" id="overviewChartTypes">
+                <label><input type="checkbox" checked><span class="dot" style="background:#f062d8"></span>新用户数</label>
+                <label><input type="checkbox" checked><span class="dot" style="background:#7c6cf2"></span>访问人数</label>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="overviewTrendChart"></canvas></div>
           </div>
         </div>
 
@@ -6386,12 +6465,31 @@
       loadMemberGroups();
     }
 
+    function renderOverviewChart(){
+      const labels=['2026-08-21','2026-08-22'];
+      const ds=[
+        {label:'新用户数',data:[10,1],borderColor:'#f062d8',backgroundColor:'rgba(240,98,216,.1)',tension:.3,pointRadius:3},
+        {label:'访问人数',data:[60,16],borderColor:'#7c6cf2',backgroundColor:'rgba(124,108,242,.1)',tension:.3,pointRadius:3}
+      ];
+      destroyChart('overview');
+      const ctx=document.getElementById('overviewTrendChart').getContext('2d');
+      statsCharts.overview=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{beginAtZero:true}},elements:{line:{borderWidth:2}}}});
+      const typesWrap=document.getElementById('overviewChartTypes');
+      if(typesWrap){
+        typesWrap.querySelectorAll('input[type=checkbox]').forEach((cb,i)=>{
+          cb.onchange=e=>{
+            if(statsCharts.overview){
+              statsCharts.overview.getDatasetMeta(i).hidden=!e.target.checked;
+              statsCharts.overview.update();
+            }
+          };
+        });
+      }
+    }
+
     function loadOverviewStats(){
       // 先用静态模拟，后续可对接 /admin/stats
-      document.getElementById('ovOrder').textContent='128';
-      document.getElementById('ovSale').textContent='¥3,420';
-      document.getElementById('ovPending').textContent='23';
-      document.getElementById('ovGoods').textContent='86';
+      renderOverviewChart();
     }
 
     /* ===== 数据分析公共 ===== */
