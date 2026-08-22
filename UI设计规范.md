@@ -54,6 +54,43 @@
   - hover：`background:#eee;color:var(--text)`（轻微加深 + 文字转深）
 - 位置：弹窗头部 flex 布局右侧（`justify-content:space-between`），与标题同行。
 
+### 5.3 删除确认弹窗（v0.1.70 起强制）
+
+> 背景：全站删除操作之前混用原生 `confirm()`，各浏览器样式不一致、文案拥挤、无统一品牌感。**所有删除确认必须改用 `confirmDialog()`，禁止再调用原生 `confirm()`**。
+
+#### 调用方式
+
+```js
+// 异步函数内
+async function delXxx(id){
+  if(!await confirmDialog('确定删除「推荐模块 2」吗？')) return;
+  // 执行删除...
+}
+```
+
+#### 视觉规范
+
+- 弹窗 ID：`#commonConfirmModal`；结构已固定，**禁止新增删除弹窗 DOM**。
+- 弹窗宽度：`max-width:400px`，居中，圆角 `var(--radius)`。
+- 顶部图标：46px 圆形浅紫底，主色 `!` 感叹号，class `.confirm-icon`。
+- 标题：固定为「提示」，class `.confirm-title`。
+- 内容：删除对象名称用 `「」` 包裹，class `.confirm-msg`。
+- 底部按钮（class `.confirm-foot`）：
+  - 左侧「取消」：`class="btn gray"`。
+  - 右侧「确定」：`class="btn primary"`。
+  - 两按钮等宽，最大宽度 `150px`，间距 `10px`。
+- 交互：点击遮罩层或取消按钮关闭弹窗并中断删除；点击确定后继续执行删除逻辑。
+
+#### 覆盖范围（现有）
+
+- 首页布局 → 删除首页模块
+- 设计装修 → 广告位 → 删除广告位
+- 平台应用 → 删除应用
+- 短信模板 → 删除模板
+- 短信联系人 → 删除联系人
+
+新增删除场景必须复用此规范。
+
 ### 5.2 多选/勾选项（checkbox 规范，v0.1.52 起强制）
 
 > 背景：推送选择等处曾用 `appearance:none` 自绘方框 + `::after` 模拟对勾，导致"框太大 / 对勾偏位 / 截断"反复返工。**统一改用浏览器原生 checkbox + `accent-color`**。

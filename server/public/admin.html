@@ -6024,11 +6024,11 @@
       if(app){app[field]=value;}
     }
 
-    function deletePlatformApp(id,event){
+    async function deletePlatformApp(id,event){
       event&&event.preventDefault();
       const app=PLATFORM_APPS.find(a=>a.id===id);
       if(!app) return;
-      if(!confirm('确定删除应用「'+app.name+'」吗？此操作不可恢复。')) return;
+      if(!await confirmDialog('确定删除应用「'+app.name+'」吗？此操作不可恢复。')) return;
       const idx=PLATFORM_APPS.findIndex(a=>a.id===id);
       if(idx>-1){PLATFORM_APPS.splice(idx,1);toast('已删除：'+app.name);renderPlatformApps();}
     }
@@ -8509,10 +8509,10 @@
       layDragIdx=null; renderLayout();
     }
     function toggleHomeComp(idx,on){const c=designConfig.components[idx];if(c)c.props.hidden=!on;renderLayout();}
-    function delLayoutComp(idx){
+    async function delLayoutComp(idx){
       const c=designConfig.components[idx]; if(!c)return;
       const name=(c.props&&c.props.title)||SECTION_TITLE[Object.keys(SECTION_TYPE).find(k=>SECTION_TYPE[k]===c.type)]||'模块';
-      if(!(confirm('确定删除首页模块「'+name+'」吗？删除后保存并发布即从小程序首页移除。')))return;
+      if(!(await confirmDialog('确定删除首页模块「'+name+'」吗？删除后保存并发布即从小程序首页移除。')))return;
       designConfig.components.splice(idx,1);
       renderLayout();
       const gp=document.getElementById('goodsPanel'); if(gp && !gp.classList.contains('hidden')) renderGoodsMods();
@@ -8776,9 +8776,9 @@
       designConfig.components.push({type:'banner_ad',sort:sort,props:{name:'广告位'+(comps.length+1),title:'',columns:1,banners:[]}});
       renderBannerAdMods();
     }
-    function delBannerAdSlot(idx){
+    async function delBannerAdSlot(idx){
       const c=designConfig.components[idx]; if(!c)return;
-      if(!confirm(`确定删除广告位「${c.props.name||''}」？`))return;
+      if(!await confirmDialog(`确定删除广告位「${c.props.name||''}」？`))return;
       designConfig.components.splice(idx,1);
       renderBannerAdMods();
     }
@@ -10694,7 +10694,7 @@
       });
     }
     async function deleteSmsTemplate(platform,key){
-      if(!confirm('确定删除该模板？')) return;
+      if(!await confirmDialog('确定删除该模板？')) return;
       const next=deepMerge({},smsTemplateData);
       if(next[platform]&&next[platform][key]) delete next[platform][key];
       const r=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:{sms_templates:next}}});
@@ -10791,7 +10791,7 @@
       });
     }
     async function deleteSmsContact(id){
-      if(!confirm('确定删除该联系人？')) return;
+      if(!await confirmDialog('确定删除该联系人？')) return;
       const r=await fetchA(`${BASE}/sms_contacts/${id}`,{method:'DELETE'});
       if(r.code!==0){toast(r.msg||'删除失败');return;}
       toast('删除成功');

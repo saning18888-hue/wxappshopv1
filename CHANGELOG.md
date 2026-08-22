@@ -1,3 +1,4 @@
+### v0.1.70 (2026-08-22) feat: 全站删除确认统一为自定义弹窗并写入设计规范
 ### v0.1.69 (2026-08-22) fix: 公告图标字段重设计（双图标/URL 文本修复 + 三字段对齐）
 ### v0.1.68 (2026-08-22) feat: 广告位跳转链接 + 公告图标上传 + 布局删除按钮
 ### v0.1.67 (2026-08-22) feat: 广告位模块 + 设计装修折叠按钮修复
@@ -14,6 +15,19 @@
 > 3. 提交信息使用英文，或 UTF-8 无 BOM 文件 + `git commit -F`（**禁止 `git commit -m "中文"`**，Windows GBK 会双重编码成乱码，详见 README「提交规范」与 RELEASE.md「关键坑」）。
 > 4. 环境/换机说明见 `RELEASE.md`；本文件只记「改了什么」。
 > 5. 推送：记录写完并 commit 后，`git push origin master --tags`。
+
+---
+
+### v0.1.70 (2026-08-22) feat: 全站删除确认统一为自定义弹窗并写入设计规范
+
+**范围**：`server/public/admin.html`、`UI设计规范.md`、`README.md`、`CHANGELOG.md`。
+
+**改动**：
+- 全站 5 处删除确认框由原生 `confirm()` 统一改为 `await confirmDialog()` 自定义弹窗：平台应用删除、首页布局删除首页模块、设计装修广告位删除、短信模板删除、短信联系人删除。
+- 弹窗视觉统一为参考图规范：居中圆形「!」图标 +「提示」标题 + 内容文案（删除对象名用「」包裹）+ 底部「取消（`.btn.gray`）/ 确定（`.btn.primary`）」双按钮。
+- `UI设计规范.md` 新增 §5.3「删除确认弹窗」：强制使用 `confirmDialog()`、禁止原生 `confirm()`，固定 DOM（`#commonConfirmModal` / `.confirm-icon` / `.confirm-title` / `.confirm-msg` / `.confirm-foot`）与按钮样式，并列出当前覆盖范围。
+
+**验证**：node 全量编译 admin.html 内嵌 script 通过；全文检索 `confirm('` 为 0；后台各删除入口弹出统一自定义确认框。
 
 ---
 
