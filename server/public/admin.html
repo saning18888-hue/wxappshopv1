@@ -6490,6 +6490,24 @@
     function loadOverviewStats(){
       // 先用静态模拟，后续可对接 /admin/stats
       renderOverviewChart();
+      document.querySelectorAll('.ov-date-tabs .ov-tab').forEach(el=>{
+        el.onclick=()=>{
+          document.querySelectorAll('.ov-date-tabs .ov-tab').forEach(t=>t.classList.remove('active'));
+          el.classList.add('active');
+          const p=el.dataset.period;
+          const data={
+            today:{labels:['2026-08-21','2026-08-22'],users:[10,1],visitors:[60,16]},
+            week:{labels:['周一','周二','周三','周四','周五','周六','周日'],users:[10,5,8,3,1,2,1],visitors:[60,45,70,40,16,30,25]},
+            month:{labels:['第1周','第2周','第3周','第4周'],users:[20,15,8,1],visitors:[120,90,70,16]}
+          }[p];
+          if(statsCharts.overview){
+            statsCharts.overview.data.labels=data.labels;
+            statsCharts.overview.data.datasets[0].data=data.users;
+            statsCharts.overview.data.datasets[1].data=data.visitors;
+            statsCharts.overview.update();
+          }
+        };
+      });
     }
 
     /* ===== 数据分析公共 ===== */
