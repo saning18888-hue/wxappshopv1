@@ -1185,6 +1185,22 @@
     .btn.icon-btn svg{width:16px;height:16px}
     .btn.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
 
+    .app-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+    .app-toolbar .input.sm{max-width:220px}
+
+    .table-pagination{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:14px;font-size:13px;color:var(--text-secondary)}
+    .table-pagination select{padding:5px 24px 5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;font-size:13px;cursor:pointer}
+    .table-pagination .pager{display:flex;align-items:center;gap:4px}
+    .table-pagination .pager button{min-width:28px;height:28px;padding:0 8px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;font-size:13px}
+    .table-pagination .pager button:disabled{border-color:#ebedf0;color:#c0c4cc;cursor:not-allowed}
+    .table-pagination .pager button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+    .table-pagination .pager button:not(:disabled):hover{border-color:var(--primary);color:var(--primary)}
+    .table-pagination .goto{display:flex;align-items:center;gap:6px}
+    .table-pagination .goto input{width:40px;text-align:center;height:28px;padding:4px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px}
+
+    #platformAppTable{min-width:1100px}
+    #platformAppTable th,#platformAppTable td{white-space:nowrap}
+
     .data-table{width:100%;border-collapse:collapse;font-size:13px}
     .data-table th,.data-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:middle}
     .data-table th{background:#fafbfc;color:var(--text-secondary);font-weight:500;white-space:nowrap}
@@ -3495,6 +3511,78 @@
           </div>
         </div>
 
+        <!-- 平台管理 -->
+        <div id="platformManagePanel" class="panel hidden plugin-config-panel">
+          <div class="plugin-config-head">
+            <button class="btn gray back-btn" onclick="backToPlugins()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+              返回
+            </button>
+            <div class="plugin-config-title">
+              <h2>平台管理</h2>
+              <p>控制小程序端版权是否显示或显示方式</p>
+            </div>
+          </div>
+          <div class="plugin-config-tabs">
+            <div class="tab-nav" id="platformTabs">
+              <span class="tab-item active" data-tab="auth" onclick="switchPlatformTab('auth')">平台权限</span>
+              <span class="tab-item" data-tab="app" onclick="switchPlatformTab('app')">应用管理</span>
+              <span class="tab-item" data-tab="wechatTpl" onclick="switchPlatformTab('wechatTpl')">微信模板库</span>
+              <span class="tab-item" data-tab="kuaishouTpl" onclick="switchPlatformTab('kuaishouTpl')">快手模板库</span>
+              <span class="tab-item" data-tab="distribution" onclick="switchPlatformTab('distribution')">分销设置</span>
+              <span class="tab-item" data-tab="ledger" onclick="switchPlatformTab('ledger')">分账设置</span>
+            </div>
+            <div class="tab-body">
+              <div class="tab-pane active" id="platformTab-auth">
+                <div class="a-field">
+                  <label>小程序版权显示</label>
+                  <div class="radio-group" id="platformCopyrightType">
+                    <label class="radio-inline"><input type="radio" name="copyrightType" value="hide"><span>隐藏</span></label>
+                    <label class="radio-inline"><input type="radio" name="copyrightType" value="image"><span>图片</span></label>
+                    <label class="radio-inline"><input type="radio" name="copyrightType" value="text" checked><span>文字</span></label>
+                  </div>
+                </div>
+                <div class="a-field" id="platformCopyrightTextWrap">
+                  <label>小程序版权</label>
+                  <input type="text" class="input" id="platformCopyrightText" value="鲁ICP备2023037624号-1X 做同款小程序：186547235">
+                </div>
+                <button class="btn primary" onclick="savePlatformAuth()">确定</button>
+              </div>
+              <div class="tab-pane" id="platformTab-app">
+                <div class="app-toolbar">
+                  <button class="btn primary sm" onclick="batchEditUploadSettings()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    批量修改上传设置
+                  </button>
+                  <input type="text" class="input sm" id="platformAppSearch" placeholder="请输入搜索内容" oninput="renderPlatformApps()">
+                </div>
+                <div class="article-table-wrap">
+                  <table class="data-table" id="platformAppTable">
+                    <thead><tr>
+                      <th><label class="checkbox-wrap"><input type="checkbox" id="platformAppCheckAll" onclick="togglePlatformAppCheckAll()"></label></th>
+                      <th>ID</th><th>账号</th><th>应用名称</th><th>统一版权</th><th>插件显示</th><th>过期时间</th><th>接口授权码</th><th>创建时间</th><th>操作</th>
+                    </tr></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <div class="table-pagination" id="platformAppPagination"></div>
+              </div>
+              <div class="tab-pane" id="platformTab-wechatTpl">
+                <div class="empty" style="padding:60px 0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;color:var(--text-muted)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg><p>微信模板库功能开发中，敬请期待。</p></div>
+              </div>
+              <div class="tab-pane" id="platformTab-kuaishouTpl">
+                <div class="empty" style="padding:60px 0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;color:var(--text-muted)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg><p>快手模板库功能开发中，敬请期待。</p></div>
+              </div>
+              <div class="tab-pane" id="platformTab-distribution">
+                <div class="empty" style="padding:60px 0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;color:var(--text-muted)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg><p>分销设置功能开发中，敬请期待。</p></div>
+              </div>
+              <div class="tab-pane" id="platformTab-ledger">
+                <div class="empty" style="padding:60px 0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:48px;height:48px;color:var(--text-muted)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg><p>分账设置功能开发中，敬请期待。</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 通用占位 -->
         <div id="placeholderPanel" class="panel hidden">
           <div class="card">
@@ -5286,8 +5374,9 @@
         {name:'百度小程序',icon:'search',locked:true},{name:'QQ小程序',icon:'messageSquare',locked:true},{name:'App原生',icon:'smartphone2',locked:true},{name:'分销渠道',icon:'gitBranch',locked:true},{name:'直播渠道',icon:'video',locked:true}
       ],
       super:[
-        {name:'站点配置',icon:'settings'},{name:'权限管理',icon:'shield'},{name:'操作日志',icon:'clock'},{name:'数据备份',icon:'database'},{name:'系统更新',icon:'refreshCw'},
-        {name:'清理缓存',icon:'trash2'},{name:'队列管理',icon:'list'},{name:'计划任务',icon:'calendar'},{name:'多租户',icon:'users',locked:true},{name:'开发模式',icon:'code'}
+        {name:'平台管理',icon:'settings',target:'platformManagePanel'},
+        {name:'站点配置',icon:'shield',locked:true},{name:'权限管理',icon:'lock',locked:true},{name:'操作日志',icon:'clock',locked:true},{name:'数据备份',icon:'database',locked:true},{name:'系统更新',icon:'refreshCw',locked:true},
+        {name:'清理缓存',icon:'trash2',locked:true},{name:'队列管理',icon:'list',locked:true},{name:'计划任务',icon:'calendar',locked:true},{name:'多租户',icon:'users',locked:true}
       ]
     };
 
@@ -5527,6 +5616,7 @@
         if(panel && !content.contains(panel)) content.appendChild(panel);
         panel.classList.remove('hidden');
         if(target==='wechatMiniProgramPanel') initWechatMiniProgram();
+        if(target==='platformManagePanel') initPlatformManage();
         resetContentScroll();
         return;
       }
@@ -5534,7 +5624,7 @@
     }
 
     function backToPlugins(){
-      document.getElementById('wechatMiniProgramPanel').classList.add('hidden');
+      document.querySelectorAll('.plugin-config-panel').forEach(p=>p.classList.add('hidden'));
       document.getElementById('pluginsPanel').classList.remove('hidden');
       resetContentScroll();
     }
@@ -5692,6 +5782,104 @@
       event&&event.preventDefault();
       navigator.clipboard?.writeText(text).then(()=>toast('已复制')).catch(()=>toast('复制失败'));
     }
+
+    /* ===== 平台管理 ===== */
+    const PLATFORM_APPS=[
+      {id:2,account:'noey',name:'金象联盟',uniformCopyright:false,pluginShow:false,expire:'永久',authCode:'无',created:'2020-08-04 15:38:42',checked:false},
+      {id:7,account:'noey',name:'诺爱雅旌',uniformCopyright:false,pluginShow:false,expire:'永久',authCode:'无',created:'2021-11-16 15:15:23',checked:false},
+      {id:8,account:'noey',name:'高密密速达啤酒配送(3600)',uniformCopyright:true,pluginShow:false,expire:'2023-07-21 00:00:00',authCode:'无',created:'2022-07-21 21:52:21',checked:false},
+      {id:9,account:'noey',name:'1',uniformCopyright:true,pluginShow:true,expire:'永久',authCode:'无',created:'2026-08-13 22:34:31',checked:false}
+    ];
+
+    let platformAppPage=1,platformAppSize=10,platformAppKeyword='';
+
+    function initPlatformManage(){
+      switchPlatformTab('auth');
+      renderPlatformApps();
+      document.querySelectorAll('input[name="copyrightType"]').forEach(el=>{
+        el.addEventListener('change',togglePlatformCopyrightInput);
+      });
+      togglePlatformCopyrightInput();
+    }
+
+    function togglePlatformCopyrightInput(){
+      const type=getRadioValue('copyrightType');
+      const wrap=document.getElementById('platformCopyrightTextWrap');
+      if(wrap) wrap.style.display=(type==='hide')?'none':'';
+    }
+
+    function switchPlatformTab(tab){
+      document.querySelectorAll('#platformTabs .tab-item').forEach(el=>el.classList.remove('active'));
+      document.querySelectorAll('#platformTabs .tab-item[data-tab="'+tab+'"]').forEach(el=>el.classList.add('active'));
+      document.querySelectorAll('#platformManagePanel .tab-pane').forEach(el=>el.classList.remove('active'));
+      document.getElementById('platformTab-'+tab).classList.add('active');
+      if(tab==='app') renderPlatformApps();
+    }
+
+    function renderPlatformApps(){
+      const kw=(document.getElementById('platformAppSearch')?.value||'').trim().toLowerCase();
+      let list=kw?PLATFORM_APPS.filter(p=>(p.account+p.name).toLowerCase().includes(kw)):PLATFORM_APPS.slice();
+      const total=list.length;
+      const totalPages=Math.max(1,Math.ceil(total/platformAppSize));
+      platformAppPage=Math.min(platformAppPage,totalPages);
+      const start=(platformAppPage-1)*platformAppSize;
+      list=list.slice(start,start+platformAppSize);
+      const tbody=document.querySelector('#platformAppTable tbody');
+      tbody.innerHTML=list.map(a=>`<tr>
+        <td><input type="checkbox" ${a.checked?'checked':''} onchange="togglePlatformAppCheck(${a.id},this.checked)" style="width:14px;height:14px;cursor:pointer;accent-color:var(--primary)"></td>
+        <td>${a.id}</td>
+        <td>${escapeHtml(a.account)}</td>
+        <td>${escapeHtml(a.name)}</td>
+        <td><label class="switch"><input type="checkbox" ${a.uniformCopyright?'checked':''} onchange="togglePlatformAppField(${a.id},'uniformCopyright',this.checked)"><span class="slider"></span></label></td>
+        <td><label class="switch"><input type="checkbox" ${a.pluginShow?'checked':''} onchange="togglePlatformAppField(${a.id},'pluginShow',this.checked)"><span class="slider"></span></label></td>
+        <td>${escapeHtml(a.expire)}</td>
+        <td>${escapeHtml(a.authCode)}</td>
+        <td>${escapeHtml(a.created)}</td>
+        <td><a href="#" class="link" onclick="toast('上传设置: ${escapeHtml(a.name)}');return false;">上传设置</a> <a href="#" class="link" onclick="toast('接口授权码: ${escapeHtml(a.name)}');return false;">接口授权码</a></td>
+      </tr>`).join('');
+      const checkAll=document.getElementById('platformAppCheckAll');
+      if(checkAll) checkAll.checked=PLATFORM_APPS.every(a=>a.checked);
+      renderPlatformAppPagination(total,totalPages);
+    }
+
+    function renderPlatformAppPagination(total,totalPages){
+      const pager=document.getElementById('platformAppPagination');
+      if(!pager) return;
+      pager.innerHTML=`<span>共 ${total} 条</span>
+        <select onchange="changePlatformAppSize(this.value)">
+          <option value="10" ${platformAppSize==10?'selected':''}>10条/页</option>
+          <option value="20" ${platformAppSize==20?'selected':''}>20条/页</option>
+          <option value="50" ${platformAppSize==50?'selected':''}>50条/页</option>
+        </select>
+        <div class="pager">
+          <button ${platformAppPage<=1?'disabled':''} onclick="gotoPlatformAppPage(${platformAppPage-1})">&lt;</button>
+          <button class="active">${platformAppPage}</button>
+          <button ${platformAppPage>=totalPages?'disabled':''} onclick="gotoPlatformAppPage(${platformAppPage+1})">&gt;</button>
+        </div>
+        <span class="goto">前往 <input type="text" value="${platformAppPage}" onkeydown="if(event.key==='Enter')gotoPlatformAppPage(this.value)"> 页</span>`;
+    }
+
+    function changePlatformAppSize(size){platformAppSize=parseInt(size)||10;platformAppPage=1;renderPlatformApps();}
+    function gotoPlatformAppPage(page){platformAppPage=Math.max(1,parseInt(page)||1);renderPlatformApps();}
+
+    function togglePlatformAppCheck(id,checked){
+      const app=PLATFORM_APPS.find(a=>a.id===id);
+      if(app){app.checked=checked;renderPlatformApps();}
+    }
+
+    function togglePlatformAppCheckAll(){
+      const all=document.getElementById('platformAppCheckAll')?.checked||false;
+      PLATFORM_APPS.forEach(a=>a.checked=all);
+      renderPlatformApps();
+    }
+
+    function togglePlatformAppField(id,field,value){
+      const app=PLATFORM_APPS.find(a=>a.id===id);
+      if(app){app[field]=value;}
+    }
+
+    function batchEditUploadSettings(){toast('正在批量修改上传设置...');}
+    function savePlatformAuth(){toast('平台权限已保存');}
 
     /* ===== 会员管理 ===== */
     let memberTab='all',memberPage=1,memberSize=20,memberTotal=0;
