@@ -8674,11 +8674,15 @@
       }catch(e){alert('上传出错：'+e);}
       renderSectionForm();
     }
+    function setNoticeIconText(v){ upsertSection('notice').props.icon=v; }
+    function setNoticeIconDefault(){ upsertSection('notice').props.icon=''; renderSectionForm(); }
     function renderNoticeForm(){
       const c=upsertSection('notice');
       const p=c.props;
       p.style=p.style||'fixed';
       p.items=p.items||(p.items=[]);
+      const icon=p.icon||'📢';
+      const iconIsUrl=/^https?:\/\//.test(icon)||icon.indexOf('/')===0;
       const STYLES=[['fixed','固定'],['marquee','从右往左划入'],['vertical','自上而下滚动']];
       const DESC={fixed:'静态展示全部公告，不滚动',marquee:'单条跑马灯，从右向左循环滚动',vertical:'逐条纵向滚动轮播'};
       let h=`<div class="notice-toolbar">
@@ -8698,11 +8702,12 @@
         ${colorField('文字色', p.color||'#5e6ad2', "upsertSection('notice').props.color")}
         <label class="color-field">
           <span class="lin-label">图标</span>
-          <span class="icon-input-wrap">
-            <input class="lin-input icon-input" value="${escapeHtml(p.icon||'📢')}" oninput="upsertSection('notice').props.icon=this.value;this.nextElementSibling.textContent=this.value||'📢';" placeholder="输入 emoji/文字，或点右侧上传图片">
-            <span class="icon-preview">${escapeHtml(p.icon||'📢')}</span>
+          <span class="icon-input-wrap" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span class="icon-preview-box" style="width:44px;height:44px;border-radius:8px;background:#fff;border:1px solid #e5e8f2;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;flex-shrink:0">${iconIsUrl?`<img src="${escapeHtml(icon)}" style="width:100%;height:100%;object-fit:contain">`:escapeHtml(icon)}</span>
+            <input class="lin-input" value="${iconIsUrl?'':escapeHtml(icon)}" oninput="setNoticeIconText(this.value)" placeholder="输入 emoji/文字，或上传图标" style="width:170px">
             <input type="file" accept="image/*" style="display:none" onchange="uploadNoticeIcon(this)">
-            <button class="btn sm outline" type="button" onclick="this.parentElement.querySelector('input[type=file]').click()">上传图片</button>
+            <button class="btn sm outline" type="button" onclick="this.parentElement.querySelector('input[type=file]').click()">上传图标</button>
+            ${p.icon?`<button class="btn sm gray" type="button" onclick="setNoticeIconDefault()">恢复默认</button>`:''}
           </span>
         </label>
       </div>`;
