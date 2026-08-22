@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `goods` (
   `detail`       TEXT         COMMENT '图文详情 HTML',
   `status`       TINYINT      NOT NULL DEFAULT 1 COMMENT '1上架 0下架',
   `created_at`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`   DATETIME     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_cat` (`category_id`),
   KEY `idx_status` (`status`)
@@ -264,4 +265,137 @@ CREATE TABLE IF NOT EXISTS `store_settings` (
   `config`     TEXT         NOT NULL,
   `updated_at` INT UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- =====================================================================
+-- 扩展模块表：文章 / 相册 / 跳转小程序 / 操作日志 / 短信
+-- 与 database/apply_*.php（SQLite 幂等迁移）对应的 MySQL 建表，
+-- 保证生产 MySQL 首装即可用。
+-- =====================================================================
+
+-- 文章模块
+CREATE TABLE IF NOT EXISTS `article_categories` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `parent_id`   INT UNSIGNED NOT NULL DEFAULT 0,
+  `sort`        INT          NOT NULL DEFAULT 0,
+  `cover_image` VARCHAR(255) NOT NULL DEFAULT '',
+  `status`      TINYINT      NOT NULL DEFAULT 1,
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `articles` (
+  `id`            INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title`         VARCHAR(255) NOT NULL DEFAULT '',
+  `category_id`   INT UNSIGNED NOT NULL DEFAULT 0,
+  `author`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `source`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `cover_image`   VARCHAR(255) NOT NULL DEFAULT '',
+  `intro`         VARCHAR(500) NOT NULL DEFAULT '',
+  `keywords`      VARCHAR(255) NOT NULL DEFAULT '',
+  `content`       TEXT,
+  `external_link` VARCHAR(255) NOT NULL DEFAULT '',
+  `display_mode`  VARCHAR(16)  NOT NULL DEFAULT 'native',
+  `is_recommend`  TINYINT      NOT NULL DEFAULT 0,
+  `is_show`       TINYINT      NOT NULL DEFAULT 1,
+  `views`         INT UNSIGNED NOT NULL DEFAULT 0,
+  `video_type`    VARCHAR(16)  NOT NULL DEFAULT 'none',
+  `video_url`     VARCHAR(255) NOT NULL DEFAULT '',
+  `publish_time`  DATETIME     DEFAULT NULL,
+  `created_at`    DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_article_cat` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 相册模块
+CREATE TABLE IF NOT EXISTS `album_categories` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `icon`        VARCHAR(255) NOT NULL DEFAULT '',
+  `sort`        INT          NOT NULL DEFAULT 0,
+  `status`      TINYINT      NOT NULL DEFAULT 1,
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `albums` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`        VARCHAR(128) NOT NULL DEFAULT '',
+  `category_id` INT UNSIGNED NOT NULL DEFAULT 0,
+  `cover_image` VARCHAR(255) NOT NULL DEFAULT '',
+  `sort`        INT          NOT NULL DEFAULT 0,
+  `status`      TINYINT      NOT NULL DEFAULT 1,
+  `image_count` INT UNSIGNED NOT NULL DEFAULT 0,
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_album_cat` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `album_images` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `album_id`    INT UNSIGNED NOT NULL DEFAULT 0,
+  `image_url`   VARCHAR(500) NOT NULL DEFAULT '',
+  `name`        VARCHAR(128) NOT NULL DEFAULT '',
+  `is_cover`    TINYINT      NOT NULL DEFAULT 0,
+  `sort`        INT          NOT NULL DEFAULT 0,
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_album_img_album` (`album_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 跳转小程序模块
+CREATE TABLE IF NOT EXISTS `mini_apps` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `platform`    VARCHAR(16)  NOT NULL DEFAULT 'wechat',
+  `name`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `appid`       VARCHAR(64)  NOT NULL DEFAULT '',
+  `path`        VARCHAR(255) NOT NULL DEFAULT '',
+  `sort`        INT          NOT NULL DEFAULT 0,
+  `status`      TINYINT      NOT NULL DEFAULT 1,
+  `created_at`  DATETIME     DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 操作日志
+CREATE TABLE IF NOT EXISTS `operation_logs` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `admin_user`  VARCHAR(64)  NOT NULL DEFAULT '',
+  `admin_name`  VARCHAR(64)  NOT NULL DEFAULT '',
+  `role`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `action`      VARCHAR(128) NOT NULL DEFAULT '',
+  `method`      VARCHAR(16)  NOT NULL DEFAULT '',
+  `url`         VARCHAR(255) NOT NULL DEFAULT '',
+  `ip`          VARCHAR(64)  NOT NULL DEFAULT '',
+  `param`       TEXT,
+  `create_time` INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_oplog_time` (`create_time`),
+  KEY `idx_oplog_user` (`admin_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 短信模块
+CREATE TABLE IF NOT EXISTS `sms_contacts` (
+  `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name`        VARCHAR(64)  NOT NULL DEFAULT '',
+  `phone`       VARCHAR(32)  NOT NULL DEFAULT '',
+  `enabled`     TINYINT      NOT NULL DEFAULT 1,
+  `subscribe`   TEXT,
+  `create_time` INT UNSIGNED NOT NULL DEFAULT 0,
+  `update_time` INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_sms_contact_phone` (`phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `sms_send_logs` (
+  `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `phone`        VARCHAR(32)  NOT NULL DEFAULT '',
+  `template_key` VARCHAR(64)  NOT NULL DEFAULT '',
+  `content`      TEXT,
+  `result`       TEXT,
+  `config_key`   VARCHAR(64)  NOT NULL DEFAULT '',
+  `create_time`  INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_sms_log_time` (`create_time`),
+  KEY `idx_sms_log_phone` (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

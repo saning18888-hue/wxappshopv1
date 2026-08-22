@@ -18,6 +18,18 @@
 
 ---
 
+### v0.1.72 (2026-08-22) fix: SQLite 首装建表不完整 + goods 表缺 updated_at 导致后台商品管理 500
+
+**范围**：`server/database/install.sqlite.sql`、`server/database/install.sql`、`server/database/apply_goods_attr.php`、`CHANGELOG.md`。
+
+**改动**：
+- 修复「商品增/改/删全部 500（数据表字段不存在:[updated_at]）」：`goods` 主表原本没有 `updated_at` 列，而 `app/controller/admin/Goods.php`、`app/service/GoodsService.php` 均在写该字段。现于 `install.sqlite.sql`（SQLite）与 `install.sql`（MySQL）的 `goods` 建表补上 `updated_at`，并在 `apply_goods_attr.php` 增加幂等迁移 `goods.updated_at`，存量库执行该脚本即可补齐。
+- 修复「按 README 快速开始只跑 `php database/init_sqlite.php` 后，后台文章/相册/跳转小程序/操作日志/短信等页面 500（no such table）」：这些表原先分散在 `apply_*.php` 且不会自动执行。现把缺失的扩展表（`article_categories`、`articles`、`album_categories`、`albums`、`album_images`、`mini_apps`、`operation_logs`、`sms_contacts`、`sms_send_logs`）及演示种子数据并入 `install.sqlite.sql`，首装即完整；同步在 `install.sql`（MySQL）补齐对应建表，保证生产 MySQL 首装可用。
+
+**验证**：删除 `database/wxappb2c.sqlite` 后重跑 `init_sqlite.php`（87 条 SQL），`goods` 含 `updated_at`；后台商品新增/编辑/删除接口均返回 200；文章、相册、跳转小程序、操作日志、短信联系人/发送日志等页面均返回 200 且带数据；全部 `apply_*.php` 幂等可重跑。
+
+---
+
 ### v0.1.71 (2026-08-22) feat: 精选推荐/广告位列数可选 + 修复商品添加不显示
 
 **范围**：`server/public/admin.html`、`miniprogram/config.js`、`.gitignore`、`CHANGELOG.md`。
