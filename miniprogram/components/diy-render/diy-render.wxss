@@ -187,6 +187,11 @@
   border-radius: 8rpx;
   padding: 6rpx 10rpx;
 }
+.diy-notice-ico-img {
+  width: 28rpx;
+  height: 28rpx;
+  display: block;
+}
 /* 固定 */
 .diy-notice-fixed { flex: 1; display: flex; flex-direction: column; }
 .diy-notice-line { line-height: 1.6; padding: 4rpx 0; }

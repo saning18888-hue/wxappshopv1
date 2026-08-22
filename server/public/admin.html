@@ -1851,7 +1851,10 @@
           </div>
           <p class="muted" style="margin:2px 0 14px">拖拽模块可调整首页从上到下的顺序；「精选推荐」的每个模块都是独立区块，可单独拖到任意位置、上/下架首页，或点「编辑」配置商品与标题。新增模块请点下方按钮。</p>
           <div id="layoutList" class="layout-list"></div>
-          <div style="margin-top:14px"><button class="btn outline sm" onclick="addRecommendMod()">＋ 添加推荐模块</button></div>
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn outline sm" onclick="addRecommendMod()">＋ 添加推荐模块</button>
+            <button class="btn outline sm" onclick="addBannerAdMod()">＋ 添加广告位</button>
+          </div>
           <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
@@ -4749,18 +4752,26 @@
     </div>
   </div>
 
-  <!-- 精选推荐 · 模块编辑弹窗 -->
+  <!-- 精选推荐 / 广告位 · 模块编辑弹窗 -->
   <div id="modEditModal" class="modal">
     <div class="modal-card lg">
-      <div class="modal-header"><h3>编辑推荐模块</h3><span class="close" onclick="closeModEditor()">&times;</span></div>
+      <div class="modal-header"><h3 id="modEditTitleText">编辑推荐模块</h3><span class="close" onclick="closeModEditor()">&times;</span></div>
       <div class="modal-body">
         <div class="form-row">
           <div class="field"><label>区块标题（首页展示）</label><input id="modEditName" placeholder="如：新人专享"></div>
           <div class="field"><label>副标题（可选）</label><input id="modEditTitle" placeholder="如：新人 1 元购"></div>
         </div>
-        <p class="muted" style="margin:6px 0 12px">该模块下的商品将依次展示在首页此区块中。</p>
-        <div id="modEditGoods" class="mod-goods-wrap"></div>
-        <button class="btn outline sm" style="margin-top:12px" onclick="addModGoods()">+ 添加商品</button>
+        <div data-mode="goods">
+          <p class="muted" style="margin:6px 0 12px">该模块下的商品将依次展示在首页此区块中。</p>
+          <div id="modEditGoods" class="mod-goods-wrap"></div>
+          <button class="btn outline sm" style="margin-top:12px" onclick="addModGoods()">+ 添加商品</button>
+        </div>
+        <div data-mode="bannerad" style="display:none">
+          <p class="muted" style="margin:6px 0 12px">该广告位下的图片将轮播展示在首页此区块中。</p>
+          <div id="modEditBanners" class="mod-goods-wrap"></div>
+          <input type="file" id="modBannerFile" accept="image/*" style="display:none" onchange="addModBanner(this)">
+          <button class="btn outline sm" style="margin-top:12px" onclick="document.getElementById('modBannerFile').click()">+ 添加图片</button>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn gray" onclick="closeModEditor()">取消</button>
@@ -8463,8 +8474,11 @@
         if(sec==='goods'){
           const m=(c.props.modules||[])[0]||{};
           sub=(m.goods||[]).length+' 件商品';
+        }else if(sec==='bannerad'){
+          sub=(c.props.banners||[]).length+' 张广告';
         }
-        const name=sec==='goods'?(c.props.title||'精选推荐'):SECTION_TITLE[sec];
+        const name=sec==='goods'?(c.props.title||'精选推荐'):(sec==='bannerad'?(c.props.title||'广告位'):SECTION_TITLE[sec]);
+        const editable=sec==='goods'||sec==='bannerad';
         return `<div class="lay-row" draggable="true" data-idx="${ai}" ondragstart="layDragStart(event,${ai})" ondragover="layDragOver(event,this)" ondrop="layDrop(event,${ai})">
           <div class="lay-grip">⋮⋮</div>
           <div class="lay-icon">${SECTION_ICON[sec]}</div>
@@ -8473,7 +8487,8 @@
             <div class="lay-sub">${sub}</div>
           </div>
           <div class="lay-actions">
-            ${sec==='goods'?`<button class="btn sm outline" onclick="openModEditor(${ai})">编辑</button>`:''}
+            ${editable?`<button class="btn sm outline" onclick="openModEditor(${ai})">编辑</button>`:''}
+            <button class="btn sm danger" onclick="delLayoutComp(${ai})">删除</button>
             <span class="lay-status ${hidden?'off':''}">${hidden?'已下架':'在首页'}</span>
             <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleHomeComp(${ai},this.checked)"><span class="slider"></span></label>
           </div>
@@ -8494,6 +8509,14 @@
       layDragIdx=null; renderLayout();
     }
     function toggleHomeComp(idx,on){const c=designConfig.components[idx];if(c)c.props.hidden=!on;renderLayout();}
+    function delLayoutComp(idx){
+      const c=designConfig.components[idx]; if(!c)return;
+      const name=(c.props&&c.props.title)||SECTION_TITLE[Object.keys(SECTION_TYPE).find(k=>SECTION_TYPE[k]===c.type)]||'模块';
+      if(!(confirm('确定删除首页模块「'+name+'」吗？删除后保存并发布即从小程序首页移除。')))return;
+      designConfig.components.splice(idx,1);
+      renderLayout();
+      const gp=document.getElementById('goodsPanel'); if(gp && !gp.classList.contains('hidden')) renderGoodsMods();
+    }
     async function saveLayout(){
       ensureHomeSections();
       const cfg=JSON.parse(JSON.stringify(designConfig));
@@ -8636,6 +8659,21 @@
       }catch(e){alert('上传出错：'+e);}
       renderSectionForm();
     }
+    async function uploadNoticeIcon(el){
+      const file=el.files&&el.files[0];
+      if(!file){return;}
+      const fd=new FormData();fd.append('file',file);
+      try{
+        const r=await fetch(`${BASE}/upload/banner_image`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+        const d=await r.json();
+        if(d.code===0&&d.data&&d.data.url){
+          upsertSection('notice').props.icon=d.data.url;
+        }else{
+          alert((d&&d.msg)||'上传失败');
+        }
+      }catch(e){alert('上传出错：'+e);}
+      renderSectionForm();
+    }
     function renderNoticeForm(){
       const c=upsertSection('notice');
       const p=c.props;
@@ -8658,6 +8696,15 @@
       h+=`<div class="notice-colors">
         ${colorField('背景色', p.bg||'#F4F5FF', "upsertSection('notice').props.bg")}
         ${colorField('文字色', p.color||'#5e6ad2', "upsertSection('notice').props.color")}
+        <label class="color-field">
+          <span class="lin-label">图标</span>
+          <span class="icon-input-wrap">
+            <input class="lin-input icon-input" value="${escapeHtml(p.icon||'📢')}" oninput="upsertSection('notice').props.icon=this.value;this.nextElementSibling.textContent=this.value||'📢';" placeholder="输入 emoji/文字，或点右侧上传图片">
+            <span class="icon-preview">${escapeHtml(p.icon||'📢')}</span>
+            <input type="file" accept="image/*" style="display:none" onchange="uploadNoticeIcon(this)">
+            <button class="btn sm outline" type="button" onclick="this.parentElement.querySelector('input[type=file]').click()">上传图片</button>
+          </span>
+        </label>
       </div>`;
       h+=`<p class="muted" style="margin:0 0 18px">当前样式：${DESC[p.style]||''}；可添加多条公告，保存草稿并发布后在小程序首页「通知公告」模块展示。</p>`;
       h+=`<div class="notice-list">`;
@@ -8904,17 +8951,19 @@
     let modDragIdx=null;
     function renderGoodsMods(){
       const wrap=document.getElementById('goodsMods'); if(!wrap)return;
-      const comps=designConfig.components.map((c,i)=>({c,i})).filter(o=>o.c.type==='goods_group');
-      if(!comps.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">暂无推荐模块，点击下方「+ 添加模块」</p>'; return; }
+      const comps=designConfig.components.map((c,i)=>({c,i})).filter(o=>o.c.type==='goods_group'||o.c.type==='banner_ad');
+      if(!comps.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">暂无模块，点击下方「+ 添加模块」</p>'; return; }
       wrap.innerHTML=comps.map((o,k)=>{
         const c=o.c; const idx=o.i; const m=(c.props.modules||[])[0]||{};
+        const isAd=c.type==='banner_ad';
+        const sub=isAd?((c.props.banners||[]).length+' 张广告'):(m.title?('展示标题：'+m.title+' · '):'')+((m.goods||[]).length)+' 件商品';
         return `<div class="mod-row" draggable="true" data-idx="${idx}"
           ondragstart="modDragStart(event,${idx})" ondragover="modDragOver(event)" ondrop="modDrop(event,${idx})">
           <div class="mod-grip">⋮⋮</div>
           <div class="mod-num">${k+1}</div>
           <div class="mod-main" onclick="openModEditor(${idx})">
-            <div class="mod-name">${c.props.title||('模块'+(k+1))}</div>
-            <div class="mod-sub">${m.title?('展示标题：'+m.title+' · '):''}${(m.goods||[]).length} 件商品</div>
+            <div class="mod-name">${(c.props.title||(isAd?'广告位':'模块'+(k+1)))} <span class="mod-type-pill">${isAd?'广告位':'推荐'}</span></div>
+            <div class="mod-sub">${sub}</div>
           </div>
           <div class="mod-actions">
             <button class="btn sm outline" onclick="event.stopPropagation();openModEditor(${idx})">编辑</button>
@@ -8935,10 +8984,18 @@
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
+    function addBannerAdMod(){
+      const n=designConfig.components.filter(c=>c.type==='banner_ad').length+1;
+      const title='广告位 '+n;
+      const comp={type:'banner_ad',props:{name:title,title,hidden:false,columns:1,banners:[]}};
+      designConfig.components.push(comp);
+      renderGoodsMods();
+      const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
+    }
     async function delRecommendMod(idx){
       const c=designConfig.components[idx];
-      if(!c||c.type!=='goods_group')return;
-      if(!(await confirmDialog('确定删除「'+(c.props.title||'精选推荐')+'」吗？')))return;
+      if(!c||(c.type!=='goods_group'&&c.type!=='banner_ad'))return;
+      if(!(await confirmDialog('确定删除「'+(c.props.title||(c.type==='banner_ad'?'广告位':'精选推荐'))+'」吗？')))return;
       designConfig.components.splice(idx,1);
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
@@ -8958,11 +9015,16 @@
     function openModEditor(idx){
       modEditingIdx=idx;
       const c=designConfig.components[idx];
+      const isAd=c&&c.type==='banner_ad';
       const m=(c&&c.props&&c.props.modules&&c.props.modules[0])||{name:'',title:'',goods:[]};
+      document.getElementById('modEditTitleText').textContent=isAd?'编辑广告位':'编辑推荐模块';
       document.getElementById('modEditName').value=c?c.props.title||'':'';
       document.getElementById('modEditTitle').value=m.title||'';
+      document.querySelectorAll('#modEditModal [data-mode]').forEach(el=>{
+        el.style.display=el.getAttribute('data-mode')===(isAd?'bannerad':'goods')?'':'none';
+      });
       document.getElementById('modEditModal').classList.add('show');
-      renderModGoods();
+      if(isAd) renderModBanners(); else renderModGoods();
     }
     function curMod(){const c=designConfig.components[modEditingIdx];return c&&c.props&&c.props.modules&&c.props.modules[0];}
     function closeModEditor(){ document.getElementById('modEditModal').classList.remove('show'); }
@@ -8985,13 +9047,76 @@
       m.goods.splice(i,1);
       renderModGoods(); renderGoodsMods();
     }
+    function renderModBanners(){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const bs=c.props.banners||(c.props.banners=[]);
+      const wrap=document.getElementById('modEditBanners');
+      if(!bs.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">还没有广告图，点击下方「添加图片」</p>'; return; }
+      wrap.innerHTML=bs.map((b,i)=>{
+        b.link=b.link||{type:'none',id:0};
+        const preview=b.image
+          ? `<img src="${b.image}" onerror="this.style.display='none'" alt="">`
+          : `<div class="ba-placeholder"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg><span>广告图</span></div>`;
+        return `<div class="ba-banner">
+          <div class="ba-thumb">${preview}</div>
+          <div class="ba-fields">
+            <input class="lin-input" value="${escapeHtml(b.image||'')}" placeholder="图片地址（选填，通常用上方上传图）" oninput="setModBanner(${i},'image',this.value)">
+            <input class="lin-input" value="${escapeHtml(b.name||'')}" placeholder="名称（选填）" oninput="setModBanner(${i},'name',this.value)" style="margin-top:8px">
+            <div class="lin-form-row" style="margin-top:8px">
+              <div class="field"><label class="lin-label">跳转类型</label><select class="lin-select" onchange="setModBannerLink(${i},'type',this.value)">${linkOpts(b.link)}</select></div>
+              <div class="field"><label class="lin-label">跳转ID</label><input class="lin-input" type="number" value="${(b.link&&b.link.id!=null)?b.link.id:0}" oninput="setModBannerLink(${i},'id',this.value)"></div>
+            </div>
+          </div>
+          <button class="btn sm gray" onclick="delModBanner(${i})">删除</button>
+        </div>`;
+      }).join('');
+    }
+    function setModBanner(i,field,val){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const b=(c.props.banners||[])[i]; if(b)b[field]=val;
+    }
+    function setModBannerLink(i,field,val){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const b=(c.props.banners||[])[i]; if(!b)return;
+      if(!b.link)b.link={type:'none',id:0};
+      b.link[field]=field==='id'?(parseInt(val)||0):val;
+    }
+    function delModBanner(i){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const bs=c.props.banners||[];
+      bs.splice(i,1);
+      renderModBanners(); renderGoodsMods();
+    }
+    async function addModBanner(input){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const bs=c.props.banners||(c.props.banners=[]);
+      let image='';
+      const file=input&&input.files&&input.files[0];
+      if(file){
+        const fd=new FormData();fd.append('file',file);
+        try{
+          const r=await fetch(`${BASE}/upload/banner_image`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+          const d=await r.json();
+          if(d.code===0&&d.data&&d.data.url){ image=d.data.url; }
+          else{ alert((d&&d.msg)||'上传失败'); return; }
+        }catch(e){ alert('上传出错：'+e); return; }
+      }
+      bs.push({name:'广告图'+(bs.length+1),image,link:{type:'none',id:0}});
+      renderModBanners(); renderGoodsMods();
+    }
     function saveModEdit(){
-      const c=designConfig.components[modEditingIdx];
-      const m=curMod();
-      if(!m)return;
-      m.name=document.getElementById('modEditName').value;
-      m.title=document.getElementById('modEditTitle').value;
-      if(c) c.props.title=m.name;
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      const isAd=c.type==='banner_ad';
+      const name=(document.getElementById('modEditName').value||'').trim();
+      const sub=(document.getElementById('modEditTitle').value||'').trim();
+      if(isAd){
+        c.props.title=name;
+        c.props.name=sub||name;
+      }else{
+        const m=curMod(); if(!m)return;
+        m.name=name; m.title=sub;
+        c.props.title=name;
+      }
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel');
       if(lp && !lp.classList.contains('hidden')) renderLayout();

@@ -49,7 +49,10 @@
 
     <!-- 通知公告 -->
     <view wx:if="{{c.type === 'notice'}}" class="diy-notice" style="background:{{c.bg}};color:{{c.color}}">
-      <view class="diy-notice-ico">📢</view>
+      <view class="diy-notice-ico">
+        <image wx:if="{{c.iconIsImg}}" class="diy-notice-ico-img" src="{{c.icon}}" mode="aspectFit"></image>
+        <text wx:else>{{c.icon || '📢'}}</text>
+      </view>
       <!-- 固定 -->
       <view wx:if="{{c.noticeStyle === 'fixed'}}" class="diy-notice-fixed">
         <view wx:for="{{c.items}}" wx:for-item="nt" wx:for-index="ni" wx:key="ni" class="diy-notice-line" data-link="{{nt.link}}" bindtap="onTapLink">{{nt.text}}</view>

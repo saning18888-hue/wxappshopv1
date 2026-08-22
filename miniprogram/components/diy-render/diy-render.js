@@ -55,13 +55,23 @@ Component({
         if (c.type === 'notice') {
           const props = c.props || {};
           const items = props.items || [];
+          const icon = props.icon || '📢';
           return Object.assign({}, c, {
             noticeStyle: props.style || 'fixed',
             bg: props.bg || '#F4F5FF',
             color: props.color || '#5e6ad2',
+            icon,
+            iconIsImg: typeof icon === 'string' && (icon.indexOf('http') === 0 || icon.indexOf('/') === 0),
             items,
             marqueeText: items.map((i) => i.text || '').join('     ◆     '),
             vItems: items.concat(items),
+          });
+        }
+        if (c.type === 'banner_ad') {
+          const props = c.props || {};
+          const module = (props.modules && props.modules[0]) || {};
+          return Object.assign({}, c, {
+            props: Object.assign({}, props, { banners: props.banners || module.banners || [], columns: props.columns || 1 }),
           });
         }
         return c;
