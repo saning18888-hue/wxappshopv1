@@ -857,6 +857,9 @@
     .seg-item{flex:1;min-width:44px;padding:7px 0;font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:14px;font-weight:510;color:#8a8f98;border:0;background:transparent;border-radius:6px;cursor:pointer;transition:all .15s;font-feature-settings:'cv01','ss03';letter-spacing:-.1px}
     .seg-item:hover{color:#5e6ad2}
     .seg-item.active{background:#5e6ad2;color:#fff;box-shadow:0 1px 3px rgba(94,106,210,.4)}
+    .mod-cols-row{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
+    .mod-cols-row .cfg-label{margin-bottom:0}
+    .mod-cols-row .seg-item{min-width:64px;padding-left:12px;padding-right:12px}
     .count-line{display:flex;align-items:baseline;gap:4px;height:42px}
     .cfg-count{font-family:Inter,-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:24px;font-weight:590;color:var(--text);letter-spacing:-.6px;line-height:1.2;font-feature-settings:'cv01','ss03'}
     .cfg-unit{font-size:14px;color:var(--text-muted)}
@@ -4746,8 +4749,9 @@
         <div id="goodsPickerPager" style="display:flex;justify-content:center;align-items:center;gap:10px;margin-top:16px"></div>
       </div>
       <div class="modal-footer">
+        <span class="muted" style="margin-right:auto;font-size:13px">已选 <b id="pickCount2" style="color:var(--primary)">0</b> 件 · 点「确定添加」加入模块</span>
         <button class="btn gray" onclick="closeGoodsPicker()">取消</button>
-        <button class="btn" onclick="confirmGoodsPicker()">确定添加（<span id="pickCount">0</span>）</button>
+        <button class="btn primary" onclick="confirmGoodsPicker()">确定添加（<span id="pickCount">0</span>）</button>
       </div>
     </div>
   </div>
@@ -4762,12 +4766,28 @@
           <div class="field"><label>副标题（可选）</label><input id="modEditTitle" placeholder="如：新人 1 元购"></div>
         </div>
         <div data-mode="goods">
+          <div class="mod-cols-row">
+            <label class="cfg-label">每行数量</label>
+            <div class="seg">
+              <button type="button" class="seg-item" id="modCols2" onclick="setModCols(2)">2 个</button>
+              <button type="button" class="seg-item" id="modCols3" onclick="setModCols(3)">3 个</button>
+            </div>
+          </div>
           <p class="muted" style="margin:6px 0 12px">该模块下的商品将依次展示在首页此区块中。</p>
           <div id="modEditGoods" class="mod-goods-wrap"></div>
           <button class="btn outline sm" style="margin-top:12px" onclick="addModGoods()">+ 添加商品</button>
+          <p class="muted" style="margin:10px 0 0;font-size:12px">提示：商品选择弹窗里点「确定添加」才会把所选商品加入模块。</p>
         </div>
         <div data-mode="bannerad" style="display:none">
-          <p class="muted" style="margin:6px 0 12px">该广告位下的图片将轮播展示在首页此区块中。</p>
+          <div class="mod-cols-row">
+            <label class="cfg-label">每行数量</label>
+            <div class="seg">
+              <button type="button" class="seg-item" id="modAdCols1" onclick="setModCols(1)">1 个</button>
+              <button type="button" class="seg-item" id="modAdCols2" onclick="setModCols(2)">2 个</button>
+              <button type="button" class="seg-item" id="modAdCols3" onclick="setModCols(3)">3 个</button>
+            </div>
+          </div>
+          <p class="muted" style="margin:6px 0 12px">该广告位下的图片将依次展示在首页此区块中。</p>
           <div id="modEditBanners" class="mod-goods-wrap"></div>
           <input type="file" id="modBannerFile" accept="image/*" style="display:none" onchange="addModBanner(this)">
           <button class="btn outline sm" style="margin-top:12px" onclick="document.getElementById('modBannerFile').click()">+ 添加图片</button>
@@ -4788,6 +4808,14 @@
         <div class="form-row">
           <div class="field"><label>广告位名称（仅后端可见）</label><input id="baEditName" placeholder="如：首页顶部广告位"></div>
           <div class="field"><label>展示标题（首页展示，可空）</label><input id="baEditTitle" placeholder="如：限时特惠"></div>
+        </div>
+        <div class="mod-cols-row">
+          <label class="cfg-label">每行数量</label>
+          <div class="seg">
+            <button type="button" class="seg-item" id="baCols1" onclick="setBaCols(1)">1 个</button>
+            <button type="button" class="seg-item" id="baCols2" onclick="setBaCols(2)">2 个</button>
+            <button type="button" class="seg-item" id="baCols3" onclick="setBaCols(3)">3 个</button>
+          </div>
         </div>
         <p class="muted" style="margin:6px 0 12px">添加一张或多张广告图，每张可单独设置跳转；首页按顺序排列展示。</p>
         <div id="baEditBanners" class="ba-banner-wrap"></div>
@@ -8421,11 +8449,21 @@
     function normalizeHomeComponents(){
       const arr=designConfig.components; const out=[];
       arr.forEach(c=>{
-        if(c&&c.type==='goods_group'&&c.props&&Array.isArray(c.props.modules)&&c.props.modules.length>1){
-          c.props.modules.forEach(m=>{
-            out.push({type:'goods_group',props:{title:(m.title||m.name||'精选推荐'),columns:(c.props.columns||2),hidden:!!m.hidden,modules:[m]}});
-          });
-        } else out.push(c);
+        if(!c){return;}
+        if(c.type==='goods_group'){
+          // 修复 v0.1.10 时代老结构（无 modules 字段，有 source/category_id/show_count）
+          if(c.props && !Array.isArray(c.props.modules)){
+            const t=c.props.title||'精选推荐';
+            c.props.modules=[{id:1,name:t,title:t,goods:[]}];
+            ['source','category_id','show_count'].forEach(k=>{ if(c.props[k]!==undefined) delete c.props[k]; });
+          } else if(c.props && Array.isArray(c.props.modules) && c.props.modules.length>1){
+            c.props.modules.forEach(m=>{
+              out.push({type:'goods_group',props:{title:(m.title||m.name||'精选推荐'),columns:(c.props.columns||2),hidden:!!m.hidden,modules:[m]}});
+            });
+            return;
+          }
+        }
+        out.push(c);
       });
       designConfig.components=out;
     }
@@ -8800,8 +8838,15 @@
       const c=designConfig.components[idx]; if(!c)return;
       document.getElementById('baEditName').value=c.props.name||'';
       document.getElementById('baEditTitle').value=c.props.title||'';
+      const cols=c.props.columns||1;
+      ['baCols1','baCols2','baCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='baCols'+cols));
       renderBannerAdBanners();
       document.getElementById('bannerAdModal').classList.add('show');
+    }
+    function setBaCols(n){
+      const c=designConfig.components[baEditIdx]; if(!c)return;
+      c.props.columns=n;
+      ['baCols1','baCols2','baCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='baCols'+n));
     }
     function closeBannerAdEditor(){ document.getElementById('bannerAdModal').classList.remove('show'); }
     function saveBannerAdEdit(){
@@ -8956,7 +9001,7 @@
     let modDragIdx=null;
     function renderGoodsMods(){
       const wrap=document.getElementById('goodsMods'); if(!wrap)return;
-      const comps=designConfig.components.map((c,i)=>({c,i})).filter(o=>o.c.type==='goods_group'||o.c.type==='banner_ad');
+      const comps=designConfig.components.map((c,i)=>({c,i})).filter(o=>o.c.type==='goods_group');
       if(!comps.length){ wrap.innerHTML='<p class="muted" style="padding:14px 0;text-align:center">暂无模块，点击下方「+ 添加模块」</p>'; return; }
       wrap.innerHTML=comps.map((o,k)=>{
         const c=o.c; const idx=o.i; const m=(c.props.modules||[])[0]||{};
@@ -9020,6 +9065,12 @@
     function openModEditor(idx){
       modEditingIdx=idx;
       const c=designConfig.components[idx];
+      // 兜底：老 goods_group 无 modules 字段时当场补一个空 modules（防 normalize 未生效）
+      if(c && c.type==='goods_group' && c.props && !Array.isArray(c.props.modules)){
+        const t=c.props.title||'精选推荐';
+        c.props.modules=[{id:1,name:t,title:t,goods:[]}];
+        ['source','category_id','show_count'].forEach(k=>{ if(c.props[k]!==undefined) delete c.props[k]; });
+      }
       const isAd=c&&c.type==='banner_ad';
       const m=(c&&c.props&&c.props.modules&&c.props.modules[0])||{name:'',title:'',goods:[]};
       document.getElementById('modEditTitleText').textContent=isAd?'编辑广告位':'编辑推荐模块';
@@ -9028,8 +9079,25 @@
       document.querySelectorAll('#modEditModal [data-mode]').forEach(el=>{
         el.style.display=el.getAttribute('data-mode')===(isAd?'bannerad':'goods')?'':'none';
       });
+      if(isAd){
+        const cols=(c&&c.props&&c.props.columns)||1;
+        ['modAdCols1','modAdCols2','modAdCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='modAdCols'+cols));
+      }else{
+        const cols=(c&&c.props&&c.props.columns)||2;
+        ['modCols2','modCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='modCols'+cols));
+      }
       document.getElementById('modEditModal').classList.add('show');
       if(isAd) renderModBanners(); else renderModGoods();
+    }
+    function setModCols(n){
+      const c=designConfig.components[modEditingIdx]; if(!c)return;
+      c.props.columns=n;
+      const isAd=c.type==='banner_ad';
+      if(isAd){
+        ['modAdCols1','modAdCols2','modAdCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='modAdCols'+n));
+      }else{
+        ['modCols2','modCols3'].forEach(id=>document.getElementById(id).classList.toggle('active',id==='modCols'+n));
+      }
     }
     function curMod(){const c=designConfig.components[modEditingIdx];return c&&c.props&&c.props.modules&&c.props.modules[0];}
     function closeModEditor(){ document.getElementById('modEditModal').classList.remove('show'); }
@@ -9162,6 +9230,7 @@
           <span style="font-size:12px;color:#888">第 ${p.page||gsPickerPage} / ${p.last_page||1} 页 · 已选 ${pickBuffer.length}</span>
           <button class="btn sm" ${gsPickerPage>=(p.last_page||1)?'disabled':''} onclick="gsPickerPage++;loadGoodsPicker()">下一页</button>`;
         const pc=document.getElementById('pickCount'); if(pc)pc.textContent=pickBuffer.length;
+        const pc2=document.getElementById('pickCount2'); if(pc2)pc2.textContent=pickBuffer.length;
       });
     }
     function togglePickGoods(id,title,cover,price){

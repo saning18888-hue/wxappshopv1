@@ -34,3 +34,9 @@ server/check_tables.php
 stats_*.json
 stats_*.html
 stats_err*.html
+
+# Playwright 调试产物 / 开发服务器日志 / 上传临时图
+.playwright-cli/
+server/server_8899.log
+server/server_8899.err.log
+server/public/uploads/banner/20260822/

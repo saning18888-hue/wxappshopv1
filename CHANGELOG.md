@@ -18,6 +18,20 @@
 
 ---
 
+### v0.1.71 (2026-08-22) feat: 精选推荐/广告位列数可选 + 修复商品添加不显示
+
+**范围**：`server/public/admin.html`、`miniprogram/config.js`、`.gitignore`、`CHANGELOG.md`。
+
+**改动**：
+- 精选推荐（goods_group）与广告位（banner）模块新增「每行数量」选择：可选 1 / 2 / 3 列，编辑弹窗内即时切换，小程序端按 `columns` 渲染对应列数。
+- 修复「精选好物」等 v0.1.10 时代旧结构 goods_group（无 `modules` 字段、仅 `source/category_id/show_count`）添加商品不显示的问题：`normalizeHomeComponents()` 新增老结构归一化分支，自动转换为 `modules:[{id,name,title,goods:[]}]` 并清理旧字段；`openModEditor()` 增加兜底，进入编辑时当场补全 `modules`，保证 `curMod()` 不再返回 undefined、`confirmGoodsPicker()` 能正确写入商品。
+- 修复小程序端 `config.js` 端口历史遗留问题：`baseUrl` 由旧 `127.0.0.1:8787` 改为项目统一端口 `127.0.0.1:8899`，注释同步更新，解决小程序请求 `ERR_CONNECTION_REFUSED`。
+- `.gitignore` 补充忽略 Playwright 调试产物、开发服务器日志与临时上传图。
+
+**验证**：node 全量编译 admin.html 内嵌 script 通过；Playwright 实测「精选好物」编辑→选 4 商品→确认，`m.goods` 正确写入 4 件且 `modEditGoods` 渲染 4 个商品卡片；小程序各接口（settings/home/bottom_nav/goods/categories）在 8899 端口均返回 200。
+
+---
+
 ### v0.1.70 (2026-08-22) feat: 全站删除确认统一为自定义弹窗并写入设计规范
 
 **范围**：`server/public/admin.html`、`UI设计规范.md`、`README.md`、`CHANGELOG.md`。
