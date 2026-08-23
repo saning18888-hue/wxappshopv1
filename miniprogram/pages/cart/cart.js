@@ -12,7 +12,7 @@ Page({
 
   // 应用主题色（基础设置 → 主题色设计）
   applyTheme() {
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
   },

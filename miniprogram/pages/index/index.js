@@ -15,14 +15,14 @@ Page({
 
   // 应用主题色（基础设置 → 主题色设计）
   applyTheme() {
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
   },
 
   // 站点状态：关闭则整页拦截（基础设置 → 站点状态）
   checkSiteStatus() {
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ siteClosed: s.site_status === 'close', closeReason: s.close_reason || '' });
     });
   },

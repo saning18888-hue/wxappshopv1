@@ -40,7 +40,7 @@ function getDefaults() {
   return JSON.parse(JSON.stringify(DEFAULTS));
 }
 
-// 拉取设置（缓存；force 时重新请求）
+// 拉取设置（force=true 时绕过模块级缓存强制重新请求，保证后台修改能及时生效）
 function fetchSettings(force) {
   if (cache && !force) return Promise.resolve(cache);
   if (fetching) return fetching;

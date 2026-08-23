@@ -22,10 +22,14 @@ Page({
       keyword: q.keyword || '',
       categoryId: Number(q.category_id) || 0,
     });
-    settings.fetchSettings().then((s) => {
+    this.load();
+  },
+
+  // 每次进入页面都强制拉取最新设置，确保后台修改的主题色及时生效
+  onShow() {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
-    this.load();
   },
 
   onPullDownRefresh() {

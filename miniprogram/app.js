@@ -61,22 +61,34 @@ App({
     // 基础设置（全局生效，见 utils/settings.js）
     settings: null,
   },
+  // 将主题色应用到原生导航栏 / 底部导航（复用，避免只写死 onLaunch 一次）
+  applyThemeToNative(themeColor) {
+    if (!themeColor) return;
+    this.globalData.brand.primary = themeColor;
+    // 同步原生顶部导航栏背景色（不再写死橙色）
+    wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: themeColor });
+    // 同步原生底部导航选中色
+    wx.setTabBarStyle({ selectedColor: themeColor });
+  },
+  // 拉取并应用最新基础设置
+  refreshSettings(force) {
+    return settings.fetchSettings(force).then((s) => {
+      this.globalData.settings = s;
+      // 应用主题色（基础设置 → 主题色设计）
+      if (s && s.theme_color) this.applyThemeToNative(s.theme_color);
+      return s;
+    });
+  },
   onLaunch() {
     // 自动登录（Mock 模式直接换 token）
     auth.ensureLogin();
-    // 拉取基础设置并缓存到全局，供各页面读取
-    settings.fetchSettings().then((s) => {
-      this.globalData.settings = s;
-      // 应用主题色（基础设置 → 主题色设计）
-      if (s && s.theme_color) {
-        this.globalData.brand.primary = s.theme_color;
-        // 同步原生顶部导航栏背景色（不再写死橙色）
-        wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: s.theme_color });
-        // 同步原生底部导航选中色
-        wx.setTabBarStyle({ selectedColor: s.theme_color });
-      }
-    });
+    // 冷启动：首次强制拉取最新基础设置并应用主题色
+    this.refreshSettings(true);
     // 拉取后台底部导航配置并应用到原生 tabBar
     applyBottomNav();
+  },
+  onShow() {
+    // 从后台切回前台：强制重新拉取设置，确保后台修改的主题色及时生效
+    if (this.globalData.settings) this.refreshSettings(true);
   },
 });
