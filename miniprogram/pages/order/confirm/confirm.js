@@ -26,23 +26,24 @@ Page({
     this.loadPreview(ck.items, this.data.address);
   },
 
-  // 应用基础设置（购买权限 / 下单验证码）
+  // 应用基础设置（购买权限 / 下单验证码 / 主题色）
   applySettings() {
-    const s = settings.getSettings();
-    let denied = '';
-    if (s.buy_permission === 'login' && !auth.getToken()) {
-      denied = '请先登录后再下单';
-    } else if (s.buy_permission === 'member') {
-      const u = auth.getUser() || {};
-      if (!u.member_card) denied = '仅限持有会员卡的用户下单';
-    }
-    const needCaptcha = !!s.captcha_order;
-    this.setData({
-      buyDenied: denied,
-      needCaptcha,
-      captchaCode: needCaptcha ? String(Math.floor(1000 + Math.random() * 9000)) : '',
-      captchaInput: '',
-      themeColor: s.theme_color || '#FF6B35',
+    settings.fetchSettings().then((s) => {
+      let denied = '';
+      if (s.buy_permission === 'login' && !auth.getToken()) {
+        denied = '请先登录后再下单';
+      } else if (s.buy_permission === 'member') {
+        const u = auth.getUser() || {};
+        if (!u.member_card) denied = '仅限持有会员卡的用户下单';
+      }
+      const needCaptcha = !!s.captcha_order;
+      this.setData({
+        buyDenied: denied,
+        needCaptcha,
+        captchaCode: needCaptcha ? String(Math.floor(1000 + Math.random() * 9000)) : '',
+        captchaInput: '',
+        themeColor: s.theme_color || '#FF6B35',
+      });
     });
   },
 

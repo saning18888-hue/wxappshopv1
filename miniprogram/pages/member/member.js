@@ -7,7 +7,10 @@ Page({
 
   onShow() {
     const u = auth.getUser();
-    this.setData({ user: u, avatarChar: u && u.nickname ? u.nickname[0] : '客', themeColor: settings.getSettings().theme_color || '#FF6B35' });
+    this.setData({ user: u, avatarChar: u && u.nickname ? u.nickname[0] : '客' });
+    settings.fetchSettings().then((s) => {
+      this.setData({ themeColor: s.theme_color || '#FF6B35' });
+    });
     api.get('/order', { page: 1, page_size: 5 })
       .then((res) => this.setData({ orders: res.list || [] }))
       .catch(() => {});

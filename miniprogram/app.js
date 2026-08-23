@@ -70,6 +70,8 @@ App({
       // 应用主题色（基础设置 → 主题色设计）
       if (s && s.theme_color) {
         this.globalData.brand.primary = s.theme_color;
+        // 同步原生顶部导航栏背景色（不再写死橙色）
+        wx.setNavigationBarColor({ frontColor: '#ffffff', backgroundColor: s.theme_color });
         // 同步原生底部导航选中色
         wx.setTabBarStyle({ selectedColor: s.theme_color });
       }

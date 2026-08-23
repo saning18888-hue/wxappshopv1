@@ -20,16 +20,17 @@ Page({
   },
 
   onLoad(q) {
-    const s = settings.getSettings();
-    this.setData({
-      showSales: !!s.show_sales,
-      showStock: !!s.show_stock,
-      showOriginalPrice: !!s.show_original_price,
-      showComment: !!s.show_comment,
-      cartButton: !!s.cart_button,
-      buyButton: !!s.buy_button,
-      serviceType: s.service_type || 'online',
-      themeColor: s.theme_color || '#FF6B35',
+    settings.fetchSettings().then((s) => {
+      this.setData({
+        showSales: !!s.show_sales,
+        showStock: !!s.show_stock,
+        showOriginalPrice: !!s.show_original_price,
+        showComment: !!s.show_comment,
+        cartButton: !!s.cart_button,
+        buyButton: !!s.buy_button,
+        serviceType: s.service_type || 'online',
+        themeColor: s.theme_color || '#FF6B35',
+      });
     });
     api.get('/goods/' + q.id).then((g) => {
       this.setData({ goods: g });
