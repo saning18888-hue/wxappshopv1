@@ -21,7 +21,9 @@ Page({
     this.setData({
       keyword: q.keyword || '',
       categoryId: Number(q.category_id) || 0,
-      themeColor: settings.getSettings().theme_color || '#FF6B35',
+    });
+    settings.fetchSettings().then((s) => {
+      this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
     this.load();
   },
