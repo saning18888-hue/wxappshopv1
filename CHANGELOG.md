@@ -1,3 +1,11 @@
+### v0.1.74 (2026-08-23) docs: 新增新仓库 PRD 与 MVP 规划文档（用于新仓库原生小程序开发）
+
+**范围**：`docs/新仓库PRD.md`、`docs/新仓库MVP.md`。
+
+**改动**：
+- 新增 `docs/新仓库PRD.md`：面向新仓库的原生小程序商城产品需求文档，沉淀已跑通的店铺概况 + 设计装修为 MVP 底座，传承 UI 设计规范（Design Token/字号/圆角/红线），明确后端架构与部署环境（Nginx 1.22.1 + PHP 8.2.31 + MySQL 5.7.40）。
+- 新增 `docs/新仓库MVP.md`：新仓库 MVP 规划，含 3 个 Sprint 迭代计划（底座复用 → 交易闭环 → 履约上线）、技术清单、风险与完成定义（DoD）。
+
 ### v0.1.73 (2026-08-22) feat: 修复主题色不生效 + 基础设置精简（删除安全/平台账号/网址统一/商家助手等）
 
 **范围**：`server/public/admin.html`、`miniprogram/app.js`、`miniprogram/pages/*`（index/cart/member/goods/list/goods/detail/order/confirm/pay/result）、`CHANGELOG.md`。

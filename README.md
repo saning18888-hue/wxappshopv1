@@ -99,3 +99,5 @@ mysql -u root -p < database/install.sql
 - `RELEASE.md`：换机重建指南、运行方式、踩坑记录。
 - `server/README.md`：后端接口与部署细节。
 - `miniprogram/README.md`：小程序端说明。
+- `docs/新仓库PRD.md`：新仓库原生小程序商城产品需求文档（沉淀概况/设计装修底座 + 设计规范）。
+- `docs/新仓库MVP.md`：新仓库 MVP 规划（Sprint 迭代计划 + 技术清单 + 完成定义）。
