@@ -3,7 +3,7 @@
 
     <!-- 轮播图 -->
     <swiper wx:if="{{c.type === 'banner'}}" class="diy-banner" indicator-dots autoplay circular
-      interval="{{c.props.interval * 1000}}" duration="400" indicator-active-color="#5e6ad2" indicator-color="rgba(17,24,39,0.15)">
+      interval="{{c.props.interval * 1000}}" duration="400" indicator-active-color="var(--primary)" indicator-color="rgba(17,24,39,0.15)">
       <swiper-item wx:for="{{c.props.items}}" wx:for-item="b" wx:for-index="bi" wx:key="bi">
         <image wx:if="{{b.type !== 'video'}}" class="diy-banner-img" src="{{b.image}}" mode="aspectFill" data-link="{{b.link}}" bindtap="onTapLink" />
         <video wx:else class="diy-banner-img" src="{{b.video}}" mode="aspectFill" autoplay loop muted show-center-play-btn="{{false}}" data-link="{{b.link}}" bindtap="onTapLink" />

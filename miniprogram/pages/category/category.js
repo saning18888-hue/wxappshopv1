@@ -1,9 +1,13 @@
 const api = require('../../utils/request');
+const settings = require('../../utils/settings');
 
 Page({
-  data: { cats: [], activeId: 0, children: [] },
+  data: { cats: [], activeId: 0, children: [], themeColor: '#FF6B35' },
 
   onLoad() {
+    settings.fetchSettings(true).then((s) => {
+      this.setData({ themeColor: s.theme_color || '#FF6B35' });
+    });
     api.get('/categories').then((res) => {
       const cats = res.list || [];
       this.setData({

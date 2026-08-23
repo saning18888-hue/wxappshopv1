@@ -50,6 +50,9 @@ function fetchSettings(force) {
       cache = Object.assign(getDefaults(), data || {});
       const app = getApp();
       if (app && app.globalData) app.globalData.settings = cache;
+      if (app && typeof app.applyThemeToNative === 'function') {
+        app.applyThemeToNative(cache.theme_color);
+      }
       return cache;
     })
     .catch(() => {

@@ -2063,7 +2063,7 @@
                   <div class="form-control">
                     <div class="theme-color-row">
                       <input type="color" class="theme-color-input" data-setting="theme_color">
-                      <input type="text" class="theme-color-hex" data-setting="theme_color" maxlength="7" placeholder="#FF6B35">
+                      <input type="text" class="theme-color-hex" maxlength="7" placeholder="#FF6B35">
                       <div class="theme-color-presets" id="themePresets"></div>
                     </div>
                     <div class="form-hint">自定义小程序前端主色调（当前为橙色 #FF6B35），保存后实时生效于首页、购物车、商品详情、个人中心等页面</div>
@@ -9359,10 +9359,12 @@
         payload[k]=v;
       });
       const pm=[];
-      if(document.getElementById('payWechat').checked) pm.push('wechat');
-      if(document.getElementById('payAlipay').checked) pm.push('alipay');
+      const payWechat=document.getElementById('payWechat');
+      const payAlipay=document.getElementById('payAlipay');
+      if(payWechat&&payWechat.checked) pm.push('wechat');
+      if(payAlipay&&payAlipay.checked) pm.push('alipay');
       payload.pay_methods=pm;
-      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:payload}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       settingsData=d.data||settingsData;
       toast('已保存');
@@ -9454,7 +9456,7 @@
         store_logo:siteData.store_logo||'',
         admin_copyright:document.getElementById('siteCopyrightInput').value.trim()
       };
-      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:payload}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       siteData=Object.assign({},siteData,d.data||{});
       toast('已保存');
@@ -9473,7 +9475,7 @@
     }
     async function saveDomainVerify(){
       const payload={domain_verify_file:siteData.domain_verify_file||''};
-      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:payload}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       siteData=Object.assign({},siteData,d.data||{});
       updateDomainVerifyFileName();
@@ -9518,7 +9520,7 @@
         if(el.dataset.type==='number') v=(v===''?'':Number(v));
         payload[k]=v;
       });
-      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify({config:payload})});
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:payload}});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       shopData=d.data||shopData;
       toast('已保存');
@@ -9801,7 +9803,7 @@
       saveDeliveryPickup();renderPickupPoints();closePickupPointModal();
     }
     async function saveDeliveryBatch(payload){
-      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:JSON.stringify(payload)});
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:payload});
       if(d.code!==0){toast(d.msg||'保存失败');return false;}
       toast('已保存');return true;
     }

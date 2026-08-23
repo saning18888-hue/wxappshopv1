@@ -1,3 +1,16 @@
+### v0.1.76 (2026-08-23) fix: 修复主题色后台保存无效 + 小程序全页/导航栏/tabBar 主题色统一生效
+
+**范围**：`server/public/admin.html`、`miniprogram/utils/settings.js`、`miniprogram/components/diy-render/*`、`miniprogram/pages/category/*`、`miniprogram/utils/mock.js`、`CHANGELOG.md`。
+
+**改动**：
+- 后台基础设置「主题色」保存无效根因：①`saveSettings()` 遍历收集表单时 `payWechat/payAlipay` 元素不存在导致 JS 抛错中断；②`fetchA` 仅在 body 为 object 时设置 `Content-Type: application/json`，而原 `saveSettings`/`saveDeliveryBatch` 传入的是 `JSON.stringify` 字符串，后端 `Request::post('config/a')` 解析为空数组，颜色从未写入库。现修复空指针与 body 传参（传 object 由 `fetchA` 统一序列化），hex 文本框重复 `data-setting="theme_color"` 也一并移除。
+- 小程序端 diy-render 组件 3 处硬编码 `#5e6ad2` 与轮播指示器色改为 `var(--primary)`，跟随主题色。
+- 分类页补齐主题色支持（`category.js` 拉取 `themeColor`、`category.wxml` 绑定 `--primary`、`category.wxss` 补齐 `.cate-left` 样式并选中态用 `var(--primary)`）。
+- `settings.js`：`fetchSettings` 成功后自动调用 `getApp().applyThemeToNative(theme_color)`，每个页面（onShow）拉取设置时同步原生导航栏背景色与 tabBar 选中色，修复「仅首页生效、其他页面导航栏仍是 app.json 写死的橙色」问题。
+- `mock.js` 补 `/settings` 兜底接口。
+
+**验证**：后台改主题色保存后，`/admin/settings` 与 `/api/v1/settings` 均返回新值；小程序各页 onShow 拉取后导航栏/tabBar/页内主色统一跟随。
+
 ### v0.1.75 (2026-08-23) fix: 修复主题色设置保存后小程序刷新仍显示默认橙色的根因（设置模块级缓存不失效）
 
 **范围**：`miniprogram/utils/settings.js`、`miniprogram/app.js`、`miniprogram/pages/*`（index/cart/member/goods/list/goods/detail/order/confirm/pay/result）、`CHANGELOG.md`。

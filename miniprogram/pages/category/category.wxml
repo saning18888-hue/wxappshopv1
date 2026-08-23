@@ -1,4 +1,4 @@
-<view class="cate">
+<view class="cate" style="--primary:{{themeColor}}">
   <scroll-view class="cate-left" scroll-y>
     <view wx:for="{{cats}}" wx:key="id" class="cate-left-item {{activeId === item.id ? 'active' : ''}}"
       data-id="{{item.id}}" bindtap="switchCat">

@@ -139,6 +139,9 @@ function dispatch(method, path, data = {}) {
   if (path === '/user/info') {
     return { code: 0, data: { user: state.user || { id: 1, nickname: '演示会员' } } };
   }
+  if (path === '/settings') {
+    return { code: 0, data: { site_name: '演示商城', theme_color: '#FF6B35', notice: '演示环境' } };
+  }
   if (path === '/home') {
     return { code: 0, data: defaultHome };
   }

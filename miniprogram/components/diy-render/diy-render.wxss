@@ -89,7 +89,7 @@
   display: inline-block;
   width: 6rpx;
   height: 24rpx;
-  background: #5e6ad2;
+  background: var(--primary);
   border-radius: 4rpx;
   margin-right: 12rpx;
   vertical-align: -4rpx;
@@ -123,7 +123,7 @@
 .diy-goods-price {
   font-size: 31rpx;
   font-weight: 600;
-  color: #5e6ad2;
+  color: var(--primary);
   margin-top: 8rpx;
   letter-spacing: -0.4rpx;
 }
