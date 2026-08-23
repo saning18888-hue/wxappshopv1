@@ -20,7 +20,15 @@ Page({
   },
 
   onLoad(q) {
-    settings.fetchSettings().then((s) => {
+    api.get('/goods/' + q.id).then((g) => {
+      this.setData({ goods: g });
+      this.matchSku();
+    });
+  },
+
+  // 每次进入页面都强制拉取最新设置，确保后台修改的主题色及时生效
+  onShow() {
+    settings.fetchSettings(true).then((s) => {
       this.setData({
         showSales: !!s.show_sales,
         showStock: !!s.show_stock,
@@ -31,10 +39,6 @@ Page({
         serviceType: s.service_type || 'online',
         themeColor: s.theme_color || '#FF6B35',
       });
-    });
-    api.get('/goods/' + q.id).then((g) => {
-      this.setData({ goods: g });
-      this.matchSku();
     });
   },
 

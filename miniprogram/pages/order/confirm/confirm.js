@@ -28,7 +28,7 @@ Page({
 
   // 应用基础设置（购买权限 / 下单验证码 / 主题色）
   applySettings() {
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       let denied = '';
       if (s.buy_permission === 'login' && !auth.getToken()) {
         denied = '请先登录后再下单';

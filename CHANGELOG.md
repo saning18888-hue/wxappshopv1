@@ -1,3 +1,22 @@
+### v0.1.75 (2026-08-23) fix: 修复主题色设置保存后小程序刷新仍显示默认橙色的根因（设置模块级缓存不失效）
+
+**范围**：`miniprogram/utils/settings.js`、`miniprogram/app.js`、`miniprogram/pages/*`（index/cart/member/goods/list/goods/detail/order/confirm/pay/result）、`CHANGELOG.md`。
+
+**改动**：
+- **根因**：`settings.js` 存在模块级缓存 `cache`，`fetchSettings()` 默认不强制刷新，首次成功后所有调用（含页面 onShow 刷新、app onLaunch）都直接命中缓存，后台修改的主题色永远无法被小程序重新读取；且原生导航栏配色只在 `onLaunch` 执行一次，热刷新/切回前台不会更新。
+- `settings.js`：保留并发合并（`fetching`），明确 `fetchSettings(force)` 在 `force=true` 时绕过模块级缓存强制重新请求，保证后台修改能及时读回。
+- `app.js`：新增 `applyThemeToNative()`（封装 `wx.setNavigationBarColor` / `wx.setTabBarStyle`）与 `refreshSettings()`；`onLaunch` 与从后台切回前台的 `onShow` 均强制重新拉取设置并重新应用原生导航栏/底部导航主题色，不再只写死 onLaunch 一次。
+- 各页面：主题色/基础设置读取全部改为 `fetchSettings(true)` 强制刷新；`goods/list`、`goods/detail` 等页面将主题色应用从 `onLoad` 移到 `onShow`，确保每次进入页面都拿到最新设置。
+
+**回归验证**（供用户 Hello World 在微信开发者工具验证）：
+1. 启动后端（`php think run -H 127.0.0.1 -p 8899`），`config.js` 中 `useMock:false`。
+2. 打开小程序，确认首页/各页主题色为默认橙 `#FF6B35`。
+3. 进入后台「基础设置 → 主题色」，改为绿色（如 `#00B86B`）并保存，确认提示「已保存」。
+4. 切回小程序，将小程序切后台再切回（或重新进入页面）触发 `onShow` 强制刷新，确认：
+   - 顶部原生导航栏背景变为绿色；
+   - 首页/分类/购物车/我的等页面主题色（主按钮、价格、选中态）均变为绿色，不再回退橙色。
+5. 验证通过标准：后台修改主题色后，小程序无需重启/重新编译，切回前台即显示新主题色。
+
 ### v0.1.74 (2026-08-23) docs: 新增新仓库 PRD 与 MVP 规划文档（用于新仓库原生小程序开发）
 
 **范围**：`docs/新仓库PRD.md`、`docs/新仓库MVP.md`。

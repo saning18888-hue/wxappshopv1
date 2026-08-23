@@ -8,7 +8,7 @@ Page({
   onShow() {
     const u = auth.getUser();
     this.setData({ user: u, avatarChar: u && u.nickname ? u.nickname[0] : '客' });
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
     api.get('/order', { page: 1, page_size: 5 })

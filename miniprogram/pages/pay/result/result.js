@@ -7,7 +7,7 @@ Page({
   onLoad(q) {
     const mock = q.mock === '1';
     this.setData({ mock });
-    settings.fetchSettings().then((s) => {
+    settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
     const after = mock
