@@ -16,6 +16,7 @@ Page({
     cartButton: true,
     buyButton: true,
     serviceType: 'online',
+    themeColor: '#FF6B35',
   },
 
   onLoad(q) {
@@ -28,6 +29,7 @@ Page({
       cartButton: !!s.cart_button,
       buyButton: !!s.buy_button,
       serviceType: s.service_type || 'online',
+      themeColor: s.theme_color || '#FF6B35',
     });
     api.get('/goods/' + q.id).then((g) => {
       this.setData({ goods: g });

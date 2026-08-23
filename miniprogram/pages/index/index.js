@@ -2,14 +2,20 @@ const api = require('../../utils/request');
 const settings = require('../../utils/settings');
 
 Page({
-  data: { components: [], goodsList: [], cats: [], loading: true, siteClosed: false, closeReason: '' },
+  data: { components: [], goodsList: [], cats: [], loading: true, siteClosed: false, closeReason: '', themeColor: '#FF6B35' },
 
   onLoad() {
     this.load();
   },
 
   onShow() {
+    this.applyTheme();
     this.checkSiteStatus();
+  },
+
+  // 应用主题色（基础设置 → 主题色设计）
+  applyTheme() {
+    this.setData({ themeColor: settings.getSettings().theme_color || '#FF6B35' });
   },
 
   // 站点状态：关闭则整页拦截（基础设置 → 站点状态）

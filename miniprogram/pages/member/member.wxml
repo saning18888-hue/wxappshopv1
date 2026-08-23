@@ -1,4 +1,4 @@
-<view class="member">
+<view class="member" style="--primary:{{themeColor}}">
   <view class="member-header">
     <view class="member-avatar">{{avatarChar}}</view>
     <view class="member-name">{{user ? user.nickname : '游客'}}</view>

@@ -1,11 +1,18 @@
 const api = require('../../utils/request');
+const settings = require('../../utils/settings');
 const app = getApp();
 
 Page({
-  data: { list: [], total: 0 },
+  data: { list: [], total: 0, themeColor: '#FF6B35' },
 
   onShow() {
+    this.applyTheme();
     this.load();
+  },
+
+  // 应用主题色（基础设置 → 主题色设计）
+  applyTheme() {
+    this.setData({ themeColor: settings.getSettings().theme_color || '#FF6B35' });
   },
 
   load() {

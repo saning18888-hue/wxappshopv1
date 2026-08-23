@@ -14,7 +14,7 @@
   font-size: 28rpx;
   color: #555;
 }
-.sort-item.active { color: #FF6B35; font-weight: 600; }
+.sort-item.active { color: var(--primary); font-weight: 600; }
 
 .goods-grid { display: flex; flex-wrap: wrap; padding: 12rpx; }
 .goods-cell {

@@ -1,11 +1,12 @@
 const api = require('../../../utils/request');
+const settings = require('../../../utils/settings');
 
 Page({
-  data: { order: null, mock: false },
+  data: { order: null, mock: false, themeColor: '#FF6B35' },
 
   onLoad(q) {
     const mock = q.mock === '1';
-    this.setData({ mock });
+    this.setData({ mock, themeColor: settings.getSettings().theme_color || '#FF6B35' });
     const after = mock
       ? api.post('/payment/mock_notify', { order_no: q.order_no })
       : Promise.resolve();

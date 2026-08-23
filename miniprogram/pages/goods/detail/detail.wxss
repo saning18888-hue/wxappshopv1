@@ -28,7 +28,7 @@
   color: #555;
   border: 2rpx solid transparent;
 }
-.spec-value.selected { color: #FF6B35; background: #fff2ec; border-color: #FF6B35; }
+.spec-value.selected { color: var(--primary); background: #fff2ec; border-color: var(--primary); }
 
 .detail-bar {
   position: fixed;
@@ -52,4 +52,4 @@
   border-radius: 999rpx;
 }
 .bar-add { background: #FFB035; border-radius: 999rpx 0 0 999rpx; }
-.bar-buy { background: #FF6B35; border-radius: 0 999rpx 999rpx 0; }
+.bar-buy { background: var(--primary); border-radius: 0 999rpx 999rpx 0; }

@@ -6,6 +6,7 @@ const DEFAULTS = {
   close_reason: '店铺暂时休息中，请稍后再来~',
   store_name: 'B2C 商城',
   store_logo: '',
+  theme_color: '#FF6B35',
   service_type: 'online',
   service_phone: '',
   service_wechat: '',

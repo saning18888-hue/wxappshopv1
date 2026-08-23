@@ -1,4 +1,5 @@
 const api = require('../../../utils/request');
+const settings = require('../../../utils/settings');
 
 Page({
   data: {
@@ -7,6 +8,7 @@ Page({
     categoryId: 0,
     sort: 'new',
     loading: false,
+    themeColor: '#FF6B35',
     sorts: [
       { key: 'new', label: '综合' },
       { key: 'sales', label: '销量' },
@@ -19,6 +21,7 @@ Page({
     this.setData({
       keyword: q.keyword || '',
       categoryId: Number(q.category_id) || 0,
+      themeColor: settings.getSettings().theme_color || '#FF6B35',
     });
     this.load();
   },
