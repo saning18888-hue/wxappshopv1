@@ -122,7 +122,8 @@ CREATE TABLE IF NOT EXISTS goods (
   detail       TEXT,
   ext_json     TEXT NOT NULL DEFAULT '{}',
   status       INTEGER NOT NULL DEFAULT 1,
-  created_at   TEXT DEFAULT CURRENT_TIMESTAMP
+  created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TEXT DEFAULT NULL
 );
 CREATE INDEX idx_goods_cat ON goods(category_id);
 CREATE INDEX idx_goods_status ON goods(status);
@@ -477,3 +478,150 @@ CREATE TABLE IF NOT EXISTS store_settings (
   config      TEXT NOT NULL,
   updated_at  INTEGER NOT NULL DEFAULT 0
 );
+
+-- =====================================================================
+-- 扩展模块表：文章 / 相册 / 跳转小程序 / 操作日志 / 短信
+-- 早期 install.sqlite.sql 未包含以下表，现并入，保证首次建表完整；
+-- database/apply_*.php 仍保留作为存量库的幂等增量迁移。
+-- =====================================================================
+
+-- 文章模块：article_categories / articles
+CREATE TABLE IF NOT EXISTS article_categories (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        TEXT NOT NULL DEFAULT '',
+  parent_id   INTEGER NOT NULL DEFAULT 0,
+  sort        INTEGER NOT NULL DEFAULT 0,
+  cover_image TEXT NOT NULL DEFAULT '',
+  status      INTEGER NOT NULL DEFAULT 1,
+  created_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS articles (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  title         TEXT NOT NULL DEFAULT '',
+  category_id   INTEGER NOT NULL DEFAULT 0,
+  author        TEXT NOT NULL DEFAULT '',
+  source        TEXT NOT NULL DEFAULT '',
+  cover_image   TEXT NOT NULL DEFAULT '',
+  intro         TEXT NOT NULL DEFAULT '',
+  keywords      TEXT NOT NULL DEFAULT '',
+  content       TEXT NOT NULL DEFAULT '',
+  external_link TEXT NOT NULL DEFAULT '',
+  display_mode  TEXT NOT NULL DEFAULT 'native',
+  is_recommend  INTEGER NOT NULL DEFAULT 0,
+  is_show       INTEGER NOT NULL DEFAULT 1,
+  views         INTEGER NOT NULL DEFAULT 0,
+  video_type    TEXT NOT NULL DEFAULT 'none',
+  video_url     TEXT NOT NULL DEFAULT '',
+  publish_time  TEXT DEFAULT '',
+  created_at    TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 相册模块：album_categories / albums / album_images
+CREATE TABLE IF NOT EXISTS album_categories (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        TEXT NOT NULL DEFAULT '',
+  icon        TEXT NOT NULL DEFAULT '',
+  sort        INTEGER NOT NULL DEFAULT 0,
+  status      INTEGER NOT NULL DEFAULT 1,
+  created_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS albums (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  name          TEXT NOT NULL DEFAULT '',
+  category_id   INTEGER NOT NULL DEFAULT 0,
+  cover_image   TEXT NOT NULL DEFAULT '',
+  sort          INTEGER NOT NULL DEFAULT 0,
+  status        INTEGER NOT NULL DEFAULT 1,
+  image_count   INTEGER NOT NULL DEFAULT 0,
+  created_at    TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS album_images (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  album_id    INTEGER NOT NULL DEFAULT 0,
+  image_url   TEXT NOT NULL DEFAULT '',
+  name        TEXT NOT NULL DEFAULT '',
+  is_cover    INTEGER NOT NULL DEFAULT 0,
+  sort        INTEGER NOT NULL DEFAULT 0,
+  created_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 跳转小程序模块：mini_apps
+CREATE TABLE IF NOT EXISTS mini_apps (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  platform    TEXT NOT NULL DEFAULT 'wechat',
+  name        TEXT NOT NULL DEFAULT '',
+  appid       TEXT NOT NULL DEFAULT '',
+  path        TEXT NOT NULL DEFAULT '',
+  sort        INTEGER NOT NULL DEFAULT 0,
+  status      INTEGER NOT NULL DEFAULT 1,
+  created_at  TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 操作日志：operation_logs
+CREATE TABLE IF NOT EXISTS operation_logs (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  admin_user  TEXT NOT NULL DEFAULT '',
+  admin_name  TEXT NOT NULL DEFAULT '',
+  role        TEXT NOT NULL DEFAULT '',
+  action      TEXT NOT NULL DEFAULT '',
+  method      TEXT NOT NULL DEFAULT '',
+  url         TEXT NOT NULL DEFAULT '',
+  ip          TEXT NOT NULL DEFAULT '',
+  param       TEXT,
+  create_time INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_operation_logs_create_time ON operation_logs (create_time);
+CREATE INDEX IF NOT EXISTS idx_operation_logs_admin_user ON operation_logs (admin_user);
+
+-- 短信模块：sms_contacts / sms_send_logs
+CREATE TABLE IF NOT EXISTS sms_contacts (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        TEXT NOT NULL DEFAULT '',
+  phone       TEXT NOT NULL DEFAULT '',
+  enabled     INTEGER NOT NULL DEFAULT 1,
+  subscribe   TEXT NOT NULL DEFAULT '[]',
+  create_time INTEGER NOT NULL DEFAULT 0,
+  update_time INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_sms_contacts_phone ON sms_contacts (phone);
+
+CREATE TABLE IF NOT EXISTS sms_send_logs (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  phone         TEXT NOT NULL DEFAULT '',
+  template_key  TEXT NOT NULL DEFAULT '',
+  content       TEXT NOT NULL DEFAULT '',
+  result        TEXT,
+  config_key    TEXT NOT NULL DEFAULT '',
+  create_time   INTEGER NOT NULL DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_sms_send_logs_create_time ON sms_send_logs (create_time);
+CREATE INDEX IF NOT EXISTS idx_sms_send_logs_phone ON sms_send_logs (phone);
+
+-- 演示种子：文章分类 / 文章
+INSERT INTO article_categories (id, name, parent_id, sort, cover_image, status) VALUES
+(1, '公司新闻', 0, 1, '', 1),
+(2, '行业动态', 0, 2, '', 1),
+(3, '使用帮助', 0, 3, '', 1),
+(4, '新手指南', 3, 1, '', 1);
+
+INSERT INTO articles (id, title, category_id, author, source, cover_image, intro, keywords, content, display_mode, is_recommend, is_show, views, video_type, publish_time) VALUES
+(1, '欢迎使用我们的小程序商城', 1, '管理员', '官方', '', '商城上线公告与功能简介', '公告,商城', '<p>感谢您使用我们的小程序商城，在这里您可以体验到丰富的商品与便捷的下单流程。</p>', 'native', 1, 1, 328, 'none', '2026-08-10 09:30:00'),
+(2, '2026 行业趋势报告解读', 2, '编辑部', '行业周刊', '', '一文读懂今年电商新趋势', '趋势,电商', '<p>今年私域与内容电商继续走高，品牌自建小程序成为标配。</p>', 'native', 0, 1, 156, 'none', '2026-08-12 14:00:00'),
+(3, '如何快速完成首单', 3, '客服小美', '帮助中心', '', '三步完成下单与支付', '帮助,下单', '<p>1. 浏览商品；2. 加入购物车；3. 提交订单并支付。</p>', 'native', 1, 1, 542, 'none', '2026-08-14 10:20:00');
+
+-- 演示种子：相册分类 / 相册
+INSERT INTO album_categories (id, name, icon, sort, status) VALUES
+(1, '商品图库', '', 99, 1),
+(2, '首页图库', '', 0, 1);
+
+INSERT INTO albums (id, name, category_id, cover_image, sort, status, image_count) VALUES
+(1, '新图片传这', 1, '', 9, 1, 0),
+(2, '已压缩01（勿上传）', 1, '', 1, 1, 0),
+(3, '已压缩02（勿上传）', 1, '', 2, 1, 0);
+
+-- 演示种子：默认短信商家联系人（店长）
+INSERT INTO sms_contacts (id, name, phone, enabled, subscribe, create_time, update_time) VALUES
+(1, '店长', '13963671858', 1, '["order_new","order_refund","group_success","seckill_success","bargain_success"]', 0, 0);
