@@ -1,4 +1,4 @@
-<view class="confirm" wx:if="{{preview}}">
+<view class="confirm" wx:if="{{preview}}" style="--primary:{{themeColor}}">
   <view wx:if="{{buyDenied}}" class="deny-banner">⚠️ {{buyDenied}}</view>
 
   <view class="addr-card">

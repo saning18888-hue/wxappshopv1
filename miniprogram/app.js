@@ -65,8 +65,14 @@ App({
     // 自动登录（Mock 模式直接换 token）
     auth.ensureLogin();
     // 拉取基础设置并缓存到全局，供各页面读取
-    settings.fetchSettings().then(() => {
-      this.globalData.settings = settings.getSettings();
+    settings.fetchSettings().then((s) => {
+      this.globalData.settings = s;
+      // 应用主题色（基础设置 → 主题色设计）
+      if (s && s.theme_color) {
+        this.globalData.brand.primary = s.theme_color;
+        // 同步原生底部导航选中色
+        wx.setTabBarStyle({ selectedColor: s.theme_color });
+      }
     });
     // 拉取后台底部导航配置并应用到原生 tabBar
     applyBottomNav();

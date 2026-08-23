@@ -1,5 +1,5 @@
-<view class="detail" wx:if="{{goods}}">
-  <swiper class="detail-swiper" indicator-dots autoplay circular interval="4000" indicator-active-color="#FF6B35">
+<view class="detail" wx:if="{{goods}}" style="--primary:{{themeColor}}">
+  <swiper class="detail-swiper" indicator-dots autoplay circular interval="4000" indicator-active-color="var(--primary)">
     <swiper-item wx:for="{{goods.images}}" wx:key="*this">
       <image class="detail-img" src="{{item}}" mode="aspectFill" />
     </swiper-item>

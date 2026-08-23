@@ -1,4 +1,4 @@
-<view class="list">
+<view class="list" style="--primary:{{themeColor}}">
   <view class="sort-bar">
     <view wx:for="{{sorts}}" wx:key="key" class="sort-item {{sort === item.key ? 'active' : ''}}"
       data-sort="{{item.key}}" bindtap="setSort">

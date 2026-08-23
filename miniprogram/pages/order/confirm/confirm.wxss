@@ -18,7 +18,7 @@
   background: #fff; display: flex; align-items: center; padding: 16rpx 24rpx; border-top: 1rpx solid #eee;
 }
 .confirm-pay { flex: 1; font-size: 28rpx; }
-.confirm-submit { background: #FF6B35; color: #fff; border-radius: 999rpx; padding: 0 56rpx; line-height: 80rpx; font-size: 30rpx; }
+.confirm-submit { background: var(--primary); color: #fff; border-radius: 999rpx; padding: 0 56rpx; line-height: 80rpx; font-size: 30rpx; }
 
 /* 购买权限拦截提示 */
 .deny-banner {
@@ -31,7 +31,7 @@
 .captcha-row { display: flex; align-items: center; gap: 20rpx; }
 .captcha-code {
   width: 200rpx; height: 76rpx; line-height: 76rpx; text-align: center;
-  font-size: 36rpx; letter-spacing: 8rpx; color: #FF6B35;
+  font-size: 36rpx; letter-spacing: 8rpx; color: var(--primary);
   background: #fff2ec; border: 1rpx dashed #ffb48a; border-radius: 10rpx;
 }
 .captcha-input { flex: 1; height: 76rpx; font-size: 28rpx; border-bottom: 1rpx solid #f0f0f0; }

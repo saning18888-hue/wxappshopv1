@@ -1909,6 +1909,14 @@
             .setting-panel .shop-tab.active::after{content:'';position:absolute;bottom:0;left:20px;right:20px;height:2px;background:var(--primary)}
             .setting-panel .setting-card{background:var(--surface);padding:24px 32px 32px;border:1px solid var(--border);border-top:0;border-radius:0 0 var(--radius) var(--radius);box-shadow:var(--shadow);margin-bottom:16px}
             .setting-panel .section-title{font-size:16px;font-weight:600;color:var(--text);padding-left:10px;border-left:4px solid var(--primary);margin-bottom:24px;line-height:1}
+            .setting-panel .theme-color-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+            .setting-panel .theme-color-input{width:44px;height:36px;padding:0;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}
+            .setting-panel .theme-color-hex{width:110px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text)}
+            .setting-panel .theme-color-hex:focus{border-color:var(--primary);outline:none}
+            .setting-panel .theme-color-presets{display:flex;gap:8px;flex-wrap:wrap}
+            .setting-panel .theme-swatch{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--border);transition:transform .12s}
+            .setting-panel .theme-swatch:hover{transform:scale(1.12)}
+            .setting-panel .theme-swatch.active{box-shadow:0 0 0 2px var(--primary)}
             .setting-panel .form-row{display:flex;align-items:flex-start;margin-bottom:22px}
             .setting-panel .form-label{width:120px;color:var(--text);font-size:14px;padding-top:5px;flex-shrink:0;text-align:left;line-height:1.5}
             .setting-panel .form-control{flex:1;min-width:0}
@@ -2049,6 +2057,20 @@
             <div class="setting-card">
               <!-- 基础设置 -->
               <div class="bs-pane" data-pane="basic">
+                <div class="section-title">主题色设计</div>
+
+                <div class="form-row">
+                  <label class="form-label">小程序主题色</label>
+                  <div class="form-control">
+                    <div class="theme-color-row">
+                      <input type="color" class="theme-color-input" data-setting="theme_color">
+                      <input type="text" class="theme-color-hex" data-setting="theme_color" maxlength="7" placeholder="#FF6B35">
+                      <div class="theme-color-presets" id="themePresets"></div>
+                    </div>
+                    <div class="form-hint">自定义小程序前端主色调（当前为橙色 #FF6B35），保存后实时生效于首页、购物车、商品详情、个人中心等页面</div>
+                  </div>
+                </div>
+
                 <div class="section-title">站点设置</div>
 
                 <div class="form-row">
@@ -9334,6 +9356,7 @@
     /* ===== 基础设置 ===== */
     const settingsDefaults={
       /* 基础设置 */
+      theme_color:'#FF6B35',
       site_status:'open',platform_account:'open',url_unified:'open',page_title_align:'left',
       customer_service_button:'unified',customer_service_type:'business_phone',
       force_auth_member_info:true,force_auth_mobile:true,
@@ -9363,6 +9386,7 @@
       if(d.code!==0){toast(d.msg||'加载失败');return;}
       settingsData=Object.assign({},settingsDefaults,d.data||{});
       bindSettingsForm();
+      initThemeColorControls();
     }
     function syncSeg(radio){
       const name=radio.name;
@@ -9381,6 +9405,7 @@
         else el.value=(v===undefined||v===null)?'':v;
       });
       form.querySelectorAll('input[type=radio]').forEach(r=>{ if(r.checked) syncSeg(r); });
+      syncThemeColor();
       const pm=settingsData.pay_methods||['wechat'];
       const payWechat=document.getElementById('payWechat');
       const payAlipay=document.getElementById('payAlipay');
@@ -9407,6 +9432,43 @@
       if(d.code!==0){toast(d.msg||'保存失败');return;}
       settingsData=d.data||settingsData;
       toast('已保存');
+    }
+    const THEME_PRESETS=['#FF6B35','#FA5151','#07C160','#10AEFF','#7232DD','#FFB035','#E64340','#00B86B','#2C6BED','#FF9F0A','#FF3B30','#34C759'];
+    function initThemePresets(){
+      const box=document.getElementById('themePresets');
+      if(!box) return;
+      box.innerHTML='';
+      THEME_PRESETS.forEach(c=>{
+        const sw=document.createElement('span');
+        sw.className='theme-swatch';
+        sw.style.background=c;
+        sw.dataset.color=c;
+        sw.title=c;
+        sw.onclick=()=>setThemeColor(c);
+        box.appendChild(sw);
+      });
+    }
+    function setThemeColor(color){
+      if(!color) return;
+      const hexEl=document.querySelector('#basePanel .theme-color-hex');
+      const colorEl=document.querySelector('#basePanel .theme-color-input');
+      if(colorEl) colorEl.value=color;
+      if(hexEl){ hexEl.value=color; settingsData.theme_color=color; }
+      const box=document.getElementById('themePresets');
+      if(box) box.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active',s.dataset.color.toLowerCase()===String(color).toLowerCase()));
+    }
+    function syncThemeColor(){
+      const c=settingsData.theme_color||'#FF6B35';
+      setThemeColor(c);
+    }
+    function initThemeColorControls(){
+      initThemePresets();
+      const colorEl=document.querySelector('#basePanel .theme-color-input');
+      const hexEl=document.querySelector('#basePanel .theme-color-hex');
+      if(!colorEl||!hexEl) return;
+      // color 选择器与 hex 输入框双向联动
+      colorEl.oninput=()=>{ const v=colorEl.value.toUpperCase(); if(hexEl.value!==v){ hexEl.value=v; settingsData.theme_color=v; } };
+      hexEl.oninput=()=>{ const v=hexEl.value.trim(); if(/^#[0-9a-fA-F]{6}$/.test(v)){ colorEl.value=v.toLowerCase(); settingsData.theme_color=v.toUpperCase(); } };
     }
     function switchBaseTab(tab){
       document.querySelectorAll('.bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));

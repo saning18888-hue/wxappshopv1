@@ -28,7 +28,7 @@
 }
 .cart-total { flex: 1; font-size: 28rpx; }
 .cart-submit {
-  background: #FF6B35;
+  background: var(--primary);
   color: #fff;
   border-radius: 999rpx;
   padding: 0 56rpx;

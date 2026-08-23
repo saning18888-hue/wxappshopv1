@@ -4,13 +4,13 @@
   margin: 0 auto; border-radius: 50%; background: #00B86B; color: #fff; font-size: 64rpx;
 }
 .result-title { font-size: 36rpx; font-weight: 600; margin-top: 24rpx; }
-.result-amount { font-size: 48rpx; color: #FF6B35; font-weight: 700; margin-top: 16rpx; }
+.result-amount { font-size: 48rpx; color: var(--primary); font-weight: 700; margin-top: 16rpx; }
 .result-tip { font-size: 26rpx; margin-top: 12rpx; }
 
 .result-btns { display: flex; margin-top: 48rpx; }
 .result-btn { flex: 1; margin: 0 16rpx; line-height: 80rpx; border-radius: 999rpx; font-size: 30rpx; }
 .result-btn.ghost { border: 2rpx solid #ddd; color: #666; }
-.result-btn.solid { background: #FF6B35; color: #fff; }
+.result-btn.solid { background: var(--primary); color: #fff; }
 
 .result-order { background: #fff; border-radius: 16rpx; margin-top: 48rpx; padding: 24rpx; text-align: left; }
 .result-row { display: flex; justify-content: space-between; font-size: 26rpx; color: #555; padding: 14rpx 0; }

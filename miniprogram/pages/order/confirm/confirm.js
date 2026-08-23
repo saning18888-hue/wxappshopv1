@@ -12,6 +12,7 @@ Page({
     needCaptcha: false,      // 下单需图形验证码（基础设置 → 安全设置）
     captchaInput: '',
     captchaCode: '',
+    themeColor: '#FF6B35',
   },
 
   onLoad() {
@@ -41,6 +42,7 @@ Page({
       needCaptcha,
       captchaCode: needCaptcha ? String(Math.floor(1000 + Math.random() * 9000)) : '',
       captchaInput: '',
+      themeColor: s.theme_color || '#FF6B35',
     });
   },
 

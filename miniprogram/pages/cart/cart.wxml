@@ -1,4 +1,4 @@
-<view class="cart">
+<view class="cart" style="--primary:{{themeColor}}">
   <view wx:if="{{list.length === 0}}" class="empty">购物车空空如也~</view>
 
   <view wx:for="{{list}}" wx:key="id" class="cart-item">

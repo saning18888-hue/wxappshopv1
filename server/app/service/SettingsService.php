@@ -21,6 +21,7 @@ class SettingsService
             'close_reason'       => '店铺暂时休息中，请稍后再来~',
             'store_name'         => 'B2C 商城',
             'store_logo'         => '',
+            'theme_color'        => '#FF6B35',   // 小程序主题色（基础设置 → 主题色设计）
             'admin_copyright'    => '',          // 后台版权信息
             'domain_verify_file' => '',           // 域名校验文件名
             'service_type'       => 'online',    // online=在线客服 / phone=电话 / wechat=微信
