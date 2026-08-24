@@ -1058,6 +1058,11 @@
     #bottomNavStyle .theme-color-input{width:44px;height:36px;padding:0;border:1px solid var(--border);border-radius:8px;background:#fff;cursor:pointer}
     #bottomNavStyle .theme-color-hex{width:110px;padding:7px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text)}
     #bottomNavStyle .theme-color-hex:focus{border-color:var(--primary);outline:none}
+    /* 站点状态：关闭按钮右侧的闭店文案输入框 */
+    .site-status-group{align-items:center;flex-wrap:wrap}
+    .site-status-close{display:inline-flex;align-items:center;gap:6px;margin-right:8px}
+    .close-reason-input{width:280px;height:34px;padding:0 10px}
+    .close-reason-input:disabled{opacity:.5;background:var(--surface);cursor:not-allowed}
 
     .bn-modal-card{width:900px;max-width:92vw}
     .bn-modal-body{display:grid;grid-template-columns:1fr 300px;gap:18px}
@@ -2165,10 +2170,12 @@
                 <div class="form-row">
                   <label class="form-label">站点状态</label>
                   <div class="form-control">
-                    <div class="radio-group">
-                      <label><input type="radio" name="site_status" value="open" data-setting="site_status" checked> 开启</label>
-                      <label><input type="radio" name="site_status" value="close" data-setting="site_status"> 关闭</label>
+                    <div class="radio-group site-status-group">
+                      <label><input type="radio" name="site_status" value="open" data-setting="site_status" checked onchange="syncCloseReasonInput()"> 开启</label>
+                      <label class="site-status-close"><input type="radio" name="site_status" value="close" data-setting="site_status" onchange="syncCloseReasonInput()"> 关闭</label>
+                      <input type="text" class="form-input close-reason-input" data-setting="close_reason" placeholder="店铺暂时休息中，请稍后再来~">
                     </div>
+                    <div class="form-hint">选择“关闭”时，小程序首页会显示打烊提示，右侧可自定义提示文案</div>
                   </div>
                 </div>
 
@@ -9464,6 +9471,11 @@
         if(item) item.classList.toggle('active',r.checked);
       });
     }
+    function syncCloseReasonInput(){
+      const closed=document.querySelector('#basePanel input[name="site_status"][value="close"]:checked');
+      const input=document.querySelector('#basePanel .close-reason-input');
+      if(input){ input.disabled=!closed; }
+    }
     function bindSettingsForm(){
       const form=document.getElementById('basePanel');
       if(!form)return;
@@ -9476,6 +9488,7 @@
       form.querySelectorAll('input[type=radio]').forEach(r=>{ if(r.checked) syncSeg(r); });
       syncThemeColor();
       syncSearchColors();
+      syncCloseReasonInput();
       const pm=settingsData.pay_methods||['wechat'];
       const payWechat=document.getElementById('payWechat');
       const payAlipay=document.getElementById('payAlipay');

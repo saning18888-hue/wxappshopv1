@@ -1,3 +1,8 @@
+### v0.1.79 (2026-08-24) feat: 站点关闭支持在后台自定义闭店提示文案
+
+- 后台「基础设置 → 站点状态」选择“关闭”后，右侧显示闭店文案输入框，可自定义小程序首页的打烊提示文字。
+- 输入框在“开启”时禁用置灰，避免误编辑。
+
 ### v0.1.78 (2026-08-24) feat: 底部导航支持自定义 tabBar 与后台独立配色（文字/选中/背景/边框色）
 
 **范围**：`miniprogram/custom-tab-bar/*`、`miniprogram/app.json`、`server/app/controller/api/v1/Design.php`、`server/app/service/SettingsService.php`、`server/public/admin.html`、`miniprogram/utils/settings.js`、`miniprogram/pages/*`（index/category/cart/member）、`CHANGELOG.md`、`miniprogram/images/tab/*`、`server/public/uploads/categories/20260824/*`。
