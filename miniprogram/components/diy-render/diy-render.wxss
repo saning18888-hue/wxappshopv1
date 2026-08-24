@@ -104,6 +104,11 @@
   display: flex;
   flex-direction: column;
 }
+.diy-goods-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 .diy-goods-cover {
   width: 100%;
   height: 220rpx;
@@ -115,7 +120,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 0;
 }
 .diy-goods-name {
@@ -123,19 +127,43 @@
   color: #374151;
   margin-top: 12rpx;
   line-height: 1.35;
+  height: 70rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+.diy-goods-sales {
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-top: 6rpx;
+  min-height: 30rpx;
+}
+.diy-goods-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8rpx;
+}
 .diy-goods-price {
   font-size: 31rpx;
   font-weight: 600;
   color: #FF4D4F;
-  margin-top: 8rpx;
   letter-spacing: -0.4rpx;
 }
+.diy-goods-cart {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(255, 77, 79, .1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.diy-goods-cart-ico { width: 28rpx; height: 28rpx; display: block; }
 
 /* 商品分类入口 */
 .diy-cat {

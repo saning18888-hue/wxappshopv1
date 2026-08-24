@@ -16,4 +16,6 @@
       </view>
     </view>
   </scroll-view>
+
+  <float-buttons />
 </view>

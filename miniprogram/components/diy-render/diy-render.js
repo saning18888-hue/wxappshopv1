@@ -89,5 +89,9 @@ Component({
     onTapCategory(e) {
       wx.navigateTo({ url: '/pages/goods/list/list?category_id=' + e.currentTarget.dataset.id });
     },
+    onTapCart(e) {
+      e.stopPropagation && e.stopPropagation();
+      wx.switchTab({ url: '/pages/cart/cart' });
+    },
   },
 });

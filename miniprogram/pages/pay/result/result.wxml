@@ -15,4 +15,6 @@
     <view class="result-row"><text>收货地址</text><text>{{order.address}}</text></view>
     <view class="result-row"><text>状态</text><text>{{order.status_text}}</text></view>
   </view>
+
+  <float-buttons />
 </view>

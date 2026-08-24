@@ -1,2 +1,4 @@
 <web-view wx:if="{{url}}" src="{{url}}"></web-view>
 <view wx:else class="empty">未配置客服地址</view>
+
+<float-buttons />

@@ -24,4 +24,6 @@
     <view class="cart-total">合计：<text class="price">¥{{total}}</text></view>
     <view class="cart-submit" bindtap="checkout">去结算</view>
   </view>
+
+  <float-buttons />
 </view>

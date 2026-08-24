@@ -36,8 +36,21 @@ class SettingsService
             'mini_program_name_color' => '#333333', // 小程序首页顶部标题名称颜色
             'admin_copyright'    => '',          // 后台版权信息
             'domain_verify_file' => '',           // 域名校验文件名
+            'collect_tip'        => 'open',      // 收藏提示：open=开启 / close=关闭
+            'home_subtitle'      => '',          // 首页副标题
+            'scroll_order'       => 'close',     // 首页滚动订单提示：open=开启 / close=关闭
+            'scroll_order_list'  => [            // 滚动订单默认文案
+              ['name' => '张**', 'text' => '刚刚下了一笔订单'],
+              ['name' => '李**', 'text' => '刚刚下了一笔订单'],
+              ['name' => '王**', 'text' => '刚刚下了一笔订单'],
+              ['name' => '赵**', 'text' => '刚刚下了一笔订单'],
+              ['name' => '刘**', 'text' => '刚刚下了一笔订单'],
+            ],
             'service_type'       => 'online',    // online=在线客服 / phone=电话 / wechat=微信
             'service_wechat'     => '',
+            'float_cart_icon'    => '',          // 悬浮购物车按钮图标（留空用默认 SVG）
+            'float_home_icon'    => '',          // 悬浮首页按钮图标（留空用默认 SVG）
+            'float_service_icon' => '',          // 悬浮客服按钮图标（留空用默认 SVG）
             'show_float_button'  => true,        // 首页悬浮按钮
             'map_lng'            => 116.404,
             'map_lat'            => 39.915,

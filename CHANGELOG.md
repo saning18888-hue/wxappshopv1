@@ -1,3 +1,11 @@
+### v0.1.81 (2026-08-24) feat: 全局悬浮按钮抽为组件且支持单独设置图标
+
+- 新增 `components/float-buttons` 组件，统一管理「购物车 / 返回首页 / 客服」三个悬浮按钮，所有页面（`index/category/goods/list/detail/cart/order/confirm/pay/result/member/webview`）均已引入，样式与交互一致。
+- 后台「基础设置 → 悬浮按钮图标」新增三个独立上传项：购物车图标 `float_cart_icon`、首页图标 `float_home_icon`、客服图标 `float_service_icon`；留空则使用默认 SVG 图标。
+- `SettingsService` 与 `utils/settings.js` 默认值新增 `float_cart_icon` / `float_home_icon` / `float_service_icon`。
+- 客服按钮仍受「客服按钮」开关与「客服类型」配置控制；购物车/首页按钮默认常显。
+- 修复商品卡片高度不一致：标题固定两行高度、价格/购物车行通过 `margin-top: auto` 吸附到底部，同一行卡片对齐。
+
 ### v0.1.80 (2026-08-24) feat: 客服类型支持四种模式并补齐后台配置
 
 - 后台「基础设置 → 客服类型」新增按类型条件显示配置区：微信小程序客服（无需配置）、商家电话（service_phone）、微信客服（wechat_corpid + wechat_url）、第三方客服（third_party_url）。

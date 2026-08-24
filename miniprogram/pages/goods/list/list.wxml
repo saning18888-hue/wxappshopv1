@@ -19,4 +19,6 @@
       <view class="goods-sales muted">已售{{item.sales}}</view>
     </view>
   </view>
+
+  <float-buttons />
 </view>

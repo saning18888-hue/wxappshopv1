@@ -2236,6 +2236,36 @@
                   </div>
                 </div>
 
+                <!-- 悬浮按钮图标 -->
+                <div class="section-title">悬浮按钮图标</div>
+                <div class="form-row">
+                  <label class="form-label">购物车图标</label>
+                  <div class="form-control">
+                    <div class="upload-preview" id="floatCartIconPreview" onclick="triggerFloatIconUpload('float_cart_icon')"><span class="plus">+</span></div>
+                    <input type="file" id="floatCartIconFile" accept="image/*" style="display:none" onchange="onFloatIconSelected('float_cart_icon',this)">
+                    <input type="hidden" data-setting="float_cart_icon" id="floatCartIconInput">
+                    <div class="form-hint">首页悬浮「购物车」按钮图标，建议 96×96；留空使用默认图标</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">首页图标</label>
+                  <div class="form-control">
+                    <div class="upload-preview" id="floatHomeIconPreview" onclick="triggerFloatIconUpload('float_home_icon')"><span class="plus">+</span></div>
+                    <input type="file" id="floatHomeIconFile" accept="image/*" style="display:none" onchange="onFloatIconSelected('float_home_icon',this)">
+                    <input type="hidden" data-setting="float_home_icon" id="floatHomeIconInput">
+                    <div class="form-hint">首页悬浮「返回首页」按钮图标，建议 96×96；留空使用默认图标</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <label class="form-label">客服图标</label>
+                  <div class="form-control">
+                    <div class="upload-preview" id="floatServiceIconPreview" onclick="triggerFloatIconUpload('float_service_icon')"><span class="plus">+</span></div>
+                    <input type="file" id="floatServiceIconFile" accept="image/*" style="display:none" onchange="onFloatIconSelected('float_service_icon',this)">
+                    <input type="hidden" data-setting="float_service_icon" id="floatServiceIconInput">
+                    <div class="form-hint">首页悬浮「客服」按钮图标，建议 96×96；留空使用默认图标</div>
+                  </div>
+                </div>
+
                 <div class="form-row">
                   <label class="form-label">强制授权</label>
                   <div class="form-control">
@@ -2316,28 +2346,6 @@
                       <label><input type="radio" name="home_button" value="hide" data-setting="home_button"> 隐藏</label>
                     </div>
                     <div class="form-hint">微信小程序左上角原生返回首页按钮</div>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <label class="form-label">防止录屏</label>
-                  <div class="form-control">
-                    <div class="radio-group">
-                      <label><input type="radio" name="prevent_screenshot" value="open" data-setting="prevent_screenshot"> 开启</label>
-                      <label><input type="radio" name="prevent_screenshot" value="close" data-setting="prevent_screenshot" checked> 关闭</label>
-                    </div>
-                    <div class="form-hint">仅支持微信小程序端</div>
-                  </div>
-                </div>
-
-                <div class="form-row">
-                  <label class="form-label">禁止PC端小程序</label>
-                  <div class="form-control">
-                    <div class="radio-group">
-                      <label><input type="radio" name="forbid_pc_miniprogram" value="open" data-setting="forbid_pc_miniprogram"> 开启</label>
-                      <label><input type="radio" name="forbid_pc_miniprogram" value="close" data-setting="forbid_pc_miniprogram" checked> 关闭</label>
-                    </div>
-                    <div class="form-hint">仅支持微信小程序端</div>
                   </div>
                 </div>
 
@@ -9461,6 +9469,12 @@
       site_status:'open',page_title_align:'left',
       customer_service_button:'open',customer_service_type:'business_phone',
       service_phone:'',wechat_corpid:'',wechat_url:'',third_party_url:'',service_wechat:'',
+      float_cart_icon:'',float_home_icon:'',float_service_icon:'',
+      collect_tip:'open',home_subtitle:'',scroll_order:'close',scroll_order_list:[
+        {name:'张**',text:'刚刚下了一笔订单'},{name:'李**',text:'刚刚下了一笔订单'},
+        {name:'王**',text:'刚刚下了一笔订单'},{name:'赵**',text:'刚刚下了一笔订单'},
+        {name:'刘**',text:'刚刚下了一笔订单'}
+      ],
       force_auth_member_info:true,force_auth_mobile:true,
       collect_tip:'open',order_message:'close',scroll_order:'open',home_button:'show',
       prevent_screenshot:'close',forbid_pc_miniprogram:'close',cart_icon:'cart3',
@@ -9523,6 +9537,7 @@
       syncSearchColors();
       syncCloseReasonInput();
       syncCustomerServiceConfig();
+      updateAllFloatIconPreviews();
       const pm=settingsData.pay_methods||['wechat'];
       const payWechat=document.getElementById('payWechat');
       const payAlipay=document.getElementById('payAlipay');
@@ -9627,6 +9642,41 @@
       const input=document.getElementById('searchBoxIconInput');
       if(!box||!input) return;
       box.innerHTML=input.value?`<img src="${input.value}" alt="">`:'<span class="plus">+</span>';
+    }
+    const FLOAT_ICONS=[
+      {key:'float_cart_icon',preview:'floatCartIconPreview',file:'floatCartIconFile',input:'floatCartIconInput'},
+      {key:'float_home_icon',preview:'floatHomeIconPreview',file:'floatHomeIconFile',input:'floatHomeIconInput'},
+      {key:'float_service_icon',preview:'floatServiceIconPreview',file:'floatServiceIconFile',input:'floatServiceIconInput'},
+    ];
+    function triggerFloatIconUpload(key){
+      const cfg=FLOAT_ICONS.find(c=>c.key===key);
+      const input=document.getElementById(cfg.file);
+      if(input) input.click();
+    }
+    function onFloatIconSelected(key,fileEl){
+      const cfg=FLOAT_ICONS.find(c=>c.key===key);
+      const file=fileEl.files[0];
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=(e)=>{
+        const data=e.target.result;
+        const hidden=document.getElementById(cfg.input);
+        if(hidden) hidden.value=data;
+        settingsData[key]=data;
+        updateFloatIconPreview(key);
+      };
+      reader.readAsDataURL(file);
+      fileEl.value='';
+    }
+    function updateFloatIconPreview(key){
+      const cfg=FLOAT_ICONS.find(c=>c.key===key);
+      const box=document.getElementById(cfg.preview);
+      const input=document.getElementById(cfg.input);
+      if(!box||!input) return;
+      box.innerHTML=input.value?`<img src="${input.value}" alt="">`:'<span class="plus">+</span>';
+    }
+    function updateAllFloatIconPreviews(){
+      FLOAT_ICONS.forEach(c=>updateFloatIconPreview(c.key));
     }
     function switchBaseTab(tab){
       document.querySelectorAll('.bs-tab').forEach(el=>el.classList.toggle('active',el.dataset.tab===tab));

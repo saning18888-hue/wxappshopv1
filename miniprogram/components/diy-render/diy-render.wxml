@@ -25,12 +25,19 @@
       <view class="diy-mod" wx:for="{{c.modules}}" wx:for-item="m" wx:key="id">
         <view class="diy-mod-title" wx:if="{{m.title}}">{{m.title}}</view>
         <view class="diy-goods-grid">
-          <view class="diy-goods-item" wx:for="{{m.goods}}" wx:for-item="g" wx:key="id"
-            style="width:{{c.colWidth}}" data-id="{{g.id}}" bindtap="onTapGoods">
-            <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
-            <view class="diy-goods-info">
-              <view class="diy-goods-name">{{g.title}}</view>
-              <view class="diy-goods-price">¥{{g.price}}</view>
+          <view class="diy-goods-item" wx:for="{{m.goods}}" wx:for-item="g" wx:key="id" style="width:{{c.colWidth}}">
+            <view class="diy-goods-card" data-id="{{g.id}}" bindtap="onTapGoods">
+              <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
+              <view class="diy-goods-info">
+                <view class="diy-goods-name">{{g.title}}</view>
+                <view class="diy-goods-sales">销量：{{g.sales || 0}}</view>
+                <view class="diy-goods-row">
+                  <view class="diy-goods-price">¥{{g.price}}</view>
+                  <view class="diy-goods-cart" catchtap="onTapCart" data-id="{{g.id}}">
+                    <image class="diy-goods-cart-ico" src="/images/cart.svg" mode="aspectFit" />
+                  </view>
+                </view>
+              </view>
             </view>
           </view>
         </view>

@@ -1,5 +1,7 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "float-buttons": "/components/float-buttons/float-buttons"
+  },
   "navigationBarTitleText": "商品列表",
   "enablePullDownRefresh": true
 }

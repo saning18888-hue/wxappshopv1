@@ -23,4 +23,6 @@
     <view class="member-menu-item"><text>客服中心</text><text class="muted">›</text></view>
     <view class="member-menu-item"><text>关于我们</text><text class="muted">›</text></view>
   </view>
+
+  <float-buttons />
 </view>

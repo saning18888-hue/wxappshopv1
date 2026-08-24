@@ -1,7 +1,8 @@
 {
   "usingComponents": {
-    "diy-render": "/components/diy-render/diy-render"
+    "diy-render": "/components/diy-render/diy-render",
+    "float-buttons": "/components/float-buttons/float-buttons"
   },
-  "navigationBarTitleText": "优选商城",
+  "navigationBarTitleText": "",
   "enablePullDownRefresh": false
 }

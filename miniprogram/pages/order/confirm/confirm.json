@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "float-buttons": "/components/float-buttons/float-buttons"
+  },
   "navigationBarTitleText": "确认订单"
 }

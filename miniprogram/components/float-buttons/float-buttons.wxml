@@ -1,0 +1,18 @@
+<!-- 全局悬浮按钮：购物车 / 返回首页 / 客服 -->
+<view class="float-btns">
+  <view class="float-btn" bindtap="onTapCart">
+    <image class="float-btn-ico" src="{{cartIcon}}" mode="aspectFit" />
+  </view>
+  <view class="float-btn" bindtap="onTapHome">
+    <image class="float-btn-ico" src="{{homeIcon}}" mode="aspectFit" />
+  </view>
+</view>
+
+<view wx:if="{{showService}}" class="cs-fab">
+  <button wx:if="{{serviceType === 'weapp'}}" class="cs-btn" open-type="contact" session-from="weapp">
+    <image class="cs-ico" src="{{serviceIcon}}" mode="aspectFit" />
+  </button>
+  <view wx:else class="cs-btn" bindtap="onCustomerService">
+    <image class="cs-ico" src="{{serviceIcon}}" mode="aspectFit" />
+  </view>
+</view>

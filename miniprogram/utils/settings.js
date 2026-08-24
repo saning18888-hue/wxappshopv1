@@ -16,12 +16,23 @@ const DEFAULTS = {
   wechat_url: '',
   third_party_url: '',
   service_wechat: '',
+  float_cart_icon: '', // 悬浮购物车按钮图标（留空用默认）
+  float_home_icon: '', // 悬浮首页按钮图标（留空用默认）
+  float_service_icon: '', // 悬浮客服按钮图标（留空用默认）
   search_box_color: '#FFFFFF',
   search_box_icon: '',
   mini_program_name_color: '#333333',
+  collect_tip: 'open',
+  home_subtitle: '',
+  scroll_order: 'close',
+  scroll_order_list: [
+    { name: '张**', text: '刚刚下了一笔订单' },
+    { name: '李**', text: '刚刚下了一笔订单' },
+    { name: '王**', text: '刚刚下了一笔订单' },
+    { name: '赵**', text: '刚刚下了一笔订单' },
+    { name: '刘**', text: '刚刚下了一笔订单' },
+  ],
   service_type: 'online',
-  service_phone: '',
-  service_wechat: '',
   show_float_button: true,
   map_lng: 116.404,
   map_lat: 39.915,

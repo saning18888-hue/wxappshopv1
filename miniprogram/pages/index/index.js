@@ -20,15 +20,16 @@ Page({
     miniProgramName: '优选商城',        // 小程序名称
     miniProgramNameColor: '#333333',    // 小程序名称颜色
     pageTitleAlign: 'left',             // 页面标题对齐 left/center
-    customerServiceButton: 'open',      // 客服按钮开关
-    customerServiceType: 'business_phone',
-    servicePhone: '',
-    serviceWechat: '',
-    wechatCorpid: '',
-    wechatUrl: '',
-    thirdPartyUrl: '',
     searchBoxColor: '#FFFFFF',          // 搜索框背景色
     searchBoxIcon: DEFAULT_SEARCH_ICON, // 搜索框图标（上传图片 URL；空则使用默认放大镜）
+
+    // 首页扩展
+    collectTip: 'open',                 // 收藏提示
+    homeSubtitle: '',                 // 首页副标题
+    scrollOrder: 'close',               // 滚动订单提示
+    scrollOrderList: [],                // 滚动订单文案列表
+    currentScrollOrder: 0,              // 当前滚动订单索引
+    scrollOrderVisible: false,          // 滚动订单是否显示
   },
 
   onLoad() {
@@ -43,7 +44,7 @@ Page({
     }
   },
 
-  // 应用基础设置（主题色 / 名称 / 搜索框 / 客服）
+  // 应用基础设置（主题色 / 名称 / 搜索框 / 客服 / 首页扩展）
   applySettings() {
     settings.fetchSettings(true).then((s) => {
       this.setData({
@@ -51,15 +52,15 @@ Page({
         miniProgramName: s.mini_program_name || '优选商城',
         miniProgramNameColor: s.mini_program_name_color || '#333333',
         pageTitleAlign: s.page_title_align || 'left',
-        customerServiceButton: s.customer_service_button || 'open',
-        customerServiceType: s.customer_service_type || 'business_phone',
-        servicePhone: s.service_phone || '',
-        serviceWechat: s.service_wechat || '',
-        wechatCorpid: s.wechat_corpid || '',
-        wechatUrl: s.wechat_url || '',
-        thirdPartyUrl: s.third_party_url || '',
         searchBoxColor: s.search_box_color || '#FFFFFF',
         searchBoxIcon: s.search_box_icon || DEFAULT_SEARCH_ICON,
+        collectTip: s.collect_tip || 'open',
+        homeSubtitle: s.home_subtitle || '',
+        scrollOrder: s.scroll_order || 'close',
+        scrollOrderList: Array.isArray(s.scroll_order_list) ? s.scroll_order_list : [],
+      }, () => {
+        this.showCollectTip();
+        this.startScrollOrder();
       });
     });
   },
@@ -95,39 +96,50 @@ Page({
     wx.navigateTo({ url: '/pages/goods/list/list?keyword=' + encodeURIComponent(kw) });
   },
 
-  onCustomerService() {
-    const { customerServiceType, servicePhone, serviceWechat, wechatCorpid, wechatUrl, thirdPartyUrl } = this.data;
-    if (customerServiceType === 'weapp') return; // 使用 open-type=contact 按钮
-    if (customerServiceType === 'business_phone') {
-      if (servicePhone) {
-        wx.makePhoneCall({ phoneNumber: servicePhone, fail: () => {} });
-      } else {
-        wx.showToast({ title: '暂未配置商家电话', icon: 'none' });
-      }
+  // 收藏提示：开启时首页首次显示右上角收藏引导
+  showCollectTip() {
+    if (this.data.collectTip !== 'open') return;
+    const shownKey = '__collect_tip_shown';
+    wx.getStorage({
+      key: shownKey,
+      fail: () => {
+        if (typeof wx.showFavoriteGuide === 'function') {
+          wx.showFavoriteGuide({
+            type: 'tip',
+            content: '收藏小程序，下次访问更快',
+            success: () => wx.setStorage({ key: shownKey, data: 1 }),
+            fail: () => {},
+          });
+        }
+      },
+    });
+  },
+
+  // 启动/停止滚动订单提示
+  startScrollOrder() {
+    this.stopScrollOrder();
+    const list = this.data.scrollOrderList || [];
+    if (this.data.scrollOrder !== 'open' || !list.length) {
+      this.setData({ scrollOrderVisible: false });
       return;
     }
-    if (customerServiceType === 'wechat') {
-      if (wechatCorpid && wechatUrl && typeof wx.openCustomerServiceChat === 'function') {
-        wx.openCustomerServiceChat({
-          corpid: wechatCorpid,
-          url: wechatUrl,
-          fail: () => wx.showToast({ title: '调起微信客服失败', icon: 'none' }),
-        });
-      } else if (serviceWechat) {
-        wx.setClipboardData({ data: serviceWechat, success: () => wx.showToast({ title: '微信号已复制', icon: 'none' }) });
-      } else {
-        wx.showToast({ title: '暂未配置微信客服', icon: 'none' });
-      }
-      return;
+    this.setData({ scrollOrderVisible: true });
+    this.scrollTimer = setInterval(() => {
+      const idx = (this.data.currentScrollOrder + 1) % list.length;
+      this.setData({ currentScrollOrder: idx });
+    }, 3500);
+  },
+  stopScrollOrder() {
+    if (this.scrollTimer) {
+      clearInterval(this.scrollTimer);
+      this.scrollTimer = null;
     }
-    if (customerServiceType === 'third_party') {
-      if (thirdPartyUrl) {
-        wx.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(thirdPartyUrl) });
-      } else {
-        wx.showToast({ title: '暂未配置第三方客服', icon: 'none' });
-      }
-      return;
-    }
-    wx.showToast({ title: '暂未配置客服', icon: 'none' });
+  },
+
+  onHide() {
+    this.stopScrollOrder();
+  },
+  onUnload() {
+    this.stopScrollOrder();
   },
 });

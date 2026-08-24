@@ -3,6 +3,16 @@
   <!-- 小程序名称 / 页面标题（基础设置 → 页面标题对齐：靠左 / 居中） -->
   <view class="app-header" style="background:{{themeColor}}">
     <view class="app-title" style="text-align:{{pageTitleAlign}};color:{{miniProgramNameColor}}">{{miniProgramName}}</view>
+    <view wx:if="{{homeSubtitle}}" class="app-subtitle" style="color:{{miniProgramNameColor}}">{{homeSubtitle}}</view>
+  </view>
+
+  <!-- 滚动订单提示（左上角） -->
+  <view wx:if="{{scrollOrder === 'open' && scrollOrderVisible && scrollOrderList.length}}" class="scroll-order">
+    <view class="scroll-order-avatar"></view>
+    <view class="scroll-order-text">
+      <text class="scroll-order-name">{{scrollOrderList[currentScrollOrder].name}}</text>
+      <text> {{scrollOrderList[currentScrollOrder].text}}</text>
+    </view>
   </view>
 
   <!-- 搜索栏（背景为小程序主题色；搜索框颜色/图标可配置） -->
@@ -16,15 +26,8 @@
   <view wx:if="{{loading}}" class="empty">加载中...</view>
   <diy-render wx:else components="{{components}}" goodsList="{{goodsList}}" cats="{{cats}}" />
 
-  <!-- 客服按钮（基础设置 → 客服按钮） -->
-  <view wx:if="{{customerServiceButton === 'open'}}" class="cs-fab">
-    <button wx:if="{{customerServiceType === 'weapp'}}" class="cs-btn" open-type="contact" session-from="weapp">
-      <text class="cs-ico">💬</text>
-    </button>
-    <view wx:else class="cs-btn" bindtap="onCustomerService">
-      <text class="cs-ico">💬</text>
-    </view>
-  </view>
+  <!-- 全局悬浮按钮（购物车 / 返回首页 / 客服），所有页面统一 -->
+  <float-buttons />
 
   <!-- 站点状态：打烊时全页拦截 -->
   <view wx:if="{{siteClosed}}" class="site-closed">
