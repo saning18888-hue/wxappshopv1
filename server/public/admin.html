@@ -1063,6 +1063,11 @@
     .site-status-close{display:inline-flex;align-items:center;gap:6px;margin-right:8px}
     .close-reason-input{width:280px;height:34px;padding:0 10px}
     .close-reason-input:disabled{opacity:.5;background:var(--surface);cursor:not-allowed}
+    /* 客服类型对应配置区 */
+    .cs-config{margin-top:14px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+    .cs-config-item{display:flex;flex-direction:column;gap:10px}
+    .cs-config-item .form-input{width:100%;max-width:420px}
+    .cs-config-item .form-hint{margin:0}
 
     .bn-modal-card{width:900px;max-width:92vw}
     .bn-modal-body{display:grid;grid-template-columns:1fr 300px;gap:18px}
@@ -2203,10 +2208,30 @@
                   <label class="form-label">客服类型</label>
                   <div class="form-control">
                     <div class="radio-group">
-                      <label><input type="radio" name="customer_service_type" value="weapp" data-setting="customer_service_type"> 微信小程序客服</label>
-                      <label><input type="radio" name="customer_service_type" value="business_phone" data-setting="customer_service_type" checked> 商家电话</label>
-                      <label><input type="radio" name="customer_service_type" value="third_party" data-setting="customer_service_type"> 第三方客服</label>
-                      <label><input type="radio" name="customer_service_type" value="wechat" data-setting="customer_service_type"> 微信客服</label>
+                      <label><input type="radio" name="customer_service_type" value="weapp" data-setting="customer_service_type" onchange="syncCustomerServiceConfig()"> 微信小程序客服</label>
+                      <label><input type="radio" name="customer_service_type" value="business_phone" data-setting="customer_service_type" onchange="syncCustomerServiceConfig()"> 商家电话</label>
+                      <label><input type="radio" name="customer_service_type" value="third_party" data-setting="customer_service_type" onchange="syncCustomerServiceConfig()"> 第三方客服</label>
+                      <label><input type="radio" name="customer_service_type" value="wechat" data-setting="customer_service_type" onchange="syncCustomerServiceConfig()"> 微信客服</label>
+                    </div>
+
+                    <!-- 各类型对应配置，按所选类型显示 -->
+                    <div class="cs-config">
+                      <div class="cs-config-item" data-cs-type="business_phone">
+                        <input type="text" class="form-input" data-setting="service_phone" placeholder="商家联系电话，如 400-888-8888">
+                        <div class="form-hint">用户点击客服按钮将直接拨打该电话</div>
+                      </div>
+                      <div class="cs-config-item" data-cs-type="weapp">
+                        <div class="form-hint">无需配置。需在 <b>微信公众平台 → 功能 → 客服</b> 中添加客服人员并启用「小程序客服」消息。</div>
+                      </div>
+                      <div class="cs-config-item" data-cs-type="wechat">
+                        <input type="text" class="form-input" data-setting="wechat_corpid" placeholder="企业微信 corpID，如 ww1234567890abcdef">
+                        <input type="text" class="form-input" data-setting="wechat_url" placeholder="微信客服链接，如 https://work.weixin.qq.com/kfid/xxxx">
+                        <div class="form-hint">需已开通企业微信「微信客服」并在小程序后台绑定。用户点击后调起微信客服会话。</div>
+                      </div>
+                      <div class="cs-config-item" data-cs-type="third_party">
+                        <input type="text" class="form-input" data-setting="third_party_url" placeholder="第三方客服 H5 地址，如 https://kf.example.com/xxx">
+                        <div class="form-hint">用户点击客服按钮将以 web-view 打开该 H5 客服页（需在小程序后台配置业务域名）。</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -9435,6 +9460,7 @@
       mini_program_name:'优选商城',mini_program_name_color:'#333333',search_box_color:'#FFFFFF',search_box_icon:'',
       site_status:'open',page_title_align:'left',
       customer_service_button:'open',customer_service_type:'business_phone',
+      service_phone:'',wechat_corpid:'',wechat_url:'',third_party_url:'',service_wechat:'',
       force_auth_member_info:true,force_auth_mobile:true,
       collect_tip:'open',order_message:'close',scroll_order:'open',home_button:'show',
       prevent_screenshot:'close',forbid_pc_miniprogram:'close',cart_icon:'cart3',
@@ -9476,6 +9502,13 @@
       const input=document.querySelector('#basePanel .close-reason-input');
       if(input){ input.disabled=!closed; }
     }
+    function syncCustomerServiceConfig(){
+      const sel=document.querySelector('#basePanel input[name="customer_service_type"]:checked');
+      const type=sel?sel.value:'business_phone';
+      document.querySelectorAll('#basePanel .cs-config-item').forEach(it=>{
+        it.style.display=(it.getAttribute('data-cs-type')===type)?'':'none';
+      });
+    }
     function bindSettingsForm(){
       const form=document.getElementById('basePanel');
       if(!form)return;
@@ -9489,6 +9522,7 @@
       syncThemeColor();
       syncSearchColors();
       syncCloseReasonInput();
+      syncCustomerServiceConfig();
       const pm=settingsData.pay_methods||['wechat'];
       const payWechat=document.getElementById('payWechat');
       const payAlipay=document.getElementById('payAlipay');

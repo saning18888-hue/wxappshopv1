@@ -26,14 +26,17 @@ class SettingsService
             'mini_program_name'  => '优选商城',   // 小程序首页顶部标题名称（可在后台修改，默认「优选商城」）
             'page_title_align'   => 'left',       // 页面标题对齐：left=靠左 / center=居中
             'customer_service_button' => 'open', // 前端客服按钮开关 open=开启 / close=关闭
-            'customer_service_type'   => 'business_phone', // weapp=微信客服 / business_phone=商家电话 / third_party=第三方 / wechat=微信客服(号)
+            'customer_service_type'   => 'business_phone', // weapp=微信小程序客服 / business_phone=商家电话 / third_party=第三方客服 / wechat=微信客服(企业微信)
+            'service_phone'      => '',           // 商家电话（customer_service_type=business_phone）
+            'wechat_corpid'      => '',           // 微信客服企业ID（customer_service_type=wechat，企业微信 corpID）
+            'wechat_url'         => '',           // 微信客服链接（customer_service_type=wechat，格式 https://work.weixin.qq.com/kfid/xxxx）
+            'third_party_url'    => '',           // 第三方客服 H5 地址（customer_service_type=third_party，通过 web-view 打开）
             'search_box_color'   => '#FFFFFF',    // 首页搜索框背景色
             'search_box_icon'    => '',            // 首页搜索框图标（可上传图片，空则使用默认放大镜）
             'mini_program_name_color' => '#333333', // 小程序首页顶部标题名称颜色
             'admin_copyright'    => '',          // 后台版权信息
             'domain_verify_file' => '',           // 域名校验文件名
             'service_type'       => 'online',    // online=在线客服 / phone=电话 / wechat=微信
-            'service_phone'      => '',
             'service_wechat'     => '',
             'show_float_button'  => true,        // 首页悬浮按钮
             'map_lng'            => 116.404,

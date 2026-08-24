@@ -24,6 +24,9 @@ Page({
     customerServiceType: 'business_phone',
     servicePhone: '',
     serviceWechat: '',
+    wechatCorpid: '',
+    wechatUrl: '',
+    thirdPartyUrl: '',
     searchBoxColor: '#FFFFFF',          // 搜索框背景色
     searchBoxIcon: DEFAULT_SEARCH_ICON, // 搜索框图标（上传图片 URL；空则使用默认放大镜）
   },
@@ -52,6 +55,9 @@ Page({
         customerServiceType: s.customer_service_type || 'business_phone',
         servicePhone: s.service_phone || '',
         serviceWechat: s.service_wechat || '',
+        wechatCorpid: s.wechat_corpid || '',
+        wechatUrl: s.wechat_url || '',
+        thirdPartyUrl: s.third_party_url || '',
         searchBoxColor: s.search_box_color || '#FFFFFF',
         searchBoxIcon: s.search_box_icon || DEFAULT_SEARCH_ICON,
       });
@@ -90,17 +96,38 @@ Page({
   },
 
   onCustomerService() {
-    const { customerServiceType, servicePhone, serviceWechat } = this.data;
+    const { customerServiceType, servicePhone, serviceWechat, wechatCorpid, wechatUrl, thirdPartyUrl } = this.data;
     if (customerServiceType === 'weapp') return; // 使用 open-type=contact 按钮
-    if (servicePhone) {
-      wx.makePhoneCall({ phoneNumber: servicePhone, fail: () => {} });
-    } else if (serviceWechat) {
-      wx.setClipboardData({
-        data: serviceWechat,
-        success: () => wx.showToast({ title: '微信号已复制', icon: 'none' }),
-      });
-    } else {
-      wx.showToast({ title: '暂未配置客服', icon: 'none' });
+    if (customerServiceType === 'business_phone') {
+      if (servicePhone) {
+        wx.makePhoneCall({ phoneNumber: servicePhone, fail: () => {} });
+      } else {
+        wx.showToast({ title: '暂未配置商家电话', icon: 'none' });
+      }
+      return;
     }
+    if (customerServiceType === 'wechat') {
+      if (wechatCorpid && wechatUrl && typeof wx.openCustomerServiceChat === 'function') {
+        wx.openCustomerServiceChat({
+          corpid: wechatCorpid,
+          url: wechatUrl,
+          fail: () => wx.showToast({ title: '调起微信客服失败', icon: 'none' }),
+        });
+      } else if (serviceWechat) {
+        wx.setClipboardData({ data: serviceWechat, success: () => wx.showToast({ title: '微信号已复制', icon: 'none' }) });
+      } else {
+        wx.showToast({ title: '暂未配置微信客服', icon: 'none' });
+      }
+      return;
+    }
+    if (customerServiceType === 'third_party') {
+      if (thirdPartyUrl) {
+        wx.navigateTo({ url: '/pages/webview/webview?url=' + encodeURIComponent(thirdPartyUrl) });
+      } else {
+        wx.showToast({ title: '暂未配置第三方客服', icon: 'none' });
+      }
+      return;
+    }
+    wx.showToast({ title: '暂未配置客服', icon: 'none' });
   },
 });

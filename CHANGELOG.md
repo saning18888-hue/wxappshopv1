@@ -1,3 +1,13 @@
+### v0.1.80 (2026-08-24) feat: 客服类型支持四种模式并补齐后台配置
+
+- 后台「基础设置 → 客服类型」新增按类型条件显示配置区：微信小程序客服（无需配置）、商家电话（service_phone）、微信客服（wechat_corpid + wechat_url）、第三方客服（third_party_url）。
+- 小程序端点击客服按钮按类型分支：商家电话走 `wx.makePhoneCall`；微信客服走 `wx.openCustomerServiceChat`，未配置时回退复制微信号；第三方客服通过 `pages/webview/webview` 以 web-view 打开 H5 地址。
+- 新增 `pages/webview/webview` 页面（app.json 注册）。
+- SettingsService 新增 `wechat_corpid` / `wechat_url` / `third_party_url` 默认值。
+- 修复自定义 tabBar 遮挡首页客服按钮：`.cs-fab` 抬到 tabBar 上方（`bottom: calc(120rpx + env(safe-area-inset-bottom))`，z-index 600）。
+
+**注意**：微信客服需已开通企业微信「微信客服」并绑定；第三方客服 H5 地址需在小程序后台配置业务域名。
+
 ### v0.1.79 (2026-08-24) feat: 站点关闭支持在后台自定义闭店提示文案
 
 - 后台「基础设置 → 站点状态」选择“关闭”后，右侧显示闭店文案输入框，可自定义小程序首页的打烊提示文字。

@@ -23,8 +23,8 @@
 .search-ico-img { width: 32rpx; height: 32rpx; margin-right: 12rpx; flex-shrink: 0; }
 .search-input { flex: 1; font-size: 28rpx; }
 
-/* 客服按钮 */
-.cs-fab { position: fixed; right: 28rpx; bottom: 60rpx; z-index: 60; }
+/* 客服按钮（抬到自定义 tabBar 上方，避免被遮挡） */
+.cs-fab { position: fixed; right: 28rpx; bottom: calc(120rpx + env(safe-area-inset-bottom)); z-index: 600; }
 .cs-btn {
   width: 96rpx; height: 96rpx; border-radius: 50%;
   background: #fff; box-shadow: 0 8rpx 24rpx rgba(0,0,0,.18);
