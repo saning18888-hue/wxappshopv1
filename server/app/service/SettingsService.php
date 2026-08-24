@@ -22,6 +22,14 @@ class SettingsService
             'store_name'         => 'B2C 商城',
             'store_logo'         => '',
             'theme_color'        => '#FF6B35',   // 小程序主题色（基础设置 → 主题色设计）
+            // —— 新增：小程序名称 / 页面标题对齐 / 客服按钮 / 搜索框配色 ——
+            'mini_program_name'  => '优选商城',   // 小程序首页顶部标题名称（可在后台修改，默认「优选商城」）
+            'page_title_align'   => 'left',       // 页面标题对齐：left=靠左 / center=居中
+            'customer_service_button' => 'open', // 前端客服按钮开关 open=开启 / close=关闭
+            'customer_service_type'   => 'business_phone', // weapp=微信客服 / business_phone=商家电话 / third_party=第三方 / wechat=微信客服(号)
+            'search_box_color'   => '#FFFFFF',    // 首页搜索框背景色
+            'search_box_icon'    => '',            // 首页搜索框图标（可上传图片，空则使用默认放大镜）
+            'mini_program_name_color' => '#333333', // 小程序首页顶部标题名称颜色
             'admin_copyright'    => '',          // 后台版权信息
             'domain_verify_file' => '',           // 域名校验文件名
             'service_type'       => 'online',    // online=在线客服 / phone=电话 / wechat=微信

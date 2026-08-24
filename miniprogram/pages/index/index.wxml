@@ -1,13 +1,30 @@
 <view class="home" style="--primary:{{themeColor}}">
-  <view class="search-bar">
-    <view class="search-box">
-      <text class="search-ico">🔍</text>
+
+  <!-- 小程序名称 / 页面标题（基础设置 → 页面标题对齐：靠左 / 居中） -->
+  <view class="app-header" style="background:{{themeColor}}">
+    <view class="app-title" style="text-align:{{pageTitleAlign}};color:{{miniProgramNameColor}}">{{miniProgramName}}</view>
+  </view>
+
+  <!-- 搜索栏（背景为小程序主题色；搜索框颜色/图标可配置） -->
+  <view class="search-bar" style="background:{{themeColor}}">
+    <view class="search-box" style="background:{{searchBoxColor}}">
+      <image class="search-ico-img" src="{{searchBoxIcon}}" mode="aspectFit"></image>
       <input class="search-input" placeholder="搜索你想要的好物" confirm-type="search" bindconfirm="onSearch" />
     </view>
   </view>
 
   <view wx:if="{{loading}}" class="empty">加载中...</view>
   <diy-render wx:else components="{{components}}" goodsList="{{goodsList}}" cats="{{cats}}" />
+
+  <!-- 客服按钮（基础设置 → 客服按钮） -->
+  <view wx:if="{{customerServiceButton === 'open'}}" class="cs-fab">
+    <button wx:if="{{customerServiceType === 'weapp'}}" class="cs-btn" open-type="contact" session-from="weapp">
+      <text class="cs-ico">💬</text>
+    </button>
+    <view wx:else class="cs-btn" bindtap="onCustomerService">
+      <text class="cs-ico">💬</text>
+    </view>
+  </view>
 
   <!-- 站点状态：打烊时全页拦截 -->
   <view wx:if="{{siteClosed}}" class="site-closed">

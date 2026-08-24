@@ -1,3 +1,18 @@
+### v0.1.78 (2026-08-24) feat: 底部导航支持自定义 tabBar 与后台独立配色（文字/选中/背景/边框色）
+
+**范围**：`miniprogram/custom-tab-bar/*`、`miniprogram/app.json`、`server/app/controller/api/v1/Design.php`、`server/app/service/SettingsService.php`、`server/public/admin.html`、`miniprogram/utils/settings.js`、`miniprogram/pages/*`（index/category/cart/member）、`CHANGELOG.md`、`miniprogram/images/tab/*`、`server/public/uploads/categories/20260824/*`。
+
+**改动**：
+- 新增自定义 tabBar（`custom-tab-bar/index.js` + `index.wxml/wxss/json`），通过 `app.json` 设置 `tabBar.custom: true` 接管原生底部导航，使文字颜色可在运行期动态变更（原生 tabBar 颜色写死后无法运行期修改）。
+- `Design.php` 新增 `bottom_nav` 接口，返回导航项列表与样式（text_color / selected_color / bg_color / border_color）。
+- `SettingsService.php` 新增底部导航配置默认值（`setting_key = bottom_nav`），含菜单项与配色。
+- 后台「店铺 → 装修设计 → 底部导航」新增「样式」Tab，可单独设置导航栏文字颜色、选中文字颜色、背景颜色、顶部边框颜色，保存草稿/发布后小程序端即时生效。
+- 自定义 tabBar 内改用 `wx.request` 直接拉取 `/api/v1/bottom_nav`，修复此前 `require('../../utils/request')` 在自定义 tabBar 上下文解析失败导致的「can not find module」编译错误。
+- 重制底部导航图标为透明背景 81×81 PNG（home/category/cart/mine 的 normal/active 各一份），修复不透明白底遮挡文字的问题。
+- 各 tab 页补充分页栏主题色跟随，样式 Tab 配色表单对齐后台基础设置风格。
+
+**验证**：清缓存重新编译后，底部导航正常显示图标与文字；后台改配色并发布后小程序即时生效。
+
 ### v0.1.77 (2026-08-24) fix: diy 商品组价格改为红色，标题/价格底部对齐布局
 
 **范围**：`miniprogram/components/diy-render/diy-render.wxml`、`miniprogram/components/diy-render/diy-render.wxss`。

@@ -8,6 +8,9 @@ Page({
   onShow() {
     this.applyTheme();
     this.load();
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 2 });
+    }
   },
 
   // 应用主题色（基础设置 → 主题色设计）

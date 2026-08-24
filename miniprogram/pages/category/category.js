@@ -18,6 +18,12 @@ Page({
     });
   },
 
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 1 });
+    }
+  },
+
   switchCat(e) {
     const id = e.currentTarget.dataset.id;
     const cat = this.data.cats.find((c) => c.id === id);

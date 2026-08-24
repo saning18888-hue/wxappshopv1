@@ -1,4 +1,4 @@
-.member { padding-bottom: 40rpx; }
+.member { padding-bottom: 140rpx; }
 .member-header {
   background: linear-gradient(135deg, var(--primary), #FF8A5C);
   padding: 60rpx 40rpx;

@@ -14,6 +14,9 @@ Page({
     api.get('/order', { page: 1, page_size: 5 })
       .then((res) => this.setData({ orders: res.list || [] }))
       .catch(() => {});
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 3 });
+    }
   },
 
   goOrders() {

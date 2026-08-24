@@ -1,4 +1,10 @@
-.home { min-height: 100vh; }
+.home { min-height: 100vh; padding-bottom: 140rpx; box-sizing: border-box; }
+
+/* 小程序名称 / 页面标题 */
+.app-header { padding: 20rpx 30rpx 10rpx; }
+.app-title { color: #fff; font-size: 38rpx; font-weight: 700; line-height: 1.4; }
+
+/* 搜索栏 */
 .search-bar {
   position: sticky;
   top: 0;
@@ -14,8 +20,19 @@
   padding: 0 24rpx;
   height: 72rpx;
 }
-.search-ico { font-size: 28rpx; margin-right: 12rpx; color: #999; }
+.search-ico-img { width: 32rpx; height: 32rpx; margin-right: 12rpx; flex-shrink: 0; }
 .search-input { flex: 1; font-size: 28rpx; }
+
+/* 客服按钮 */
+.cs-fab { position: fixed; right: 28rpx; bottom: 60rpx; z-index: 60; }
+.cs-btn {
+  width: 96rpx; height: 96rpx; border-radius: 50%;
+  background: #fff; box-shadow: 0 8rpx 24rpx rgba(0,0,0,.18);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; line-height: 1; margin: 0;
+}
+.cs-btn::after { border: none; }
+.cs-ico { font-size: 46rpx; line-height: 1; }
 
 /* 站点打烊全页拦截 */
 .site-closed {
@@ -30,3 +47,6 @@
 .site-closed-ico { font-size: 72rpx; }
 .site-closed-title { font-size: 36rpx; font-weight: 700; margin: 20rpx 0 12rpx; }
 .site-closed-reason { font-size: 26rpx; color: #888; line-height: 1.6; }
+
+/* 加载中 */
+.empty { text-align: center; color: #999; font-size: 26rpx; padding: 120rpx 0; }

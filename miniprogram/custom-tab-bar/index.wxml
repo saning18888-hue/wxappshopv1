@@ -1,0 +1,19 @@
+<view class="tab-bar" style="background:{{bgColor}};border-top-color:{{borderColor}}">
+  <view
+    wx:for="{{list}}"
+    wx:key="index"
+    class="tab-bar-item"
+    data-index="{{index}}"
+    bindtap="switchTab"
+  >
+    <image
+      class="tab-icon"
+      src="{{selected === index ? item.selectedIcon : item.icon}}"
+      mode="aspectFit"
+    ></image>
+    <view
+      class="tab-text"
+      style="color:{{selected === index ? selectedColor : textColor}}"
+    >{{item.text}}</view>
+  </view>
+</view>

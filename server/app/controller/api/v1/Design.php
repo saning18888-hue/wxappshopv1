@@ -17,6 +17,13 @@ class Design extends ApiController
         if (!$cfg) {
             $cfg = $svc->defaultBottomNav();
         }
+        $styleDefaults = [
+            'text_color'     => '#999999',
+            'selected_color' => '#FF6B35',
+            'bg_color'       => '#FFFFFF',
+            'border_color'   => '#EEEEEE',
+        ];
+        $cfg['style'] = array_merge($styleDefaults, $cfg['style'] ?? []);
         return $this->ok($cfg);
     }
 }

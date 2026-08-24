@@ -88,6 +88,12 @@ class PageService
         return [
             'page'       => 'bottom_nav',
             'version'    => 1,
+            'style'      => [
+                'text_color'     => '#999999',
+                'selected_color' => '#FF6B35',
+                'bg_color'       => '#FFFFFF',
+                'border_color'   => '#EEEEEE',
+            ],
             'components' => [
                 [
                     'type'  => 'bottom_nav',
