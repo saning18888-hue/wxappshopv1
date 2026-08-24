@@ -101,6 +101,8 @@
 .diy-goods-item {
   padding: 10rpx;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 .diy-goods-cover {
   width: 100%;
@@ -108,6 +110,13 @@
   border-radius: 16rpx;
   background: #f2f3f5;
   box-shadow: inset 0 0 0 1rpx rgba(17, 24, 39, 0.03);
+}
+.diy-goods-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
 }
 .diy-goods-name {
   font-size: 25rpx;
@@ -123,7 +132,7 @@
 .diy-goods-price {
   font-size: 31rpx;
   font-weight: 600;
-  color: var(--primary);
+  color: #FF4D4F;
   margin-top: 8rpx;
   letter-spacing: -0.4rpx;
 }

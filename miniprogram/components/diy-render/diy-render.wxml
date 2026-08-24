@@ -28,8 +28,10 @@
           <view class="diy-goods-item" wx:for="{{m.goods}}" wx:for-item="g" wx:key="id"
             style="width:{{c.colWidth}}" data-id="{{g.id}}" bindtap="onTapGoods">
             <image class="diy-goods-cover" src="{{g.cover}}" mode="aspectFill" />
-            <view class="diy-goods-name">{{g.title}}</view>
-            <view class="diy-goods-price">¥{{g.price}}</view>
+            <view class="diy-goods-info">
+              <view class="diy-goods-name">{{g.title}}</view>
+              <view class="diy-goods-price">¥{{g.price}}</view>
+            </view>
           </view>
         </view>
       </view>

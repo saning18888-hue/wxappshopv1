@@ -1,3 +1,11 @@
+### v0.1.77 (2026-08-24) fix: diy 商品组价格改为红色，标题/价格底部对齐布局
+
+**范围**：`miniprogram/components/diy-render/diy-render.wxml`、`miniprogram/components/diy-render/diy-render.wxss`。
+
+**改动**：
+- 商品组价格颜色由 `var(--primary)` 改为红色 `#FF4D4F`。
+- 商品卡片改为 `flex-direction: column`，标题与价格包进 `.diy-goods-info`（`flex:1` + `justify-content: space-between`），修复「标题一行时价格跟在标题下方、未贴底对齐」的布局问题，无论标题 1 行或 2 行价格都固定在卡片底部。
+
 ### v0.1.76 (2026-08-23) fix: 修复主题色后台保存无效 + 小程序全页/导航栏/tabBar 主题色统一生效
 
 **范围**：`server/public/admin.html`、`miniprogram/utils/settings.js`、`miniprogram/components/diy-render/*`、`miniprogram/pages/category/*`、`miniprogram/utils/mock.js`、`CHANGELOG.md`。
