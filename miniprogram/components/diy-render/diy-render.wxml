@@ -33,8 +33,8 @@
                 <view class="diy-goods-sales">销量：{{g.sales || 0}}</view>
                 <view class="diy-goods-row">
                   <view class="diy-goods-price">¥{{g.price}}</view>
-                  <view class="diy-goods-cart" catchtap="onTapCart" data-id="{{g.id}}">
-                    <image class="diy-goods-cart-ico" src="/images/cart.svg" mode="aspectFit" />
+                  <view wx:if="{{cartIcon}}" class="diy-goods-cart" style="background: {{cartIconBg}};" catchtap="onTapCart" data-id="{{g.id}}">
+                    <image class="diy-goods-cart-ico" src="{{cartIcon}}" mode="aspectFit" />
                   </view>
                 </view>
               </view>

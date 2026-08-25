@@ -19,7 +19,7 @@
   <view class="search-bar" style="background:{{themeColor}}">
     <view class="search-box" style="background:{{searchBoxColor}}">
       <image class="search-ico-img" src="{{searchBoxIcon}}" mode="aspectFit"></image>
-      <input class="search-input" placeholder="搜索你想要的好物" confirm-type="search" bindconfirm="onSearch" />
+      <input class="search-input" placeholder="{{searchPlaceholder}}" confirm-type="search" bindconfirm="onSearch" />
     </view>
   </view>
 

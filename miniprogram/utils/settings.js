@@ -19,8 +19,12 @@ const DEFAULTS = {
   float_cart_icon: '', // 悬浮购物车按钮图标（留空用默认）
   float_home_icon: '', // 悬浮首页按钮图标（留空用默认）
   float_service_icon: '', // 悬浮客服按钮图标（留空用默认）
+  cart_icon: 'cart3', // 商品卡片加购图标：none/cart1/cart2/cart3/cart4/cart7/plus/plus2
+  cart_icon_bg: '#ffeded', // 商品卡片加购按钮底色
+  cart_icon_color: '#ff4d4f', // 商品卡片加购图标颜色
   search_box_color: '#FFFFFF',
   search_box_icon: '',
+  search_placeholder: '搜索你想要的好物',
   mini_program_name_color: '#333333',
   collect_tip: 'open',
   home_subtitle: '',

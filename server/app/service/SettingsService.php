@@ -33,6 +33,7 @@ class SettingsService
             'third_party_url'    => '',           // 第三方客服 H5 地址（customer_service_type=third_party，通过 web-view 打开）
             'search_box_color'   => '#FFFFFF',    // 首页搜索框背景色
             'search_box_icon'    => '',            // 首页搜索框图标（可上传图片，空则使用默认放大镜）
+            'search_placeholder' => '搜索你想要的好物', // 首页搜索框占位文字
             'mini_program_name_color' => '#333333', // 小程序首页顶部标题名称颜色
             'admin_copyright'    => '',          // 后台版权信息
             'domain_verify_file' => '',           // 域名校验文件名
@@ -52,6 +53,9 @@ class SettingsService
             'float_home_icon'    => '',          // 悬浮首页按钮图标（留空用默认 SVG）
             'float_service_icon' => '',          // 悬浮客服按钮图标（留空用默认 SVG）
             'show_float_button'  => true,        // 首页悬浮按钮
+            'cart_icon'          => 'cart3',     // 商品卡片加购图标：none/cart1/cart2/cart3/cart4/cart7/plus/plus2
+            'cart_icon_bg'       => '#ffeded',   // 商品卡片加购按钮底色
+            'cart_icon_color'    => '#ff4d4f',   // 商品卡片加购图标颜色
             'map_lng'            => 116.404,
             'map_lat'            => 39.915,
             'map_address'        => '北京市朝阳区',

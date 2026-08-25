@@ -1,4 +1,24 @@
 const { goLink } = require('../../utils/mock');
+const settings = require('../../utils/settings');
+
+// 各加购图标 SVG 模板，使用 currentColor 占位，运行时替换为后台配置的颜色
+const CART_ICON_SVGS = {
+  cart1: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M2 3h2.2l2.1 2h12.7a1 1 0 0 1 .99 1.14l-1.1 6.5A2 2 0 0 1 16.9 14.5H8.2a2 2 0 0 1-1.97-1.6L4.5 6H2.5a1 1 0 0 1-.5-3z"/><circle cx="9.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/></svg>',
+  cart2: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h2l2.68 13.39a2 2 0 0 0 1.97 1.61h9.7a2 2 0 0 0 1.97-1.61L23 6H6.5z"/><circle cx="10.5" cy="20.5" r="1.6"/><circle cx="19" cy="20.5" r="1.6"/></svg>',
+  cart3: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h2.2l2.1 2.4h11.7a1 1 0 0 1 .99 1.2l-1.2 6.6a2 2 0 0 1-1.97 1.6H8.6a2 2 0 0 1-1.96-1.56L5 5.6H2.9a.9.9 0 0 1-.9-.9A.9.9 0 0 1 2.9 4H3z"/><circle cx="9.4" cy="19.4" r="1.6"/><circle cx="16.6" cy="19.4" r="1.6"/></svg>',
+  cart4: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>',
+  cart7: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M5 5h2l2 3h10a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H8.5a2 2 0 0 1-2-1.5L4.5 7H2V5h3zm4 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>',
+  plus: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>',
+  plus2: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+};
+
+// 根据图标类型与颜色生成 data-uri，解决 <image> 加载外部 svg 时 currentColor 失效（始终黑色）的问题
+function buildCartIcon(type, color) {
+  const tpl = CART_ICON_SVGS[type];
+  if (!tpl) return '';
+  const svg = tpl.replace(/currentColor/g, color);
+  return 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
 
 Component({
   properties: {
@@ -6,7 +26,11 @@ Component({
     goodsList: { type: Array, value: [] },
     cats: { type: Array, value: [] },
   },
-  data: { viewList: [] },
+  data: {
+    viewList: [],
+    cartIcon: '', // 商品卡片加购图标 data-uri，对应后台 cart_icon + cart_icon_color
+    cartIconBg: '#ffeded', // 商品卡片加购按钮底色
+  },
   observers: {
     'components, goodsList, cats'(comps, goods, cats) {
       const list = (comps || [])
@@ -80,6 +104,17 @@ Component({
     },
   },
   methods: {
+    loadSettings() {
+      settings.fetchSettings(false).then((s) => {
+        if (!s) return;
+        const type = s.cart_icon;
+        const color = s.cart_icon_color || '#ff4d4f';
+        this.setData({
+          cartIcon: type && type !== 'none' ? buildCartIcon(type, color) : '',
+          cartIconBg: s.cart_icon_bg || '#ffeded',
+        });
+      });
+    },
     onTapLink(e) {
       goLink(e.currentTarget.dataset.link);
     },
@@ -92,6 +127,16 @@ Component({
     onTapCart(e) {
       e.stopPropagation && e.stopPropagation();
       wx.switchTab({ url: '/pages/cart/cart' });
+    },
+  },
+  lifetimes: {
+    attached() {
+      this.loadSettings();
+    },
+  },
+  pageLifetimes: {
+    show() {
+      this.loadSettings();
     },
   },
 });

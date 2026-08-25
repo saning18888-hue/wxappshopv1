@@ -22,6 +22,7 @@ Page({
     pageTitleAlign: 'left',             // 页面标题对齐 left/center
     searchBoxColor: '#FFFFFF',          // 搜索框背景色
     searchBoxIcon: DEFAULT_SEARCH_ICON, // 搜索框图标（上传图片 URL；空则使用默认放大镜）
+    searchPlaceholder: '搜索你想要的好物', // 搜索框占位文字
 
     // 首页扩展
     collectTip: 'open',                 // 收藏提示
@@ -54,6 +55,7 @@ Page({
         pageTitleAlign: s.page_title_align || 'left',
         searchBoxColor: s.search_box_color || '#FFFFFF',
         searchBoxIcon: s.search_box_icon || DEFAULT_SEARCH_ICON,
+        searchPlaceholder: s.search_placeholder || '搜索你想要的好物',
         collectTip: s.collect_tip || 'open',
         homeSubtitle: s.home_subtitle || '',
         scrollOrder: s.scroll_order || 'close',

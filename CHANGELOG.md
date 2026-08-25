@@ -1,3 +1,69 @@
+### v0.1.91 (2026-08-25) tweak: 移除 cart5 / cart6 / cart8 加购图标
+
+- 后台「基础设置 → 购物车图标」预置项移除「购物车+（cart5）」「购物车→（cart6）」「cart8」。
+- `diy-render.js` 的 `CART_ICON_SVGS` 同步删除对应 SVG。
+- `SettingsService.php`、`utils/settings.js` 的枚举注释同步更新。
+- 保留：无、cart1、cart2、cart3（默认）、cart4（扁平）、cart7、加号、纯加号。
+
+### v0.1.87 (2026-08-25) tweak: 商品卡片加购按钮底色缩小
+
+- `diy-render.wxss` 中 `.diy-goods-cart` 由 48rpx 减至 40rpx；图标保持 28rpx 不变。
+
+### v0.1.90 (2026-08-25) feat: 搜索框占位文字可配置
+
+- 新增设置项 `search_placeholder`（默认「搜索你想要的好物」）。
+- 后台「基础设置 → 搜索框配色」新增「搜索框文字」输入框，最多 20 字。
+- 小程序 `pages/index` 的搜索框 `placeholder` 改为绑定 `searchPlaceholder`，跟随后台配置。
+- 默认值在 `SettingsService.php`、`utils/settings.js`、`index.js` 同步补充。
+
+### v0.1.89 (2026-08-25) tweak: 前三个购物车图标改扁平化、纯加号再加粗
+
+- `diy-render.js` 中 `cart1/cart2/cart3` 由线框改为实心填充扁平化；后台预览同步用 `flat` 类显示为黑色实心。
+- `plus2` 描边由 3 加粗到 4。
+- 其他图标（cart4~cart8、plus 圆圈加号）保持不变。
+
+### v0.1.88 (2026-08-25) tweak: 购物车图标线条加粗
+
+- `diy-render.js` 中线框图标 `cart1/cart2/cart3` 描边由 1.6 加粗到 2；`plus` 由 1.8 到 2.4；新增的纯加号 `plus2` 由 2 到 3，更醒目。
+
+### v0.1.87 (2026-08-25) feat: 新增纯加号购物车图标
+
+- `diy-render.js` 的 `CART_ICON_SVGS` 新增 `plus2`（只有 `+` 的按钮，无外圈），与原有带圆圈的 `plus` 区分。
+- 后台「购物车图标」新增「纯加号」单选项，枚举注释同步更新。
+
+### v0.1.86 (2026-08-25) feat: 新增多个扁平化购物车图标
+
+- `diy-render.js` 的 `CART_ICON_SVGS` 新增扁平购物车图标：`cart5` 加购、`cart6` 结算、`cart7` 实心方体购物车、`cart8` 实心斜体购物车（均为实心填充）。
+- 后台「购物车图标」同步替换对应单选项，保持黑色显示，不跟随颜色配置。
+- `SettingsService.php`、`utils/settings.js` 枚举注释更新。
+
+### v0.1.85 (2026-08-25) fix: 商品卡片加购图标真正跟随颜色配置
+
+- 根因：小程序用 `<image src="*.svg">` 加载外部 SVG 时，`currentColor` 无法读取父级 `color`，图标始终渲染为黑色。
+- 改为在 `diy-render.js` 内嵌各图标 SVG 模板，运行时把颜色替换进去并生成 `data:image/svg+xml` data-uri 作为 `<image>` 的 `src`，使图标颜色随 `cart_icon_color` 实时变化。
+- 移除不再使用的 `miniprogram/images/{cart1,cart2,cart3,cart4,plus}.svg`。
+
+### v0.1.84 (2026-08-25) feat: 商品卡片加购图标支持颜色配置
+
+- 后台「基础设置」新增「购物车图标颜色」取色器（`cart_icon_color`），前端通过 `color: {{cartIconColor}}` 控制图标线条/实心颜色，默认红 `#ff4d4f`。
+- `SettingsService.php`、`utils/settings.js`、`admin.html` 默认值同步补充 `cart_icon_color: '#ff4d4f'`。
+
+### v0.1.83 (2026-08-25) feat: 商品卡片加购图标支持底色配置与扁平图标
+
+- 后台「购物车图标」新增「扁平购物车」选项（`cart4`），新增 `miniprogram/images/cart4.svg`。
+- 删除「减号」选项与对应的 `miniprogram/images/minus.svg`。
+- 后台新增「购物车图标底色」取色器（`cart_icon_bg`），前端商品卡片加购按钮背景色实时跟随。
+- `SettingsService.php` 与 `utils/settings.js` 默认值同步补充 `cart_icon_bg: '#ffeded'`、`cart_icon: 'cart3'` 选项枚举更新。
+
+### v0.1.82 (2026-08-25) fix: 接通后台「购物车图标」设置到前端商品卡片加购按钮
+
+- 后台「基础设置 → 购物车图标」单选（无 / cart1 / cart2 / cart3 / 加号 / 减号）此前未生效：前端 `diy-render` 写死使用 `/images/cart.svg`，改后端不联动。
+- 新增预设图标文件 `miniprogram/images/{cart1,cart2,cart3,plus,minus}.svg`，与后台预览一致。
+- `diy-render` 组件读取 `cart_icon` 设置映射图标；选「无」时隐藏加购按钮。
+- `SettingsService` 与 `utils/settings.js` 默认值补充 `cart_icon: 'cart3'`。
+
+> 说明：「强制授权（会员信息 / 手机号）」与「购物车图标」是后台基础设置里的不同配置项，本次仅修复购物车图标的前端联动；会员信息/手机号授权为另一套逻辑（如需同步排查请告知）。
+
 ### v0.1.81 (2026-08-24) feat: 全局悬浮按钮抽为组件且支持单独设置图标
 
 - 新增 `components/float-buttons` 组件，统一管理「购物车 / 返回首页 / 客服」三个悬浮按钮，所有页面（`index/category/goods/list/detail/cart/order/confirm/pay/result/member/webview`）均已引入，样式与交互一致。
