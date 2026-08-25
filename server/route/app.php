@@ -39,6 +39,9 @@ Route::group('api/v1', function () {
 
     // 基础设置（小程序端读取）
     Route::get('settings', 'api/v1.Settings/get');
+
+    // 物流轨迹查询
+    Route::get('logistics/track', 'api/v1.Logistics/track');
 });
 
 // 运营后台（本地管理用，简单口令登录，前缀 /admin）
@@ -80,6 +83,9 @@ Route::group('admin', function () {
     Route::post('orders/batch_delete', 'admin.Order/batchDelete');
     Route::post('orders/batch_ship', 'admin.Order/batchShip');
     Route::post('orders_create', 'admin.Order/create');
+
+    // 物流对接测试
+    Route::post('logistics/test', 'admin.Logistics/test');
 
     // 售后订单
     Route::get('orders_aftersale', 'admin.Order/aftersale');

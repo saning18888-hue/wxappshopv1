@@ -3065,11 +3065,67 @@
                   <label class="form-label">对接类型</label>
                   <div class="form-control">
                     <div class="radio-group">
-                      <label><input type="radio" name="logistics_type" value="kdniao" data-setting="logistics_type" checked> 快递鸟</label>
-                      <label><input type="radio" name="logistics_type" value="kuaidi100" data-setting="logistics_type"> 快递100</label>
+                      <label><input type="radio" name="logistics_type" value="kdniao" data-setting="logistics_type" onchange="updateLogisticsType()" checked> 快递鸟</label>
+                      <label><input type="radio" name="logistics_type" value="kuaidi100" data-setting="logistics_type" onchange="updateLogisticsType()"> 快递100</label>
+                    </div>
+                    <div class="form-hint">选择要对接的物流查询服务商，并填写对应的接口凭证。</div>
+                  </div>
+                </div>
+
+                <!-- 快递鸟 -->
+                <div id="logiKdniao" class="logi-type-box">
+                  <div class="form-row">
+                    <label class="form-label">用户ID</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kdniao_user_id" placeholder="快递鸟 用户ID（EBusinessID）">
+                      <div class="form-hint">快递鸟后台「我的服务」中的 用户ID。</div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label">APIKey</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kdniao_api_key" placeholder="快递鸟 APIKey">
+                      <div class="form-hint">快递鸟后台「我的服务」中的 APIKey（即时查询接口）。</div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label">接口地址</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kdniao_api_url" placeholder="https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label">沙箱环境</label>
+                    <div class="form-control">
+                      <label class="switch"><input type="checkbox" data-setting="kdniao_sandbox" data-type="bool"><span class="switch-slider"></span></label>
+                      <div class="form-hint">开启后调用快递鸟沙箱地址（仅用于调试，返回模拟数据）。</div>
                     </div>
                   </div>
                 </div>
+
+                <!-- 快递100 -->
+                <div id="logiKuaidi100" class="logi-type-box hidden">
+                  <div class="form-row">
+                    <label class="form-label">授权码</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kuaidi100_customer" placeholder="快递100 授权码（customer）">
+                      <div class="form-hint">快递100 后台「我的产品」→ 实时查询 的 授权码。</div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label">APIKey</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kuaidi100_api_key" placeholder="快递100 APIKey">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="form-label">接口地址</label>
+                    <div class="form-control">
+                      <input type="text" class="form-input" data-setting="kuaidi100_api_url" placeholder="https://poll.kuaidi100.com/poll/query.do">
+                    </div>
+                  </div>
+                </div>
+
                 <div class="form-row">
                   <label class="form-label">缓存时间</label>
                   <div class="form-control">
@@ -3082,6 +3138,7 @@
                 </div>
                 <div class="form-actions">
                   <button class="btn-submit" onclick="saveShopSettings()">确定</button>
+                  <button class="btn-ghost" type="button" onclick="testLogistics()">测试连接</button>
                 </div>
               </div>
             </div>
@@ -8533,7 +8590,7 @@
           sub=(c.props.banners||[]).length+' 张广告';
         }
         const name=sec==='goods'?(c.props.title||'精选推荐'):(sec==='bannerad'?(c.props.title||'广告位'):SECTION_TITLE[sec]);
-        const editable=sec==='goods'||sec==='bannerad';
+        const editable=sec==='goods'||sec==='bannerad'||sec==='cat';
         return `<div class="lay-row" draggable="true" data-idx="${ai}" ondragstart="layDragStart(event,${ai})" ondragover="layDragOver(event,this)" ondrop="layDrop(event,${ai})">
           <div class="lay-grip">⋮⋮</div>
           <div class="lay-icon">${SECTION_ICON[sec]}</div>
@@ -8542,13 +8599,20 @@
             <div class="lay-sub">${sub}</div>
           </div>
           <div class="lay-actions">
-            ${editable?`<button class="btn sm outline" onclick="openModEditor(${ai})">编辑</button>`:''}
+            ${editable?`<button class="btn sm outline" onclick="editLayoutComp(${ai})">编辑</button>`:''}
             <button class="btn sm danger" onclick="delLayoutComp(${ai})">删除</button>
             <span class="lay-status ${hidden?'off':''}">${hidden?'已下架':'在首页'}</span>
             <label class="switch"><input type="checkbox" ${hidden?'':'checked'} onchange="toggleHomeComp(${ai},this.checked)"><span class="slider"></span></label>
           </div>
         </div>`;
       }).join('');
+    }
+    // 首页布局里点「编辑」：商品/广告位打开模块编辑器，分类导航跳到分类导航设置
+    function editLayoutComp(ai){
+      const c=designConfig.components[ai];
+      if(!c) return;
+      if(c.type==='category_nav'){ switchMenu('shop','cat'); return; }
+      openModEditor(ai);
     }
     let layDragIdx=null;
     function layDragStart(e,i){layDragIdx=i;e.dataTransfer.effectAllowed='move';}
@@ -9273,7 +9337,9 @@
     }
     function renderCatForm(){
       const c=upsertSection('cat');
-      const catOpts=catOptionsCache.map(o=>`<option value="${o.id}" ${(c.props.category_ids||[]).indexOf(o.id)>=0?'selected':''}>${o.name}</option>`).join('');
+      // 分类导航在前端只展示顶级分类（api/v1.Category/index 仅返回 parent_id=0 的分类），
+      // 这里只列出顶级分类，避免在前端选了子分类却显示不出来的数据不一致。
+      const catOpts=catOptionsCache.filter(o=>o.parent_id===0).map(o=>`<option value="${o.id}" ${(c.props.category_ids||[]).indexOf(o.id)>=0?'selected':''}>${o.name}</option>`).join('');
       const src=c.props.source||'all';
       let h=`<div class="lin-form-row cat-form-row">
         <div class="field"><label class="lin-label">标题</label><input class="lin-input" value="${c.props.title||''}" oninput="upsertSection('cat').props.title=this.value" placeholder="商品分类"></div>
@@ -9688,7 +9754,9 @@
     /* ===== 店铺设置 ===== */
     const shopDefaults={
       map_name:'',map_address:'',map_lng:'',map_lat:'',
-      logistics_type:'kdniao',logistics_cache_minutes:20
+      logistics_type:'kdniao',logistics_cache_minutes:20,
+      kdniao_user_id:'',kdniao_api_key:'',kdniao_api_url:'https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx',kdniao_sandbox:0,
+      kuaidi100_customer:'',kuaidi100_api_key:'',kuaidi100_api_url:'https://poll.kuaidi100.com/poll/query.do'
     };
     let shopData={};
     async function loadShopSettings(){
@@ -9696,7 +9764,18 @@
       if(d.code!==0){toast(d.msg||'加载失败');return;}
       shopData=Object.assign({},shopDefaults,d.data||{});
       bindShopSettingsForm();
+      updateLogisticsType();
       switchShopTab('merchant');
+    }
+    function updateLogisticsType(){
+      const t=shopData.logistics_type||'kdniao';
+      document.getElementById('logiKdniao').classList.toggle('hidden',t!=='kdniao');
+      document.getElementById('logiKuaidi100').classList.toggle('hidden',t!=='kuaidi100');
+    }
+    async function testLogistics(){
+      const d=await fetchA(`${BASE}/logistics/test`,{method:'POST'});
+      if(d.code!==0){toast(d.msg||'测试失败');return;}
+      toast(d.msg||'连接成功');
     }
     function bindShopSettingsForm(){
       const form=document.getElementById('shopPanel');

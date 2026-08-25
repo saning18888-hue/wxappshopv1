@@ -22,4 +22,9 @@ Page({
   goOrders() {
     wx.showToast({ title: '全部订单开发中', icon: 'none' });
   },
+
+  goLogistics(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: '/pages/logistics/logistics?order_id=' + id });
+  },
 });

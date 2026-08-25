@@ -156,6 +156,16 @@ class SettingsService
                     'lottery'                => ['description' => '全渠道抽奖', 'template_id' => '', 'enabled' => 1, 'content' => '【{1}】恭喜您！在本次抽奖活动中获得{2}({3})！请到小程序中兑换领取。'],
                 ],
             ],
+            // 物流查询配置（快递鸟 / 快递100）
+            'logistics_type'          => 'kdniao',    // kdniao=快递鸟 / kuaidi100=快递100
+            'logistics_cache_minutes' => 20,          // 轨迹缓存时间（分钟）
+            'kdniao_user_id'          => '',          // 快递鸟 用户ID（EBusinessID）
+            'kdniao_api_key'          => '',          // 快递鸟 APIKey
+            'kdniao_api_url'          => 'https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx',
+            'kdniao_sandbox'          => 0,           // 1=沙箱环境
+            'kuaidi100_customer'      => '',          // 快递100 授权码（customer）
+            'kuaidi100_api_key'       => '',          // 快递100 APIKey
+            'kuaidi100_api_url'       => 'https://poll.kuaidi100.com/poll/query.do',
         ];
     }
 

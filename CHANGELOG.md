@@ -1,3 +1,23 @@
+### v0.1.94 (2026-08-25) fix: 装修「分类导航」来源选择纠正 + 首页布局增加编辑入口
+
+- 修复后台「设计装修 → 分类导航」分类来源数据不一致：装修后台的分类下拉此前来自 `admin.Category/index`（扁平返回全部分类，含子分类），而小程序端 `分类导航` 只渲染顶级分类（`api/v1.Category/index` 仅返回 `parent_id=0` 的分类）。选了子分类时前端因找不到对应项而显示不出。现将该下拉限定为 `parent_id===0` 的顶级分类，与前端展示保持一致。
+- 修复小程序端「指定分类」展示顺序：此前按全部分类顺序过滤，与后台勾选顺序不符；现按 `category_ids` 的勾选顺序渲染。
+- 后台「首页布局」中「分类导航」模块新增「编辑」按钮，点击直接跳转到「设计装修 → 分类导航」设置（复用 `switchMenu('shop','cat')`）。
+
+### v0.1.93 (2026-08-25) feat: 物流配置对接快递鸟/快递100 即时查询
+
+- 后台「基础设置 → 物流配置」补全两家服务商的接口配置：
+  - 快递鸟：用户ID（EBusinessID）、APIKey、接口地址、沙箱环境开关。
+  - 快递100：授权码（customer）、APIKey、接口地址。
+  - 按「对接类型」单选自动切换显示对应凭证；新增「测试连接」按钮（`POST /admin/logistics/test`）验证凭据与网络可用性。
+- 新增 `LogisticsService`：实现两家「即时查询」接口的真实调用与签名：
+  - 快递鸟 `RequestType=1002`：`DataSign = urlencode(base64(md5(RequestData + APIKey)))`，`RequestData`/`EBusinessID`/`DataType=2` 表单提交。
+  - 快递100 实时查询：`sign = strtoupper(md5(param + customer + key))`，POST `customer/sign/param`。
+  - 内置快递公司中文名 → 接口代码映射（顺丰、中通、圆通等常见承运商）。
+  - 结果统一归一化为 `company/no/state/state_text/traces`，并按缓存时间（分钟）做文件缓存，降低接口调用频率。
+- 新增接口 `GET /api/v1/logistics/track`：支持按 `order_id`（自动取订单的发货公司与运单号、手机号后四位）或 `company/no/phone` 查询。
+- 小程序新增「物流追踪」页面（`pages/logistics`），并在「我的」订单项增加「查看物流」入口。
+
 ### v0.1.92 (2026-08-25) tweak: 削减商家信息菜单 + 门店位置移至店铺设置 + 修复地图加载
 
 - 移除商品详情页底部「客服」「门店」按钮（`detail.wxml` 的 `detail-actions` 区块及 `onService`、`onOpenMap` 处理函数）。

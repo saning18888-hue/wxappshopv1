@@ -12,6 +12,7 @@
       <view class="member-order-info">
         <text class="price">¥{{item.pay_amount}}</text>
         <text class="muted">{{item.status_text}}</text>
+        <text class="logi-link" bindtap="goLogistics" data-id="{{item.id}}">查看物流</text>
       </view>
     </view>
     <view class="member-more" bindtap="goOrders">查看全部订单 ›</view>

@@ -71,7 +71,8 @@ Component({
           let catList = cats || [];
           if (c.props && c.props.source === 'ids' && Array.isArray(c.props.category_ids) && c.props.category_ids.length) {
             const ids = c.props.category_ids.map(Number);
-            catList = (cats || []).filter((cat) => ids.indexOf(cat.id) >= 0);
+            // 按选择的顺序展示，避免与装修后台指定的顺序不一致
+            catList = ids.map((id) => (cats || []).find((cat) => cat.id === id)).filter(Boolean);
           }
           const cols = (c.props && c.props.columns) || 4;
           return Object.assign({}, c, { catList, colWidth: 100 / cols + '%' });

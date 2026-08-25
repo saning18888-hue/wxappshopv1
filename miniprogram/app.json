@@ -8,6 +8,7 @@
     "pages/order/confirm/confirm",
     "pages/pay/result/result",
     "pages/member/member",
+    "pages/logistics/logistics",
     "pages/webview/webview"
   ],
   "window": {

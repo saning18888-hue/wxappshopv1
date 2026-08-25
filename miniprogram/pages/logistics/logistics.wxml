@@ -1,0 +1,21 @@
+<view class="logi-page">
+  <view wx:if="{{loading}}" class="logi-loading">加载中…</view>
+  <block wx:else>
+    <view class="logi-card">
+      <view class="logi-company">{{info.company || '物流'}}</view>
+      <view class="logi-no">运单号：{{info.no || '暂无'}}</view>
+      <view class="logi-state">状态：{{info.state_text || '未知'}}</view>
+    </view>
+
+    <view class="logi-timeline" wx:if="{{info.traces.length}}">
+      <view class="logi-item {{index === 0 ? 'first' : ''}}" wx:for="{{info.traces}}" wx:key="index">
+        <view class="logi-dot"></view>
+        <view class="logi-content">
+          <view class="logi-context">{{item.context}}</view>
+          <view class="logi-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="logi-empty">暂无物流轨迹</view>
+  </block>
+</view>

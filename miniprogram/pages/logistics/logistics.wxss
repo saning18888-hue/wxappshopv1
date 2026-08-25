@@ -1,0 +1,22 @@
+.logi-page { padding: 24rpx; }
+.logi-loading { text-align: center; color: #999; padding: 80rpx 0; }
+.logi-card {
+  background: #fff; border-radius: 16rpx; padding: 28rpx; margin-bottom: 20rpx;
+}
+.logi-company { font-size: 32rpx; font-weight: 600; color: #333; }
+.logi-no { font-size: 26rpx; color: #666; margin-top: 10rpx; }
+.logi-state { font-size: 26rpx; color: #FF6B35; margin-top: 6rpx; }
+
+.logi-timeline { background: #fff; border-radius: 16rpx; padding: 24rpx 28rpx; }
+.logi-item { position: relative; padding: 0 0 36rpx 40rpx; border-left: 2rpx solid #eee; }
+.logi-item.first { border-left-color: #FF6B35; }
+.logi-dot {
+  position: absolute; left: -10rpx; top: 6rpx; width: 18rpx; height: 18rpx;
+  border-radius: 50%; background: #ccc;
+}
+.logi-item.first .logi-dot { background: #FF6B35; }
+.logi-context { font-size: 28rpx; color: #333; line-height: 1.5; }
+.logi-item.first .logi-context { color: #FF6B35; font-weight: 600; }
+.logi-time { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+
+.logi-empty { text-align: center; color: #999; padding: 80rpx 0; }
