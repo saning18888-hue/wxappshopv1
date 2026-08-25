@@ -16,10 +16,6 @@
       <text wx:if="{{showSales}}" class="muted">已售 {{goods.sales}} 件</text>
       <text wx:if="{{showStock && currentSku}}" class="muted">库存 {{currentSku.stock}}</text>
     </view>
-    <view class="detail-actions">
-      <view class="detail-act" bindtap="onService">客服</view>
-      <view class="detail-act" bindtap="onOpenMap">门店</view>
-    </view>
   </view>
 
   <!-- 规格选择 -->

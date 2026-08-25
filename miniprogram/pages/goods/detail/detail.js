@@ -15,7 +15,6 @@ Page({
     showComment: true,
     cartButton: true,
     buyButton: true,
-    serviceType: 'online',
     themeColor: '#FF6B35',
   },
 
@@ -36,35 +35,8 @@ Page({
         showComment: !!s.show_comment,
         cartButton: !!s.cart_button,
         buyButton: !!s.buy_button,
-        serviceType: s.service_type || 'online',
         themeColor: s.theme_color || '#FF6B35',
       });
-    });
-  },
-
-  // 客服入口（基础设置 → 客服类型）
-  onService() {
-    const s = settings.getSettings();
-    if (s.service_type === 'phone') {
-      if (!s.service_phone) return wx.showToast({ title: '未配置客服电话', icon: 'none' });
-      wx.makePhoneCall({ phoneNumber: s.service_phone, fail: () => {} });
-    } else if (s.service_type === 'wechat') {
-      if (!s.service_wechat) return wx.showToast({ title: '未配置客服微信号', icon: 'none' });
-      wx.setClipboardData({ data: s.service_wechat, success: () => wx.showToast({ title: '微信号已复制', icon: 'none' }) });
-    } else {
-      wx.showToast({ title: '正在接入在线客服…', icon: 'none' });
-    }
-  },
-
-  // 查看门店（基础设置 → 地图）
-  onOpenMap() {
-    const s = settings.getSettings();
-    wx.openLocation({
-      latitude: Number(s.map_lat) || 39.915,
-      longitude: Number(s.map_lng) || 116.404,
-      name: s.map_name || '门店',
-      address: s.map_address || '',
-      fail: () => wx.showToast({ title: '打开地图失败', icon: 'none' }),
     });
   },
 

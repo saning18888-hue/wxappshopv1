@@ -1,3 +1,15 @@
+### v0.1.92 (2026-08-25) tweak: 削减商家信息菜单 + 门店位置移至店铺设置 + 修复地图加载
+
+- 移除商品详情页底部「客服」「门店」按钮（`detail.wxml` 的 `detail-actions` 区块及 `onService`、`onOpenMap` 处理函数）。
+- 后台「店铺设置 → 商家信息」菜单削减：移除公司名称、英文名、联系人电话、QQ、公司地址、营业时间、货币符号、Logo、内容编辑器、地图位置、分享标题/描述/封面等所有预设，仅保留「门店位置」。
+- 「门店位置」（门店名称 / 详细地址 / 经纬度 + 地图选点）从基础设置移至「店铺设置 → 商家信息」，复用 `openStoreMapPicker`。
+- `shopDefaults` 同步精简；服务器 `SettingsService` 已包含 `map_lng/lat/address/name` 默认值，保存为合并写入，不会清空其它配置。
+- 修复腾讯地图加载地址：将 `https://map.qq.com/api/js?v=2.exp`（旧版 JS API，对应 `qq.maps`）改为 `https://map.qq.com/api/gljs?v=1.exp`（GL JS API，对应 `TMap`），并增加 `TMap.service` 就绪校验。
+- 增强地图选点弹窗容错：每次打开时销毁旧实例、捕获初始化异常、6 秒未加载瓦片则提示密钥无效/域名未授权等常见原因，并保留手动填写经纬度的入口。
+- 修复地图搜索逻辑：将错误的 `search.search({keyword})` 改为 `search.searchRegion({keyword, cityName})`，支持按城市直接搜索地址，无需拖动地图。
+- 地图搜索增加 `servicesk` 参数传入腾讯地图 Secret Key（`map_secret`），解决 WebService API 签名验证失败问题。
+- 关闭地图选点弹窗的「点空白处自动关闭」行为，改由右上角 ×、取消、确定按钮关闭，避免选点时误关闭。
+
 ### v0.1.91 (2026-08-25) tweak: 移除 cart5 / cart6 / cart8 加购图标
 
 - 后台「基础设置 → 购物车图标」预置项移除「购物车+（cart5）」「购物车→（cart6）」「cart8」。
