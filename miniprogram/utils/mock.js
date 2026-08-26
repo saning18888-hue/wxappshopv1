@@ -15,6 +15,19 @@ const goodsList = [
 const goodsDetail = {
   1: {
     id: 1, title: '云南蜜橘 5斤装', subtitle: '皮薄多汁 产地直发', price: 19.9, market_price: 29.9, stock: 100, sales: 320,
+    promotion: '限时直降 ¥10｜下单立减，再送运费险',
+    attrs: [
+      { id: 1, name: '产地', values: ['云南高原直采'] },
+      { id: 2, name: '规格', values: ['5斤装', '10斤装'] },
+      { id: 3, name: '保质期', values: ['常温 15 天'] },
+      { id: 4, name: '储存方式', values: ['阴凉通风处，避免暴晒'] },
+      { id: 5, name: '发货时效', values: ['48 小时内发货'] },
+    ],
+    reviews: [
+      { id: 1, user_name: '橙粉小姐姐', avatar: '', rating: 5, content: '橘子很甜，皮薄好剥，孩子一口气吃了三个！', images: [], reply: '感谢支持，产地直发更新鲜~', created_at: '2026-08-20 10:12' },
+      { id: 2, user_name: '李**', avatar: '', rating: 4, content: '整体不错，有一两个稍微青了点，放两天就甜了。', images: [], reply: '', created_at: '2026-08-18 09:30' },
+      { id: 3, user_name: '果果妈', avatar: '', rating: 5, content: '包装很扎实，没有磕碰，回购了！', images: [], reply: '', created_at: '2026-08-15 21:05' },
+    ],
     images: ['https://placehold.co/400x400/FF6B35/fff?text=Orange', 'https://placehold.co/400x400/FFB035/fff?text=Orange2'], video: '',
     detail_html: '<p>产自云南高原，皮薄多汁，5斤装约8-12个。</p>',
     spec_groups: [{ id: 1, name: '规格', values: [{ id: 1, value: '5斤装' }, { id: 2, value: '10斤装' }] }],
@@ -25,12 +38,37 @@ const goodsDetail = {
   },
   2: {
     id: 2, title: '泰国金枕榴莲 3斤', subtitle: '树熟发货 软糯香甜', price: 59.9, market_price: 79.9, stock: 50, sales: 88,
+    promotion: '树熟现摘｜坏果包赔，顺丰冷链直达',
+    attrs: [
+      { id: 6, name: '产地', values: ['泰国进口'] },
+      { id: 7, name: '品种', values: ['金枕榴莲'] },
+      { id: 8, name: '净重', values: ['3斤±0.2'] },
+      { id: 9, name: '储存方式', values: ['冷藏保鲜'] },
+      { id: 10, name: '食用方式', values: ['开壳即食'] },
+    ],
+    reviews: [
+      { id: 4, user_name: '榴莲控', avatar: '', rating: 5, content: '肉厚核小，软糯香甜，比超市新鲜！', images: [], reply: '', created_at: '2026-08-22 14:40' },
+      { id: 5, user_name: '王**', avatar: '', rating: 4, content: '有一个开口的，客服很快补发了，服务不错。', images: [], reply: '已为您安排补发，抱歉体验不佳。', created_at: '2026-08-19 16:22' },
+    ],
     images: ['https://placehold.co/400x400/00B86B/fff?text=Durian'], video: '',
     detail_html: '<p>泰国进口金枕榴莲，自然树熟，肉厚核小。</p>',
     spec_groups: [], skus: [{ id: 3, spec_value_ids: '', price: 59.9, market_price: 79.9, stock: 50, image: 'https://placehold.co/400x400/00B86B/fff?text=Durian' }],
   },
   3: {
     id: 3, title: '每日坚果 30包', subtitle: '混合果仁 独立小包', price: 99, market_price: 129, stock: 200, sales: 1500,
+    promotion: '买 2 件送 1 件｜独立小包，随身健康',
+    attrs: [
+      { id: 11, name: '品牌', values: ['优选'] },
+      { id: 12, name: '净含量', values: ['30包/盒'] },
+      { id: 13, name: '保质期', values: ['180 天'] },
+      { id: 14, name: '产地', values: ['安徽'] },
+      { id: 15, name: '配料', values: ['巴旦木/腰果/蔓越莓等混合果仁'] },
+    ],
+    reviews: [
+      { id: 6, user_name: '养生达人', avatar: '', rating: 5, content: '每天一包，营养又方便，办公零食首选。', images: [], reply: '', created_at: '2026-08-23 11:08' },
+      { id: 7, user_name: '张**', avatar: '', rating: 5, content: '日期新鲜，坚果很脆，没有哈喇味。', images: [], reply: '感谢，品质把控严格~', created_at: '2026-08-21 19:55' },
+      { id: 8, user_name: '宝妈', avatar: '', rating: 4, content: '孩子爱吃，就是蜂蜜黄油的稍微有点甜。', images: [], reply: '', created_at: '2026-08-17 08:43' },
+    ],
     images: ['https://placehold.co/400x400/4A90E2/fff?text=Nut'], video: '',
     detail_html: '<p>巴旦木/腰果/蔓越莓等混合，每日一包健康好吃。</p>',
     spec_groups: [
@@ -44,6 +82,18 @@ const goodsDetail = {
   },
   4: {
     id: 4, title: '手撕风干牛肉干 200g', subtitle: '内蒙古草饲 高蛋白', price: 39.9, market_price: 49.9, stock: 80, sales: 460,
+    promotion: '内蒙古草饲｜高蛋白低脂，第二件半价',
+    attrs: [
+      { id: 16, name: '产地', values: ['内蒙古'] },
+      { id: 17, name: '净含量', values: ['200g/袋'] },
+      { id: 18, name: '保质期', values: ['12 个月'] },
+      { id: 19, name: '口味', values: ['原味'] },
+      { id: 20, name: '储存方式', values: ['阴凉干燥处'] },
+    ],
+    reviews: [
+      { id: 9, user_name: '健身党', avatar: '', rating: 5, content: '肉质紧实，很有嚼劲，健身加餐很合适。', images: [], reply: '', created_at: '2026-08-24 12:30' },
+      { id: 10, user_name: '赵**', avatar: '', rating: 4, content: '味道不错，就是有点干，配点水更好。', images: [], reply: '', created_at: '2026-08-16 17:18' },
+    ],
     images: ['https://placehold.co/400x400/9B59B6/fff?text=Beef'], video: '',
     detail_html: '<p>精选牛后腿肉，低温风干，嚼劲十足。</p>',
     spec_groups: [], skus: [{ id: 6, spec_value_ids: '', price: 39.9, market_price: 49.9, stock: 80, image: 'https://placehold.co/400x400/9B59B6/fff?text=Beef' }],
@@ -140,7 +190,12 @@ function dispatch(method, path, data = {}) {
     return { code: 0, data: { user: state.user || { id: 1, nickname: '演示会员' } } };
   }
   if (path === '/settings') {
-    return { code: 0, data: { site_name: '演示商城', theme_color: '#FF6B35', notice: '演示环境' } };
+    return { code: 0, data: {
+      site_name: '演示商城', theme_color: '#FF6B35', notice: '演示环境',
+      show_goods_sales: true, show_goods_promotion: true, show_goods_detail: true,
+      show_goods_attr: true, show_goods_comment: true,
+      text_goods_detail: '商品详情', text_goods_attr: '商品属性', text_goods_comment: '商品评价',
+    } };
   }
   if (path === '/home') {
     return { code: 0, data: defaultHome };

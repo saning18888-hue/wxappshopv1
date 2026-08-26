@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `goods` (
   `images`       TEXT         COMMENT '图片 JSON 数组',
   `video`        VARCHAR(255) NOT NULL DEFAULT '',
   `detail`       TEXT         COMMENT '图文详情 HTML',
+  `promotion`    VARCHAR(255) NOT NULL DEFAULT '' COMMENT '商品促销语',
   `status`       TINYINT      NOT NULL DEFAULT 1 COMMENT '1上架 0下架',
   `created_at`   DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `updated_at`   DATETIME     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,

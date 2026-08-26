@@ -57,6 +57,36 @@ class GoodsService
         }
         $images = json_decode($g['images'] ?? '[]', true) ?: [];
 
+        // 商品属性（与后台 adminDetail 一致，直接按 goods_id 取）
+        $attrs = Db::name('goods_attrs')->where('goods_id', $id)->order('sort asc, id asc')->select()->toArray();
+        $attrs = array_map(function ($a) {
+            return [
+                'id'     => $a['id'],
+                'name'   => $a['name'],
+                'values' => json_decode($a['attr_values'] ?? '[]', true) ?: [],
+            ];
+        }, $attrs);
+
+        // 商品评价（仅展示未隐藏的，最多 20 条）
+        $reviews = Db::name('goods_reviews')
+            ->where('goods_id', $id)
+            ->where('is_hidden', 0)
+            ->order('id desc')
+            ->limit(20)
+            ->select()->toArray();
+        $reviews = array_map(function ($r) {
+            return [
+                'id'         => $r['id'],
+                'user_name'  => $r['user_name'] ?: '匿名用户',
+                'avatar'     => $r['avatar'] ?: '',
+                'rating'     => (int) $r['rating'],
+                'content'    => $r['content'],
+                'images'     => json_decode($r['images'] ?? '[]', true) ?: [],
+                'reply'      => $r['reply'] ?: '',
+                'created_at' => $r['created_at'],
+            ];
+        }, $reviews);
+
         return [
             'id'           => $g['id'],
             'title'        => $g['title'],
@@ -65,11 +95,14 @@ class GoodsService
             'market_price' => floatval($g['market_price'] / 100),
             'stock'        => (int) $g['stock'],
             'sales'        => (int) $g['sales'],
+            'promotion'    => $g['promotion'] ?? '',
             'images'       => $images,
             'video'        => $g['video'],
             'detail_html'  => $g['detail'],
             'spec_groups'  => $specGroups,
             'skus'         => $skus,
+            'attrs'        => $attrs,
+            'reviews'      => $reviews,
         ];
     }
 

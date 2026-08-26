@@ -62,10 +62,16 @@ class SettingsService
             'map_name'           => 'B2C 商城（总店）',
             // 商品设置
             'buy_permission'     => 'all',       // all=所有人 / login=登录用户 / member=有会员卡
-            'show_sales'         => true,        // 商品详情显示销量
+            'show_goods_sales'   => true,        // 商品详情显示销量
+            'show_goods_promotion' => false,     // 商品详情显示促销语
+            'show_goods_detail'  => true,        // 商品详情显示图文详情
+            'show_goods_attr'    => false,       // 商品详情显示商品属性
+            'show_goods_comment' => false,       // 商品详情显示评价
             'show_stock'         => true,        // 商品详情显示库存
             'show_original_price'=> true,        // 显示划线原价
-            'show_comment'       => true,        // 显示评价
+            'text_goods_detail'  => '商品详情',   // 图文详情区块标题
+            'text_goods_attr'    => '商品属性',   // 商品属性区块标题
+            'text_goods_comment' => '商品评价',   // 商品评价区块标题
             'cart_button'        => true,        // 加入购物车按钮
             'buy_button'         => true,        // 立即购买按钮
             // 交易设置

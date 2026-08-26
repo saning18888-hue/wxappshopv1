@@ -8,13 +8,17 @@
   <view class="detail-info">
     <view class="detail-price">
       <text class="price">¥{{currentSku ? currentSku.price : goods.price}}</text>
-      <text wx:if="{{showOriginalPrice}}" class="detail-market muted">¥{{goods.market_price}}</text>
+      <text wx:if="{{showGoodsOriginalPrice}}" class="detail-market muted">¥{{goods.market_price}}</text>
     </view>
     <view class="detail-title">{{goods.title}}</view>
     <view class="detail-sub muted">{{goods.subtitle}}</view>
     <view class="detail-meta">
-      <text wx:if="{{showSales}}" class="muted">已售 {{goods.sales}} 件</text>
-      <text wx:if="{{showStock && currentSku}}" class="muted">库存 {{currentSku.stock}}</text>
+      <text wx:if="{{showGoodsSales}}" class="muted">已售 {{goods.sales}} 件</text>
+      <text wx:if="{{showGoodsStock && currentSku}}" class="muted">库存 {{currentSku.stock}}</text>
+    </view>
+    <view wx:if="{{showGoodsPromotion && goods.promotion}}" class="detail-promo">
+      <text class="promo-tag">促销</text>
+      <text class="promo-text">{{goods.promotion}}</text>
     </view>
   </view>
 
@@ -32,14 +36,43 @@
     </view>
   </view>
 
-  <view class="detail-html">
-    <view class="spec-name">图文详情</view>
+  <view wx:if="{{showGoodsDetail}}" class="detail-html">
+    <view class="spec-name">{{goodsDetailText}}</view>
     <rich-text nodes="{{goods.detail_html}}"></rich-text>
   </view>
 
-  <view wx:if="{{showComment}}" class="comment-block">
-    <view class="spec-name">用户评价</view>
-    <view class="comment-empty muted">暂无评价</view>
+  <!-- 商品属性 -->
+  <view class="attr-block" wx:if="{{showGoodsAttr && goods.attrs.length > 0}}">
+    <view class="spec-name">{{goodsAttrText}}</view>
+    <view class="attr-row" wx:for="{{goods.attrs}}" wx:key="id" wx:for-item="attr">
+      <text class="attr-name">{{attr.name}}</text>
+      <text class="attr-value">{{attr.values}}</text>
+    </view>
+  </view>
+
+  <!-- 商品评价 -->
+  <view wx:if="{{showGoodsComment}}" class="comment-block">
+    <view class="spec-name">{{goodsCommentText}}（{{goods.reviews.length}}）</view>
+    <block wx:if="{{goods.reviews.length > 0}}">
+      <view class="comment-item" wx:for="{{goods.reviews}}" wx:key="id" wx:for-item="rv">
+        <view class="comment-head">
+          <image wx:if="{{rv.avatar}}" class="comment-avatar" src="{{rv.avatar}}" mode="aspectFill" />
+          <view class="comment-user">
+            <text class="comment-name">{{rv.user_name}}</text>
+            <view class="comment-stars">
+              <text wx:for="{{[1,2,3,4,5]}}" wx:for-item="s" wx:key="*this" class="{{s <= rv.rating ? 'star on' : 'star'}}">★</text>
+            </view>
+          </view>
+          <text class="comment-date muted">{{rv.created_at}}</text>
+        </view>
+        <view class="comment-content">{{rv.content}}</view>
+        <view wx:if="{{rv.images.length > 0}}" class="comment-imgs">
+          <image wx:for="{{rv.images}}" wx:for-item="img" wx:key="*this" class="comment-img" src="{{img}}" mode="aspectFill" />
+        </view>
+        <view wx:if="{{rv.reply}}" class="comment-reply">商家回复：{{rv.reply}}</view>
+      </view>
+    </block>
+    <view wx:else class="comment-empty muted">暂无评价</view>
   </view>
 
   <view style="height:120rpx"></view>

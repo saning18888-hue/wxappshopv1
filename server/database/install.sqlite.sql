@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS goods (
   images       TEXT,
   video        TEXT NOT NULL DEFAULT '',
   detail       TEXT,
+  promotion    VARCHAR(255) NOT NULL DEFAULT '',
   ext_json     TEXT NOT NULL DEFAULT '{}',
   status       INTEGER NOT NULL DEFAULT 1,
   created_at   TEXT DEFAULT CURRENT_TIMESTAMP,
