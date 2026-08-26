@@ -1,0 +1,50 @@
+<view class="page" style="--primary:#FF6B35;--price:#E54D42;--border:#EEEEEE;--red:#E54D42;">
+  <!-- 地址列表 -->
+  <view class="list">
+    <block wx:for="{{list}}" wx:key="id">
+      <view class="addr-card {{item.is_default?'addr-default':''}}" bindtap="selectAddr" data-index="{{index}}">
+        <!-- 姓名 + 手机 -->
+        <view class="a-top">
+          <text class="a-name">{{item.name}}</text>
+          <text class="a-phone">{{item.phone}}</text>
+        </view>
+        <!-- 详细地址 -->
+        <text class="a-detail">{{item.address}}</text>
+
+        <!-- 底部操作行 -->
+        <view class="a-bar" catchtap="stopTap">
+          <label class="default-lbl" catchtap="setDefault" data-id="{{item.id}}">
+            <radio value="{{item.id}}" checked="{{item.is_default}}" color="#E54D42" />
+            <text>设为默认地址</text>
+          </label>
+          <view class="a-actions">
+            <view class="a-act" catchtap="editAddr" data-index="{{index}}">
+              <view class="icon-edit"></view>
+              <text>编辑</text>
+            </view>
+            <view class="a-act a-del" catchtap="deleteAddr" data-index="{{index}}">
+              <view class="icon-del"></view>
+              <text>删除</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{list.length === 0}}" class="empty">暂无收货地址</view>
+  </view>
+
+  <!-- 底部按钮区（并排） -->
+  <view class="bottom-area">
+    <button class="btn-wechat" open-type="chooseAddress" bindchooseaddress="onWechatAddr" hover-class="btn-hover">
+      添加微信收货地址
+    </button>
+    <button class="btn-new" bindtap="newAddr" hover-class="btn-hover-new">
+      + 新建收货地址
+    </button>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="spacer"></view>
+</view>

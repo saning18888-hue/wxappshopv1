@@ -8,6 +8,9 @@ Page({
     items: [],
     preview: null,
     address: { name: '', phone: '', address: '' },
+    remark: '',              // 订单留言
+    delivery: 'express',     // 配送方式 express=同城配送 pickup=到店自提
+    addrWarn: '',            // 地址异常提示（如超出配送范围）
     buyDenied: '',           // 购买权限拦截提示
     needCaptcha: false,      // 下单需图形验证码（基础设置 → 安全设置）
     captchaInput: '',
@@ -89,8 +92,58 @@ Page({
   },
 
   // 选择支付方式
-  selectPay(e) {
-    this.setData({ payMethod: e.currentTarget.dataset.value });
+  selPay(e) {
+    this.setData({ payMethod: e.currentTarget.dataset.v });
+  },
+
+  // 数量 +1
+  qtyPlus(e) {
+    const idx = e.currentTarget.dataset.i;
+    const items = this.data.items.slice();
+    items[idx].quantity = (items[idx].quantity || 1) + 1;
+    this.setData({ items });
+    this.loadPreview(items, this.data.address);
+  },
+
+  // 数量 -1
+  qtyMinus(e) {
+    const idx = e.currentTarget.dataset.i;
+    const items = this.data.items.slice();
+    if (items[idx].quantity <= 1) return;
+    items[idx].quantity -= 1;
+    this.setData({ items });
+    this.loadPreview(items, this.data.address);
+  },
+
+  // 订单留言
+  onRemark(e) {
+    this.setData({ remark: e.detail.value });
+  },
+
+  // 跳转收货地址页
+  goAddress() {
+    wx.navigateTo({
+      url: '/pages/address/address?from=confirm',
+      events: {
+        // 接收地址页返回的数据
+        acceptAddr: (addr) => {
+          if (addr && addr.name && addr.phone && addr.address) {
+            this.setData({ address: addr, addrWarn: '' });
+            this.loadPreview(this.data.items, addr);
+          }
+        },
+      },
+    });
+  },
+
+  // 配送方式切换
+  setDelivery(e) {
+    this.setData({ delivery: e.currentTarget.dataset.v });
+  },
+
+  // 优惠券入口
+  onCoupon() {
+    wx.showToast({ title: '暂无可用优惠券', icon: 'none' });
   },
 
   onAddressInput(e) {
@@ -111,7 +164,18 @@ Page({
 
   loadPreview(items, address) {
     api.post('/order/preview', { items, address })
-      .then((p) => this.setData({ preview: p }))
+      .then((p) => {
+        // 价格格式化：分 → 元（保留2位小数）
+        const fmt = (fen) => (Number(fen || 0) / 100).toFixed(2);
+        p.goods_amount_yuan = fmt(p.goods_amount);
+        p.shipping_fee_yuan = fmt(p.shipping_fee);
+        p.discount_yuan = fmt(p.discount);
+        p.pay_amount_yuan = fmt(p.pay_amount);
+        if (p.items) {
+          p.items.forEach((it) => { it.price_yuan = fmt(it.price); });
+        }
+        this.setData({ preview: p });
+      })
       .catch((err) => wx.showToast({ title: err.message, icon: 'none' }));
   },
 

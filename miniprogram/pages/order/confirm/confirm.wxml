@@ -1,56 +1,105 @@
-<view class="confirm" wx:if="{{preview}}" style="--primary:{{themeColor}}">
-  <view wx:if="{{buyDenied}}" class="deny-banner">⚠️ {{buyDenied}}</view>
-
-  <view class="addr-card">
-    <view class="addr-title">收货信息</view>
-    <input class="addr-input" placeholder="收货人姓名" data-field="name" value="{{address.name}}" bindinput="onAddressInput" />
-    <input class="addr-input" placeholder="手机号" type="number" data-field="phone" value="{{address.phone}}" bindinput="onAddressInput" />
-    <input class="addr-input" placeholder="详细收货地址" data-field="address" value="{{address.address}}" bindinput="onAddressInput" />
+<view class="page" wx:if="{{preview}}" style="--primary:{{themeColor}};--price:#E54D42;--warn-bg:#FFF8E1;--warn-color:#F5A623;--border:#EEEEEE;">
+  <!-- 购买权限拦截 -->
+  <view wx:if="{{buyDenied}}" class="warn-bar">
+    <text class="warn-text">{{buyDenied}}</text>
   </view>
 
-  <view class="goods-card">
-    <view wx:for="{{preview.items}}" wx:key="sku_id" class="goods-line">
-      <image class="goods-line-img" src="{{item.image}}" mode="aspectFill" />
-      <view class="goods-line-mid">
-        <view class="goods-line-title">{{item.title}}</view>
-        <view class="goods-line-spec muted" wx:if="{{item.spec_desc}}">{{item.spec_desc}}</view>
-        <view class="goods-line-price price">¥{{item.price}} <text class="muted">x{{item.quantity}}</text></view>
+  <!-- 收货地址栏（非卡片，简单行） -->
+  <view class="addr-row" bindtap="goAddress">
+    <view wx:if="{{address.name && address.phone}}" class="addr-filled">
+      <view class="addr-top">
+        <text class="addr-name">{{address.name}}</text>
+        <text class="addr-phone">{{address.phone}}</text>
+      </view>
+      <text class="addr-detail">{{address.address}}</text>
+    </view>
+    <text wx:else class="addr-empty">暂无收货地址</text>
+    <text class="addr-action">{{address.name ? '去修改' : '去添加'}} ›</text>
+  </view>
+
+  <!-- 商品卡片 -->
+  <view class="card goods-card">
+    <view wx:for="{{preview.items}}" wx:key="sku_id" class="g-row">
+      <image class="g-img" src="{{item.image}}" mode="aspectFill" />
+      <view class="g-info">
+        <view class="g-title">{{item.title}}</view>
+        <text class="g-spec" wx:if="{{item.spec_desc}}">{{item.spec_desc}}</text>
+        <view class="g-bottom">
+          <text class="g-price">¥{{item.price_yuan}}</text>
+          <view class="stepper">
+            <text class="st-btn {{item.quantity<=1?'dis':''}}" data-i="{{index}}" catchtap="qtyMinus">−</text>
+            <text class="st-num">{{item.quantity}}</text>
+            <text class="st-btn" data-i="{{index}}" catchtap="qtyPlus">+</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>
 
-  <view class="amount-card">
-    <view class="amount-line"><text>商品金额</text><text>¥{{preview.goods_amount}}</text></view>
-    <view class="amount-line"><text>运费</text><text>¥{{preview.shipping_fee}}</text></view>
-    <view class="amount-line" wx:if="{{preview.discount > 0}}"><text>优惠</text><text>-¥{{preview.discount}}</text></view>
-    <view class="amount-line total"><text>实付金额</text><text class="price">¥{{preview.pay_amount}}</text></view>
-  </view>
-
-  <view class="pay-card" wx:if="{{payMethods.length}}">
-    <view class="pay-title">支付方式</view>
-    <view wx:for="{{payMethods}}" wx:key="value" class="pay-item {{payMethod===item.value?'active':''}}" bindtap="selectPay" data-value="{{item.value}}">
-      <text class="pay-label">{{item.label}}</text>
-      <text class="pay-check">{{payMethod===item.value?'✓':''}}</text>
-    </view>
-    <view wx:if="{{balanceHint}}" class="pay-hint">{{balanceHint}}</view>
-  </view>
-
-  <view style="height:120rpx"></view>
-
-  <view wx:if="{{needCaptcha}}" class="captcha-card">
-    <view class="captcha-title">图形验证码（下单验证）</view>
-    <view class="captcha-row">
-      <view class="captcha-code" bindtap="refreshCaptcha">{{captchaCode}}</view>
-      <input class="captcha-input" placeholder="请输入右侧验证码" value="{{captchaInput}}" bindinput="onCaptchaInput" />
+  <!-- 配送方式 -->
+  <view class="sec-row">
+    <text class="sec-label">配送方式</text>
+    <view class="d-tabs">
+      <text class="d-tab {{delivery==='express'?'on':''}}" catchtap="setDelivery" data-v="express">同城配送</text>
+      <text class="d-tab {{delivery==='pickup'?'on':''}}" catchtap="setDelivery" data-v="pickup">到店自提</text>
     </view>
   </view>
 
-  <view class="confirm-bar">
-    <view class="confirm-pay">应付 <text class="price">¥{{preview.pay_amount}}</text></view>
-    <view class="confirm-submit" bindtap="submit">提交订单</view>
+  <!-- 订单留言 -->
+  <view class="sec-row">
+    <text class="sec-label">订单留言</text>
+    <input class="remark-in" placeholder="选填，请先和商家协商一致" value="{{remark}}" bindinput="onRemark" />
+  </view>
+
+  <!-- 金额明细（无卡片包裹） -->
+  <view class="amt-section">
+    <view class="amt-row">
+      <text class="amt-l">商品金额</text>
+      <text class="amt-sub">(共{{preview.items.length}}件商品)</text>
+      <text class="amt-r">¥{{preview.goods_amount_yuan}}</text>
+    </view>
+    <view class="amt-row">
+      <text class="amt-l">运费</text>
+      <text class="amt-r">¥{{preview.shipping_fee_yuan}}</text>
+    </view>
+    <view class="amt-row" wx:if="{{preview.discount > 0}}">
+      <text class="amt-l">优惠</text>
+      <text class="amt-r disc">-¥{{preview.discount_yuan}}</text>
+    </view>
+
+    <!-- 支付方式 -->
+    <block wx:if="{{payMethods.length > 1}}">
+      <view class="amt-row pay-opt" wx:for="{{payMethods}}" wx:key="value" bindtap="selPay" data-v="{{item.value}}">
+        <text class="amt-l">{{item.label}}</text>
+        <view class="radio {{payMethod===item.value?'chk':''}}"></view>
+      </view>
+      <text wx:if="{{balanceHint}}" class="bal-hint">{{balanceHint}}</text>
+    </block>
+
+    <!-- 优惠券 -->
+    <view class="amt-row coupon-row" bindtap="onCoupon">
+      <text class="amt-l">使用优惠券</text>
+      <text class="coupon-none">暂无可用优惠券</text>
+      <text class="arr">›</text>
+    </view>
+  </view>
+
+  <!-- 地址异常提示条 -->
+  <view wx:if="{{addrWarn}}" class="warn-bar warn-center">
+    <text class="warn-text">{{addrWarn}}</text>
+  </view>
+
+  <!-- 底部占位 -->
+  <view class="spacer"></view>
+
+  <!-- 提交栏 -->
+  <view class="submit-bar">
+    <view class="sub-left">
+      <text class="sub-lbl">合计：</text>
+      <text class="sub-total">¥{{preview.pay_amount_yuan}}</text>
+    </view>
+    <view class="sub-btn" bindtap="submit">提交订单</view>
   </view>
 </view>
 
 <view wx:else class="empty">加载中...</view>
-
-<float-buttons />

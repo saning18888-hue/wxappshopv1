@@ -1,0 +1,25 @@
+feat: 确认订单页UI重刻 + 收货地址列表/编辑页 + 商品规格补全 + 交易自动化bug修复
+
+确认订单页:
+- 按美团风格全面重写WXML/WXSS（地址栏、商品行、配送方式、金额明细、底部提交栏）
+- 价格格式化分->元显示
+- 去掉所有Emoji图标改用CSS绘制
+- 配送方式可切换、数量选择器实时算价
+
+收货地址功能:
+- 新增地址列表页 pages/address/address（卡片列表+默认地址+编辑/删除）
+- 新增地址编辑表单页 pages/address-form/address-form（新建/编辑双模式）
+- 微信收货地址一键导入(open-type=chooseAddress)
+- 本地存储持久化 address_list
+- eventChannel 数据回传给确认订单页
+
+商品演示数据:
+- 补全商品2(榴莲)和商品4(牛肉干)的规格组/SKU数据
+- 同步更新 install.sql 和 install.sqlite.sql seed文件
+
+后端修复:
+- 修正 OrderService::autoConfirmReceived 状态值 3->5(已发货->已完成)
+
+TODO(尚未实现):
+- 后台管理: 普通订单开关、电子卡券开关、跨门店核销开关
+- 协议设置: 协议显示开关、协议名称、协议内容富文本编辑器

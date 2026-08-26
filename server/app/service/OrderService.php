@@ -491,13 +491,13 @@ class OrderService
             return 0;
         }
         $deadline = date('Y-m-d H:i:s', time() - $days * 86400);
-        $rows = Db::name('orders')->where('status', 2)
+        $rows = Db::name('orders')->where('status', 3) // 已发货
             ->where('updated_at', '<', $deadline)
             ->field('id')->select()->toArray();
         $svc = new self();
         $count = 0;
         foreach ($rows as $o) {
-            $svc->changeStatus((int) $o['id'], 3); // 自动确认收货
+            $svc->changeStatus((int) $o['id'], 5); // 自动确认收货 → 已完成
             $count++;
         }
         return $count;

@@ -1,0 +1,54 @@
+<view class="page" style="--primary:#FF6B35;--price:#E54D42;--border:#EEEEEE;">
+  <!-- 收件人 -->
+  <view class="form-row">
+    <text class="form-label"><text class="req">*</text>收件人：</text>
+    <input class="form-input" placeholder="请输入收件人姓名或店名" value="{{form.name}}" bindinput="onInput" data-field="name" />
+  </view>
+
+  <!-- 手机号 -->
+  <view class="form-row">
+    <text class="form-label"><text class="req">*</text>手机号：</text>
+    <input class="form-input" type="number" placeholder="请输入收件人手机号" maxlength="11" value="{{form.phone}}" bindinput="onInput" data-field="phone" />
+  </view>
+
+  <!-- 所在区域 -->
+  <view class="form-row" bindtap="pickRegion">
+    <text class="form-label"><text class="req">*</text>所在区域：</text>
+    <view class="form-right">
+      <text class="region-text {{!form.region?'ph':''}}">{{form.region || '请选择省/市/区'}}</text>
+      <text class="arr">›</text>
+      <view class="icon-loc"></view>
+      <text class="loc-txt">定位</text>
+    </view>
+  </view>
+
+  <!-- 详细地址 -->
+  <view class="form-row form-row-area">
+    <text class="form-label"><text class="req">*</text>详细地址：</text>
+    <textarea class="form-area" placeholder="请输入详细地址或店名" value="{{form.detail}}" bindinput="onInput" data-field="detail" auto-height />
+  </view>
+
+  <!-- 底部操作栏（默认地址 + 编辑/删除） -->
+  <view class="action-bar">
+    <label class="default-toggle">
+      <radio value="1" checked="{{isDefault}}" color="#E54D42" bindchange="toggleDefault" />
+      <text class="default-txt">设为默认地址</text>
+    </label>
+    <view wx:if="{{mode==='edit'}}" class="act-btns">
+      <view class="act-btn save-act" bindtap="doSave">
+        <view class="icon-save"></view>
+        <text>保存</text>
+      </view>
+      <view class="act-btn cancel-act" bindtap="doCancel">
+        <view class="icon-cancel"></view>
+        <text>取消</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部占位 + 保存按钮 -->
+  <view class="bottom-spacer"></view>
+  <view class="save-bar">
+    <button class="save-btn" bindtap="doSave">{{mode==='edit'?'保存修改':'保存'}}</button>
+  </view>
+</view>

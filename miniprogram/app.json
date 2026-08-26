@@ -6,6 +6,8 @@
     "pages/goods/detail/detail",
     "pages/cart/cart",
     "pages/order/confirm/confirm",
+    "pages/address/address",
+    "pages/address-form/address-form",
     "pages/pay/result/result",
     "pages/member/member",
     "pages/logistics/logistics",
