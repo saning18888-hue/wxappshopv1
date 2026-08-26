@@ -31,8 +31,12 @@ class Order extends ApiController
         if (empty($items)) {
             return $this->fail('请选择商品', 422);
         }
+        $meta = [
+            'pay_method' => input('post.pay_method', 'wechat'),
+            'platform'   => input('post.platform', ''),
+        ];
         try {
-            $data = (new \app\service\OrderService())->create($user['id'], $items, $address);
+            $data = (new \app\service\OrderService())->create($user['id'], $items, $address, $meta);
         } catch (\Exception $e) {
             return $this->fail($e->getMessage(), 400);
         }

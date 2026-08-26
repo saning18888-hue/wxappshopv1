@@ -31,8 +31,20 @@ class OrderService
         ];
     }
 
-    public function create(int $userId, array $items, array $address): array
+    public function create(int $userId, array $items, array $address, array $meta = []): array
     {
+        $payMethod = $meta['pay_method'] ?? 'wechat';
+        $platform  = strtolower($meta['platform'] ?? '');
+
+        // iOS 端支付限制：被限制的支付方式在 iOS 上禁止下单
+        if ($platform === 'ios') {
+            $s = SettingsService::load();
+            $limit = $s['ios_pay_limit'] ?? [];
+            if ($payMethod === 'balance' && !empty($limit['balance'])) {
+                throw new \Exception('iOS 端暂不支持储值余额支付');
+            }
+        }
+
         $detail = $this->buildItems($items);
         $goodsAmount = (int) array_sum(array_column($detail, 'subtotal'));
         $shippingFee = $goodsAmount >= 9900 ? 0 : 1000;
@@ -54,6 +66,21 @@ class OrderService
                 Db::name('goods')->where('id', $it['goods_id'])->dec('stock', $it['quantity'])->update();
             }
 
+            // 储值余额支付：扣减用户余额，订单直接置为已付款（status=1）
+            $balanceUsed = 0;
+            $orderStatus = 0;
+            $paidAt      = null;
+            if ($payMethod === 'balance') {
+                $payer = Db::name('users')->where('id', $userId)->lock(true)->find();
+                if (!$payer || $payer['balance'] < $payAmount) {
+                    throw new \Exception('储值余额不足');
+                }
+                Db::name('users')->where('id', $userId)->dec('balance', $payAmount);
+                $balanceUsed = $payAmount;
+                $orderStatus = 1;
+                $paidAt      = date('Y-m-d H:i:s');
+            }
+
             $orderNo = $this->genOrderNo();
             $orderId = Db::name('orders')->insertGetId([
                 'order_no'      => $orderNo,
@@ -65,7 +92,9 @@ class OrderService
                 'shipping_fee'  => $shippingFee,
                 'discount'      => $discount,
                 'pay_amount'    => $payAmount,
-                'status'        => 0, // 待付款
+                'balance_used'  => $balanceUsed,
+                'status'        => $orderStatus,
+                'pay_time'      => $paidAt,
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ]);
@@ -86,9 +115,9 @@ class OrderService
             Db::name('order_payments')->insert([
                 'order_id' => $orderId,
                 'pay_no'   => '',
-                'channel'  => 'wechat',
+                'channel'  => $payMethod,
                 'amount'   => $payAmount,
-                'status'   => 0,
+                'status'   => $orderStatus === 1 ? 1 : 0,
                 'created_at' => date('Y-m-d H:i:s'),
             ]);
 
@@ -99,10 +128,12 @@ class OrderService
         }
 
         return [
-            'order_id'  => $orderId,
-            'order_no'  => $orderNo,
-            'pay_amount'=> $payAmount / 100,
-            'pay'       => ['mock' => true], // 开发态：由 mock_notify 完成支付
+            'order_id'   => $orderId,
+            'order_no'   => $orderNo,
+            'pay_amount' => $payAmount / 100,
+            'pay_method' => $payMethod,
+            'need_pay'   => $orderStatus !== 1,
+            'paid'       => $orderStatus === 1,
         ];
     }
 
@@ -430,5 +461,45 @@ class OrderService
             'refund_apply_at' => $o['refund_apply_at'] ?: $now,
             'updated_at'      => $now,
         ]);
+    }
+
+    // ---------- 定时任务：交易自动化 ----------
+
+    /** 扫描未支付超时订单并自动取消（minutes 分钟） */
+    public static function cancelExpiredOrders(int $minutes): int
+    {
+        if ($minutes <= 0) {
+            return 0;
+        }
+        $deadline = date('Y-m-d H:i:s', time() - $minutes * 60);
+        $rows = Db::name('orders')->where('status', 0)
+            ->where('created_at', '<', $deadline)
+            ->field('id')->select()->toArray();
+        $svc = new self();
+        $count = 0;
+        foreach ($rows as $o) {
+            $svc->changeStatus((int) $o['id'], 10); // 取消并回滚库存
+            $count++;
+        }
+        return $count;
+    }
+
+    /** 扫描已发货超时未确认收货订单并自动完成（days 天） */
+    public static function autoConfirmReceived(int $days): int
+    {
+        if ($days <= 0) {
+            return 0;
+        }
+        $deadline = date('Y-m-d H:i:s', time() - $days * 86400);
+        $rows = Db::name('orders')->where('status', 2)
+            ->where('updated_at', '<', $deadline)
+            ->field('id')->select()->toArray();
+        $svc = new self();
+        $count = 0;
+        foreach ($rows as $o) {
+            $svc->changeStatus((int) $o['id'], 3); // 自动确认收货
+            $count++;
+        }
+        return $count;
     }
 }

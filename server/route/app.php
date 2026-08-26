@@ -37,6 +37,9 @@ Route::group('api/v1', function () {
     // 支付（Mock 回调，用于无真实商户号时跑通闭环）
     Route::post('payment/mock_notify', 'api/v1.Payment/mockNotify');
 
+    // 定时任务（交易自动化：超时取消 + 自动确认收货），由外部计划任务带 token 触发
+    Route::get('cron/trade', 'api/v1.Cron/trade');
+
     // 基础设置（小程序端读取）
     Route::get('settings', 'api/v1.Settings/get');
 

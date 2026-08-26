@@ -26,6 +26,15 @@
     <view class="amount-line total"><text>实付金额</text><text class="price">¥{{preview.pay_amount}}</text></view>
   </view>
 
+  <view class="pay-card" wx:if="{{payMethods.length}}">
+    <view class="pay-title">支付方式</view>
+    <view wx:for="{{payMethods}}" wx:key="value" class="pay-item {{payMethod===item.value?'active':''}}" bindtap="selectPay" data-value="{{item.value}}">
+      <text class="pay-label">{{item.label}}</text>
+      <text class="pay-check">{{payMethod===item.value?'✓':''}}</text>
+    </view>
+    <view wx:if="{{balanceHint}}" class="pay-hint">{{balanceHint}}</view>
+  </view>
+
   <view style="height:120rpx"></view>
 
   <view wx:if="{{needCaptcha}}" class="captcha-card">

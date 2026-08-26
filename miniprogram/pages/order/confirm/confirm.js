@@ -13,6 +13,10 @@ Page({
     captchaInput: '',
     captchaCode: '',
     themeColor: '#FF6B35',
+    payMethods: [],          // 可用支付方式列表
+    payMethod: 'wechat',     // 当前选中支付方式
+    balanceHint: '',         // 余额提示
+    devicePlatform: '',      // ios / android / devtools
   },
 
   onLoad() {
@@ -22,11 +26,18 @@ Page({
       return;
     }
     this.setData({ items: ck.items });
+    // 记录设备平台，用于 iOS 支付限制判断
+    try {
+      const dev = wx.getDeviceInfo ? wx.getDeviceInfo() : wx.getSystemInfoSync();
+      this.setData({ devicePlatform: (dev.platform || '').toLowerCase() });
+    } catch (e) {
+      this.setData({ devicePlatform: '' });
+    }
     this.applySettings();
     this.loadPreview(ck.items, this.data.address);
   },
 
-  // 应用基础设置（购买权限 / 下单验证码 / 主题色）
+  // 应用基础设置（购买权限 / 下单验证码 / 主题色 / 支付方式）
   applySettings() {
     settings.fetchSettings(true).then((s) => {
       let denied = '';
@@ -37,14 +48,49 @@ Page({
         if (!u.member_card) denied = '仅限持有会员卡的用户下单';
       }
       const needCaptcha = !!s.captcha_order;
+
+      // 支付方式：依据后台 pay_methods + iOS 限制 生成可选列表
+      const allMap = {
+        wechat:  { value: 'wechat',  label: '微信支付' },
+        balance: { value: 'balance', label: '储值余额' },
+      };
+      let methods = (s.pay_methods || ['wechat'])
+        .map((m) => allMap[m])
+        .filter((m) => !!m);
+
+      const isIOS = this.data.devicePlatform === 'ios';
+      if (isIOS && s.ios_pay_limit) {
+        methods = methods.filter((m) => {
+          if (m.value === 'balance' && s.ios_pay_limit.balance) return false;
+          if (m.value === 'card' && s.ios_pay_limit.card) return false;
+          if (m.value === 'knowledge' && s.ios_pay_limit.knowledge) return false;
+          return true;
+        });
+      }
+      if (methods.length === 0) methods = [{ value: 'wechat', label: '微信支付' }];
+
+      // 余额提示
+      const u = auth.getUser() || {};
+      const balanceHint = methods.some((m) => m.value === 'balance')
+        ? '可用余额 ¥' + (Number(u.balance || 0) / 100).toFixed(2)
+        : '';
+
       this.setData({
         buyDenied: denied,
         needCaptcha,
         captchaCode: needCaptcha ? String(Math.floor(1000 + Math.random() * 9000)) : '',
         captchaInput: '',
         themeColor: s.theme_color || '#FF6B35',
+        payMethods: methods,
+        payMethod: methods[0].value,
+        balanceHint,
       });
     });
+  },
+
+  // 选择支付方式
+  selectPay(e) {
+    this.setData({ payMethod: e.currentTarget.dataset.value });
   },
 
   onAddressInput(e) {
@@ -92,10 +138,20 @@ Page({
       wx.showToast({ title: '请填写正确的手机号', icon: 'none' });
       return;
     }
-    api.post('/order', { items: this.data.items, address: a })
+    api.post('/order', {
+      items: this.data.items,
+      address: a,
+      pay_method: this.data.payMethod,
+      platform: this.data.devicePlatform,
+    })
       .then((res) => {
         app.globalData.pendingCheckout = null;
-        wx.redirectTo({ url: '/pages/pay/result/result?order_no=' + res.order_no + '&mock=1' });
+        if (res.paid) {
+          // 储值余额支付已直接到账，无需走 mock 回调
+          wx.redirectTo({ url: '/pages/pay/result/result?order_no=' + res.order_no + '&paid=1' });
+        } else {
+          wx.redirectTo({ url: '/pages/pay/result/result?order_no=' + res.order_no + '&mock=1' });
+        }
       })
       .catch((err) => wx.showToast({ title: err.message, icon: 'none' }));
   },

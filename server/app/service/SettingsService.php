@@ -76,9 +76,15 @@ class SettingsService
             'buy_button'         => true,        // 立即购买按钮
             // 交易设置
             'auto_cancel_minutes'=> 30,          // 未支付订单自动取消（分钟）
+            'auto_receive_days'  => 7,           // 自动确认收货（天），0=关闭
             'require_mobile'     => true,        // 下单需绑定手机号
             'allow_comment'      => true,        // 允许评价订单
-            'pay_methods'        => ['wechat'],  // 可用支付方式
+            'pay_methods'        => ['wechat'],  // 可用支付方式 wechat=微信 balance=储值余额
+            'ios_pay_limit'      => [            // iOS 端支付限制：true=在 iOS 上禁用该支付方式
+                'card'      => false,            // 电子卡券
+                'balance'   => false,            // 会员储值
+                'knowledge' => false,            // 知识付费
+            ],
             'pay_after_action'   => 'none',      // 支付后动作 none / coupon / points
             // 安全设置
             'captcha_login'      => false,       // 登录图形验证码

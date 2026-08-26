@@ -149,6 +149,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `status`         TINYINT      NOT NULL DEFAULT 0 COMMENT '0待付款 1已付款 2配货中 3已发货 4待自提 5已完成 10已取消 11退款中 12已退款',
   `pay_type`       VARCHAR(16)  NOT NULL DEFAULT '',
   `pay_time`       DATETIME     DEFAULT NULL,
+  `balance_used`  INT          NOT NULL DEFAULT 0,
   `created_at`     DATETIME     DEFAULT CURRENT_TIMESTAMP,
   `updated_at`     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
