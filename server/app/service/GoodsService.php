@@ -45,6 +45,11 @@ class GoodsService
         $specs  = Db::name('goods_specs')->where('goods_id', $id)->select()->toArray();
         $values = Db::name('goods_spec_values')->where('goods_id', $id)->select()->toArray();
         $skus   = Db::name('goods_skus')->where('goods_id', $id)->select()->toArray();
+        // SKU 价格分→元
+        $skus = array_map(function ($s) {
+            $s['price'] = floatval($s['price'] / 100);
+            return $s;
+        }, $skus);
 
         $specGroups = [];
         foreach ($specs as $s) {

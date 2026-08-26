@@ -2,12 +2,21 @@ const api = require('../../../utils/request');
 const settings = require('../../../utils/settings');
 const app = getApp();
 
+// 价格格式化：保留 2 位小数（后端已返回元）
+function formatPrice(price) {
+  if (price == null) return '';
+  return Number(price).toFixed(2);
+}
+
 Page({
   data: {
     goods: null,
     selected: {},     // { spec_id: value_id }
     currentSku: null,
     quantity: 1,
+    displayPrice: '',      // 格式化后的当前价格
+    displayMarketPrice: '', // 格式化后的原价
+    isFavorite: false,     // 是否已收藏
     // 商品详情页展示开关（基础设置 → 商品设置）
     showGoodsSales: true,
     showGoodsStock: true,
@@ -26,7 +35,13 @@ Page({
 
   onLoad(q) {
     api.get('/goods/' + q.id).then((g) => {
-      this.setData({ goods: g });
+      console.log('商品数据:', JSON.stringify(g));
+      console.log('price:', g.price, 'market_price:', g.market_price);
+      this.setData({ 
+        goods: g,
+        displayPrice: formatPrice(g.price),
+        displayMarketPrice: formatPrice(g.market_price)
+      });
       this.matchSku();
     });
   },
@@ -79,7 +94,10 @@ Page({
       if (arr.length !== selArr.length) return false;
       return arr.every((v, i) => v === selArr[i]);
     });
-    this.setData({ currentSku: sku || null });
+    this.setData({ 
+      currentSku: sku || null,
+      displayPrice: sku ? formatPrice(sku.price) : formatPrice(g.price)
+    });
   },
 
   incQty() {
@@ -110,10 +128,24 @@ Page({
       wx.showToast({ title: '请选择规格', icon: 'none' });
       return false;
     }
-    if (this.data.currentSku.stock <= 0) {
-      wx.showToast({ title: '该规格库存不足', icon: 'none' });
-      return false;
-    }
     return true;
+  },
+
+  // 切换收藏状态
+  toggleFavorite() {
+    const fav = !this.data.isFavorite;
+    this.setData({ isFavorite: fav });
+    wx.showToast({ title: fav ? '已收藏' : '已取消收藏', icon: 'success' });
+    // TODO: 调用后端收藏接口
+  },
+
+  // 分享
+  onShareAppMessage() {
+    const g = this.data.goods || {};
+    return {
+      title: g.title || '好物推荐',
+      path: '/pages/goods/detail/detail?id=' + (g.id || ''),
+      imageUrl: (g.images && g.images[0]) || '',
+    };
   },
 });

@@ -7,8 +7,20 @@
 
   <view class="detail-info">
     <view class="detail-price">
-      <text class="price">¥{{currentSku ? currentSku.price : goods.price}}</text>
-      <text wx:if="{{showGoodsOriginalPrice}}" class="detail-market muted">¥{{goods.market_price}}</text>
+      <view class="price-left">
+        <text class="price">¥{{displayPrice}}</text>
+        <text wx:if="{{showGoodsOriginalPrice}}" class="detail-market muted">¥{{displayMarketPrice}}</text>
+      </view>
+      <view class="price-right">
+        <view class="icon-btn" bindtap="toggleFavorite">
+          <text class="icon-text {{isFavorite ? 'active' : ''}}">{{isFavorite ? '★' : '☆'}}</text>
+          <text class="icon-label">{{isFavorite ? '已收藏' : '收藏'}}</text>
+        </view>
+        <button class="icon-btn" open-type="share">
+          <text class="icon-text">↗</text>
+          <text class="icon-label">分享</text>
+        </button>
+      </view>
     </view>
     <view class="detail-title">{{goods.title}}</view>
     <view class="detail-sub muted">{{goods.subtitle}}</view>
