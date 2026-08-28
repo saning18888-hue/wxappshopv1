@@ -9768,7 +9768,8 @@
       switchShopTab('merchant');
     }
     function updateLogisticsType(){
-      const t=shopData.logistics_type||'kdniao';
+      const checked=document.querySelector('input[name="logistics_type"]:checked');
+      const t=checked?checked.value:(shopData.logistics_type||'kdniao');
       document.getElementById('logiKdniao').classList.toggle('hidden',t!=='kdniao');
       document.getElementById('logiKuaidi100').classList.toggle('hidden',t!=='kuaidi100');
     }
