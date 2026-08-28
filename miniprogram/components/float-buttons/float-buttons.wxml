@@ -2,6 +2,7 @@
 <view class="float-btns">
   <view class="float-btn" bindtap="onTapCart">
     <image class="float-btn-ico" src="{{cartIcon}}" mode="aspectFit" />
+    <view wx:if="{{cartCount > 0}}" class="cart-badge">{{cartCount > 99 ? '99+' : cartCount}}</view>
   </view>
   <view class="float-btn" bindtap="onTapHome">
     <image class="float-btn-ico" src="{{homeIcon}}" mode="aspectFit" />

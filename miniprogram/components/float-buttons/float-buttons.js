@@ -1,4 +1,5 @@
 const settings = require('../../utils/settings');
+const api = require('../../utils/request');
 
 Component({
   data: {
@@ -12,6 +13,7 @@ Component({
     cartIcon: '/images/cart.svg',
     homeIcon: '/images/home.svg',
     serviceIcon: '/images/message.svg',
+    cartCount: 0,
   },
   methods: {
     loadSettings() {
@@ -31,6 +33,12 @@ Component({
         homeIcon: s.float_home_icon || '/images/home.svg',
         serviceIcon: s.float_service_icon || '/images/message.svg',
       });
+    },
+    refreshCartCount() {
+      api.get('/cart/count').then((res) => {
+        const count = (res && typeof res.count === 'number') ? res.count : (res && res.total_count) || 0;
+        this.setData({ cartCount: count });
+      }).catch(() => {});
     },
     onTapCart() {
       wx.switchTab({ url: '/pages/cart/cart' });
@@ -80,11 +88,13 @@ Component({
   lifetimes: {
     attached() {
       this.loadSettings();
+      this.refreshCartCount();
     },
   },
   pageLifetimes: {
     show() {
       this.loadSettings();
+      this.refreshCartCount();
     },
   },
 });
