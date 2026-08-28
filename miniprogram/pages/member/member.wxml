@@ -1,18 +1,35 @@
 <view class="member" style="--primary:{{themeColor}}">
   <!-- 用户信息区 -->
   <view class="member-header">
-    <image wx:if="{{user && user.avatarUrl}}" class="member-avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
-    <view wx:else class="member-avatar avatar-text">{{avatarChar}}</view>
-    <view class="member-meta">
-      <view class="member-name">{{user && user.nickname ? user.nickname : '游客'}}</view>
-      <view class="member-level">
-        <text class="level-icon">V</text>
-        <text>会员等级</text>
+    <view class="header-top">
+      <image wx:if="{{user && user.avatarUrl}}" class="member-avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
+      <view wx:else class="member-avatar avatar-text">{{avatarChar}}</view>
+      <view class="member-meta">
+        <view class="member-name">{{user && user.nickname ? user.nickname : '游客'}}</view>
+        <view class="member-level">
+          <text class="level-icon">V</text>
+          <text>会员等级</text>
+        </view>
+      </view>
+      <view class="header-right">
+        <view class="sign-btn" bindtap="onSign">签到</view>
+        <text class="arrow">›</text>
       </view>
     </view>
-    <view class="header-right">
-      <view class="sign-btn" bindtap="onSign">签到</view>
-      <text class="arrow">›</text>
+
+    <view class="member-stats">
+      <view class="stat-item">
+        <text class="stat-num">{{stats.points}}</text>
+        <text class="stat-label">积分</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.coupon}}</text>
+        <text class="stat-label">优惠券</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num">{{stats.balance}}</text>
+        <text class="stat-label">余额</text>
+      </view>
     </view>
   </view>
 

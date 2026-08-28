@@ -50,9 +50,12 @@ class ApiController
     protected function formatUser($u): array
     {
         return [
-            'id'       => $u['id'],
-            'nickname' => $u['nickname'],
-            'avatar'   => $u['avatar'],
+            'id'        => $u['id'],
+            'nickname'  => $u['nickname'],
+            'avatar'    => $u['avatar'],
+            'points'    => intval($u['points'] ?? 0),
+            'balance'   => floatval($u['balance'] ?? 0),
+            'coupon'    => 0, // MVP 预留，后续接入优惠券统计
         ];
     }
 }

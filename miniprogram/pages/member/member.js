@@ -8,6 +8,7 @@ Page({
     user: null,
     avatarChar: '客',
     themeColor: '#FF6B35',
+    stats: { points: 0, coupon: 0, balance: '0.00' },
     statusList: [
       { key: 'pending_payment', label: '待付款', icon: '/images/mine/pending-pay.svg', count: 0 },
       { key: 'pending_ship', label: '待发货', icon: '/images/mine/pending-send.svg', count: 0 },
@@ -34,10 +35,20 @@ Page({
   applyUser(u) {
     if (!u) return;
     const avatarUrl = asset(u.avatar || u.avatarUrl);
+    const points = this.formatStatNum(u.points ?? 0);
+    const coupon = this.formatStatNum(u.coupon ?? 0);
+    const balance = parseFloat(u.balance || 0).toFixed(2);
     this.setData({
       user: Object.assign({}, u, { avatarUrl }),
       avatarChar: u.nickname ? u.nickname[0] : '客',
+      stats: { points, coupon, balance },
     });
+  },
+
+  formatStatNum(num) {
+    const n = parseInt(num || 0, 10);
+    if (n > 9999) return '9999+';
+    return n;
   },
 
   // 拉取后端最新用户信息（头像等），成功后更新缓存与视图
