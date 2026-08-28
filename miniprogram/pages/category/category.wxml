@@ -18,10 +18,10 @@
             <view class="goods-price">¥{{item.price}}
               <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
             </view>
-            <view class="goods-sales muted" wx:if="{{item.sales}}">已售{{item.sales}}</view>
+            <view class="goods-sales muted" wx:if="{{item.sales}}">销量：{{item.sales}}</view>
           </view>
           <view class="goods-cart" catchtap="addCart" data-id="{{item.id}}">
-            <image class="goods-cart-icon" src="/images/cart.svg" mode="aspectFit" />
+            <text class="goods-cart-plus">+</text>
           </view>
         </view>
       </view>

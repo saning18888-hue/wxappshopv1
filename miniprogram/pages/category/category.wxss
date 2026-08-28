@@ -46,13 +46,14 @@
 .goods-sales { font-size: 22rpx; color: #999; margin-top: 4rpx; }
 .goods-bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8rpx; }
 .goods-cart {
-  width: 48rpx;
-  height: 48rpx;
+  width: 40rpx;
+  height: 40rpx;
   border-radius: 50%;
-  background: var(--primary);
+  background: #FF3B30;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.12);
+  box-shadow: 0 4rpx 10rpx rgba(255,59,48,0.25);
 }
-.goods-cart-icon { width: 28rpx; height: 28rpx; }
+.goods-cart-plus { font-size: 32rpx; line-height: 1; font-weight: bold; }
