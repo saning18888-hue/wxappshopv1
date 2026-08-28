@@ -2,7 +2,7 @@ const api = require('../../utils/request');
 const settings = require('../../utils/settings');
 
 Page({
-  data: { cats: [], activeId: 0, list: [], loading: false, themeColor: '#FF6B35' },
+  data: { cats: [], activeId: 0, list: [], loading: false, keyword: '', themeColor: '#FF6B35' },
 
   onLoad() {
     settings.fetchSettings(true).then((s) => {
@@ -26,6 +26,20 @@ Page({
     const id = e.currentTarget.dataset.id;
     this.setData({ activeId: id, list: [] });
     this.loadGoods(id);
+  },
+
+  onSearchInput(e) {
+    this.setData({ keyword: e.detail.value });
+  },
+
+  onSearchConfirm() {
+    const { keyword } = this.data;
+    if (!keyword.trim()) return;
+    wx.navigateTo({ url: '/pages/goods/list/list?keyword=' + encodeURIComponent(keyword.trim()) });
+  },
+
+  clearSearch() {
+    this.setData({ keyword: '' });
   },
 
   loadGoods(categoryId) {

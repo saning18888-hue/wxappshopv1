@@ -1,5 +1,15 @@
-<view class="cate" style="--primary:{{themeColor}}">
-  <scroll-view class="cate-left" scroll-y>
+<view class="page">
+  <view class="search-bar" style="--primary:{{themeColor}}">
+    <view class="search-input-wrap">
+      <image class="search-icon" src="/images/search.png" mode="aspectFit" />
+      <input class="search-input" type="text" confirm-type="search" placeholder="请输入商品名称"
+        value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearchConfirm" />
+      <view class="search-clear" wx:if="{{keyword}}" catchtap="clearSearch">×</view>
+    </view>
+  </view>
+
+  <view class="cate" style="--primary:{{themeColor}}">
+    <scroll-view class="cate-left" scroll-y>
     <view wx:for="{{cats}}" wx:key="id" class="cate-left-item {{activeId === item.id ? 'active' : ''}}"
       data-id="{{item.id}}" bindtap="switchCat">
       {{item.name}}
@@ -29,4 +39,5 @@
   </scroll-view>
 
   <float-buttons />
+  </view>
 </view>
