@@ -19,7 +19,7 @@
 
 ---
 
-## 二、已完成（截至 v0.1.95）
+## 二、已完成（截至 v0.1.97）
 
 ### 2.1 小程序端（miniprogram/）
 - 首页（DIY 装修渲染：轮播/魔方导航/精选推荐/分类导航/首页布局/底部导航）、分类、商品列表/详情（SKU 规格）、购物车、确认订单、支付结果、会员中心。
@@ -85,7 +85,7 @@
 ```bash
 git clone https://github.com/saning18888-hue/wxappshopv1.git wxappshopv1
 cd wxappshopv1
-git checkout v0.1.95   # 或最新 tag
+git checkout v0.1.97   # 或最新 tag
 ```
 > 远程地址见 `git remote -v`；如需推送，需有仓库写权限（GitHub Token）。
 
