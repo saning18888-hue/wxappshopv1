@@ -1,5 +1,5 @@
 /* 首页快捷按钮（购物车 / 返回首页） */
-.float-btns { position: fixed; right: 28rpx; bottom: calc(620rpx + env(safe-area-inset-bottom)); z-index: 600; display: flex; flex-direction: column; gap: 20rpx; }
+.float-btns { position: fixed; right: 28rpx; bottom: calc(420rpx + env(safe-area-inset-bottom)); z-index: 600; display: flex; flex-direction: column; gap: 20rpx; }
 .float-btn {
   width: 96rpx; height: 96rpx; border-radius: 50%;
   background: #fff; box-shadow: 0 8rpx 24rpx rgba(0,0,0,.18);
@@ -9,7 +9,7 @@
 .float-btn-ico { width: 44rpx; height: 44rpx; display: block; }
 
 /* 客服按钮 */
-.cs-fab { position: fixed; right: 28rpx; bottom: calc(520rpx + env(safe-area-inset-bottom)); z-index: 600; }
+.cs-fab { position: fixed; right: 28rpx; bottom: calc(320rpx + env(safe-area-inset-bottom)); z-index: 600; }
 .cs-btn {
   width: 96rpx; height: 96rpx; border-radius: 50%;
   background: #fff; box-shadow: 0 8rpx 24rpx rgba(0,0,0,.18);
