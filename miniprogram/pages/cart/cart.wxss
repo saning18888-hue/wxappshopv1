@@ -1,32 +1,130 @@
-.cart { background: #f5f5f5; min-height: 100vh; padding: 16rpx; padding-bottom: 140rpx; box-sizing: border-box; }
+.cart { background: #f5f5f5; min-height: 100vh; padding: 16rpx; padding-bottom: 220rpx; box-sizing: border-box; }
+
+/* 顶部标题栏 */
+.cart-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1rpx solid #eee;
+}
+.cart-title { font-size: 30rpx; color: #333; font-weight: 400; }
+.cart-manage {
+  position: absolute;
+  right: 24rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 空状态 */
+.empty-state { display: flex; flex-direction: column; align-items: center; padding-top: calc(var(--status-bar) + var(--nav-height) + 200rpx); }
+.empty-img { width: 280rpx; height: 280rpx; margin-bottom: 30rpx; }
+.empty-title { font-size: 32rpx; color: #333; margin-bottom: 12rpx; }
+.empty-tip { font-size: 26rpx; color: #999; margin-bottom: 48rpx; }
+.empty-btn {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 999rpx;
+  padding: 0 80rpx;
+  line-height: 80rpx;
+  font-size: 30rpx;
+}
+
+/* 商品列表 */
+.cart-list { padding-top: calc(var(--status-bar) + var(--nav-height) + 24rpx); }
 .cart-item {
   display: flex;
+  align-items: center;
   background: #fff;
   border-radius: 16rpx;
   padding: 20rpx;
   margin-bottom: 16rpx;
+  position: relative;
 }
-.cart-cover { width: 160rpx; height: 160rpx; border-radius: 12rpx; background: #f5f5f5; }
-.cart-mid { flex: 1; padding: 0 20rpx; display: flex; flex-direction: column; }
-.cart-title { font-size: 28rpx; color: #333; }
-.cart-spec { font-size: 22rpx; margin: 8rpx 0; }
-.cart-price { font-size: 32rpx; margin-top: auto; }
-.cart-right { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; }
-.cart-qty { display: flex; align-items: center; }
-.cart-qty-btn { width: 52rpx; height: 52rpx; line-height: 48rpx; text-align: center; background: #f5f5f5; border-radius: 8rpx; font-size: 30rpx; }
-.cart-qty-num { width: 64rpx; text-align: center; font-size: 28rpx; }
-.cart-del { font-size: 24rpx; color: #999; }
+.cart-check { display: flex; align-items: center; margin-right: 16rpx; }
+.check-circle {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  border: 2rpx solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 22rpx;
+  box-sizing: border-box;
+}
+.check-circle.checked { background: var(--primary); border-color: var(--primary); }
+.check-label { font-size: 26rpx; color: #333; margin-left: 12rpx; }
 
+.cart-cover { width: 160rpx; height: 160rpx; border-radius: 12rpx; background: #f5f5f5; }
+.cart-info {
+  flex: 1;
+  padding: 0 16rpx;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 160rpx;
+}
+.cart-name { font-size: 28rpx; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cart-spec {
+  margin-top: 10rpx;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  padding: 6rpx 12rpx;
+}
+.spec-tag { font-size: 22rpx; color: #999; }
+.spec-arrow { font-size: 18rpx; color: #999; margin-left: 6rpx; }
+.cart-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.cart-price { font-size: 32rpx; color: var(--primary); font-weight: 500; }
+.cart-qty { display: flex; align-items: center; }
+.qty-btn {
+  width: 52rpx;
+  height: 52rpx;
+  line-height: 48rpx;
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 30rpx;
+  color: #666;
+}
+.qty-num { width: 64rpx; text-align: center; font-size: 28rpx; color: #333; }
+.cart-del { width: 40rpx; height: 40rpx; position: absolute; top: 20rpx; right: 20rpx; }
+
+/* 底部结算栏 */
 .cart-bar {
   position: fixed;
-  left: 0; right: 0; bottom: 0;
+  left: 0;
+  right: 0;
+  bottom: calc(100rpx + env(safe-area-inset-bottom));
+  z-index: 550;
   background: #fff;
   display: flex;
   align-items: center;
   padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
   border-top: 1rpx solid #eee;
 }
-.cart-total { flex: 1; font-size: 28rpx; }
+.cart-summary {
+  flex: 1;
+  text-align: right;
+  margin-right: 20rpx;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+}
+.cart-count { font-size: 24rpx; color: #999; margin-right: 16rpx; }
+.cart-total { font-size: 28rpx; color: #333; }
+.total-price { color: var(--primary); }
+.flex-grow { flex: 1; }
 .cart-submit {
   background: var(--primary);
   color: #fff;

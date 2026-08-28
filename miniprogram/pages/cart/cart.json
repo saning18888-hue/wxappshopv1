@@ -1,6 +1,6 @@
 {
+  "navigationStyle": "custom",
   "usingComponents": {
     "float-buttons": "/components/float-buttons/float-buttons"
-  },
-  "navigationBarTitleText": "购物车"
+  }
 }
