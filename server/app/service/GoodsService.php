@@ -13,7 +13,9 @@ class GoodsService
     {
         $q = Db::name('goods')->where('status', 1);
         if ($catId) {
-            $q->where('category_id', $catId);
+            // 父级分类需包含其所有子孙分类下的商品
+            $catIds = $this->descendantIds((int) $catId);
+            $q->where('category_id', 'in', $catIds);
         }
         if ($keyword) {
             $q->where('title', 'like', "%{$keyword}%");
@@ -34,6 +36,29 @@ class GoodsService
             'page'      => $page,
             'page_size' => $pageSize,
         ];
+    }
+
+    /**
+     * 取分类自身及其所有子孙分类 id（含自身），用于商品按父分类筛选
+     */
+    private function descendantIds(int $catId): array
+    {
+        $rows  = Db::name('categories')->field('id,parent_id')->select()->toArray();
+        $byPar = [];
+        foreach ($rows as $r) {
+            $byPar[$r['parent_id']][] = $r;
+        }
+        $ids = [$catId];
+        $stack = [$catId];
+        while ($stack) {
+            $cur = array_pop($stack);
+            foreach ($byPar[$cur] ?? [] as $c) {
+                $ids[] = $c['id'];
+                $stack[] = $c['id'];
+            }
+        }
+        // 去重（极端异常时可能出现环）
+        return array_values(array_unique($ids));
     }
 
     public function detail(int $id): ?array

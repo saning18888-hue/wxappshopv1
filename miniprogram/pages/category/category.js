@@ -40,6 +40,25 @@ Page({
       });
   },
 
+  addCart(e) {
+    const id = e.currentTarget.dataset.id;
+    api.get('/goods/' + id)
+      .then((detail) => {
+        const skus = detail.skus || [];
+        if (!skus.length) {
+          wx.showToast({ title: '该商品暂无规格', icon: 'none' });
+          return Promise.reject(new Error('no sku'));
+        }
+        const sku = skus[0];
+        return api.post('/cart', { sku_id: sku.id, quantity: 1 });
+      })
+      .then(() => wx.showToast({ title: '已加入购物车', icon: 'success' }))
+      .catch((err) => {
+        if (err && err.message === 'no sku') return;
+        wx.showToast({ title: err.message || '添加失败', icon: 'none' });
+      });
+  },
+
   goDetail(e) {
     wx.navigateTo({ url: '/pages/goods/detail/detail?id=' + e.currentTarget.dataset.id });
   },

@@ -13,10 +13,17 @@
         <image class="goods-cover" src="{{item.cover}}" mode="aspectFill" />
         <view class="goods-name">{{item.title}}</view>
         <view class="goods-sub muted">{{item.subtitle}}</view>
-        <view class="goods-price">¥{{item.price}}
-          <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
+        <view class="goods-bottom">
+          <view>
+            <view class="goods-price">¥{{item.price}}
+              <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
+            </view>
+            <view class="goods-sales muted" wx:if="{{item.sales}}">已售{{item.sales}}</view>
+          </view>
+          <view class="goods-cart" catchtap="addCart" data-id="{{item.id}}">
+            <image class="goods-cart-icon" src="/images/cart.svg" mode="aspectFit" />
+          </view>
         </view>
-        <view class="goods-sales muted" wx:if="{{item.sales}}">已售{{item.sales}}</view>
       </view>
     </view>
   </scroll-view>

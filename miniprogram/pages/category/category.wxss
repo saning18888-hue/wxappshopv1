@@ -44,3 +44,15 @@
 .goods-price { font-size: 30rpx; color: var(--primary); margin-top: 8rpx; }
 .goods-market { font-size: 22rpx; color: #999; text-decoration: line-through; margin-left: 10rpx; }
 .goods-sales { font-size: 22rpx; color: #999; margin-top: 4rpx; }
+.goods-bottom { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 8rpx; }
+.goods-cart {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.12);
+}
+.goods-cart-icon { width: 28rpx; height: 28rpx; }
