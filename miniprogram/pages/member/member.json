@@ -1,6 +1,6 @@
 {
-  "usingComponents": {
-    "float-buttons": "/components/float-buttons/float-buttons"
-  },
-  "navigationBarTitleText": "我的"
+  "navigationBarTitleText": "个人中心",
+  "navigationBarTextStyle": "white",
+  "navigationBarBackgroundColor": "#FF6B35",
+  "usingComponents": {}
 }

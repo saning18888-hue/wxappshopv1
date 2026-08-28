@@ -1,29 +1,67 @@
 <view class="member" style="--primary:{{themeColor}}">
+  <!-- 用户信息区 -->
   <view class="member-header">
-    <view class="member-avatar">{{avatarChar}}</view>
-    <view class="member-name">{{user ? user.nickname : '游客'}}</view>
-  </view>
-
-  <view class="member-card">
-    <view class="member-card-title">我的订单</view>
-    <view wx:if="{{orders.length === 0}}" class="muted" style="padding:20rpx 0;">暂无订单</view>
-    <view wx:for="{{orders}}" wx:key="id" class="member-order">
-      <view class="member-order-no">订单号 {{item.order_no}}</view>
-      <view class="member-order-info">
-        <text class="price">¥{{item.pay_amount}}</text>
-        <text class="muted">{{item.status_text}}</text>
-        <text class="logi-link" bindtap="goLogistics" data-id="{{item.id}}">查看物流</text>
+    <image wx:if="{{user && user.avatarUrl}}" class="member-avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
+    <view wx:else class="member-avatar avatar-text">{{avatarChar}}</view>
+    <view class="member-meta">
+      <view class="member-name">{{user && user.nickname ? user.nickname : '游客'}}</view>
+      <view class="member-level">
+        <text class="level-icon">V</text>
+        <text>会员等级</text>
       </view>
     </view>
-    <view class="member-more" bindtap="goOrders">查看全部订单 ›</view>
+    <view class="header-right">
+      <view class="sign-btn" bindtap="onSign">签到</view>
+      <text class="arrow">›</text>
+    </view>
   </view>
 
+  <!-- 会员卡 -->
+  <view class="vip-card">
+    <view class="vip-left">
+      <text class="vip-title">会员卡</text>
+      <text class="vip-desc">享全场包邮、全场9折</text>
+    </view>
+    <view class="vip-btn" bindtap="onOpenVip">立即开卡</view>
+  </view>
+
+  <!-- 我的订单 -->
+  <view class="order-card">
+    <view class="order-title-row">
+      <text class="order-title">我的订单</text>
+      <view class="order-all" bindtap="goOrders">
+        <text>全部订单</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="order-status-row">
+      <view class="status-item" wx:for="{{statusList}}" wx:key="key" bindtap="onStatusTap" data-key="{{item.key}}">
+        <view class="status-icon-wrap">
+          <image class="status-icon" src="{{item.icon}}" mode="aspectFit" />
+          <view wx:if="{{item.count > 0}}" class="status-badge">{{item.count > 99 ? '99+' : item.count}}</view>
+        </view>
+        <text class="status-label">{{item.label}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 常用菜单 -->
   <view class="member-menu">
-    <view class="member-menu-item"><text>收货地址</text><text class="muted">›</text></view>
-    <view class="member-menu-item"><text>优惠券</text><text class="muted">›</text></view>
-    <view class="member-menu-item"><text>客服中心</text><text class="muted">›</text></view>
-    <view class="member-menu-item"><text>关于我们</text><text class="muted">›</text></view>
+    <view class="menu-item" bindtap="goAddress">
+      <text class="menu-label">收货地址</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goCoupon">
+      <text class="menu-label">优惠券</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goService">
+      <text class="menu-label">客服中心</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goAbout">
+      <text class="menu-label">关于我们</text>
+      <text class="arrow">›</text>
+    </view>
   </view>
-
-  <float-buttons />
 </view>
