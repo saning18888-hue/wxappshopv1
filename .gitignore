@@ -39,4 +39,8 @@ stats_err*.html
 .playwright-cli/
 server/server_8899.log
 server/server_8899.err.log
+server/server.err
+server/server.log
 server/public/uploads/banner/20260822/
+server/public/uploads/categories/20260828/
+server/public/uploads/avatar/20260828/

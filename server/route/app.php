@@ -76,6 +76,7 @@ Route::group('admin', function () {
     Route::delete('categories/:id', 'admin.Category/remove');
     Route::put('categories/:id/status', 'admin.Category/toggleStatus');
     Route::post('upload/image', 'admin.Upload/image');
+    Route::post('upload/avatar', 'admin.Upload/avatarImage');
     Route::post('upload/banner_image', 'admin.Upload/bannerImage');
     Route::post('upload/video', 'admin.Upload/video');
     Route::post('upload/domain_verify', 'admin.Upload/domainVerify');

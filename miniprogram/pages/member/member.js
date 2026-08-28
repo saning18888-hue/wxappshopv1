@@ -1,6 +1,7 @@
 const api = require('../../utils/request');
 const auth = require('../../utils/auth');
 const settings = require('../../utils/settings');
+const { asset } = require('../../utils/img');
 
 Page({
   data: {
@@ -18,17 +19,43 @@ Page({
 
   onShow() {
     const u = auth.getUser();
-    this.setData({
-      user: u,
-      avatarChar: u && u.nickname ? u.nickname[0] : '客',
-    });
+    this.applyUser(u);
     settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
     this.loadOrderCounts();
+    this.refreshUser();
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 });
     }
+  },
+
+  // 用本地缓存即时渲染（避免闪烁）
+  applyUser(u) {
+    if (!u) return;
+    const avatarUrl = asset(u.avatar || u.avatarUrl);
+    this.setData({
+      user: Object.assign({}, u, { avatarUrl }),
+      avatarChar: u.nickname ? u.nickname[0] : '客',
+    });
+  },
+
+  // 拉取后端最新用户信息（头像等），成功后更新缓存与视图
+  refreshUser() {
+    api
+      .get('/user/info')
+      .then((res) => {
+        console.log('[member] /user/info response:', res);
+        const latest = (res && res.user) || null;
+        if (!latest) return;
+        const merged = Object.assign({}, auth.getUser(), latest);
+        auth.setUser(merged);
+        this.applyUser(merged);
+        console.log('[member] avatar after apply:', this.data.user && this.data.user.avatar);
+      })
+      .catch((err) => {
+        console.error('[member] /user/info failed:', err);
+      });
   },
 
   loadOrderCounts() {

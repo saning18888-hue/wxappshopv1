@@ -40,6 +40,14 @@ class Upload extends AdminController
     }
 
     /**
+     * 会员头像上传：独立目录 uploads/avatar/，返回相对路径（不带域名）
+     */
+    public function avatarImage()
+    {
+        return $this->store('avatar', 2 * 1024 * 1024, 'jpg,jpeg,png,gif,webp');
+    }
+
+    /**
      * 首页轮播图图片上传
      */
     public function bannerImage()

@@ -1,7 +1,19 @@
 const { goLink } = require('../../utils/mock');
 const settings = require('../../utils/settings');
 const api = require('../../utils/request');
+const config = require('../../config');
 const app = getApp();
+
+// 资源域名：从 config.baseUrl 派生（http://host:port），用于补全后端返回的 /uploads/... 相对路径
+const ASSET_BASE = (config.baseUrl || '').replace(/\/api\/v1$/, '');
+
+// 图片地址补全：已是完整 http(s)  URL 的原样返回；以 / 开头的相对路径拼上当前资源域名
+function ix(p) {
+  if (!p || typeof p !== 'string') return p;
+  if (p.indexOf('http://') === 0 || p.indexOf('https://') === 0) return p;
+  if (p.indexOf('/') === 0) return ASSET_BASE + p;
+  return p;
+}
 
 // 重新拉取购物车数量并广播到悬浮角标
 function refreshCartCount() {
@@ -47,9 +59,20 @@ Component({
       const list = (comps || [])
         .filter((c) => !(c.props && c.props.hidden))
         .map((c) => {
+        if (c.type === 'banner') {
+          const props = c.props || {};
+          const items = (props.items || []).map((b) => {
+            const nb = Object.assign({}, b);
+            if (nb.image) nb.image = ix(nb.image);
+            if (nb.video) nb.video = ix(nb.video);
+            return nb;
+          });
+          return Object.assign({}, c, { props: Object.assign({}, props, { items }) });
+        }
         if (c.type === 'nav_grid') {
           const cols = (c.props && c.props.columns) || 5;
-          return Object.assign({}, c, { colWidth: 100 / cols + '%' });
+          const items = (c.props && c.props.items || []).map((n) => Object.assign({}, n, { icon: ix(n.icon) }));
+          return Object.assign({}, c, { colWidth: 100 / cols + '%', props: Object.assign({}, c.props, { items }) });
         }
         if (c.type === 'goods_group') {
           const props = c.props || {};
@@ -62,7 +85,10 @@ Component({
                 const moduleGoods = (m.goods || [])
                   .map((slot) => {
                     const live = (goods || []).find((g) => g.id === slot.id);
-                    return Object.assign({}, slot, live || {});
+                    const merged = Object.assign({}, slot, live || {});
+                    if (merged.cover) merged.cover = ix(merged.cover);
+                    if (merged.thumb) merged.thumb = ix(merged.thumb);
+                    return merged;
                   })
                   .filter((x) => x && x.id);
                 return Object.assign({}, m, { goods: moduleGoods });
@@ -72,18 +98,38 @@ Component({
           }
           // 兼容旧数据
           const show = props.show_count || 4;
-          let items = (goods || []).slice(0, show);
+          let items = (goods || []).slice(0, show).map((g) => {
+            const ng = Object.assign({}, g);
+            if (ng.cover) ng.cover = ix(ng.cover);
+            if (ng.thumb) ng.thumb = ix(ng.thumb);
+            return ng;
+          });
           if (props.source === 'category' && props.category_id) {
-            items = (goods || []).filter((g) => g.category_id === Number(props.category_id)).slice(0, show);
+            items = (goods || []).filter((g) => g.category_id === Number(props.category_id)).slice(0, show)
+              .map((g) => {
+                const ng = Object.assign({}, g);
+                if (ng.cover) ng.cover = ix(ng.cover);
+                if (ng.thumb) ng.thumb = ix(ng.thumb);
+                return ng;
+              });
           }
           return Object.assign({}, c, { items, colWidth: 100 / columns + '%' });
         }
         if (c.type === 'category_nav') {
-          let catList = cats || [];
+          let catList = (cats || []).map((cat) => {
+            const nc = Object.assign({}, cat);
+            if (nc.icon) nc.icon = ix(nc.icon);
+            return nc;
+          });
           if (c.props && c.props.source === 'ids' && Array.isArray(c.props.category_ids) && c.props.category_ids.length) {
             const ids = c.props.category_ids.map(Number);
             // 按选择的顺序展示，避免与装修后台指定的顺序不一致
-            catList = ids.map((id) => (cats || []).find((cat) => cat.id === id)).filter(Boolean);
+            catList = ids.map((id) => (cats || []).find((cat) => cat.id === id)).filter(Boolean)
+              .map((cat) => {
+                const nc = Object.assign({}, cat);
+                if (nc.icon) nc.icon = ix(nc.icon);
+                return nc;
+              });
           }
           const cols = (c.props && c.props.columns) || 4;
           return Object.assign({}, c, { catList, colWidth: 100 / cols + '%' });
@@ -91,7 +137,8 @@ Component({
         if (c.type === 'notice') {
           const props = c.props || {};
           const items = props.items || [];
-          const icon = props.icon || '📢';
+          let icon = props.icon || '📢';
+          if (typeof icon === 'string' && (icon.indexOf('http') === 0 || icon.indexOf('/') === 0)) icon = ix(icon);
           return Object.assign({}, c, {
             noticeStyle: props.style || 'fixed',
             bg: props.bg || '#F4F5FF',
@@ -106,8 +153,14 @@ Component({
         if (c.type === 'banner_ad') {
           const props = c.props || {};
           const module = (props.modules && props.modules[0]) || {};
+          const banners = (props.banners || module.banners || []).map((b) => {
+            const nb = Object.assign({}, b);
+            if (nb.image) nb.image = ix(nb.image);
+            if (nb.video) nb.video = ix(nb.video);
+            return nb;
+          });
           return Object.assign({}, c, {
-            props: Object.assign({}, props, { banners: props.banners || module.banners || [], columns: props.columns || 1 }),
+            props: Object.assign({}, props, { banners, columns: props.columns || 1 }),
           });
         }
         return c;

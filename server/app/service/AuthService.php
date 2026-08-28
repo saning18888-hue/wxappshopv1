@@ -15,14 +15,37 @@ class AuthService
         $user   = Db::name('users')->where('openid', $openid)->find();
         if (!$user) {
             $uid  = Db::name('users')->insertGetId([
-                'openid'     => $openid,
-                'nickname'   => '微信用户' . substr($openid, -4),
-                'avatar'     => '',
-                'status'     => 1,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                'openid'        => $openid,
+                'nickname'      => '微信用户' . substr($openid, -4),
+                'avatar'        => '/default-avatar.svg',
+                'phone'         => '',
+                'gender'        => 0,
+                'level'         => 1,
+                'growth'        => 0,
+                'points'        => 0,
+                'balance'       => 0.00,
+                'group_id'      => 1,
+                'source'        => '微信小程序',
+                'auth_status'   => 1,
+                'delete_status' => 0,
+                'status'        => 1,
+                'created_at'    => date('Y-m-d H:i:s'),
+                'updated_at'    => date('Y-m-d H:i:s'),
             ]);
             $user = Db::name('users')->find($uid);
+        } else {
+            // 补齐早期开发态创建的会员可能缺失的字段
+            $fill = [];
+            if (empty($user['avatar']))       $fill['avatar'] = '/default-avatar.svg';
+            if (empty($user['source']))       $fill['source'] = '微信小程序';
+            if (empty($user['group_id']))     $fill['group_id'] = 1;
+            if (empty($user['level']))        $fill['level'] = 1;
+            if (!isset($user['auth_status'])) $fill['auth_status'] = 1;
+            if (!empty($fill)) {
+                $fill['updated_at'] = date('Y-m-d H:i:s');
+                Db::name('users')->where('id', $user['id'])->update($fill);
+                $user = array_merge($user, $fill);
+            }
         }
         $token = $this->createToken($user['id']);
         return ['token' => $token, 'user' => $this->formatUser($user)];

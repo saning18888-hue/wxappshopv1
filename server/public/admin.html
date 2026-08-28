@@ -3454,6 +3454,7 @@
                 <div class="field"><label>头像</label>
                   <div class="avatar-upload">
                     <img id="mInfoAvatar" class="avatar-preview" src="" onerror="this.style.display='none'">
+                    <input type="hidden" id="mInfoAvatarPath" value="">
                     <button class="btn sm" type="button" onclick="document.getElementById('mInfoAvatarFile').click()">上传头像</button>
                     <input type="file" id="mInfoAvatarFile" style="display:none" accept="image/*" onchange="uploadMemberAvatar(this)">
                   </div>
@@ -6306,6 +6307,7 @@
       document.getElementById('mInfoDistributor').textContent=m.distributor_name?m.distributor_name:'无';
       const av=document.getElementById('mInfoAvatar');
       if(m.avatar){av.src=m.avatar;av.style.display='';av.setAttribute('src',m.avatar);}else{av.style.display='none';}
+      document.getElementById('mInfoAvatarPath').value=m.avatar||'';
       document.getElementById('memberInfoModal').classList.add('open');
     }
     function closeMemberInfo(){document.getElementById('memberInfoModal').classList.remove('open');}
@@ -6315,7 +6317,7 @@
         nickname:document.getElementById('mInfoNickname').value.trim(),
         phone:document.getElementById('mInfoPhone').value.trim(),
         gender:parseInt(getRadioValue('mInfoGender')||'0',10),
-        avatar:document.getElementById('mInfoAvatar').getAttribute('src')||''
+        avatar:document.getElementById('mInfoAvatarPath').value||''
       };
       const d=await fetchA(`${BASE}/members/${id}/save`,{method:'POST',body:data});
       if(d.code!==0){toast(d.msg||'保存失败');return;}
@@ -6323,9 +6325,21 @@
     }
     async function uploadMemberAvatar(input){
       if(!input.files||!input.files.length)return;
-      const url=await uploadToServer(input.files[0],'image');
-      if(url){const av=document.getElementById('mInfoAvatar');av.src=url;av.style.display='';av.setAttribute('src',url);}
+      const r=await uploadAvatarToServer(input.files[0]);
+      if(r){
+        const av=document.getElementById('mInfoAvatar');
+        av.src=r.url;av.style.display='';av.setAttribute('src',r.url);
+        document.getElementById('mInfoAvatarPath').value=r.path;
+      }
       input.value='';
+    }
+    async function uploadAvatarToServer(file){
+      const fd=new FormData();
+      fd.append('file',file);
+      const r=await fetch(`${BASE}/upload/avatar`,{method:'POST',headers:{'X-Admin-Token':token()},body:fd});
+      const d=await r.json();
+      if(d.code===0)return {url:d.data.url,path:d.data.path};
+      toast(d.msg||'上传失败');return null;
     }
 
     async function openMemberEdit(id){
