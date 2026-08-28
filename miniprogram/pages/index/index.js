@@ -1,5 +1,15 @@
 const api = require('../../utils/request');
 const settings = require('../../utils/settings');
+const app = getApp();
+
+// 重新拉取购物车数量并广播到悬浮角标
+function refreshCartCount() {
+  api.get('/cart').then((res) => {
+    const list = (res && res.list) || [];
+    const count = list.reduce((sum, i) => sum + (i.quantity || 0), 0);
+    app.emitCartCount(count);
+  }).catch(() => {});
+}
 
 // 默认放大镜图标（本地 PNG，避免 base64 data URI 兼容问题）
 const DEFAULT_SEARCH_ICON = '/images/search.png';

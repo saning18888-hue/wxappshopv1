@@ -61,6 +61,19 @@ App({
     // 基础设置（全局生效，见 utils/settings.js）
     settings: null,
   },
+  // 购物车数量变更事件总线
+  _cartCountSubs: [],
+  onCartCountChange(cb) {
+    if (typeof cb === 'function') this._cartCountSubs.push(cb);
+    return () => {
+      this._cartCountSubs = this._cartCountSubs.filter((f) => f !== cb);
+    };
+  },
+  emitCartCount(count) {
+    (this._cartCountSubs || []).forEach((cb) => {
+      try { cb(count); } catch (e) {}
+    });
+  },
   // 将主题色应用到原生导航栏 / 底部导航（复用，避免只写死 onLaunch 一次）
   applyThemeToNative(themeColor) {
     if (!themeColor) return;

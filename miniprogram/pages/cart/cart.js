@@ -45,6 +45,7 @@ Page({
         selected: item.selected === 1 || item.selected === true,
       }));
       this.setData({ list }, () => this.calcTotal());
+      app.emitCartCount(list.reduce((s, i) => s + (i.quantity || 0), 0));
     }).catch(() => {
       this.setData({ list: [] });
     });
@@ -99,13 +100,14 @@ Page({
     this.setData({ list }, () => {
       this.calcTotal();
       this.syncQty(id);
+      app.emitCartCount(list.reduce((s, i) => s + (i.quantity || 0), 0));
     });
   },
 
   syncQty(id) {
     const item = this.data.list.find((i) => i.id === id);
     if (!item) return;
-    api.post('/cart/update', { goods_id: item.goods_id, sku_id: item.sku_id, quantity: item.quantity }).catch(() => {});
+    api.post('/cart', { goods_id: item.goods_id, sku_id: item.sku_id, quantity: item.quantity }).catch(() => {});
   },
 
   removeTap(e) {
@@ -120,7 +122,18 @@ Page({
   },
 
   remove(ids) {
-    api.post('/cart/delete', { ids }).then(() => this.load()).catch(() => {});
+    let done = 0;
+    const total = ids.length;
+    if (!total) return;
+    ids.forEach((id) => {
+      api.del('/cart/' + id).then(() => {
+        done += 1;
+        if (done >= total) this.load();
+      }).catch(() => {
+        done += 1;
+        if (done >= total) this.load();
+      });
+    });
   },
 
   batchDelete() {

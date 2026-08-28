@@ -1,5 +1,6 @@
 const settings = require('../../utils/settings');
 const api = require('../../utils/request');
+const app = getApp();
 
 Component({
   data: {
@@ -35,8 +36,9 @@ Component({
       });
     },
     refreshCartCount() {
-      api.get('/cart/count').then((res) => {
-        const count = (res && typeof res.count === 'number') ? res.count : (res && res.total_count) || 0;
+      api.get('/cart').then((res) => {
+        const list = (res && res.list) || [];
+        const count = list.reduce((sum, i) => sum + (i.quantity || 0), 0);
         this.setData({ cartCount: count });
       }).catch(() => {});
     },
@@ -89,6 +91,12 @@ Component({
     attached() {
       this.loadSettings();
       this.refreshCartCount();
+      this._unsub = app.onCartCountChange((count) => {
+        this.setData({ cartCount: count });
+      });
+    },
+    detached() {
+      if (this._unsub) this._unsub();
     },
   },
   pageLifetimes: {

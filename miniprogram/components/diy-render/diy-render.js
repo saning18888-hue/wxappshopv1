@@ -1,5 +1,16 @@
 const { goLink } = require('../../utils/mock');
 const settings = require('../../utils/settings');
+const api = require('../../utils/request');
+const app = getApp();
+
+// 重新拉取购物车数量并广播到悬浮角标
+function refreshCartCount() {
+  api.get('/cart').then((res) => {
+    const list = (res && res.list) || [];
+    const count = list.reduce((sum, i) => sum + (i.quantity || 0), 0);
+    app.emitCartCount(count);
+  }).catch(() => {});
+}
 
 // 各加购图标 SVG 模板，使用 currentColor 占位，运行时替换为后台配置的颜色
 const CART_ICON_SVGS = {
@@ -127,7 +138,17 @@ Component({
     },
     onTapCart(e) {
       e.stopPropagation && e.stopPropagation();
-      wx.switchTab({ url: '/pages/cart/cart' });
+      const id = e.currentTarget.dataset.id;
+      api.post('/cart', { goods_id: id, sku_id: id, quantity: 1 })
+        .then((res) => {
+          if (res && res.code && res.code !== 0) {
+            wx.showToast({ title: res.msg || '加购失败', icon: 'none' });
+            return;
+          }
+          wx.showToast({ title: '已加入购物车', icon: 'success' });
+          refreshCartCount();
+        })
+        .catch(() => wx.showToast({ title: '加购失败', icon: 'none' }));
     },
   },
   lifetimes: {
