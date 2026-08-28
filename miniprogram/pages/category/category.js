@@ -2,7 +2,7 @@ const api = require('../../utils/request');
 const settings = require('../../utils/settings');
 
 Page({
-  data: { cats: [], activeId: 0, children: [], themeColor: '#FF6B35' },
+  data: { cats: [], activeId: 0, list: [], loading: false, themeColor: '#FF6B35' },
 
   onLoad() {
     settings.fetchSettings(true).then((s) => {
@@ -10,11 +10,9 @@ Page({
     });
     api.get('/categories').then((res) => {
       const cats = res.list || [];
-      this.setData({
-        cats,
-        activeId: cats[0] ? cats[0].id : 0,
-        children: cats[0] ? cats[0].children : [],
-      });
+      const activeId = cats[0] ? cats[0].id : 0;
+      this.setData({ cats, activeId });
+      this.loadGoods(activeId);
     });
   },
 
@@ -26,11 +24,23 @@ Page({
 
   switchCat(e) {
     const id = e.currentTarget.dataset.id;
-    const cat = this.data.cats.find((c) => c.id === id);
-    this.setData({ activeId: id, children: cat ? cat.children : [] });
+    this.setData({ activeId: id, list: [] });
+    this.loadGoods(id);
   },
 
-  goList(e) {
-    wx.navigateTo({ url: '/pages/goods/list/list?category_id=' + e.currentTarget.dataset.id });
+  loadGoods(categoryId) {
+    if (!categoryId) return;
+    this.setData({ loading: true });
+    api.get('/goods', { category_id: categoryId, page: 1, page_size: 50 })
+      .then((res) => {
+        this.setData({ list: res.list || [], loading: false });
+      })
+      .catch(() => {
+        this.setData({ loading: false });
+      });
+  },
+
+  goDetail(e) {
+    wx.navigateTo({ url: '/pages/goods/detail/detail?id=' + e.currentTarget.dataset.id });
   },
 });

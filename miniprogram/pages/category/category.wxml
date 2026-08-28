@@ -7,12 +7,16 @@
   </scroll-view>
 
   <scroll-view class="cate-right" scroll-y>
-    <view wx:if="{{children.length === 0}}" class="empty">该分类暂无子分类</view>
-    <view class="cate-right-title" wx:if="{{children.length > 0}}">选择子类</view>
-    <view class="cate-right-grid">
-      <view wx:for="{{children}}" wx:key="id" class="cate-right-item"
-        data-id="{{item.id}}" bindtap="goList">
-        <view class="cate-right-name">{{item.name}}</view>
+    <view wx:if="{{!loading && list.length === 0}}" class="empty">该分类暂无商品</view>
+    <view class="goods-grid">
+      <view wx:for="{{list}}" wx:key="id" class="goods-cell" data-id="{{item.id}}" bindtap="goDetail">
+        <image class="goods-cover" src="{{item.cover}}" mode="aspectFill" />
+        <view class="goods-name">{{item.title}}</view>
+        <view class="goods-sub muted">{{item.subtitle}}</view>
+        <view class="goods-price">¥{{item.price}}
+          <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
+        </view>
+        <view class="goods-sales muted" wx:if="{{item.sales}}">已售{{item.sales}}</view>
       </view>
     </view>
   </scroll-view>
