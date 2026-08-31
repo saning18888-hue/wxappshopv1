@@ -267,12 +267,56 @@ function dispatch(method, path, data = {}) {
     return { code: 0, msg: '下单成功', data: { order_id: order._order.id, order_no: order._order.order_no, pay_amount: order.pay_amount, pay: { mock: true } } };
   }
   if (path === '/order' && method === 'GET') {
-    return { code: 0, data: { list: state.orders.slice(), total: state.orders.length, page: data.page || 1, page_size: 10 } };
+    let list = state.orders.slice();
+    if (data.status === 'review') list = list.filter((o) => o.status === 3 || o.status === 5);
+    else if (data.status !== undefined && data.status !== '' && !isNaN(Number(data.status))) {
+      list = list.filter((o) => o.status === Number(data.status));
+    }
+    return { code: 0, data: { list, total: list.length, page: data.page || 1, page_size: 10 } };
   }
   const om = path.match(/^\/order\/(\d+)$/);
   if (om && method === 'GET') {
     const o = state.orders.find((x) => x.id === Number(om[1]));
     return o ? { code: 0, data: o } : { code: 404, msg: '订单不存在' };
+  }
+  if (path === '/order/counts' && method === 'GET') {
+    const cnt = {};
+    state.orders.forEach((o) => { cnt[o.status] = (cnt[o.status] || 0) + 1; });
+    return { code: 0, data: { counts: {
+      pending_payment: cnt[0] || 0,
+      pending_ship: cnt[1] || 0,
+      pending_receive: cnt[2] || 0,
+      pending_review: (cnt[3] || 0) + (cnt[5] || 0),
+      refund: (cnt[11] || 0) + (cnt[12] || 0),
+    } } };
+  }
+  if (path === '/order/refunds' && method === 'GET') {
+    const list = state.orders.filter((o) => o.status === 11 || o.status === 12);
+    return { code: 0, data: { list } };
+  }
+  if (path === '/order/refund' && method === 'POST') {
+    const o = state.orders.find((x) => x.id === Number(data.order_id));
+    if (!o) return { code: 404, msg: '订单不存在' };
+    if (o.status === 11 || o.status === 12) return { code: 400, msg: '该订单已在售后中' };
+    if (![1, 2, 3, 5].includes(o.status)) return { code: 400, msg: '当前订单状态不可申请售后' };
+    o.refund_type = data.type === 'return_refund' ? 'return_refund' : 'only_refund';
+    o.refund_status = 'pending';
+    o.refund_reason = data.reason || '';
+    o.refund_amount = Math.round((parseFloat(data.amount) || 0) * 100);
+    o.refund_remark = data.remark || '';
+    o.refund_images = data.images || [];
+    o.refund_apply_at = now();
+    o.refund_previous_status = o.status;
+    o.status = 11; o.status_text = '退款中';
+    return { code: 0, data: { order_id: o.id } };
+  }
+  if (path === '/order/refund/cancel' && method === 'POST') {
+    const o = state.orders.find((x) => x.id === Number(data.order_id));
+    if (!o) return { code: 404, msg: '订单不存在' };
+    if (o.status !== 11) return { code: 400, msg: '当前没有进行中的售后' };
+    o.status = o.refund_previous_status || 1; o.status_text = statusText(o.status);
+    o.refund_status = 'cancelled';
+    return { code: 0, data: {} };
   }
 
   // 模拟支付回调
@@ -293,33 +337,36 @@ function buildOrder(items, address, withOrder) {
     const found = findSku(Number(it.sku_id));
     if (!found) throw new Error('商品不存在');
     if (found.sku.stock < Number(it.quantity)) throw new Error('库存不足：' + found.goods.title);
+    const price = Math.round(found.sku.price * 100); // 元→分，与后端一致
     return {
       sku_id: found.sku.id, goods_id: found.goods.id, title: found.goods.title,
-      image: found.sku.image || found.goods.cover, price: found.sku.price,
-      quantity: Number(it.quantity), subtotal: found.sku.price * Number(it.quantity),
+      image: found.sku.image || found.goods.cover, price,
+      quantity: Number(it.quantity), subtotal: price * Number(it.quantity),
       spec_desc: specDesc(found.sku),
     };
   });
   const goodsAmount = detail.reduce((s, x) => s + x.subtotal, 0);
-  const shippingFee = goodsAmount >= 99 ? 0 : 10;
+  const shippingFee = goodsAmount >= 9900 ? 0 : 1000;
   const discount = 0;
   const payAmount = goodsAmount + shippingFee - discount;
   const result = {
     items: detail,
-    goods_amount: round2(goodsAmount),
-    shipping_fee: round2(shippingFee),
-    discount: round2(discount),
-    pay_amount: round2(payAmount),
+    goods_amount: goodsAmount,
+    shipping_fee: shippingFee,
+    discount: discount,
+    pay_amount: payAmount,
     address: address || {},
   };
   if (withOrder) {
     result._order = {
       id: state.orderSeq++, order_no: genOrderNo(),
       status: 0, status_text: '待付款',
-      goods_amount: round2(goodsAmount), shipping_fee: round2(shippingFee),
-      discount: round2(discount), pay_amount: round2(payAmount),
+      goods_amount: goodsAmount, shipping_fee: shippingFee,
+      discount: discount, pay_amount: payAmount,
       receiver_name: (address && address.name) || '', receiver_phone: (address && address.phone) || '',
       address: (address && address.address) || '', items: detail, created_at: now(), pay_time: '',
+      refund_type: '', refund_status: '', refund_reason: '', refund_amount: 0,
+      refund_remark: '', refund_images: [], refund_apply_at: '', refund_finish_at: '', refund_previous_status: 0,
     };
   }
   return result;
@@ -334,6 +381,9 @@ function now() {
   const d = new Date();
   const p = (n) => ('' + n).padStart(2, '0');
   return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+}
+function statusText(s) {
+  return { 0: '待付款', 1: '待发货', 2: '待收货', 3: '已完成', 4: '待核销', 5: '已完成', 10: '已取消', 11: '退款中', 12: '已退款', 20: '已关闭' }[s] || '未知';
 }
 function round2(n) {
   return Math.round(n * 100) / 100;

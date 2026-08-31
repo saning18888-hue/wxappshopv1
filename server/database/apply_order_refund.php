@@ -34,5 +34,10 @@ addCol('orders', 'refund_apply_at', "TEXT");
 addCol('orders', 'refund_finish_at', "TEXT");
 addCol('orders', 'refund_reason', "TEXT NOT NULL DEFAULT ''");
 addCol('orders', 'refund_amount', "INTEGER NOT NULL DEFAULT 0");
+addCol('orders', 'refund_type', "TEXT NOT NULL DEFAULT ''");
+addCol('orders', 'refund_status', "TEXT NOT NULL DEFAULT ''");
+addCol('orders', 'refund_remark', "TEXT NOT NULL DEFAULT ''");
+addCol('orders', 'refund_images', "TEXT NOT NULL DEFAULT ''");
+addCol('orders', 'refund_previous_status', "INTEGER NOT NULL DEFAULT 0");
 
 echo "order_refund migration done.\n";

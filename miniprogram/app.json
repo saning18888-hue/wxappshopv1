@@ -11,7 +11,11 @@
     "pages/pay/result/result",
     "pages/member/member",
     "pages/logistics/logistics",
-    "pages/webview/webview"
+    "pages/webview/webview",
+    "pages/order/list/list",
+    "pages/order/detail/detail",
+    "pages/aftersale/apply/apply",
+    "pages/aftersale/list/list"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FF6B35",

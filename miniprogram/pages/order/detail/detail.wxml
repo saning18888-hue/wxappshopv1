@@ -1,0 +1,61 @@
+<view class="page" wx:if="{{order}}" style="--primary:{{themeColor}}">
+  <view class="status-bar">
+    <text class="s-text">{{order.refund_status ? order.refund_status_text : order.status_text}}</text>
+    <text class="s-sub">{{order.refund_status ? order.refund_type_text : order.delivery_text}}</text>
+  </view>
+
+  <!-- 售后进度 -->
+  <view wx:if="{{order.refund_status}}" class="card refund-card">
+    <view class="rf-head">
+      <text class="rf-title">{{order.refund_type_text}} · {{order.refund_status_text}}</text>
+      <text wx:if="{{order.refund_amount}}" class="rf-amt">¥{{order.refund_amount_yuan}}</text>
+    </view>
+    <view class="rf-row"><text class="rf-l">退款原因</text><text class="rf-r">{{order.refund_reason || '-'}}</text></view>
+    <view wx:if="{{order.refund_remark}}" class="rf-row"><text class="rf-l">说明</text><text class="rf-r">{{order.refund_remark}}</text></view>
+    <view class="rf-row"><text class="rf-l">申请时间</text><text class="rf-r">{{order.refund_apply_at || '-'}}</text></view>
+    <view wx:if="{{order.refund_images.length}}" class="rf-imgs">
+      <image wx:for="{{order.refund_images}}" wx:key="*this" class="rf-img" src="{{item}}" mode="aspectFill" />
+    </view>
+  </view>
+
+  <!-- 商品 -->
+  <view class="card">
+    <view wx:for="{{order.items}}" wx:key="sku_id" class="g-row">
+      <image class="g-img" src="{{item.image}}" mode="aspectFill" />
+      <view class="g-info">
+        <view class="g-title">{{item.title}}</view>
+        <text class="g-spec" wx:if="{{item.spec_desc}}">{{item.spec_desc}}</text>
+        <view class="g-bottom">
+          <text class="g-price">¥{{item.price_yuan}}</text>
+          <text class="g-qty">x{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 金额 -->
+  <view class="card amt-card">
+    <view class="amt-row"><text class="amt-l">商品金额</text><text class="amt-r">¥{{order.goods_amount_yuan}}</text></view>
+    <view class="amt-row"><text class="amt-l">运费</text><text class="amt-r">¥{{order.shipping_fee_yuan}}</text></view>
+    <view class="amt-row" wx:if="{{order.discount > 0}}"><text class="amt-l">优惠</text><text class="amt-r disc">-¥{{order.discount_yuan}}</text></view>
+    <view class="amt-row total"><text class="amt-l">实付</text><text class="amt-r">¥{{order.price_yuan}}</text></view>
+  </view>
+
+  <!-- 收货信息 -->
+  <view class="card addr-card">
+    <view class="amt-row"><text class="amt-l">收货人</text><text class="amt-r">{{order.receiver_name}} {{order.receiver_phone}}</text></view>
+    <view class="amt-row"><text class="amt-l">收货地址</text><text class="amt-r addr">{{order.address}}</text></view>
+    <view class="amt-row"><text class="amt-l">订单编号</text><text class="amt-r copy" bindtap="copyNo">{{order.order_no}} 复制</text></view>
+    <view class="amt-row"><text class="amt-l">下单时间</text><text class="amt-r">{{order.created_at}}</text></view>
+    <view wx:if="{{order.shipping_no}}" class="amt-row"><text class="amt-l">物流单号</text><text class="amt-r">{{order.shipping_company}} {{order.shipping_no}}</text></view>
+  </view>
+
+  <view class="spacer"></view>
+
+  <view class="foot-bar">
+    <text wx:if="{{order.refund_status==='pending' || order.refund_status==='approved'}}" class="btn ghost" bindtap="cancelRefund">撤销申请</text>
+    <text wx:elif="{{order.status===1 || order.status===2 || order.status===3 || order.status===5}}" class="btn primary" bindtap="goAftersale">申请售后</text>
+  </view>
+</view>
+
+<view wx:else class="empty">加载中...</view>

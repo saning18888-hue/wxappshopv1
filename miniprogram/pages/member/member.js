@@ -97,13 +97,18 @@ Page({
   },
 
   goOrders() {
-    wx.showToast({ title: '全部订单开发中', icon: 'none' });
+    wx.navigateTo({ url: '/pages/order/list/list' });
   },
 
   onStatusTap(e) {
     const key = e.currentTarget.dataset.key;
-    const item = this.data.statusList.find((i) => i.key === key);
-    wx.showToast({ title: (item ? item.label : '') + ' 开发中', icon: 'none' });
+    if (key === 'refund') {
+      wx.navigateTo({ url: '/pages/aftersale/list/list' });
+      return;
+    }
+    const map = { pending_payment: '0', pending_ship: '1', pending_receive: '2', pending_review: 'review' };
+    const status = map[key] || '';
+    wx.navigateTo({ url: '/pages/order/list/list?status=' + status });
   },
 
   goAddress() {

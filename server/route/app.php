@@ -34,6 +34,10 @@ Route::group('api/v1', function () {
     Route::get('order', 'api/v1.Order/index');
     // 会员中心各状态订单数量：必须注册在 order/:id 之前，否则会被 :id 抢匹配
     Route::get('order/counts', 'api/v1.Order/counts');
+    // 售后：必须注册在 order/:id 之前，否则会被 :id 抢匹配
+    Route::get('order/refunds', 'api/v1.Order/refunds');
+    Route::post('order/refund', 'api/v1.Order/refundApply');
+    Route::post('order/refund/cancel', 'api/v1.Order/refundCancel');
     Route::get('order/:id', 'api/v1.Order/detail');
 
     // 支付（Mock 回调，用于无真实商户号时跑通闭环）

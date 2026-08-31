@@ -169,13 +169,32 @@ class OrderService
         ];
     }
 
-    public function index(int $userId, int $page, int $pageSize): array
+    public function index(int $userId, int $page, int $pageSize, $status = ''): array
     {
-        $total = Db::name('orders')->where('user_id', $userId)->count();
-        $rows  = Db::name('orders')->where('user_id', $userId)
-            ->order('id desc')->page($page, $pageSize)->select()->toArray();
-        $list = array_map(fn($o) => $this->formatOrder($o, []), $rows);
+        $q = Db::name('orders')->where('user_id', $userId)->where('is_deleted', 0);
+        if ($status === 'review') {
+            $q->whereIn('status', [3, 5]);
+        } elseif ($status !== '' && is_numeric($status)) {
+            $q->where('status', (int) $status);
+        }
+        $total = $q->count();
+        $rows  = $q->order('id desc')->page($page, $pageSize)->select()->toArray();
+        $itemMap = $this->orderItemsMap($rows);
+        $list = array_map(fn($o) => $this->formatOrder($o, $itemMap[$o['id']] ?? []), $rows);
         return ['list' => $list, 'total' => (int) $total, 'page' => $page, 'page_size' => $pageSize];
+    }
+
+    /** 我的售后列表（退款中/已退款） */
+    public function refunds(int $userId): array
+    {
+        $rows = Db::name('orders')->where('user_id', $userId)
+            ->where('is_deleted', 0)
+            ->whereIn('status', [11, 12])
+            ->order('refund_apply_at desc')
+            ->select()->toArray();
+        $itemMap = $this->orderItemsMap($rows);
+        $list = array_map(fn($o) => $this->formatOrder($o, $itemMap[$o['id']] ?? []), $rows);
+        return ['list' => $list];
     }
 
     public function detail(int $userId, int $id): ?array
@@ -186,6 +205,59 @@ class OrderService
         }
         $items = Db::name('order_items')->where('order_id', $id)->select()->toArray();
         return $this->formatOrder($o, $items);
+    }
+
+    /** 申请售后：写入 refund_* 字段，订单置为退款中（status=11） */
+    public function refundApply(int $userId, array $data): array
+    {
+        $orderId = (int) ($data['order_id'] ?? 0);
+        $o = Db::name('orders')->where(['id' => $orderId, 'user_id' => $userId, 'is_deleted' => 0])->find();
+        if (!$o) {
+            throw new \Exception('订单不存在');
+        }
+        $status = (int) $o['status'];
+        if (in_array($status, [11, 12], true)) {
+            throw new \Exception('该订单已在售后流程中');
+        }
+        if (!in_array($status, [1, 2, 3, 5], true)) {
+            throw new \Exception('当前订单状态不可申请售后');
+        }
+        $amount = intval(round(floatval($data['amount'] ?? 0) * 100));
+        if ($amount <= 0) {
+            $amount = (int) $o['pay_amount'];
+        }
+        $now = date('Y-m-d H:i:s');
+        Db::name('orders')->where('id', $orderId)->update([
+            'refund_type'            => $data['type'] === 'return_refund' ? 'return_refund' : 'only_refund',
+            'refund_status'          => 'pending',
+            'refund_reason'          => $data['reason'] ?? '',
+            'refund_amount'          => $amount,
+            'refund_remark'          => $data['remark'] ?? '',
+            'refund_images'          => json_encode($data['images'] ?? []),
+            'refund_apply_at'        => $now,
+            'refund_previous_status' => $status,
+            'status'                 => 11,
+            'updated_at'             => $now,
+        ]);
+        return ['order_id' => $orderId];
+    }
+
+    /** 撤销售后：恢复订单原状态 */
+    public function refundCancel(int $userId, int $orderId): void
+    {
+        $o = Db::name('orders')->where(['id' => $orderId, 'user_id' => $userId, 'is_deleted' => 0])->find();
+        if (!$o) {
+            throw new \Exception('订单不存在');
+        }
+        if ((int) $o['status'] !== 11) {
+            throw new \Exception('当前没有进行中的售后');
+        }
+        $prev = (int) ($o['refund_previous_status'] ?: 1);
+        Db::name('orders')->where('id', $orderId)->update([
+            'status'       => $prev,
+            'refund_status' => 'cancelled',
+            'updated_at'   => date('Y-m-d H:i:s'),
+        ]);
     }
 
     /**
@@ -334,6 +406,21 @@ class OrderService
         return date('YmdHis') . str_pad((string) mt_rand(0, 9999), 4, '0', STR_PAD_LEFT);
     }
 
+    /** 批量取出订单商品明细，按 order_id 分组，避免列表 N+1 查询 */
+    private function orderItemsMap(array $orders): array
+    {
+        $ids = array_column($orders, 'id');
+        if (empty($ids)) {
+            return [];
+        }
+        $items = Db::name('order_items')->whereIn('order_id', $ids)->select()->toArray();
+        $map = [];
+        foreach ($items as $it) {
+            $map[$it['order_id']][] = $it;
+        }
+        return $map;
+    }
+
     private function formatOrder($o, array $items): array
     {
         $user = null;
@@ -373,6 +460,16 @@ class OrderService
             'items'           => $items,
             'created_at'      => $o['created_at'],
             'updated_at'      => $o['updated_at'] ?? $o['created_at'],
+            'refund_type'     => $o['refund_type'] ?? '',
+            'refund_type_text'=> ($o['refund_type'] ?? '') === 'return_refund' ? '退货退款' : ((($o['refund_type'] ?? '') === 'only_refund') ? '仅退款' : ''),
+            'refund_status'   => $o['refund_status'] ?? '',
+            'refund_status_text' => $this->refundStatusText($o['refund_status'] ?? ''),
+            'refund_reason'   => $o['refund_reason'] ?? '',
+            'refund_amount'   => floatval(($o['refund_amount'] ?? 0) / 100),
+            'refund_remark'   => $o['refund_remark'] ?? '',
+            'refund_images'   => $o['refund_images'] ? (json_decode($o['refund_images'], true) ?: []) : [],
+            'refund_apply_at' => $o['refund_apply_at'] ?? '',
+            'refund_finish_at'=> $o['refund_finish_at'] ?? '',
         ];
     }
 
@@ -390,6 +487,17 @@ class OrderService
             12 => '已退款',
             20 => '已关闭',
         ][$status] ?? '未知';
+    }
+
+    private function refundStatusText(string $status): string
+    {
+        return [
+            'pending'   => '审核中',
+            'approved'  => '退款中',
+            'rejected'  => '已拒绝',
+            'cancelled' => '已撤销',
+            'finished'  => '已完成',
+        ][$status] ?? '';
     }
 
     // ---------- 后台管理（全部订单）----------
@@ -410,7 +518,8 @@ class OrderService
         }
         $total = $q->count();
         $rows  = $q->order('id desc')->page($page, $pageSize)->select()->toArray();
-        $list  = array_map(fn($o) => $this->formatOrder($o, []), $rows);
+        $itemMap = $this->orderItemsMap($rows);
+        $list  = array_map(fn($o) => $this->formatOrder($o, $itemMap[$o['id']] ?? []), $rows);
         return ['list' => $list, 'total' => (int) $total, 'page' => $page, 'page_size' => $pageSize, 'last_page' => max(1, (int) ceil($total / $pageSize))];
     }
 
@@ -547,7 +656,8 @@ class OrderService
         }
         $total = $q->count();
         $rows  = $q->order('id desc')->page($page, $pageSize)->select()->toArray();
-        $list  = array_map(fn($o) => $this->formatOrder($o, []), $rows);
+        $itemMap = $this->orderItemsMap($rows);
+        $list  = array_map(fn($o) => $this->formatOrder($o, $itemMap[$o['id']] ?? []), $rows);
         return [
             'list'      => $list,
             'total'     => (int) $total,

@@ -1,0 +1,35 @@
+.page { min-height: 100vh; background: #f5f5f5; padding-bottom: 140rpx; }
+.status-bar { background: var(--primary); color: #fff; padding: 44rpx 32rpx; }
+.s-text { font-size: 38rpx; font-weight: 700; display: block; }
+.s-sub { font-size: 24rpx; opacity: 0.9; }
+.card { background: #fff; border-radius: 16rpx; margin: 20rpx; padding: 20rpx; }
+.refund-card { border: 1rpx solid #ffe0d6; background: #fff8f5; }
+.rf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8rpx; }
+.rf-title { font-size: 28rpx; color: #333; font-weight: 600; }
+.rf-amt { color: #E54D42; font-size: 30rpx; font-weight: 700; }
+.rf-row { display: flex; font-size: 24rpx; color: #666; padding: 6rpx 0; }
+.rf-l { width: 140rpx; color: #999; flex-shrink: 0; }
+.rf-r { flex: 1; color: #333; }
+.rf-imgs { display: flex; margin-top: 12rpx; }
+.rf-img { width: 120rpx; height: 120rpx; border-radius: 10rpx; margin-right: 12rpx; background: #eee; }
+.g-row { display: flex; padding: 12rpx 0; border-bottom: 1rpx solid #f3f3f3; }
+.g-row:last-child { border-bottom: none; }
+.g-img { width: 120rpx; height: 120rpx; border-radius: 12rpx; background: #f3f3f3; flex-shrink: 0; }
+.g-info { flex: 1; margin-left: 16rpx; }
+.g-title { font-size: 28rpx; color: #333; }
+.g-spec { font-size: 22rpx; color: #999; }
+.g-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 10rpx; }
+.g-price { color: #E54D42; font-size: 28rpx; }
+.g-qty { color: #999; font-size: 24rpx; }
+.amt-card .amt-row { display: flex; justify-content: space-between; font-size: 26rpx; color: #666; padding: 8rpx 0; }
+.amt-row.total { border-top: 1rpx solid #f3f3f3; margin-top: 8rpx; padding-top: 16rpx; }
+.amt-r.disc { color: #E54D42; }
+.amt-row.total .amt-r { color: #E54D42; font-weight: 700; font-size: 30rpx; }
+.addr-card .amt-row { align-items: flex-start; }
+.addr-card .addr, .addr-card .copy { text-align: right; }
+.spacer { height: 20rpx; }
+.foot-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; padding: 16rpx 24rpx; display: flex; justify-content: flex-end; box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.05); }
+.btn { font-size: 26rpx; padding: 16rpx 40rpx; border-radius: 36rpx; }
+.btn.primary { background: var(--primary); color: #fff; }
+.btn.ghost { border: 1rpx solid var(--primary); color: var(--primary); }
+.empty { text-align: center; color: #999; padding: 120rpx 0; }

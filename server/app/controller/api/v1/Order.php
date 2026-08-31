@@ -46,14 +46,52 @@ class Order extends ApiController
         return $this->ok($data, '下单成功');
     }
 
-    /** GET /api/v1/order */
+    /** GET /api/v1/order?status=0|1|2|3|review  订单列表（可按状态筛选） */
     public function index()
     {
         $user = $this->authUser();
         $page = input('get.page/d', 1);
         $size = input('get.page_size/d', 10);
-        $data = (new \app\service\OrderService())->index($user['id'], $page, $size);
+        $status = input('get.status', '');
+        $data = (new \app\service\OrderService())->index($user['id'], $page, $size, $status);
         return $this->ok($data);
+    }
+
+    /** GET /api/v1/order/refunds  我的售后列表 */
+    public function refunds()
+    {
+        $user = $this->authUser();
+        $data = (new \app\service\OrderService())->refunds($user['id']);
+        return $this->ok($data);
+    }
+
+    /** POST /api/v1/order/refund  申请售后 */
+    public function refundApply()
+    {
+        $user = $this->authUser();
+        $post = input('post.');
+        if (empty($post['reason'])) {
+            return $this->fail('请填写退款原因', 422);
+        }
+        try {
+            $data = (new \app\service\OrderService())->refundApply($user['id'], $post);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage(), 400);
+        }
+        return $this->ok($data, '申请已提交');
+    }
+
+    /** POST /api/v1/order/refund/cancel  撤销售后 */
+    public function refundCancel()
+    {
+        $user = $this->authUser();
+        $orderId = input('post.order_id/d', 0);
+        try {
+            (new \app\service\OrderService())->refundCancel($user['id'], $orderId);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage(), 400);
+        }
+        return $this->ok([], '已撤销');
     }
 
     /** GET /api/v1/order/counts  会员中心各状态订单数量 */

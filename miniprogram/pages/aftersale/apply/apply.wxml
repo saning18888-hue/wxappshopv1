@@ -1,0 +1,49 @@
+<view class="page" wx:if="{{order}}" style="--primary:{{themeColor}}">
+  <view class="card">
+    <view class="o-no">订单号 {{order.order_no}}</view>
+    <view class="o-amt">实付 ¥{{order.pay_amount_yuan}}</view>
+  </view>
+
+  <view class="card">
+    <view class="sec-title">售后类型</view>
+    <view class="type-tabs">
+      <view class="t-tab {{type==='only_refund'?'on':''}}" data-v="only_refund" bindtap="selType">仅退款</view>
+      <view class="t-tab {{type==='return_refund'?'on':''}}" data-v="return_refund" bindtap="selType">退货退款</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="sec-title">退款原因</view>
+    <picker mode="selector" range="{{reasons}}" value="{{reasonIndex}}" bindchange="onReason">
+      <view class="picker">{{reason || '请选择'}} <text class="arr">›</text></view>
+    </picker>
+  </view>
+
+  <view class="card">
+    <view class="sec-title">退款金额（元）</view>
+    <input class="inp" type="digit" value="{{amountYuan}}" placeholder="请输入退款金额" bindinput="onAmount" />
+  </view>
+
+  <view class="card">
+    <view class="sec-title">说明（选填）</view>
+    <textarea class="textarea" value="{{remark}}" placeholder="补充描述，便于商家处理" bindinput="onRemark" />
+  </view>
+
+  <view class="card">
+    <view class="sec-title">上传凭证（选填，最多3张）</view>
+    <view class="imgs">
+      <view wx:for="{{images}}" wx:key="*this" class="img-wrap">
+        <image class="up-img" src="{{item}}" mode="aspectFill" />
+        <text class="del" data-i="{{index}}" catchtap="delImg">×</text>
+      </view>
+      <view wx:if="{{images.length<3}}" class="up-add" bindtap="chooseImg">+</view>
+    </view>
+  </view>
+
+  <view class="spacer"></view>
+  <view class="submit-bar">
+    <view class="sub-btn {{submitting?'dis':''}}" bindtap="submit">提交申请</view>
+  </view>
+</view>
+
+<view wx:else class="empty">加载中...</view>

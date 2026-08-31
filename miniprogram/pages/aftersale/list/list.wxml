@@ -1,0 +1,23 @@
+<view class="page" style="--primary:{{themeColor}}">
+  <view wx:if="{{list.length===0 && !loading}}" class="empty">暂无售后记录</view>
+  <view class="list">
+    <view wx:for="{{list}}" wx:key="id" class="rf" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="rf-head">
+        <text class="rf-type">{{item.refund_type_text}}</text>
+        <text class="rf-status">{{item.refund_status_text}}</text>
+      </view>
+      <view wx:for="{{item.items}}" wx:for-item="it" wx:key="sku_id" class="g-row">
+        <image class="g-img" src="{{it.image}}" mode="aspectFill" />
+        <view class="g-info">
+          <view class="g-title">{{it.title}}</view>
+          <text class="g-spec" wx:if="{{it.spec_desc}}">{{it.spec_desc}}</text>
+        </view>
+      </view>
+      <view class="rf-foot">
+        <text class="rf-reason">原因：{{item.refund_reason || '-'}}</text>
+        <text class="rf-amt" wx:if="{{item.refund_amount}}">¥{{item.refund_amount_yuan}}</text>
+      </view>
+      <view class="rf-time">申请时间：{{item.refund_apply_at || '-'}}</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,23 @@
+.page { min-height: 100vh; background: #f5f5f5; padding-bottom: 140rpx; }
+.card { background: #fff; border-radius: 16rpx; margin: 20rpx; padding: 24rpx; }
+.o-no { font-size: 26rpx; color: #999; }
+.o-amt { font-size: 32rpx; color: #E54D42; font-weight: 700; margin-top: 8rpx; }
+.sec-title { font-size: 28rpx; color: #333; font-weight: 600; margin-bottom: 16rpx; }
+.type-tabs { display: flex; }
+.t-tab { flex: 1; text-align: center; padding: 20rpx 0; border: 1rpx solid #eee; border-radius: 12rpx; margin-right: 16rpx; font-size: 28rpx; color: #666; }
+.t-tab:last-child { margin-right: 0; }
+.t-tab.on { border-color: var(--primary); color: var(--primary); background: #fff5f0; font-weight: 600; }
+.picker { font-size: 28rpx; color: #333; display: flex; justify-content: space-between; align-items: center; padding: 12rpx 0; }
+.arr { color: #ccc; }
+.inp { font-size: 28rpx; padding: 12rpx 0; }
+.textarea { width: 100%; height: 140rpx; font-size: 26rpx; color: #333; }
+.imgs { display: flex; flex-wrap: wrap; }
+.img-wrap { position: relative; margin-right: 16rpx; margin-bottom: 16rpx; }
+.up-img { width: 150rpx; height: 150rpx; border-radius: 12rpx; background: #eee; }
+.del { position: absolute; top: -12rpx; right: -12rpx; width: 36rpx; height: 36rpx; line-height: 32rpx; text-align: center; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; font-size: 28rpx; }
+.up-add { width: 150rpx; height: 150rpx; border-radius: 12rpx; border: 1rpx dashed #ccc; color: #ccc; font-size: 60rpx; text-align: center; line-height: 140rpx; }
+.spacer { height: 20rpx; }
+.submit-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; padding: 16rpx 24rpx; }
+.sub-btn { background: var(--primary); color: #fff; text-align: center; padding: 22rpx 0; border-radius: 40rpx; font-size: 30rpx; }
+.sub-btn.dis { opacity: 0.6; }
+.empty { text-align: center; color: #999; padding: 120rpx 0; }

@@ -3,3 +3,6 @@
 .env
 database/*.sqlite
 composer.phar
+
+# CodeBuddy 状态灯（AI 主动写入，免确认，不入库）
+.codebuddy/ai_status.json
