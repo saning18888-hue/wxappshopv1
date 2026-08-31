@@ -9,7 +9,11 @@ Page({
     preview: null,
     address: { name: '', phone: '', address: '' },
     remark: '',              // 订单留言
-    delivery: 'express',     // 配送方式 express=同城配送 pickup=到店自提
+    delivery: 'express',     // 配送方式 express=快递配送 self_pickup=到店自提 same_city=同城配送
+    deliveryOptions: [],     // 可用配送方式（后端按后台开关返回）
+    pickupPoints: [],        // 自提点列表（self_pickup 时）
+    pickupPointId: '',       // 选中的自提点 id
+    pickupIndex: 0,          // 选中的自提点序号（picker 用）
     addrWarn: '',            // 地址异常提示（如超出配送范围）
     buyDenied: '',           // 购买权限拦截提示
     needCaptcha: false,      // 下单需图形验证码（基础设置 → 安全设置）
@@ -87,6 +91,7 @@ Page({
         payMethods: methods,
         payMethod: methods[0].value,
         balanceHint,
+        delivery: s.default_delivery || 'express',
       });
     });
   },
@@ -138,7 +143,18 @@ Page({
 
   // 配送方式切换
   setDelivery(e) {
-    this.setData({ delivery: e.currentTarget.dataset.v });
+    const v = e.currentTarget.dataset.v;
+    this.setData({ delivery: v, pickupPointId: '', pickupIndex: 0 });
+    this.loadPreview(this.data.items, this.data.address);
+  },
+  // 自提点选择（picker 的 value 是序号，需映射到自提点 id）
+  onPickupPoint(e) {
+    const idx = e.detail.value;
+    const pt = this.data.pickupPoints[idx];
+    this.setData({
+      pickupIndex: idx,
+      pickupPointId: pt ? String(pt.id) : '',
+    });
   },
 
   // 优惠券入口
@@ -163,7 +179,7 @@ Page({
   },
 
   loadPreview(items, address) {
-    api.post('/order/preview', { items, address })
+    api.post('/order/preview', { items, address, delivery: this.data.delivery })
       .then((p) => {
         // 价格格式化：分 → 元（保留2位小数）
         const fmt = (fen) => (Number(fen || 0) / 100).toFixed(2);
@@ -174,7 +190,19 @@ Page({
         if (p.items) {
           p.items.forEach((it) => { it.price_yuan = fmt(it.price); });
         }
-        this.setData({ preview: p });
+        // 校正当前选中的配送方式（若后端回退到其它启用的方式）
+        let delivery = this.data.delivery;
+        const opts = p.delivery_options || [];
+        if (opts.length && !opts.some((o) => o.type === delivery)) {
+          delivery = opts[0].type;
+        }
+        const pickup = opts.find((o) => o.type === 'self_pickup');
+        this.setData({
+          preview: p,
+          delivery,
+          deliveryOptions: opts,
+          pickupPoints: pickup ? (pickup.points || []) : [],
+        });
       })
       .catch((err) => wx.showToast({ title: err.message, icon: 'none' }));
   },
@@ -207,6 +235,8 @@ Page({
       address: a,
       pay_method: this.data.payMethod,
       platform: this.data.devicePlatform,
+      delivery: this.data.delivery,
+      pickup_point_id: this.data.pickupPointId,
     })
       .then((res) => {
         app.globalData.pendingCheckout = null;

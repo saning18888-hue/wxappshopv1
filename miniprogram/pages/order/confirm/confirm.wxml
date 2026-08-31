@@ -36,13 +36,20 @@
     </view>
   </view>
 
-  <!-- 配送方式 -->
-  <view class="sec-row">
+  <!-- 配送方式（按后台开关动态显示） -->
+  <view class="sec-row" wx:if="{{deliveryOptions.length > 0}}">
     <text class="sec-label">配送方式</text>
     <view class="d-tabs">
-      <text class="d-tab {{delivery==='express'?'on':''}}" catchtap="setDelivery" data-v="express">同城配送</text>
-      <text class="d-tab {{delivery==='pickup'?'on':''}}" catchtap="setDelivery" data-v="pickup">到店自提</text>
+      <text wx:for="{{deliveryOptions}}" wx:key="type" class="d-tab {{delivery===item.type?'on':''}}" catchtap="setDelivery" data-v="{{item.type}}">{{item.name}}</text>
     </view>
+  </view>
+
+  <!-- 自提点选择（到店自提时） -->
+  <view class="sec-row" wx:if="{{delivery==='self_pickup' && pickupPoints.length > 0}}">
+    <text class="sec-label">自提点</text>
+    <picker class="pickup-picker" range="{{pickupPoints}}" range-key="name" value="{{pickupIndex}}" bindchange="onPickupPoint">
+      <view class="picker-view">{{pickupPoints[pickupIndex].name || '请选择自提点'}}</view>
+    </picker>
   </view>
 
   <!-- 订单留言 -->

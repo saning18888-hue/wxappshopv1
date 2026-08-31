@@ -11,11 +11,12 @@ class Order extends ApiController
         $user   = $this->authUser();
         $items  = input('post.items/a', []);
         $address = input('post.address/a', []);
+        $delivery = input('post.delivery', 'express');
         if (empty($items)) {
             return $this->fail('请选择商品', 422);
         }
         try {
-            $data = (new \app\service\OrderService())->preview($user['id'], $items, $address);
+            $data = (new \app\service\OrderService())->preview($user['id'], $items, $address, $delivery);
         } catch (\Exception $e) {
             return $this->fail($e->getMessage(), 400);
         }
@@ -34,6 +35,8 @@ class Order extends ApiController
         $meta = [
             'pay_method' => input('post.pay_method', 'wechat'),
             'platform'   => input('post.platform', ''),
+            'delivery'   => input('post.delivery', 'express'),
+            'pickup_point_id' => input('post.pickup_point_id', 0),
         ];
         try {
             $data = (new \app\service\OrderService())->create($user['id'], $items, $address, $meta);

@@ -86,6 +86,14 @@ class SettingsService
                 'knowledge' => false,            // 知识付费
             ],
             'pay_after_action'   => 'none',      // 支付后动作 none / coupon / points
+            // 配送设置（默认开启快递与同城配送；自提默认关闭，后台可改）
+            'default_delivery'   => 'same_city',  // 默认配送方式 express=快递 self_pickup=到店自提 same_city=同城
+            'delivery_express_enabled' => 1,
+            'delivery_express_templates' => [],
+            'delivery_pickup_enabled' => 1,
+            'delivery_pickup_points' => [],
+            'delivery_local_enabled' => 1,
+            'delivery_local_rules' => [],
             // 安全设置
             'captcha_login'      => false,       // 登录图形验证码
             'captcha_order'      => false,       // 下单图形验证码

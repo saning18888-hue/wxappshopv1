@@ -214,6 +214,8 @@ CREATE TABLE IF NOT EXISTS orders (
   pay_time          TEXT DEFAULT NULL,
   buyer_message     TEXT NOT NULL DEFAULT '',
   remark            TEXT NOT NULL DEFAULT '',
+  delivery          TEXT NOT NULL DEFAULT 'express',
+  pickup_point_id   INTEGER NOT NULL DEFAULT 0,
   shipping_company  TEXT NOT NULL DEFAULT '',
   shipping_no       TEXT NOT NULL DEFAULT '',
   is_deleted        INTEGER NOT NULL DEFAULT 0,

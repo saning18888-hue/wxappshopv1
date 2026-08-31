@@ -10,13 +10,21 @@ use think\facade\Db;
 class OrderService
 {
     /** 价格预览：必须以服务端计算结果为准（PRD 4.2） */
-    public function preview(int $userId, array $items, array $address, ?int $couponId = null): array
+    public function preview(int $userId, array $items, array $address, string $delivery = 'express', ?int $couponId = null): array
     {
         $detail = $this->buildItems($items);
         $goodsAmount = (int) array_sum(array_column($detail, 'subtotal'));
 
-        // 运费：满 99 元(9900分)包邮，否则 10 元(1000分)
-        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount);
+        $s = SettingsService::get();
+        $enabled = [];
+        if (!empty($s['delivery_express_enabled'])) $enabled[] = 'express';
+        if (!empty($s['delivery_pickup_enabled'])) $enabled[] = 'self_pickup';
+        if (!empty($s['delivery_local_enabled'])) $enabled[] = 'same_city';
+        if (!empty($enabled) && !in_array($delivery, $enabled, true)) {
+            $delivery = $enabled[0];
+        }
+
+        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount, $delivery);
 
         return [
             'items'          => $detail,
@@ -25,14 +33,37 @@ class OrderService
             'discount'       => $discount,
             'member_discount'=> $memberDiscount,
             'pay_amount'     => $payAmount,
+            'delivery'       => $delivery,
+            'delivery_options' => $this->deliveryOptions($s, $goodsAmount),
             'address'        => $address,
         ];
+    }
+
+    /** 可用配送方式列表（按后台开关）+ 各方式运费 */
+    private function deliveryOptions(array $s, int $goodsAmount): array
+    {
+        $opts = [];
+        if (!empty($s['delivery_express_enabled'])) {
+            $opts[] = ['type' => 'express', 'name' => '快递配送', 'fee' => $this->calcExpressFee($s, $goodsAmount)];
+        }
+        if (!empty($s['delivery_pickup_enabled'])) {
+            $raw = $s['delivery_pickup_points'] ?? null;
+            $points = is_string($raw) ? json_decode($raw, true) : ($raw ?? []);
+            $opts[] = ['type' => 'self_pickup', 'name' => '到店自提', 'fee' => 0,
+                       'points' => is_array($points) ? $points : []];
+        }
+        if (!empty($s['delivery_local_enabled'])) {
+            $opts[] = ['type' => 'same_city', 'name' => '同城配送', 'fee' => $this->calcLocalFee($s, $goodsAmount)];
+        }
+        return $opts;
     }
 
     public function create(int $userId, array $items, array $address, array $meta = []): array
     {
         $payMethod = $meta['pay_method'] ?? 'wechat';
         $platform  = strtolower($meta['platform'] ?? '');
+        $delivery  = $meta['delivery'] ?? 'express';
+        $pickupPointId = (int) ($meta['pickup_point_id'] ?? 0);
 
         // iOS 端支付限制：被限制的支付方式在 iOS 上禁止下单
         if ($platform === 'ios') {
@@ -45,7 +76,7 @@ class OrderService
 
         $detail = $this->buildItems($items);
         $goodsAmount = (int) array_sum(array_column($detail, 'subtotal'));
-        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount);
+        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount, $delivery);
 
         // 锁库存 + 创建订单（事务）
         Db::startTrans();
@@ -84,6 +115,8 @@ class OrderService
                 'receiver_name' => $address['name'] ?? '',
                 'receiver_phone'=> $address['phone'] ?? '',
                 'address'       => $address['address'] ?? '',
+                'delivery'      => $delivery,
+                'pickup_point_id'=> $pickupPointId,
                 'goods_amount'  => $goodsAmount,
                 'shipping_fee'  => $shippingFee,
                 'discount'      => $discount,
@@ -129,6 +162,8 @@ class OrderService
             'order_no'   => $orderNo,
             'pay_amount' => $payAmount,
             'pay_method' => $payMethod,
+            'delivery'   => $delivery,
+            'pickup_point_id' => $pickupPointId,
             'need_pay'   => $orderStatus !== 1,
             'paid'       => $orderStatus === 1,
         ];
@@ -207,14 +242,54 @@ class OrderService
      * 汇总金额：返回 [运费, 会员折扣额, 总优惠额, 应付额]（单位：分）
      * 目前优惠仅含会员分组折扣；后续可叠加优惠券/积分。
      */
-    private function calcTotals(int $userId, int $goodsAmount): array
+    private function calcTotals(int $userId, int $goodsAmount, string $delivery = 'express'): array
     {
-        $shippingFee = $goodsAmount >= 9900 ? 0 : 1000;
+        if ($delivery === 'self_pickup') {
+            $shippingFee = 0;
+        } elseif ($delivery === 'same_city') {
+            $shippingFee = $this->calcLocalFee(SettingsService::get(), $goodsAmount);
+        } else {
+            $shippingFee = $this->calcExpressFee(SettingsService::get(), $goodsAmount);
+        }
         $rate = $this->memberDiscountRate($userId);
         $memberDiscount = (int) floor($goodsAmount * (100 - $rate) / 100);
         $discount = $memberDiscount;
         $payAmount = $goodsAmount + $shippingFee - $discount;
         return [$shippingFee, $memberDiscount, $discount, $payAmount];
+    }
+
+    /** 快递运费：取第一个运费模板（满 free_amount 包邮，否则 base_fee），无模板回退满99包邮 */
+    private function calcExpressFee(array $s, int $goodsAmount): int
+    {
+        $tpl = $this->firstEntry($s['delivery_express_templates'] ?? null);
+        if (!$tpl) {
+            return $goodsAmount >= 9900 ? 0 : 1000;
+        }
+        $free = (int) ($tpl['free_amount'] ?? 0);
+        $fee  = (int) ($tpl['fee'] ?? $tpl['base_fee'] ?? 1000);
+        return ($free > 0 && $goodsAmount >= $free) ? 0 : $fee;
+    }
+
+    /** 同城运费：取第一个规则（满 free_amount 包邮，否则 base_fee），无规则回退 */
+    private function calcLocalFee(array $s, int $goodsAmount): int
+    {
+        $rule = $this->firstEntry($s['delivery_local_rules'] ?? null);
+        if (!$rule) {
+            return $goodsAmount >= 9900 ? 0 : 1000;
+        }
+        $free = (int) ($rule['free_amount'] ?? 0);
+        $fee  = (int) ($rule['base_fee'] ?? 1000);
+        return ($free > 0 && $goodsAmount >= $free) ? 0 : $fee;
+    }
+
+    /** 模板/规则可能是 JSON 字符串或数组：统一取首条作为计费对象（兼容 [{...}] 或 {...}） */
+    private function firstEntry($raw)
+    {
+        if (empty($raw)) return null;
+        $arr = is_string($raw) ? json_decode($raw, true) : $raw;
+        if (!is_array($arr)) return null;
+        // 列表包裹（如后台存的是 [{...}]）取第一条；单个对象（{...}）直接返回
+        return (isset($arr[0]) && is_array($arr[0])) ? $arr[0] : $arr;
     }
 
     private function buildItems(array $items): array
@@ -278,6 +353,9 @@ class OrderService
             'order_type_text' => ($o['order_type'] ?? 0) == 0 ? '普通订单' : '其他',
             'source'          => $o['source'] ?? 'wechat',
             'source_text'     => ($o['source'] ?? 'wechat') === 'wechat' ? '微信' : '其他',
+            'delivery'        => $o['delivery'] ?? 'express',
+            'delivery_text'   => (['express' => '快递配送', 'self_pickup' => '到店自提', 'same_city' => '同城配送'][$o['delivery'] ?? 'express'] ?? '快递配送'),
+            'pickup_point_id' => (int) ($o['pickup_point_id'] ?? 0),
             'goods_amount'    => floatval($o['goods_amount'] / 100),
             'shipping_fee'    => floatval($o['shipping_fee'] / 100),
             'discount'        => floatval($o['discount'] / 100),
