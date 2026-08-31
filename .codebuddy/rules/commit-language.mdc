@@ -1,0 +1,7 @@
+---
+description: Git commit messages must be written in English
+globs:
+alwaysApply: true
+---
+
+All git commit messages for this project MUST be written in English. No Chinese or other languages in subject or body. Applies to every commit on every branch by any contributor or agent.
