@@ -49,13 +49,29 @@ class ApiController
 
     protected function formatUser($u): array
     {
+        $groupName = '';
+        $groupLevel = 0;
+        $groupDiscount = 100;
+        if (!empty($u['group_id'])) {
+            $g = \think\facade\Db::name('member_groups')->where('id', $u['group_id'])
+                  ->field('name,level,discount')->find();
+            if ($g) {
+                $groupName = $g['name'];
+                $groupLevel = intval($g['level']);
+                $groupDiscount = intval($g['discount']);
+            }
+        }
         return [
-            'id'        => $u['id'],
-            'nickname'  => $u['nickname'],
-            'avatar'    => $u['avatar'],
-            'points'    => intval($u['points'] ?? 0),
-            'balance'   => floatval($u['balance'] ?? 0),
-            'coupon'    => 0, // MVP 预留，后续接入优惠券统计
+            'id'            => $u['id'],
+            'nickname'      => $u['nickname'],
+            'avatar'        => $u['avatar'],
+            'points'        => intval($u['points'] ?? 0),
+            'balance'       => floatval($u['balance'] ?? 0),
+            'coupon'        => 0, // MVP 预留，后续接入优惠券统计
+            'group_id'       => intval($u['group_id'] ?? 0),
+            'group_name'     => $groupName,
+            'group_level'    => $groupLevel,
+            'group_discount' => $groupDiscount,
         ];
     }
 }

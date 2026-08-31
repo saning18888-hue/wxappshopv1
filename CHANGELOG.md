@@ -1,3 +1,8 @@
+### v0.1.104 (2026-08-31) feat: 会员分组端到端互通 + 修复下单金额单位 BUG
+
+- 会员分组打通：后端 `ApiController::formatUser` 返回会员所属分组 id / 名称 / 折扣；前端会员页展示「XX组 / N折」；后台新增 `members/:id/assign_group` 分配接口（`MemberService::assignGroup`）；下单按会员分组折扣算价（`OrderService::calcTotals`）。
+- 修复下单确认页金额显示错误：后端 `OrderService::preview / create` 返回金额统一为「分」（原顶层金额被误转成元，前端再除 100 后金额缩水 100 倍，如 29 元变 0.29 元）。
+
 ### v0.1.103 (2026-08-29) docs: 合并项目文档为单一来源（README / PRD / 新仓库规划）
 
 - 合并 `RELEASE.md` 与子模块 `miniprogram/README.md`、`server/README.md` 进根 `README.md`（新增「模块说明」章节承载前后端运行说明）。

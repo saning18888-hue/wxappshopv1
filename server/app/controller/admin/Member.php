@@ -71,6 +71,14 @@ class Member extends AdminController
         return $this->ok();
     }
 
+    /** 将会员分配到会员分组 */
+    public function assignGroup($id)
+    {
+        $d = $this->body();
+        (new MemberService())->assignGroup(intval($id), intval($d['group_id'] ?? 0));
+        return $this->ok();
+    }
+
     /** 处理注销申请：pass / reject */
     public function logout($id)
     {

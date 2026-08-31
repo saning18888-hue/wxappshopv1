@@ -53,6 +53,14 @@ class Order extends ApiController
         return $this->ok($data);
     }
 
+    /** GET /api/v1/order/counts  会员中心各状态订单数量 */
+    public function counts()
+    {
+        $user = $this->authUser();
+        $data = (new \app\service\OrderService())->counts($user['id']);
+        return $this->ok($data);
+    }
+
     /** GET /api/v1/order/:id */
     public function detail($id)
     {

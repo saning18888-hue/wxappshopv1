@@ -36,6 +36,11 @@
   font-size: 22rpx;
 }
 .level-icon { font-size: 20rpx; font-weight: 700; margin-right: 6rpx; color: #FFE4B5; }
+.level-tag {
+  display: inline-flex; align-items: center; margin-left: 10rpx;
+  padding: 2rpx 12rpx; border-radius: 16rpx;
+  font-size: 20rpx; color: #fff; background: rgba(255,255,255,0.25);
+}
 .header-right { display: flex; align-items: center; gap: 16rpx; }
 .sign-btn {
   border: 2rpx solid #fff;

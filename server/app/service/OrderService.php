@@ -16,18 +16,16 @@ class OrderService
         $goodsAmount = (int) array_sum(array_column($detail, 'subtotal'));
 
         // 运费：满 99 元(9900分)包邮，否则 10 元(1000分)
-        $shippingFee = $goodsAmount >= 9900 ? 0 : 1000;
-        // 优惠：MVP 预留优惠券/积分，此处为 0
-        $discount = 0;
-        $payAmount = $goodsAmount + $shippingFee - $discount;
+        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount);
 
         return [
-            'items'         => $detail,
-            'goods_amount'  => $goodsAmount / 100,
-            'shipping_fee'  => $shippingFee / 100,
-            'discount'      => $discount / 100,
-            'pay_amount'    => $payAmount / 100,
-            'address'       => $address,
+            'items'          => $detail,
+            'goods_amount'   => $goodsAmount,
+            'shipping_fee'   => $shippingFee,
+            'discount'       => $discount,
+            'member_discount'=> $memberDiscount,
+            'pay_amount'     => $payAmount,
+            'address'        => $address,
         ];
     }
 
@@ -38,7 +36,7 @@ class OrderService
 
         // iOS 端支付限制：被限制的支付方式在 iOS 上禁止下单
         if ($platform === 'ios') {
-            $s = SettingsService::load();
+            $s = SettingsService::get();
             $limit = $s['ios_pay_limit'] ?? [];
             if ($payMethod === 'balance' && !empty($limit['balance'])) {
                 throw new \Exception('iOS 端暂不支持储值余额支付');
@@ -47,9 +45,7 @@ class OrderService
 
         $detail = $this->buildItems($items);
         $goodsAmount = (int) array_sum(array_column($detail, 'subtotal'));
-        $shippingFee = $goodsAmount >= 9900 ? 0 : 1000;
-        $discount    = 0;
-        $payAmount   = $goodsAmount + $shippingFee - $discount;
+        [$shippingFee, $memberDiscount, $discount, $payAmount] = $this->calcTotals($userId, $goodsAmount);
 
         // 锁库存 + 创建订单（事务）
         Db::startTrans();
@@ -91,6 +87,7 @@ class OrderService
                 'goods_amount'  => $goodsAmount,
                 'shipping_fee'  => $shippingFee,
                 'discount'      => $discount,
+                'member_discount'=> $memberDiscount,
                 'pay_amount'    => $payAmount,
                 'balance_used'  => $balanceUsed,
                 'status'        => $orderStatus,
@@ -130,7 +127,7 @@ class OrderService
         return [
             'order_id'   => $orderId,
             'order_no'   => $orderNo,
-            'pay_amount' => $payAmount / 100,
+            'pay_amount' => $payAmount,
             'pay_method' => $payMethod,
             'need_pay'   => $orderStatus !== 1,
             'paid'       => $orderStatus === 1,
@@ -156,7 +153,69 @@ class OrderService
         return $this->formatOrder($o, $items);
     }
 
+    /**
+     * 会员中心各状态订单数量
+     * 状态码：0待付款 1待发货 2待收货 3/5已完成(待评价) 11退款中 12已退款
+     */
+    public function counts(int $userId): array
+    {
+        $rows = Db::name('orders')
+            ->where('user_id', $userId)
+            ->where('is_deleted', 0)
+            ->field('status, COUNT(*) AS cnt')
+            ->group('status')
+            ->select()
+            ->toArray();
+
+        $map = [];
+        foreach ($rows as $r) {
+            $map[(int) $r['status']] = (int) $r['cnt'];
+        }
+        $sum = function (array $statuses) use ($map) {
+            $n = 0;
+            foreach ($statuses as $s) {
+                $n += $map[$s] ?? 0;
+            }
+            return $n;
+        };
+
+        return [
+            'counts' => [
+                'pending_payment' => $sum([0]),
+                'pending_ship'    => $sum([1]),
+                'pending_receive' => $sum([2]),
+                'pending_review'  => $sum([3, 5]),
+                'refund'          => $sum([11, 12]),
+            ],
+        ];
+    }
+
     // ---- 内部辅助 ----
+
+    /** 会员分组折扣率（百分比，100=无折扣） */
+    private function memberDiscountRate(int $userId): int
+    {
+        $u = Db::name('users')->where('id', $userId)->field('group_id')->find();
+        if (!$u || empty($u['group_id'])) {
+            return 100;
+        }
+        $g = Db::name('member_groups')->where('id', $u['group_id'])->field('discount')->find();
+        return $g ? intval($g['discount']) : 100;
+    }
+
+    /**
+     * 汇总金额：返回 [运费, 会员折扣额, 总优惠额, 应付额]（单位：分）
+     * 目前优惠仅含会员分组折扣；后续可叠加优惠券/积分。
+     */
+    private function calcTotals(int $userId, int $goodsAmount): array
+    {
+        $shippingFee = $goodsAmount >= 9900 ? 0 : 1000;
+        $rate = $this->memberDiscountRate($userId);
+        $memberDiscount = (int) floor($goodsAmount * (100 - $rate) / 100);
+        $discount = $memberDiscount;
+        $payAmount = $goodsAmount + $shippingFee - $discount;
+        return [$shippingFee, $memberDiscount, $discount, $payAmount];
+    }
 
     private function buildItems(array $items): array
     {

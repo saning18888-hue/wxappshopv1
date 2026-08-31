@@ -38,10 +38,16 @@ Page({
     const points = this.formatStatNum(u.points ?? 0);
     const coupon = this.formatStatNum(u.coupon ?? 0);
     const balance = parseFloat(u.balance || 0).toFixed(2);
+    const groupName = u.group_name || '';
+    const groupDiscountText = (u.group_discount && u.group_discount < 100)
+      ? (u.group_discount / 10) + '折'
+      : '';
     this.setData({
       user: Object.assign({}, u, { avatarUrl }),
       avatarChar: u.nickname ? u.nickname[0] : '客',
       stats: { points, coupon, balance },
+      groupName,
+      groupDiscountText,
     });
   },
 

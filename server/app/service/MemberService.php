@@ -129,6 +129,27 @@ class MemberService
         return true;
     }
 
+    /** 将会员分配到会员分组（group_id=0 表示取消分组） */
+    public function assignGroup($id, $groupId)
+    {
+        $user = Db::table('users')->where('id', $id)->find();
+        if (!$user) {
+            throw new \Exception('会员不存在');
+        }
+        $groupId = intval($groupId);
+        if ($groupId > 0) {
+            $g = Db::table('member_groups')->where('id', $groupId)->find();
+            if (!$g) {
+                throw new \Exception('会员分组不存在');
+            }
+        }
+        Db::table('users')->where('id', $id)->update([
+            'group_id'   => $groupId,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+        return true;
+    }
+
     /** 处理注销申请：action=pass|reject */
     public function handleLogout($id, $action)
     {

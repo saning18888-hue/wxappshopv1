@@ -8,7 +8,8 @@
         <view class="member-name">{{user && user.nickname ? user.nickname : '游客'}}</view>
         <view class="member-level">
           <text class="level-icon">V</text>
-          <text>会员等级</text>
+          <text>{{groupName || '会员等级'}}</text>
+          <text wx:if="{{groupDiscountText}}" class="level-tag">{{groupDiscountText}}</text>
         </view>
       </view>
       <view class="header-right">

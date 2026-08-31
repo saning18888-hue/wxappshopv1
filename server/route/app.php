@@ -32,6 +32,8 @@ Route::group('api/v1', function () {
     Route::post('order/preview', 'api/v1.Order/preview');
     Route::post('order', 'api/v1.Order/create');
     Route::get('order', 'api/v1.Order/index');
+    // 会员中心各状态订单数量：必须注册在 order/:id 之前，否则会被 :id 抢匹配
+    Route::get('order/counts', 'api/v1.Order/counts');
     Route::get('order/:id', 'api/v1.Order/detail');
 
     // 支付（Mock 回调，用于无真实商户号时跑通闭环）
@@ -140,6 +142,7 @@ Route::group('admin', function () {
     Route::post('members/:id/assign_staff', 'admin.Member/assignStaff');
     Route::post('members/:id/assign_distributor', 'admin.Member/assignDistributor');
     Route::post('members/:id/logout', 'admin.Member/logout');
+    Route::post('members/:id/assign_group', 'admin.Member/assignGroup');
     Route::get('member_groups', 'admin.Member/groups');
     Route::get('member_group_list', 'admin.Member/groupList');
     Route::post('member_groups', 'admin.Member/groupCreate');
