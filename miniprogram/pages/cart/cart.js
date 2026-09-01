@@ -23,6 +23,11 @@ Page({
     themeColor: '#FF6B35',
     statusBarHeight: 20,
     navHeight: 44,
+    cartDesign: {
+      title: '您的购物车暂无商品',
+      tip: '再忙，也要记得买点什么东西犒劳下自己哦~',
+      button: '随便逛逛',
+    },
   },
 
   onLoad() {
@@ -34,6 +39,7 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ active: '/pages/cart/cart' });
     }
+    this.loadCartDesign();
     this.load();
   },
 
@@ -69,6 +75,25 @@ Page({
       selectedCount: count,
       allSelected: all,
     });
+  },
+
+  // 拉取「购物车页」装修配置：覆盖空状态主标题/副标题/按钮文案，未配或失败时保留初始默认值
+  loadCartDesign() {
+    api.get('/cart_page')
+      .then((res) => {
+        const cfg = res || {};
+        const comp = (cfg.components || []).find((c) => c && c.type === 'cartEmpty');
+        if (!comp) return;
+        const p = comp.props || {};
+        this.setData({
+          cartDesign: {
+            title:  p.title  || '您的购物车暂无商品',
+            tip:    p.tip    || '再忙，也要记得买点什么东西犒劳下自己哦~',
+            button: p.button || '随便逛逛',
+          },
+        });
+      })
+      .catch(() => {});
   },
 
   toggleEdit() {

@@ -2130,6 +2130,58 @@
           <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
+        <!-- 购物车页装修设计 -->
+        <div id="cartDecorPanel" class="panel hidden">
+          <style>
+            .cart-dp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;box-shadow:var(--shadow);margin-bottom:16px}
+            .cart-dp-row{display:flex;align-items:flex-start;margin-bottom:18px}
+            .cart-dp-row:last-child{margin-bottom:0}
+            .cart-dp-label{width:120px;color:var(--text);font-size:14px;padding-top:8px;flex-shrink:0;line-height:1.5}
+            .cart-dp-control{flex:1;min-width:0}
+            .cart-dp-input{width:100%;max-width:480px;padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none}
+            .cart-dp-input:focus{border-color:var(--primary);background:#fff}
+            .cart-dp-count{font-size:12px;color:var(--text-muted);margin-top:4px;text-align:right;max-width:480px}
+            .cart-dp-count.over{color:#e74c3c}
+          </style>
+          <div class="sec-toolbar">
+            <h3>购物车页</h3>
+            <div class="actions">
+              <button class="btn outline sm" onclick="loadCartDesign()">刷新</button>
+              <button class="btn green sm" onclick="saveCartDesign()">保存草稿</button>
+              <button class="btn sm" onclick="publishCartDesign()">发布上线</button>
+            </div>
+          </div>
+          <p class="muted" style="margin:2px 0 14px">配置小程序端「购物车页」空购物车的三段文案（主标题 / 副标题 / 按钮文字）。修改后先「保存草稿」，确认无误再「发布上线」，即时生效到小程序购物车页空状态。</p>
+
+          <div class="cart-dp-card">
+            <div class="cart-dp-row">
+              <label class="cart-dp-label">主标题</label>
+              <div class="cart-dp-control">
+                <input id="cartEmptyTitle" class="cart-dp-input" maxlength="20" placeholder="您的购物车暂无商品" oninput="onCartTextInput('cartEmptyTitle','cartEmptyTitleCount',20)">
+                <div id="cartEmptyTitleCount" class="cart-dp-count">0/20</div>
+              </div>
+            </div>
+
+            <div class="cart-dp-row">
+              <label class="cart-dp-label">副标题</label>
+              <div class="cart-dp-control">
+                <input id="cartEmptyTip" class="cart-dp-input" maxlength="40" placeholder="再忙，也要记得买点什么东西犒劳下自己哦~" oninput="onCartTextInput('cartEmptyTip','cartEmptyTipCount',40)">
+                <div id="cartEmptyTipCount" class="cart-dp-count">0/40</div>
+              </div>
+            </div>
+
+            <div class="cart-dp-row">
+              <label class="cart-dp-label">按钮文字</label>
+              <div class="cart-dp-control">
+                <input id="cartEmptyButton" class="cart-dp-input" maxlength="8" placeholder="随便逛逛" oninput="onCartTextInput('cartEmptyButton','cartEmptyButtonCount',8)">
+                <div id="cartEmptyButtonCount" class="cart-dp-count">0/8</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+        </div>
+
         <!-- 基础设置 -->
         <div id="basePanel" class="panel hidden setting-panel">
           <style>
@@ -5695,7 +5747,7 @@
           {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'},
           {key:'pageCategory',label:'分类页',icon:ICONS.layers,panel:'categoryDecorPanel'},
-          {key:'pageCart',label:'购物车页',icon:ICONS.cart},
+          {key:'pageCart',label:'购物车页',icon:ICONS.cart,panel:'cartDecorPanel'},
           {key:'pageMine',label:'我的页面',icon:ICONS.user,panel:'memberDecorPanel'}
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings,panel:'basePanel'},
@@ -5982,6 +6034,7 @@
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='categoryDecorPanel') loadCategoryDesign();
       if(panelId==='memberDecorPanel') loadMemberDesign();
+      if(panelId==='cartDecorPanel') loadCartDesign();
       if(panelId==='goodsSpecPanel') loadGoodsSpecs();
       if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
@@ -9142,6 +9195,94 @@
       const p=await fetchA(`${BASE}/design/member/publish`,{method:'POST',body:{}});
       toast(p.code===0?'发布成功，小程序端即时生效':(p.msg||'发布失败'));
       if(p.code===0) loadMemberDesign();
+    }
+
+    /* ===== 购物车页装修（设计装修 → 购物车页） ===== */
+    let cartDesignConfig = null;
+    const CART_EMPTY_DEFAULTS = {
+      title:  '您的购物车暂无商品',
+      tip:    '再忙，也要记得买点什么东西犒劳下自己哦~',
+      button: '随便逛逛',
+    };
+    async function loadCartDesign(){
+      const d = await fetchA(`${BASE}/design/cart`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const dd=d.data||{};
+      const src=(dd.draft&&dd.draft.config)?dd.draft.config:(dd.published_config||{page:'cart',components:[]});
+      cartDesignConfig=JSON.parse(JSON.stringify(src));
+      ensureCartEmptyComponent();
+      renderCartPanel();
+    }
+    function ensureCartEmptyComponent(){
+      if(!cartDesignConfig.components) cartDesignConfig.components=[];
+      let c=cartDesignConfig.components.find(x=>x.type==='cartEmpty');
+      if(!c){
+        c={type:'cartEmpty',sort:1,props:{...CART_EMPTY_DEFAULTS}};
+        cartDesignConfig.components.push(c);
+      }
+      c.props.title  = c.props.title  || CART_EMPTY_DEFAULTS.title;
+      c.props.tip    = c.props.tip    || CART_EMPTY_DEFAULTS.tip;
+      c.props.button = c.props.button || CART_EMPTY_DEFAULTS.button;
+    }
+    function renderCartPanel(){
+      if(!cartDesignConfig) return;
+      ensureCartEmptyComponent();
+      const c=cartDesignConfig.components.find(x=>x.type==='cartEmpty');
+      const p=c.props;
+      document.getElementById('cartEmptyTitle').value =p.title ||'';
+      document.getElementById('cartEmptyTip').value   =p.tip   ||'';
+      document.getElementById('cartEmptyButton').value=p.button||'';
+      updateCartCount('cartEmptyTitle','cartEmptyTitleCount',20);
+      updateCartCount('cartEmptyTip','cartEmptyTipCount',40);
+      updateCartCount('cartEmptyButton','cartEmptyButtonCount',8);
+    }
+    function onCartTextInput(inputId,countId,max){
+      const el=document.getElementById(inputId);
+      const cnt=document.getElementById(countId);
+      if(!el||!cnt) return;
+      let v=el.value||'';
+      if(v.length>max){v=v.slice(0,max);el.value=v;}
+      cnt.textContent=v.length+'/'+max;
+      cnt.classList.toggle('over', v.length>=max);
+      const c=cartDesignConfig.components.find(x=>x.type==='cartEmpty');
+      if(!c) return;
+      if(inputId==='cartEmptyTitle')      c.props.title=v;
+      else if(inputId==='cartEmptyTip')   c.props.tip=v;
+      else if(inputId==='cartEmptyButton')c.props.button=v;
+    }
+    function updateCartCount(inputId,countId,max){
+      const el=document.getElementById(inputId);
+      const cnt=document.getElementById(countId);
+      if(!el||!cnt) return;
+      const v=el.value||'';
+      cnt.textContent=v.length+'/'+max;
+      cnt.classList.toggle('over', v.length>=max);
+    }
+    function syncCartFormToConfig(){
+      if(!cartDesignConfig) return;
+      const c=cartDesignConfig.components.find(x=>x.type==='cartEmpty');
+      if(!c) return;
+      c.props.title  =document.getElementById('cartEmptyTitle').value  ||c.props.title||CART_EMPTY_DEFAULTS.title;
+      c.props.tip    =document.getElementById('cartEmptyTip').value    ||c.props.tip||CART_EMPTY_DEFAULTS.tip;
+      c.props.button =document.getElementById('cartEmptyButton').value ||c.props.button||CART_EMPTY_DEFAULTS.button;
+    }
+    async function saveCartDesign(){
+      syncCartFormToConfig();
+      cartDesignConfig.page='cart';
+      const cfg=JSON.parse(JSON.stringify(cartDesignConfig));
+      const r=await fetchA(`${BASE}/design/cart/save`,{method:'POST',body:{config:cfg,remark:'购物车页装修'}});
+      toast(r.code===0?'草稿保存成功':(r.msg||'保存失败'));
+      if(r.code===0) loadCartDesign();
+    }
+    async function publishCartDesign(){
+      syncCartFormToConfig();
+      cartDesignConfig.page='cart';
+      const cfg=JSON.parse(JSON.stringify(cartDesignConfig));
+      const s=await fetchA(`${BASE}/design/cart/save`,{method:'POST',body:{config:cfg,remark:'购物车页装修'}});
+      if(s.code!==0){toast(s.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/cart/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功，小程序端即时生效':(p.msg||'发布失败'));
+      if(p.code===0) loadCartDesign();
     }
 
     function renderSectionForm(){

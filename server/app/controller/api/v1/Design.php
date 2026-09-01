@@ -65,4 +65,25 @@ class Design extends ApiController
         }
         return $this->ok($cfg);
     }
+
+    /** GET /api/v1/cart_page  下发已发布的购物车页装修配置 */
+    public function cartPage()
+    {
+        $svc = new PageService();
+        $cfg = $svc->publishedConfig('cart');
+        if (!$cfg) {
+            $cfg = $svc->defaultCart();
+        }
+        // 兜底空字段，确保前端不会拿到空字符串
+        $def = $svc->defaultCart();
+        if (isset($cfg['components']) && is_array($cfg['components'])) {
+            foreach ($cfg['components'] as &$c) {
+                if (($c['type'] ?? '') === 'cartEmpty') {
+                    $c['props'] = array_merge($def['components'][0]['props'], $c['props'] ?? []);
+                }
+            }
+            unset($c);
+        }
+        return $this->ok($cfg);
+    }
 }

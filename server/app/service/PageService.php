@@ -172,6 +172,26 @@ class PageService
         ];
     }
 
+    /** 兜底默认购物车页配置（空购物车状态的三段文案） */
+    public function defaultCart(): array
+    {
+        return [
+            'page'       => 'cart',
+            'version'    => 1,
+            'components' => [
+                [
+                    'type'  => 'cartEmpty',
+                    'sort'  => 1,
+                    'props' => [
+                        'title'  => '您的购物车暂无商品',
+                        'tip'    => '再忙，也要记得买点什么东西犒劳下自己哦~',
+                        'button' => '随便逛逛',
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /** 当前已发布配置（数组），无则返回 null */
     public function publishedConfig(string $page): ?array
     {

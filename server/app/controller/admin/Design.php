@@ -29,6 +29,7 @@ class Design extends AdminController
                 'bottom_nav' => 'defaultBottomNav',
                 'category'   => 'defaultCategoryConfig',
                 'member'     => 'defaultMember',
+                'cart'       => 'defaultCart',
             ];
             $defaultFn = $defaultMap[$page] ?? 'defaultHome';
             $published = $this->svc->{$defaultFn}();
@@ -41,7 +42,7 @@ class Design extends AdminController
             return $v;
         }, $versions);
 
-        $titleMap = ['home' => '首页', 'bottom_nav' => '底部导航', 'category' => '分类页'];
+        $titleMap = ['home' => '首页', 'bottom_nav' => '底部导航', 'category' => '分类页', 'cart' => '购物车页'];
 
         return $this->ok([
             'page'             => $page,

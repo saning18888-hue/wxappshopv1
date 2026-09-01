@@ -8,9 +8,9 @@
   <!-- 空状态 -->
   <view wx:if="{{list.length === 0}}" class="empty-state">
     <image class="empty-img" src="/images/empty-cart.svg" mode="aspectFit" />
-    <view class="empty-title">您的购物车暂无商品</view>
-    <view class="empty-tip">再忙，也要记得买点什么犒劳下自己哦~</view>
-    <view class="empty-btn" bindtap="goShopping">随便逛逛</view>
+    <view class="empty-title">{{cartDesign.title}}</view>
+    <view class="empty-tip">{{cartDesign.tip}}</view>
+    <view class="empty-btn" bindtap="goShopping">{{cartDesign.button}}</view>
   </view>
 
   <!-- 商品列表 -->

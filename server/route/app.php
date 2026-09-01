@@ -21,6 +21,9 @@ Route::group('api/v1', function () {
     // 会员中心（我的页面）装修下发
     Route::get('member_page', 'api/v1.Design/memberPage');
 
+    // 购物车页装修下发
+    Route::get('cart_page', 'api/v1.Design/cartPage');
+
     // 分类
     Route::get('categories', 'api/v1.Category/index');
 
