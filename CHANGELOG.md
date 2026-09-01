@@ -1,3 +1,23 @@
+### v0.1.106 (2026-09-01) fix: 商品促销语/副标题链路打通 + 后台列表分类名 + 分类页自动刷新
+
+**范围**：`miniprogram/pages/category/category.js`、`server/public/admin.html`、`server/app/service/GoodsService.php`、`CHANGELOG.md`。
+
+- 小程序分类页 `onShow` 在已加载后重新拉取商品列表：此前仅在首次进入时拉一次，后台改促销语/排序后分类页一直显示旧内存数据，看起来「改了没用」；现切回分类页即重新请求，后台改动实时可见。
+- 后台商品编辑新增「副标题」输入框（紧邻商品名称下方）：此前表单无副标题字段，且保存时 `subtitle` 被写死为空字符串，导致副标题永远存不进库、列表标题下不显示；现补齐输入框、保存读取该框、编辑回填、清空表单一并处理（后端 `GoodsService` 早已支持 `subtitle` 字段，无需改后端）。
+- 后台商品列表分类列显示真实分类名：`GoodsService::adminList` 补充返回 `category_id` + `category_name`（批量查 `categories` 映射），前端 `${g.category_name||'-'}` 渲染不再显示 `-`。
+- 商品促销语链路全链路验证打通：后台 `admin/Goods::save` 把 `ext_json.promo` 映射为 `goods.promotion` → `GoodsService::update` 整组落库 → 小程序 `/api/v1/goods` 经 `formatList` 透出 `promotion` → 分类页卡片渲染正常。
+
+**验证**：后台编辑 ID4 牛肉干填副标题保存后列表标题下显示灰字；改促销语 `111111122222` 保存后 `/api/v1/goods` 返回 `promotion` 正确；小程序切到「休闲零食 / 肉脯肉干」可见该商品与促销语；后台列表 ID4 分类列显示「肉脯肉干」（非 `-`）。
+
+### v0.1.105 (2026-08-31) feat: 订单/售后页面联通后端 + 修复编译错误
+
+**范围**：`miniprogram/pages/order/*`、`miniprogram/pages/aftersale/*`、`miniprogram/pages/member/member.js`、`miniprogram/utils/mock.js`、`server/app/controller/api/v1/Order.php`、`server/app/service/OrderService.php`、`server/database/apply_order_refund.php`、`server/route/app.php`、`miniprogram/app.json`。
+
+- 订单列表/详情页、售后申请/列表页联通后端：新增 `miniprogram/pages/order/{list,detail}` 与 `miniprogram/pages/aftersale/{apply,list}` 四个页面及样式，对接 `Order.php` 与 `OrderService.php`。
+- `member.js` 会员页联调；`utils/mock.js` 补充下单/售后 mock 数据；`miniprogram/app.json` 登记新页面路由。
+- 后端 `OrderService::calcTotals` 扩展，新增 `server/database/apply_order_refund.php` 退款申请表，`server/route/app.php` 补充售后路由。
+- 修复若干编译错误，确保小程序通过构建。
+
 ### v0.1.104 (2026-08-31) feat: 会员分组端到端互通 + 修复下单金额单位 BUG
 
 - 会员分组打通：后端 `ApiController::formatUser` 返回会员所属分组 id / 名称 / 折扣；前端会员页展示「XX组 / N折」；后台新增 `members/:id/assign_group` 分配接口（`MemberService::assignGroup`）；下单按会员分组折扣算价（`OrderService::calcTotals`）。

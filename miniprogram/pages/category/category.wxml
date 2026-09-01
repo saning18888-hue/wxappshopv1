@@ -1,43 +1,79 @@
-<view class="page">
-  <view class="search-bar" style="--primary:{{themeColor}}">
-    <view class="search-input-wrap">
-      <image class="search-icon" src="/images/search.png" mode="aspectFit" />
-      <input class="search-input" type="text" confirm-type="search" placeholder="请输入商品名称"
-        value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearchConfirm" />
-      <view class="search-clear" wx:if="{{keyword}}" catchtap="clearSearch">×</view>
-    </view>
-  </view>
+<!-- 商品分类页：竖版（左分类右商品网格）+ 横版（顶分类横滑 + 商品横卡片） -->
+<view class="page page-{{viewStyle}}" style="--primary:{{themeColor}}">
 
-  <view class="cate" style="--primary:{{themeColor}}">
-    <scroll-view class="cate-left" scroll-y>
-    <view wx:for="{{cats}}" wx:key="id" class="cate-left-item {{activeId === item.id ? 'active' : ''}}"
-      data-id="{{item.id}}" bindtap="switchCat">
-      {{item.name}}
-    </view>
-  </scroll-view>
-
-  <scroll-view class="cate-right" scroll-y>
-    <view wx:if="{{!loading && list.length === 0}}" class="empty">该分类暂无商品</view>
-    <view class="goods-grid">
-      <view wx:for="{{list}}" wx:key="id" class="goods-cell" data-id="{{item.id}}" bindtap="goDetail">
-        <image class="goods-cover" src="{{item.cover}}" mode="aspectFill" />
-        <view class="goods-name">{{item.title}}</view>
-        <view class="goods-sub muted">{{item.subtitle}}</view>
-        <view class="goods-bottom">
-          <view>
-            <view class="goods-price">¥{{item.price}}
-              <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
-            </view>
-            <view class="goods-sales muted" wx:if="{{item.sales}}">销量：{{item.sales}}</view>
-          </view>
-          <view class="goods-cart" catchtap="addCart" data-id="{{item.id}}">
-            <text class="goods-cart-plus">+</text>
-          </view>
-        </view>
+  <!-- 竖版：保留搜索栏 -->
+  <block wx:if="{{viewStyle === 'vertical'}}">
+    <view class="search-bar">
+      <view class="search-input-wrap">
+        <image class="search-icon" src="/images/search.png" mode="aspectFit" />
+        <input class="search-input" type="text" confirm-type="search" placeholder="请输入商品名称"
+          value="{{keyword}}" bindinput="onSearchInput" bindconfirm="onSearchConfirm" />
+        <view class="search-clear" wx:if="{{keyword}}" catchtap="clearSearch">×</view>
       </view>
     </view>
-  </scroll-view>
+
+    <view class="cate">
+      <scroll-view class="cate-left" scroll-y>
+        <view wx:for="{{cats}}" wx:key="id" class="cate-left-item {{activeId === item.id ? 'active' : ''}}"
+          data-id="{{item.id}}" bindtap="switchCat">
+          {{item.name}}
+        </view>
+      </scroll-view>
+
+      <scroll-view class="cate-right" scroll-y>
+        <view wx:if="{{!loading && list.length === 0}}" class="empty">该分类暂无商品</view>
+        <view class="goods-grid">
+          <view wx:for="{{list}}" wx:key="id" class="goods-cell" data-id="{{item.id}}" bindtap="goDetail">
+            <image class="goods-cover" src="{{item.cover_url}}" mode="aspectFill" />
+            <view class="goods-name">{{item.title}}</view>
+            <view class="goods-promo" wx:if="{{showPromo && item.promotion}}">{{item.promotion}}</view>
+            <view class="goods-bottom">
+              <view>
+                <view class="goods-price">¥{{item.price}}
+                  <text class="goods-market muted" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
+                </view>
+                <view class="goods-sales muted" wx:if="{{item.sales}}">销量：{{item.sales}}</view>
+              </view>
+              <view class="goods-cart" catchtap="addCart" data-id="{{item.id}}">
+                <text class="goods-cart-plus">+</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </block>
+
+  <!-- 横版：标题栏 + 横滑分类 chip + 商品横卡片 -->
+  <block wx:elif="{{viewStyle === 'horizontal'}}">
+    
+
+    <scroll-view class="h-chips" scroll-x enable-flex enhanced show-scrollbar="{{false}}">
+      <view wx:for="{{cats}}" wx:key="id"
+        class="h-chip {{activeId === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}" bindtap="switchCatChip">
+        {{item.name}}
+      </view>
+    </scroll-view>
+
+    <scroll-view class="h-list" scroll-y>
+      <view wx:if="{{!loading && list.length === 0}}" class="empty">该分类暂无商品</view>
+      <view wx:for="{{list}}" wx:key="id" class="h-card" data-id="{{item.id}}" bindtap="goDetail">
+        <image class="h-card-cover" src="{{item.cover_url}}" mode="aspectFill" />
+        <view class="h-card-info">
+          <view class="h-card-title">{{item.title}}</view>
+          <view class="h-card-promo" wx:if="{{showPromo && item.promotion}}">{{item.promotion}}</view>
+          <view class="h-card-sales" wx:if="{{item.sales}}">销量：{{item.sales}}</view>
+          <view class="h-card-bottom">
+            <view class="h-card-price">¥{{item.price}}
+              <text class="h-card-market" wx:if="{{item.market_price}}">¥{{item.market_price}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="h-card-cart" catchtap="addCart" data-id="{{item.id}}">+</view>
+      </view>
+    </scroll-view>
+  </block>
 
   <float-buttons />
-  </view>
 </view>

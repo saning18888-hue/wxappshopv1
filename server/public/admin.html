@@ -1952,6 +1952,120 @@
           </div>
         </div>
 
+        <!-- 分类页装修设计 -->
+        <div id="categoryDecorPanel" class="panel hidden">
+          <style>
+            .cdp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;box-shadow:var(--shadow);margin-bottom:16px}
+            .cdp-row{display:flex;align-items:flex-start;margin-bottom:22px}
+            .cdp-row:last-child{margin-bottom:0}
+            .cdp-label{width:120px;color:var(--text);font-size:14px;padding-top:8px;flex-shrink:0;line-height:1.5}
+            .cdp-control{flex:1;min-width:0}
+            .cdp-select{height:36px;padding:0 32px 0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:12px;min-width:140px}
+            .cdp-select:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(94,106,210,.12)}
+            .cdp-inline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+            .cdp-hint{font-size:12px;color:var(--text-muted);margin-top:6px;line-height:1.6}
+            .cdp-tag-list{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;min-height:32px;align-items:center}
+            .cdp-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:#eef0fb;color:var(--primary);border-radius:14px;font-size:13px}
+            .cdp-tag .x{cursor:pointer;opacity:.55;font-size:14px;line-height:1}
+            .cdp-tag .x:hover{opacity:1}
+            .cdp-empty{font-size:12px;color:var(--text-muted)}
+            .cdp-style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+            .cdp-style-card{position:relative;padding:14px;border:2px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all .15s;background:#fff}
+            .cdp-style-card:hover{border-color:#a8b1f0;transform:translateY(-1px)}
+            .cdp-style-card.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(94,106,210,.18)}
+            .cdp-style-card.selected::after{content:'✓';position:absolute;top:8px;right:8px;width:22px;height:22px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+            .cdp-style-preview{width:100%;height:90px;background:#f7f8fa;border-radius:var(--radius-sm);margin-bottom:10px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border)}
+            .cdp-style-preview svg{width:100%;height:100%}
+            .cdp-style-name{font-weight:600;font-size:14px;color:var(--text);margin-bottom:3px}
+            .cdp-style-desc{font-size:12px;color:var(--text-muted);line-height:1.4}
+            .cdp-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f7f8fa;padding:1px 5px;border-radius:3px;font-size:12px;color:var(--primary)}
+            #catPickerModal .picker-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer}
+            #catPickerModal .picker-row:hover{background:#f7f8fa}
+            #catPickerModal .picker-row input{accent-color:var(--primary)}
+            #catPickerModal .picker-indent-1{padding-left:28px}
+            #catPickerModal .picker-indent-2{padding-left:48px}
+            #catPickerModal .picker-indent-3{padding-left:68px}
+          </style>
+          <div class="sec-toolbar">
+            <h3>分类页</h3>
+            <div class="actions">
+              <button class="btn outline sm" onclick="loadCategoryDesign()">刷新</button>
+              <button class="btn green sm" onclick="saveCategoryDesign()">保存草稿</button>
+              <button class="btn sm" onclick="publishCategoryDesign()">发布上线</button>
+            </div>
+          </div>
+          <p class="muted" style="margin:2px 0 14px">配置小程序端「分类页」的展示规则：每页数量、排序方式及升降序、广告位 / 促销语开关、商品分类范围、展示风格。新增展示风格只需在 <span class="cdp-code">PageService::defaultCategoryConfig()</span> 的 <span class="cdp-code">styles</span> 数组里追加一项即可，无需改前端。</p>
+
+          <div class="cdp-card">
+            <div class="cdp-row">
+              <label class="cdp-label">每页显示</label>
+              <div class="cdp-control">
+                <select id="catPageSize" class="cdp-select">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="30">30</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+                <div class="cdp-hint">每次请求下发的商品数量</div>
+              </div>
+            </div>
+
+            <div class="cdp-row">
+              <label class="cdp-label">排序方式</label>
+              <div class="cdp-control">
+                <div class="cdp-inline">
+                  <select id="catSort" class="cdp-select" style="min-width:140px">
+                    <option value="new">上架时间</option>
+                    <option value="sales">销量</option>
+                    <option value="price">价格</option>
+                  </select>
+                  <select id="catOrder" class="cdp-select" style="min-width:110px">
+                    <option value="desc">降序</option>
+                    <option value="asc">升序</option>
+                  </select>
+                </div>
+                <div class="cdp-hint">如「时间降序」= 上架时间倒序；排序维度会下发到小程序端的 <span class="cdp-code">/api/v1/goods?sort=…&amp;order=…</span></div>
+              </div>
+            </div>
+
+            <div class="cdp-row">
+              <label class="cdp-label">展示广告位</label>
+              <div class="cdp-control">
+                <label class="switch"><input type="checkbox" id="catShowAd"><span class="slider"></span></label>
+                <span style="margin-left:10px;color:var(--text-secondary);font-size:13px">开启后，分类页顶部展示 banner 广告位</span>
+              </div>
+            </div>
+
+            <div class="cdp-row">
+              <label class="cdp-label">显示促销语</label>
+              <div class="cdp-control">
+                <label class="switch"><input type="checkbox" id="catShowPromo"><span class="slider"></span></label>
+                <span style="margin-left:10px;color:var(--text-secondary);font-size:13px">商品卡片展示「满减 / 限时特价」等促销文案（每件商品的 promotion 字段）</span>
+              </div>
+            </div>
+
+            <div class="cdp-row">
+              <label class="cdp-label">商品分类</label>
+              <div class="cdp-control">
+                <div id="catCategoryTags" class="cdp-tag-list"></div>
+                <button class="btn outline sm" onclick="openCategoryPicker()">＋ 添加分类</button>
+                <div class="cdp-hint">勾选要在此页展示的分类；不选则展示全部商品（按当前选中的排序）</div>
+              </div>
+            </div>
+
+            <div class="cdp-row">
+              <label class="cdp-label">展示风格</label>
+              <div class="cdp-control">
+                <div id="catStyleList" class="cdp-style-grid"></div>
+                <div class="cdp-hint">点击卡片切换当前风格；橙红描边为选中。当前内置 5 种，新增风格只需在 <span class="cdp-code">PageService::defaultCategoryConfig()</span> 的 <span class="cdp-code">styles</span> 数组追加一项，刷新本页即自动出现</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+        </div>
+
         <!-- 基础设置 -->
         <div id="basePanel" class="panel hidden setting-panel">
           <style>
@@ -3803,6 +3917,10 @@
             <div class="goods-form-control"><input id="gTitle" placeholder="商品名称"></div>
           </div>
           <div class="goods-form-item">
+            <label class="goods-form-label">副标题</label>
+            <div class="goods-form-control"><input id="gSubtitle" placeholder="副标题（列表/详情页标题下方展示）"></div>
+          </div>
+          <div class="goods-form-item">
             <label class="goods-form-label">商品编码</label>
             <div class="goods-form-control"><input id="gCode" placeholder="商品编码"></div>
           </div>
@@ -5512,7 +5630,7 @@
           {key:'bannerad',label:'广告位',icon:ICONS.megaphone,panel:'sectionPanel'},
           {key:'layout',label:'首页布局',icon:ICONS.layoutRows,panel:'layoutPanel'},
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'},
-          {key:'pageCategory',label:'分类页',icon:ICONS.layers},
+          {key:'pageCategory',label:'分类页',icon:ICONS.layers,panel:'categoryDecorPanel'},
           {key:'pageCart',label:'购物车页',icon:ICONS.cart},
           {key:'pageMine',label:'我的页面',icon:ICONS.user}
         ]},
@@ -5798,6 +5916,7 @@
 
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
+      if(panelId==='categoryDecorPanel') loadCategoryDesign();
       if(panelId==='goodsSpecPanel') loadGoodsSpecs();
       if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
@@ -6991,7 +7110,7 @@
 
     function clearGoodsForm(){
       gState={images:[],videoCover:'',shareCover:'',specs:[],skus:[],attrs:[],editingSpecIdx:-1,editingAttrIdx:-1,svValues:[],avValues:[]};
-      ['gId','gTitle','gCode','gBarcode','gPromo','gUnit','gPrice','gMarket','gCost','gStock','gVirtualSales','gSort','gVideoUrl','gNotice','gRemark','gWeight','gMinBuy','gLimitLifetimeNum','gLimitPeriodDay','gLimitPeriodNum','gMessage','gShareTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+      ['gId','gTitle','gCode','gBarcode','gPromo','gSubtitle','gUnit','gPrice','gMarket','gCost','gStock','gVirtualSales','gSort','gVideoUrl','gNotice','gRemark','gWeight','gMinBuy','gLimitLifetimeNum','gLimitPeriodDay','gLimitPeriodNum','gMessage','gShareTitle'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
       setRadio('gType','physical');setRadio('gVideoType','mp4');setRadio('gAutoPlay','0');
       setRadio('gShowStock','1');setRadio('gStatus','1');setRadio('gLimitType','none');setRadio('gAgreement','0');
       document.getElementById('gShipSelf').checked=false;document.getElementById('gShipSame').checked=false;
@@ -7319,6 +7438,7 @@
       document.getElementById('goodsModalTitle').textContent='编辑商品';
       document.getElementById('gId').value=g.id;
       document.getElementById('gTitle').value=g.title||'';
+      document.getElementById('gSubtitle').value=g.subtitle||'';
       document.getElementById('gCat').value=g.category_id||'';
       document.getElementById('gPrice').value=g.price?g.price.toFixed(2):'';
       document.getElementById('gMarket').value=g.market_price?g.market_price.toFixed(2):'';
@@ -7407,7 +7527,7 @@
       const body={
         id:id||0,
         title:document.getElementById('gTitle').value,
-        subtitle:'',
+        subtitle:document.getElementById('gSubtitle').value,
         category_id:document.getElementById('gCat').value,
         price:price,
         market_price:market,
@@ -8673,6 +8793,168 @@
       const p=await fetchA(`${BASE}/design/home/publish`,{method:'POST',body:{}});
       toast(p.code===0?'发布成功':(p.msg||'发布失败'));
     }
+
+    /* ===== 分类页装修（设计装修 → 分类页） ===== */
+    let catDesignConfig = null;
+    async function loadCategoryDesign(){
+      const d = await fetchA(`${BASE}/design/category`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const dd=d.data||{};
+      // 优先草稿，否则已发布（与首页布局同逻辑：避免「保存了没用」错觉）
+      const src=(dd.draft&&dd.draft.config)?dd.draft.config:(dd.published_config||{page:'category',settings:{},styles:[],components:[]});
+      catDesignConfig=JSON.parse(JSON.stringify(src));
+      if(!catDesignConfig.settings) catDesignConfig.settings={};
+      // 兜底 styles：空数组 或 name 全是 ??? 的脏数据 时强制覆盖为新默认（竖版/横版）
+      const _stylesGarbled=!catDesignConfig.styles
+        || !catDesignConfig.styles.length
+        || catDesignConfig.styles.some(s=>!s.name || /^\?+$/.test(String(s.name)));
+      if(_stylesGarbled){
+        catDesignConfig.styles=[
+          {key:'vertical',  name:'竖版', desc:'每屏多列卡片竖向滚动'},
+          {key:'horizontal',name:'横版', desc:'每行单张大图横滑切换'}
+        ];
+      }
+      // 兜底 view_style：若当前 settings.view_style 不在新 styles 列表里，重置为第一个的 key
+      if(!catDesignConfig.styles.find(s=>s.key===(catDesignConfig.settings&&catDesignConfig.settings.view_style))){
+        catDesignConfig.settings.view_style=catDesignConfig.styles[0].key;
+      }
+      if(!catDesignConfig.components) catDesignConfig.components=[];
+      await ensureCats();
+      renderCategoryPanel();
+    }
+    function syncCategoryFormToConfig(){
+      if(!catDesignConfig.settings) catDesignConfig.settings={};
+      catDesignConfig.settings.page_size=parseInt(document.getElementById('catPageSize').value)||50;
+      catDesignConfig.settings.sort=document.getElementById('catSort').value;
+      catDesignConfig.settings.order=document.getElementById('catOrder').value;
+      catDesignConfig.settings.show_ad=document.getElementById('catShowAd').checked;
+      catDesignConfig.settings.show_promo=document.getElementById('catShowPromo').checked;
+    }
+    function renderCategoryPanel(){
+      if(!catDesignConfig) return;
+      const s=catDesignConfig.settings;
+      document.getElementById('catPageSize').value=s.page_size||50;
+      document.getElementById('catSort').value=s.sort||'new';
+      document.getElementById('catOrder').value=s.order||'desc';
+      document.getElementById('catShowAd').checked=!!s.show_ad;
+      document.getElementById('catShowPromo').checked=!!s.show_promo;
+      renderCategoryTags(s.category_ids||[]);
+      renderCategoryStyles(s.view_style||'grid_2col');
+    }
+    function renderCategoryTags(ids){
+      const wrap=document.getElementById('catCategoryTags');
+      if(!ids.length){wrap.innerHTML='<span class="cdp-empty">未选择分类，将展示所有商品</span>';return;}
+      wrap.innerHTML=ids.map(id=>{
+        const c=catOptionsCache.find(x=>Number(x.id)===Number(id));
+        const name=c?c.name:('#'+id);
+        return `<span class="cdp-tag">${escapeHtml(name)}<span class="x" onclick="removeCatTag(${id})">×</span></span>`;
+      }).join('');
+    }
+    function removeCatTag(id){
+      if(!catDesignConfig.settings.category_ids) return;
+      catDesignConfig.settings.category_ids=catDesignConfig.settings.category_ids.filter(x=>Number(x)!==Number(id));
+      renderCategoryTags(catDesignConfig.settings.category_ids);
+    }
+    function renderCategoryStyles(selected){
+      const wrap=document.getElementById('catStyleList');
+      const styles=catDesignConfig.styles||[];
+      wrap.innerHTML=styles.map(st=>{
+        const sel=st.key===selected?'selected':'';
+        return `<div class="cdp-style-card ${sel}" data-key="${st.key}" onclick="selectCategoryStyle('${st.key}')">
+          <div class="cdp-style-preview">${renderStylePreview(st.key)}</div>
+          <div class="cdp-style-name">${escapeHtml(st.name)}</div>
+          <div class="cdp-style-desc">${escapeHtml(st.desc||'')}</div>
+        </div>`;
+      }).join('');
+    }
+    function selectCategoryStyle(key){
+      catDesignConfig.settings.view_style=key;
+      renderCategoryStyles(key);
+    }
+    function renderStylePreview(key){
+      const c='#5e6ad2';
+      const cards={
+        // 竖版：左右双列多行，凸显"竖向滚动"密度感
+        vertical:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="6" y="10" width="40" height="26" fill="${c}" opacity=".35"/><rect x="54" y="10" width="40" height="26" fill="${c}" opacity=".35"/><rect x="6" y="42" width="40" height="26" fill="${c}" opacity=".35"/><rect x="54" y="42" width="40" height="26" fill="${c}" opacity=".35"/><rect x="6" y="74" width="40" height="18" fill="${c}" opacity=".35"/><rect x="54" y="74" width="40" height="18" fill="${c}" opacity=".35"/></svg>`,
+        // 横版：单张大图+底部细条标题，凸显"横滑"卡片
+        horizontal:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="10" y="10" width="80" height="60" fill="${c}" opacity=".35"/><rect x="10" y="76" width="60" height="3" fill="${c}" opacity=".25"/><rect x="10" y="83" width="40" height="3" fill="${c}" opacity=".25"/></svg>`,
+        // 兼容老 key（已被新版精简，但若历史草稿/模板里残留仍可渲染）
+        grid_2col:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="6" y="10" width="40" height="36" fill="${c}" opacity=".35"/><rect x="54" y="10" width="40" height="36" fill="${c}" opacity=".35"/><rect x="6" y="54" width="40" height="36" fill="${c}" opacity=".35"/><rect x="54" y="54" width="40" height="36" fill="${c}" opacity=".35"/></svg>`,
+        grid_3col:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="4" y="10" width="28" height="36" fill="${c}" opacity=".35"/><rect x="36" y="10" width="28" height="36" fill="${c}" opacity=".35"/><rect x="68" y="10" width="28" height="36" fill="${c}" opacity=".35"/><rect x="4" y="54" width="28" height="36" fill="${c}" opacity=".35"/><rect x="36" y="54" width="28" height="36" fill="${c}" opacity=".35"/><rect x="68" y="54" width="28" height="36" fill="${c}" opacity=".35"/></svg>`,
+        big:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="6" y="10" width="88" height="36" fill="${c}" opacity=".35"/><rect x="6" y="54" width="88" height="36" fill="${c}" opacity=".35"/></svg>`,
+        list:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="6" y="8" width="22" height="22" fill="${c}" opacity=".35"/><rect x="34" y="14" width="60" height="3" fill="${c}" opacity=".25"/><rect x="34" y="22" width="40" height="3" fill="${c}" opacity=".25"/><rect x="6" y="38" width="22" height="22" fill="${c}" opacity=".35"/><rect x="34" y="44" width="60" height="3" fill="${c}" opacity=".25"/><rect x="34" y="52" width="40" height="3" fill="${c}" opacity=".25"/><rect x="6" y="68" width="22" height="22" fill="${c}" opacity=".35"/><rect x="34" y="74" width="60" height="3" fill="${c}" opacity=".25"/><rect x="34" y="82" width="40" height="3" fill="${c}" opacity=".25"/></svg>`,
+        mixed:`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><rect x="6" y="10" width="88" height="34" fill="${c}" opacity=".35"/><rect x="6" y="50" width="40" height="40" fill="${c}" opacity=".35"/><rect x="54" y="50" width="40" height="40" fill="${c}" opacity=".35"/></svg>`
+      };
+      return cards[key]||cards.vertical;
+    }
+    function buildCategoryTree(list){
+      const map={}; const roots=[];
+      list.forEach(c=>{c.children=[];map[c.id]=c;});
+      list.forEach(c=>{
+        if(c.parent_id && map[c.parent_id]) map[c.parent_id].children.push(c);
+        else roots.push(c);
+      });
+      return roots;
+    }
+    async function openCategoryPicker(){
+      await ensureCats();
+      let modal=document.getElementById('catPickerModal');
+      if(!modal){
+        modal=document.createElement('div');
+        modal.id='catPickerModal';
+        modal.className='modal';
+        modal.innerHTML=`<div class="modal-card" style="width:520px;max-width:96vw">
+          <div class="modal-head"><span>选择分类</span><button class="modal-close" onclick="document.getElementById('catPickerModal').classList.remove('show')">×</button></div>
+          <div class="modal-body" id="catPickerList" style="max-height:60vh;overflow:auto;padding:8px 16px"></div>
+          <div class="modal-foot">
+            <button class="btn outline" onclick="document.getElementById('catPickerModal').classList.remove('show')">取消</button>
+            <button class="btn primary" onclick="confirmCategoryPicker()">确定</button>
+          </div>
+        </div>`;
+        document.body.appendChild(modal);
+      }
+      const selected=(catDesignConfig.settings.category_ids||[]).map(String);
+      const tree=buildCategoryTree(catOptionsCache);
+      document.getElementById('catPickerList').innerHTML=renderCatPickerTree(tree,selected);
+      modal.classList.add('show');
+    }
+    function renderCatPickerTree(nodes,selected,depth=0){
+      if(!nodes||!nodes.length) return '';
+      // 动态缩进：depth=0 顶级无缩进；1/2/3 分别对应二级/三级/四级（CSS picker-indent-1/2/3 兜底 28/48/68 px）
+      const indentCls=depth===0?'':'picker-indent-'+Math.min(depth,3);
+      return nodes.map(n=>{
+        const checked=selected.includes(String(n.id))?'checked':'';
+        return `<label class="picker-row ${indentCls}"><input type="checkbox" data-id="${n.id}" ${checked}><span>${escapeHtml(n.name)}</span></label>${renderCatPickerTree(n.children,selected,depth+1)}`;
+      }).join('');
+    }
+    function confirmCategoryPicker(){
+      const checked=Array.from(document.querySelectorAll('#catPickerList input[type=checkbox]:checked')).map(el=>parseInt(el.dataset.id));
+      catDesignConfig.settings.category_ids=checked;
+      renderCategoryTags(checked);
+      document.getElementById('catPickerModal').classList.remove('show');
+    }
+    async function saveCategoryDesign(){
+      syncCategoryFormToConfig();
+      catDesignConfig.page='category';
+      const cfg=JSON.parse(JSON.stringify(catDesignConfig));
+      // 不允许把 styles 清空：万一草稿里被误删，强制兜底
+      if(!cfg.styles||!cfg.styles.length) cfg.styles=catDesignConfig.styles||[];
+      const r=await fetchA(`${BASE}/design/category/save`,{method:'POST',body:{config:cfg,remark:'分类页装修'}});
+      toast(r.code===0?'草稿保存成功':(r.msg||'保存失败'));
+      if(r.code===0) loadCategoryDesign();
+    }
+    async function publishCategoryDesign(){
+      syncCategoryFormToConfig();
+      catDesignConfig.page='category';
+      const cfg=JSON.parse(JSON.stringify(catDesignConfig));
+      if(!cfg.styles||!cfg.styles.length) cfg.styles=catDesignConfig.styles||[];
+      const s=await fetchA(`${BASE}/design/category/save`,{method:'POST',body:{config:cfg,remark:'分类页装修'}});
+      if(s.code!==0){toast(s.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/category/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功，小程序端即时生效':(p.msg||'发布失败'));
+      if(p.code===0) loadCategoryDesign();
+    }
+
     function renderSectionForm(){
       const sec=state.section;
       const comp=(sec==='bannerad')?(getBaComps().length?{props:{}}:null):getSection(sec);

@@ -15,6 +15,9 @@ Route::group('api/v1', function () {
     // 底部导航配置下发
     Route::get('bottom_nav', 'api/v1.Design/bottomNav');
 
+    // 分类页装修下发
+    Route::get('category_page', 'api/v1.Design/categoryPage');
+
     // 分类
     Route::get('categories', 'api/v1.Category/index');
 

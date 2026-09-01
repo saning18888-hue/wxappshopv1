@@ -1,4 +1,7 @@
-feat: 会员分组端到端互通 + 修复下单金额单位 BUG
+chore: release v0.1.106 - fix promotion/subtitle chain, admin list category name, category page auto refresh
 
-- 会员分组打通：前端会员页展示分组名/折扣，后台 members/:id/assign_group 分配接口，下单按分组折扣算价
-- 修复下单确认页金额显示错误：后端 OrderService 返回金额统一为分，前端不再多除 100
+- miniprogram category page onShow re-fetches goods list so backend promo/subtitle edits show immediately
+- admin goods edit adds subtitle input; fix subtitle being overwritten to empty string on save (list title stayed blank)
+- admin goods list shows real category name (GoodsService::adminList returns category_id + category_name)
+- verify promotion chain end-to-end: admin save -> GoodsService::update -> /api/v1/goods formatList -> miniprogram render
+- docs: bump CHANGELOG/README to v0.1.106; backfill missing v0.1.105 record (order/aftersale pages wired to backend)

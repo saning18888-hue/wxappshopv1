@@ -78,6 +78,40 @@ class PageService
         ];
     }
 
+    /** 兜底默认分类页配置（装修设计-分类页） */
+    public function defaultCategoryConfig(): array
+    {
+        return [
+            'page'     => 'category',
+            'version'  => 1,
+            'settings' => [
+                'page_size'    => 50,                 // 每页显示数量
+                'sort'         => 'new',              // 时间/点击量/推荐 → 后端 sort 值
+                'order'        => 'desc',             // 升/降序
+                'show_ad'      => true,               // 是否展示广告位
+                'show_promo'   => true,               // 是否显示促销语
+                'category_ids' => [],                 // 选中的商品分类 id
+                'view_style'   => 'vertical',         // 展示风格 key（默认竖版）
+            ],
+            // 系统支持的展示风格（key 唯一，新风格追加一项即可被后台面板识别）
+            // 用户要求精简为 2 种：竖版（多列竖滚）/ 横版（横滑卡片），后续可手动追加新风格
+            'styles' => [
+                ['key' => 'vertical',   'name' => '竖版', 'desc' => '每屏多列卡片竖向滚动'],
+                ['key' => 'horizontal', 'name' => '横版', 'desc' => '每行单张大图横滑切换'],
+            ],
+            'components' => [
+                [
+                    'type'  => 'banner_ad',
+                    'sort'  => 1,
+                    'props' => [
+                        'image' => 'https://placehold.co/750x200/FF6B35/fff?text=广告位',
+                        'link'  => ['type' => 'page', 'id' => 'home'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     /** 兜底默认底部导航配置 */
     public function defaultBottomNav(): array
     {

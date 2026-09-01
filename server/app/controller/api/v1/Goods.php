@@ -11,10 +11,11 @@ class Goods extends ApiController
         $catId    = input('get.category_id/d', 0);
         $keyword  = input('get.keyword/s', '');
         $sort     = input('get.sort/s', 'new');
+        $order    = input('get.order/s', 'desc');
         $page     = input('get.page/d', 1);
         $pageSize = input('get.page_size/d', 10);
         $data = (new \app\service\GoodsService())->list(
-            $catId ?: null, $keyword ?: null, $sort, $page, $pageSize
+            $catId ?: null, $keyword ?: null, $sort, $order, $page, $pageSize
         );
         return $this->ok($data);
     }

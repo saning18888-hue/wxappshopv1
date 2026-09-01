@@ -51,6 +51,7 @@ class Goods extends AdminController
         $fields = [
             'title'        => $title,
             'subtitle'     => trim($d['subtitle'] ?? ''),
+            'promotion'    => trim($ext['promo'] ?? ''),
             'category_id'  => intval($d['category_id'] ?? 0),
             'price'        => $price,
             'market_price' => $market,

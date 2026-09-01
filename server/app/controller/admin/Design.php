@@ -25,7 +25,12 @@ class Design extends AdminController
         $page = $this->request->param('page', 'home');
         $published = $this->svc->publishedConfig($page);
         if (!$published) {
-            $published = $page === 'bottom_nav' ? $this->svc->defaultBottomNav() : $this->svc->defaultHome();
+            $defaultMap = [
+                'bottom_nav' => 'defaultBottomNav',
+                'category'   => 'defaultCategoryConfig',
+            ];
+            $defaultFn = $defaultMap[$page] ?? 'defaultHome';
+            $published = $this->svc->{$defaultFn}();
         }
         $draft    = $this->svc->latestDraft($page);
         $versions = $this->svc->versions($page);
@@ -35,7 +40,7 @@ class Design extends AdminController
             return $v;
         }, $versions);
 
-        $titleMap = ['home' => '首页', 'bottom_nav' => '底部导航'];
+        $titleMap = ['home' => '首页', 'bottom_nav' => '底部导航', 'category' => '分类页'];
 
         return $this->ok([
             'page'             => $page,

@@ -9,7 +9,7 @@ use think\facade\Db;
  */
 class GoodsService
 {
-    public function list(?int $catId, ?string $keyword, ?string $sort, int $page, int $pageSize): array
+    public function list(?int $catId, ?string $keyword, ?string $sort, ?string $order, int $page, int $pageSize): array
     {
         $q = Db::name('goods')->where('status', 1);
         if ($catId) {
@@ -21,14 +21,15 @@ class GoodsService
             $q->where('title', 'like', "%{$keyword}%");
         }
         $total = $q->count();
-        $sortMap = [
-            'new'        => 'id desc',
-            'price_asc'  => 'price asc',
-            'price_desc' => 'price desc',
-            'sales'      => 'sales desc',
+        // sort 维度 → 真实可排字段；方向由 order(asc/desc) 决定，默认 desc
+        $fieldMap = [
+            'new'   => 'created_at',   // 上架时间
+            'sales' => 'sales',        // 销量
+            'price' => 'price',        // 价格
         ];
-        $order = $sortMap[$sort] ?? 'id desc';
-        $rows  = $q->order($order)->page($page, $pageSize)->select();
+        $field = $fieldMap[$sort] ?? 'created_at';
+        $dir   = strtolower($order ?? '') === 'asc' ? 'asc' : 'desc';
+        $rows  = $q->order($field . ' ' . $dir)->page($page, $pageSize)->select();
 
         return [
             'list'      => array_map([$this, 'formatList'], $rows->toArray()),
@@ -148,6 +149,7 @@ class GoodsService
             'market_price' => floatval($g['market_price'] / 100),
             'stock'        => (int) $g['stock'],
             'sales'        => (int) $g['sales'],
+            'promotion'    => $g['promotion'] ?? '',
             'cover'        => $images[0] ?? '',
             'ext_json'     => $ext,
         ];
@@ -166,8 +168,15 @@ class GoodsService
         }
         $total = $q->count();
         $rows  = $q->order('id desc')->page($page, $pageSize)->select();
+        $catMap = Db::name('categories')->column('name', 'id');
+        $list = array_map(function ($g) use ($catMap) {
+            $r = $this->formatList($g);
+            $r['category_id']   = (int) $g['category_id'];
+            $r['category_name'] = $catMap[$g['category_id']] ?? '';
+            return $r;
+        }, $rows->toArray());
         return [
-            'list'      => array_map([$this, 'formatList'], $rows->toArray()),
+            'list'      => $list,
             'total'     => (int) $total,
             'page'      => $page,
             'page_size' => $pageSize,

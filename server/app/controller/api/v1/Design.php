@@ -26,4 +26,32 @@ class Design extends ApiController
         $cfg['style'] = array_merge($styleDefaults, $cfg['style'] ?? []);
         return $this->ok($cfg);
     }
+
+    /** GET /api/v1/category_page  下发已发布的分类页装修配置 */
+    public function categoryPage()
+    {
+        $svc = new PageService();
+        $cfg = $svc->publishedConfig('category');
+        if (!$cfg) {
+            $cfg = $svc->defaultCategoryConfig();
+        }
+        // 保证前端拿到 styles 列表（空数组或脏数据都兜底）
+        $defStyles = $svc->defaultCategoryConfig()['styles'];
+        $stylesDirty = empty($cfg['styles']) || !is_array($cfg['styles'])
+            || array_filter($cfg['styles'], fn($s) => empty($s['name']) || preg_match('/^\?+$/', (string)($s['name'] ?? '')));
+        if ($stylesDirty) {
+            $cfg['styles'] = $defStyles;
+        }
+        // 保证 settings 默认值齐全
+        $cfg['settings'] = array_merge([
+            'page_size'    => 50,
+            'sort'         => 'new',
+            'order'        => 'desc',
+            'show_ad'      => true,
+            'show_promo'   => true,
+            'category_ids' => [],
+            'view_style'   => 'vertical',
+        ], $cfg['settings'] ?? []);
+        return $this->ok($cfg);
+    }
 }
