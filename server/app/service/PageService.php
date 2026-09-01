@@ -32,6 +32,7 @@ class PageService
                             ['image' => 'https://placehold.co/750x320/00B86B/ffffff?text=Banner2', 'link' => ['type' => 'goods', 'id' => 2]],
                         ],
                         'interval' => 4,
+                        'height'   => 300,
                     ],
                 ],
                 [
@@ -138,6 +139,32 @@ class PageService
                             ['name' => '分类', 'icon' => $placeholder('分类'), 'active_icon' => $placeholder('分类', true), 'link' => ['type' => 'page', 'id' => 'category']],
                             ['name' => '购物车', 'icon' => $placeholder('车'), 'active_icon' => $placeholder('车', true), 'link' => ['type' => 'page', 'id' => 'cart']],
                             ['name' => '我的', 'icon' => $placeholder('我'), 'active_icon' => $placeholder('我', true), 'link' => ['type' => 'page', 'id' => 'user']],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /** 兜底默认会员中心（我的页面）配置 */
+    public function defaultMember(): array
+    {
+        return [
+            'page'       => 'member',
+            'version'    => 1,
+            'components' => [
+                [
+                    'type'  => 'orderIcons',
+                    'sort'  => 1,
+                    'props' => [
+                        'moduleName' => '我的订单',
+                        'rightName'  => '全部订单',
+                        'items'      => [
+                            ['key' => 'pending_payment', 'name' => '待付款',    'icon' => '/images/mine/pending-pay.svg',     'visible' => true, 'status' => '0',      'link' => 'order'],
+                            ['key' => 'pending_ship',    'name' => '待发货',    'icon' => '/images/mine/pending-send.svg',    'visible' => true, 'status' => '1',      'link' => 'order'],
+                            ['key' => 'pending_receive', 'name' => '待收货',    'icon' => '/images/mine/pending-receive.svg', 'visible' => true, 'status' => '2',      'link' => 'order'],
+                            ['key' => 'pending_review',  'name' => '待评价',    'icon' => '/images/mine/pending-review.svg',  'visible' => true, 'status' => 'review', 'link' => 'order'],
+                            ['key' => 'refund',          'name' => '退款/售后', 'icon' => '/images/mine/refund.svg',          'visible' => true, 'status' => '',       'link' => 'aftersale'],
                         ],
                     ],
                 ],

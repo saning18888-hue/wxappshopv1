@@ -54,4 +54,15 @@ class Design extends ApiController
         ], $cfg['settings'] ?? []);
         return $this->ok($cfg);
     }
+
+    /** GET /api/v1/member_page  下发已发布的会员中心（我的页面）装修配置 */
+    public function memberPage()
+    {
+        $svc = new PageService();
+        $cfg = $svc->publishedConfig('member');
+        if (!$cfg) {
+            $cfg = $svc->defaultMember();
+        }
+        return $this->ok($cfg);
+    }
 }

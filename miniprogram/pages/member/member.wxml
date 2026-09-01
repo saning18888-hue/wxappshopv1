@@ -46,14 +46,14 @@
   <!-- 我的订单 -->
   <view class="order-card">
     <view class="order-title-row">
-      <text class="order-title">我的订单</text>
+      <text class="order-title">{{orderModule.moduleName || '我的订单'}}</text>
       <view class="order-all" bindtap="goOrders">
-        <text>全部订单</text>
+        <text>{{orderModule.rightName || '全部订单'}}</text>
         <text class="arrow">›</text>
       </view>
     </view>
     <view class="order-status-row">
-      <view class="status-item" wx:for="{{statusList}}" wx:key="key" bindtap="onStatusTap" data-key="{{item.key}}">
+      <view class="status-item" wx:for="{{statusList}}" wx:key="key" bindtap="onStatusTap" data-status="{{item.status}}" data-link="{{item.link}}">
         <view class="status-icon-wrap">
           <image class="status-icon" src="{{item.icon}}" mode="aspectFit" />
           <view wx:if="{{item.count > 0}}" class="status-badge">{{item.count > 99 ? '99+' : item.count}}</view>

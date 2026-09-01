@@ -1,3 +1,11 @@
+### v0.1.107 (2026-09-01) feat: 我的页面装修（订单模块）+ 轮播高度设置 + 订单图标预览
+
+**范围**：`miniprogram/pages/member/member.js`、`miniprogram/pages/member/member.wxml`、`server/app/controller/admin/Design.php`、`server/app/controller/api/v1/Design.php`、`server/app/service/PageService.php`、`server/public/admin.html`、`server/route/app.php`、`miniprogram/components/diy-render/diy-render.wxml`、`miniprogram/components/diy-render/diy-render.wxss`、`miniprogram/images/mine/refund.svg`、`server/public/images/mine/*`。
+
+- 新增「我的页面装修」：后台可配置会员中心「我的订单」模块（模块名、右侧名、5 个订单状态的名称/图标/显隐/跳转），小程序我的页 `onShow` 拉取配置即时渲染（关闭的状态不显示、改图标/名称即时生效）。
+- 后台订单状态图标新增缩略图预览：每个图标输入框右侧实时显示 36×36 缩略图；同时修复图标 404——前端订单图标改用小程序本地路径（不再经 `asset()` 拼后端域名），并将 5 个订单 svg 与 `refund.svg` 复制到后端 `server/public/images/mine/` 供后台预览加载。
+- 轮播图支持后台设置高度（默认 300rpx）：后台「轮播设置」新增「轮播高度」步进输入框并标注当前值；前端 `diy-render` 的 swiper 高度绑定 `c.props.height`，保存发布后首页轮播即时变高/变矮。
+
 ### v0.1.106 (2026-09-01) fix: 商品促销语/副标题链路打通 + 后台列表分类名 + 分类页自动刷新
 
 **范围**：`miniprogram/pages/category/category.js`、`server/public/admin.html`、`server/app/service/GoodsService.php`、`CHANGELOG.md`。

@@ -28,6 +28,7 @@ class Design extends AdminController
             $defaultMap = [
                 'bottom_nav' => 'defaultBottomNav',
                 'category'   => 'defaultCategoryConfig',
+                'member'     => 'defaultMember',
             ];
             $defaultFn = $defaultMap[$page] ?? 'defaultHome';
             $published = $this->svc->{$defaultFn}();

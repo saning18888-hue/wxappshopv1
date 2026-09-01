@@ -24,6 +24,7 @@ Page({
     settings.fetchSettings(true).then((s) => {
       this.setData({ themeColor: s.theme_color || '#FF6B35' });
     });
+    this.loadMemberDesign();
     this.loadOrderCounts();
     this.refreshUser();
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
@@ -88,6 +89,36 @@ Page({
       .catch(() => {});
   },
 
+  // 拉取「我的页面」装修配置：覆盖订单模块标题、右侧名、状态图标/名称/可见性/跳转
+  loadMemberDesign() {
+    api.get('/member_page')
+      .then((res) => {
+        const cfg = res || {};
+        const comp = (cfg.components || []).find((c) => c && c.type === 'orderIcons') || null;
+        if (!comp) return;
+        const p = comp.props || {};
+        const items = (p.items || []).filter((it) => it && it.visible);
+        const statusList = items.map((it) => ({
+          key: it.key,
+          label: it.name || it.key,
+          icon: it.icon || '',
+          count: 0,
+          status: it.status || '',
+          link: it.link || (it.key === 'refund' ? 'aftersale' : 'order'),
+        }));
+        this.setData({
+          orderModule: {
+            moduleName: p.moduleName || '我的订单',
+            rightName: p.rightName || '全部订单',
+          },
+          statusList,
+        });
+        // 装修数据到达后再注一次，避免与 onShow 里的 loadOrderCounts 写入顺序冲突导致 count 丢失
+        this.loadOrderCounts();
+      })
+      .catch(() => {});
+  },
+
   onSign() {
     wx.showToast({ title: '签到功能开发中', icon: 'none' });
   },
@@ -101,14 +132,13 @@ Page({
   },
 
   onStatusTap(e) {
-    const key = e.currentTarget.dataset.key;
-    if (key === 'refund') {
+    const status = e.currentTarget.dataset.status;
+    const link = e.currentTarget.dataset.link || '';
+    if (link === 'aftersale') {
       wx.navigateTo({ url: '/pages/aftersale/list/list' });
       return;
     }
-    const map = { pending_payment: '0', pending_ship: '1', pending_receive: '2', pending_review: 'review' };
-    const status = map[key] || '';
-    wx.navigateTo({ url: '/pages/order/list/list?status=' + status });
+    wx.navigateTo({ url: '/pages/order/list/list?status=' + (status || '') });
   },
 
   goAddress() {

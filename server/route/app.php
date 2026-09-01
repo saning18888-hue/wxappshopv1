@@ -18,6 +18,9 @@ Route::group('api/v1', function () {
     // 分类页装修下发
     Route::get('category_page', 'api/v1.Design/categoryPage');
 
+    // 会员中心（我的页面）装修下发
+    Route::get('member_page', 'api/v1.Design/memberPage');
+
     // 分类
     Route::get('categories', 'api/v1.Category/index');
 

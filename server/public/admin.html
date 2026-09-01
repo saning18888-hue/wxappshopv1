@@ -2066,6 +2066,70 @@
           <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
 
+        <!-- 我的页面装修设计 -->
+        <div id="memberDecorPanel" class="panel hidden">
+          <style>
+            .mdp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;box-shadow:var(--shadow);margin-bottom:16px}
+            .mdp-row{display:flex;align-items:flex-start;margin-bottom:18px}
+            .mdp-row:last-child{margin-bottom:0}
+            .mdp-label{width:120px;color:var(--text);font-size:14px;padding-top:8px;flex-shrink:0;line-height:1.5}
+            .mdp-control{flex:1;min-width:0}
+            .mdp-input{width:100%;max-width:280px;padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;color:var(--text);background:#f7f8fa;outline:none}
+            .mdp-input:focus{border-color:var(--primary);background:#fff}
+            .mdp-count{font-size:12px;color:var(--text-muted);margin-top:4px;text-align:right;max-width:280px}
+            .mdp-count.over{color:#e74c3c}
+            .mdp-items{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:#fff}
+            .mdp-item-row{display:grid;grid-template-columns:130px 1fr 1.4fr 50px;align-items:center;padding:12px 14px;border-top:1px solid var(--border);gap:12px}
+            .mdp-item-row.head{background:#f7f8fa;font-weight:600;color:var(--text-secondary);font-size:13px}
+            .mdp-item-row.head .mdp-item-head{font-size:13px;color:var(--text-secondary);font-weight:500}
+            .mdp-item-key{font-size:13px;color:var(--text-muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+            .mdp-item-icon-input{display:flex;align-items:center;gap:10px}
+            .mdp-item-icon-input input{flex:1;min-width:0;max-width:none}
+            .mdp-item-icon-input img{width:36px;height:36px;border-radius:6px;border:1px solid var(--border);background:#fff;object-fit:contain;flex-shrink:0;visibility:visible}
+            .mdp-eye{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;padding:0}
+            .mdp-eye:hover{border-color:var(--primary);color:var(--primary)}
+            .mdp-eye.off{color:#bbb;background:#f7f8fa}
+            .mdp-eye svg{width:18px;height:18px}
+          </style>
+          <div class="sec-toolbar">
+            <h3>我的页面</h3>
+            <div class="actions">
+              <button class="btn outline sm" onclick="loadMemberDesign()">刷新</button>
+              <button class="btn green sm" onclick="saveMemberDesign()">保存草稿</button>
+              <button class="btn sm" onclick="publishMemberDesign()">发布上线</button>
+            </div>
+          </div>
+          <p class="muted" style="margin:2px 0 14px">配置小程序端「我的页面」的「我的订单」模块：模块标题、右侧"全部订单"按钮名、5 个订单状态（名称 / 图标 / 是否显示）。每个状态的跳转与订单状态码由系统预设，无须配置。修改后先「保存草稿」，确认无误再「发布上线」。</p>
+
+          <div class="mdp-card">
+            <div class="mdp-row">
+              <label class="mdp-label">模块名称</label>
+              <div class="mdp-control">
+                <input id="memModuleName" class="mdp-input" maxlength="10" placeholder="我的订单" oninput="onMemTextInput('memModuleName','memModuleNameCount',10)">
+                <div id="memModuleNameCount" class="mdp-count">0/10</div>
+              </div>
+            </div>
+
+            <div class="mdp-row">
+              <label class="mdp-label">右侧名称</label>
+              <div class="mdp-control">
+                <input id="memRightName" class="mdp-input" maxlength="10" placeholder="全部订单" oninput="onMemTextInput('memRightName','memRightNameCount',10)">
+                <div id="memRightNameCount" class="mdp-count">0/10</div>
+              </div>
+            </div>
+
+            <div class="mdp-row">
+              <label class="mdp-label" style="padding-top:0">订单状态</label>
+              <div class="mdp-control">
+                <div class="mdp-items" id="memOrderItems"></div>
+                <div class="cdp-hint" style="margin-top:10px">点击右侧眼睛可显示/隐藏该状态；图标支持填写本地路径（如 <span class="cdp-code">/images/mine/pending-pay.svg</span>）或 https 图片地址。</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
+        </div>
+
         <!-- 基础设置 -->
         <div id="basePanel" class="panel hidden setting-panel">
           <style>
@@ -5632,7 +5696,7 @@
           {key:'bottomNav',label:'底部导航',icon:ICONS.menu,panel:'bottomNavPanel'},
           {key:'pageCategory',label:'分类页',icon:ICONS.layers,panel:'categoryDecorPanel'},
           {key:'pageCart',label:'购物车页',icon:ICONS.cart},
-          {key:'pageMine',label:'我的页面',icon:ICONS.user}
+          {key:'pageMine',label:'我的页面',icon:ICONS.user,panel:'memberDecorPanel'}
         ]},
         {key:'base',label:'基础设置',icon:ICONS.settings,panel:'basePanel'},
         {key:'info',label:'店铺设置',icon:ICONS.store,panel:'shopPanel'},
@@ -5917,6 +5981,7 @@
       if(panelId==='goodsPanel') loadGoods();
       if(panelId==='categoryPanel') loadCategoriesAdmin();
       if(panelId==='categoryDecorPanel') loadCategoryDesign();
+      if(panelId==='memberDecorPanel') loadMemberDesign();
       if(panelId==='goodsSpecPanel') loadGoodsSpecs();
       if(panelId==='goodsAttrPanel') loadGoodsAttrs();
       if(panelId==='ordersPanel') loadOrders();
@@ -8955,6 +9020,130 @@
       if(p.code===0) loadCategoryDesign();
     }
 
+    /* ===== 我的页面装修（设计装修 → 我的页面） ===== */
+    let memDesignConfig = null;
+    async function loadMemberDesign(){
+      const d = await fetchA(`${BASE}/design/member`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      const dd=d.data||{};
+      const src=(dd.draft&&dd.draft.config)?dd.draft.config:(dd.published_config||{page:'member',components:[]});
+      memDesignConfig=JSON.parse(JSON.stringify(src));
+      ensureOrderIconsComponent();
+      renderMemberPanel();
+    }
+    function ensureOrderIconsComponent(){
+      if(!memDesignConfig.components) memDesignConfig.components=[];
+      let c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      if(!c){
+        c={type:'orderIcons',sort:1,props:{
+          moduleName:'我的订单', rightName:'全部订单',
+          items:[
+            {key:'pending_payment',name:'待付款',icon:'/images/mine/pending-pay.svg',visible:true,status:'0',link:'order'},
+            {key:'pending_ship',name:'待发货',icon:'/images/mine/pending-send.svg',visible:true,status:'1',link:'order'},
+            {key:'pending_receive',name:'待收货',icon:'/images/mine/pending-receive.svg',visible:true,status:'2',link:'order'},
+            {key:'pending_review',name:'待评价',icon:'/images/mine/pending-review.svg',visible:true,status:'review',link:'order'},
+            {key:'refund',name:'退款/售后',icon:'/images/mine/refund.svg',visible:true,status:'',link:'aftersale'}
+          ]
+        }};
+        memDesignConfig.components.push(c);
+      }
+    }
+    function renderMemberPanel(){
+      if(!memDesignConfig) return;
+      ensureOrderIconsComponent();
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      const p=c.props;
+      document.getElementById('memModuleName').value=p.moduleName||'我的订单';
+      document.getElementById('memRightName').value=p.rightName||'全部订单';
+      updateMemCount('memModuleName','memModuleNameCount',10);
+      updateMemCount('memRightName','memRightNameCount',10);
+      const wrap=document.getElementById('memOrderItems');
+      const headRow=`<div class="mdp-item-row head"><div class="mdp-item-head">订单状态</div><div class="mdp-item-head">名称</div><div class="mdp-item-head">图标</div><div class="mdp-item-head">操作</div></div>`;
+      wrap.innerHTML=headRow+(p.items||[]).map((it,i)=>{
+        const visible=it.visible!==false;
+        const status=it.status==null?'':String(it.status);
+        const link=it.link||(it.key==='refund'?'aftersale':'order');
+        const eyeOn='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+        const eyeOff='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+        return `<div class="mdp-item-row">
+          <div class="mdp-item-key">${escapeHtml(it.key)}</div>
+          <input class="mdp-input" value="${escapeHtml(it.name||'')}" placeholder="名称" oninput="setMemItem(${i},'name',this.value)">
+          <div class="mdp-item-icon-input">
+            <input class="mdp-input" value="${escapeHtml(it.icon||'')}" placeholder="/images/mine/xxx.svg 或 https://..." oninput="setMemItem(${i},'icon',this.value);refreshMemIcon(${i})">
+            <img id="memItemIcon${i}" src="${escapeHtml(it.icon||'')}" onerror="this.style.visibility='hidden'" onload="this.style.visibility='visible'">
+          </div>
+          <button class="mdp-eye ${visible?'':'off'}" onclick="toggleMemItemVisible(${i})" title="${visible?'显示中，点击隐藏':'已隐藏，点击显示'}">${visible?eyeOn:eyeOff}</button>
+          <input type="hidden" data-mem-status="${i}" value="${escapeHtml(status)}">
+          <input type="hidden" data-mem-link="${i}" value="${escapeHtml(link)}">
+        </div>`;
+      }).join('');
+    }
+    function setMemItem(i,field,val){
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      if(!c||!c.props.items||!c.props.items[i]) return;
+      c.props.items[i][field]=val;
+    }
+    function refreshMemIcon(i){
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      const url=(c&&c.props.items&&c.props.items[i]&&c.props.items[i].icon)||'';
+      const img=document.getElementById('memItemIcon'+i);
+      if(!img) return;
+      img.src=url;
+    }
+    function toggleMemItemVisible(i){
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      if(!c||!c.props.items||!c.props.items[i]) return;
+      c.props.items[i].visible=!c.props.items[i].visible;
+      renderMemberPanel();
+    }
+    function onMemTextInput(inputId,countId,max){
+      const el=document.getElementById(inputId);
+      const cnt=document.getElementById(countId);
+      if(!el||!cnt) return;
+      let v=el.value||'';
+      if(v.length>max){v=v.slice(0,max);el.value=v;}
+      cnt.textContent=v.length+'/'+max;
+      cnt.classList.toggle('over', v.length>=max);
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      if(c){
+        if(inputId==='memModuleName') c.props.moduleName=v;
+        else if(inputId==='memRightName') c.props.rightName=v;
+      }
+    }
+    function updateMemCount(inputId,countId,max){
+      const el=document.getElementById(inputId);
+      const cnt=document.getElementById(countId);
+      if(!el||!cnt) return;
+      const v=el.value||'';
+      cnt.textContent=v.length+'/'+max;
+      cnt.classList.toggle('over', v.length>=max);
+    }
+    function syncMemberFormToConfig(){
+      if(!memDesignConfig) return;
+      const c=memDesignConfig.components.find(x=>x.type==='orderIcons');
+      if(!c) return;
+      c.props.moduleName=document.getElementById('memModuleName').value||'我的订单';
+      c.props.rightName=document.getElementById('memRightName').value||'全部订单';
+    }
+    async function saveMemberDesign(){
+      syncMemberFormToConfig();
+      memDesignConfig.page='member';
+      const cfg=JSON.parse(JSON.stringify(memDesignConfig));
+      const r=await fetchA(`${BASE}/design/member/save`,{method:'POST',body:{config:cfg,remark:'我的页面装修'}});
+      toast(r.code===0?'草稿保存成功':(r.msg||'保存失败'));
+      if(r.code===0) loadMemberDesign();
+    }
+    async function publishMemberDesign(){
+      syncMemberFormToConfig();
+      memDesignConfig.page='member';
+      const cfg=JSON.parse(JSON.stringify(memDesignConfig));
+      const s=await fetchA(`${BASE}/design/member/save`,{method:'POST',body:{config:cfg,remark:'我的页面装修'}});
+      if(s.code!==0){toast(s.msg||'保存失败');return;}
+      const p=await fetchA(`${BASE}/design/member/publish`,{method:'POST',body:{}});
+      toast(p.code===0?'发布成功，小程序端即时生效':(p.msg||'发布失败'));
+      if(p.code===0) loadMemberDesign();
+    }
+
     function renderSectionForm(){
       const sec=state.section;
       const comp=(sec==='bannerad')?(getBaComps().length?{props:{}}:null):getSection(sec);
@@ -9000,6 +9189,16 @@
             <button type="button" class="step-btn" onclick="stepInterval(1)">+</button>
           </div>
           <span class="cfg-unit">秒</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:6px">
+          <label class="cfg-label" style="margin-bottom:0">轮播高度</label>
+          <div class="stepper">
+            <button type="button" class="step-btn" onclick="stepBannerHeight(-10)">−</button>
+            <input class="step-input" type="number" value="${c.props.height||300}" oninput="upsertSection('banner').props.height=parseInt(this.value)||300">
+            <button type="button" class="step-btn" onclick="stepBannerHeight(10)">+</button>
+          </div>
+          <span class="cfg-unit">rpx</span>
+          <span style="color:var(--text-muted);font-size:12px">当前 ${c.props.height||300} rpx（保存后小程序端即时生效）</span>
         </div>
         <div style="display:flex;align-items:center;gap:10px">
           <label class="cfg-label" style="margin-bottom:0">轮播数量</label>
@@ -9059,6 +9258,11 @@
     function stepInterval(delta){
       const c=upsertSection('banner');
       c.props.interval=Math.max(1,(parseInt(c.props.interval,10)||4)+delta);
+      renderSectionForm();
+    }
+    function stepBannerHeight(delta){
+      const c=upsertSection('banner');
+      c.props.height=Math.max(80,(parseInt(c.props.height,10)||300)+delta);
       renderSectionForm();
     }
     async function uploadItemMedia(el,sec,i,field){
