@@ -259,3 +259,32 @@
 .diy-bannerad-grid{display:flex;flex-wrap:wrap;}
 .diy-bannerad-item{box-sizing:border-box;padding:4rpx;}
 .diy-bannerad-img{width:100%;display:block;border-radius:14rpx;background:#f2f3f5;}
+
+/* 文章列表模块 */
+.diy-articles{background:#fff;margin:16rpx;border-radius:22rpx;padding:20rpx 24rpx 8rpx;box-shadow:0 1rpx 2rpx rgba(17,24,39,0.04),0 6rpx 20rpx rgba(17,24,39,0.04);}
+.diy-articles-head{display:flex;align-items:center;justify-content:space-between;padding:4rpx 6rpx 18rpx;}
+.diy-articles-title{font-size:31rpx;font-weight:600;color:#111827;letter-spacing:-0.4rpx;}
+.diy-articles-more{font-size:24rpx;color:#5e6ad2;font-weight:500;}
+.diy-articles-empty{padding:32rpx 0;text-align:center;color:#9ca3af;font-size:25rpx;}
+
+/* 单图+文字布局 */
+.diy-articles-single{}
+.diy-art-row{display:flex;gap:20rpx;padding:20rpx 0;border-top:1rpx solid #f0f1f3;}
+.diy-art-row:first-of-type{border-top:none;padding-top:14rpx;}
+.diy-art-row:active{background:#fafbff;}
+.diy-art-row-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;}
+.diy-art-title{font-size:29rpx;font-weight:600;color:#111827;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.diy-art-intro{font-size:23rpx;color:#6b7280;margin-top:8rpx;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.diy-art-meta{display:flex;gap:14rpx;font-size:22rpx;color:#9ca3af;margin-top:10rpx;}
+.diy-art-cover{width:180rpx;height:180rpx;border-radius:14rpx;background:#f2f3f5;flex-shrink:0;box-shadow:inset 0 0 0 1rpx rgba(17,24,39,0.03);}
+
+/* 双图横排布局 */
+.diy-articles-multi{}
+.diy-articles-grid{display:flex;flex-wrap:wrap;margin:0 -10rpx;}
+.diy-art-cell{box-sizing:border-box;width:50%;padding:10rpx;}
+.diy-art-cell-cover{width:100%;height:200rpx;border-radius:14rpx;background:#f2f3f5;display:block;box-shadow:inset 0 0 0 1rpx rgba(17,24,39,0.03);}
+.diy-art-cell-cover--empty{display:flex;align-items:center;justify-content:center;color:#c4c8d4;font-size:24rpx;}
+.diy-art-cell-info{padding:10rpx 4rpx 16rpx;}
+.diy-art-title--cell{font-size:26rpx;-webkit-line-clamp:2;}
+.diy-art-intro--cell{font-size:22rpx;-webkit-line-clamp:1;margin-top:6rpx;}
+.diy-art-row:active,.diy-art-cell:active{opacity:0.85;}

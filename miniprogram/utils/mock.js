@@ -171,6 +171,14 @@ function goLink(link) {
     wx.navigateTo({ url: '/pages/goods/detail/detail?id=' + link.id });
   } else if (link.type === 'category') {
     wx.navigateTo({ url: '/pages/goods/list/list?category_id=' + link.id });
+  } else if (link.type === 'article') {
+    wx.navigateTo({ url: '/pages/article/detail/detail?id=' + link.id });
+  } else if (link.type === 'article_list' || link.type === 'page') {
+    // link.id = 'article_list' 或未指定 → 进入文章列表页
+    const path = (link.type === 'page' && link.id === 'article_list')
+      ? '/pages/article/list/list'
+      : '/pages/article/list/list';
+    wx.navigateTo({ url: path });
   } else {
     wx.showToast({ title: '活动即将上线', icon: 'none' });
   }

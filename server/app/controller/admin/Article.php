@@ -181,17 +181,38 @@ class Article extends AdminController
         ]);
     }
 
-    /** 基础设置：文章标题/发布时间/浏览量 显示开关 */
+    /** 基础设置：文章标题/发布时间/浏览量 显示开关 + 文章列表模块配置 */
     public function settings()
     {
-        $d = $this->body();
-        $cfg = [
-            'title_show'     => intval($d['title_show'] ?? 1),
-            'publish_show'   => intval($d['publish_show'] ?? 1),
-            'views_show'     => intval($d['views_show'] ?? 1),
-        ];
+        $d   = $this->body();
+        $svc = new \app\service\SettingsService();
+        $cur = $svc->get();
+        $art = $cur['article'] ?? [];
+
+        // 详情页字段显示
+        $art['title_show']   = intval($d['title_show']   ?? 1);
+        $art['publish_show'] = intval($d['publish_show'] ?? 1);
+        $art['views_show']   = intval($d['views_show']   ?? 1);
+
+        // 文章列表模块配置（首页 DIY 用的全局配置）
+        $m = $d['article_list_module'] ?? null;
+        if (is_array($m)) {
+            $art['article_list_module'] = [
+                'title'       => trim($m['title'] ?? '示例文章'),
+                'hide_title'  => intval($m['hide_title'] ?? 0),
+                'layout'      => in_array($m['layout'] ?? 'single', ['single', 'multi'], true) ? $m['layout'] : 'single',
+                'source'      => in_array($m['source'] ?? 'specific', ['specific', 'category'], true) ? $m['source'] : 'specific',
+                'category_id' => intval($m['category_id'] ?? 0),
+                'article_ids' => array_values(array_filter(array_map('intval', $m['article_ids'] ?? []))),
+                'show_intro'  => intval($m['show_intro'] ?? 1),
+                'show_date'   => intval($m['show_date']  ?? 1),
+                'show_views'  => intval($m['show_views'] ?? 0),
+                'more_link'   => is_array($m['more_link'] ?? null) ? $m['more_link'] : ['type' => 'page', 'id' => 'article_list'],
+            ];
+        }
+
         try {
-            (new \app\service\SettingsService())->save(['article' => $cfg]);
+            $svc->save(['article' => $art]);
         } catch (\Throwable $e) {
             return $this->fail('保存失败：' . $e->getMessage());
         }

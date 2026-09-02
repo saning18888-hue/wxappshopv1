@@ -3,6 +3,13 @@ const config = require('../config');
 const mock = require('./mock');
 
 function request(method, path, data = {}) {
+  // 兼容只传 path 的旧写法: api.request('/api/v1/xxx')
+  // 第一个参数若以 / 开头,把它当 path,method 默认为 GET
+  if (typeof method === 'string' && method.startsWith('/')) {
+    data = path || {};
+    path = method;
+    method = 'GET';
+  }
   return new Promise((resolve, reject) => {
     if (config.useMock) {
       // Mock：模拟网络延迟后返回内存数据
@@ -38,8 +45,11 @@ function request(method, path, data = {}) {
           reject(new Error((body && body.msg) || '请求失败'));
         }
       },
-      fail() {
-        reject(new Error('网络异常，请稍后重试'));
+      fail(err) {
+        // 透传 wx.request 的真实失败原因(URL、连接错误、超时、合法域名拦截等),
+        // 便于排查「真机预览 127.0.0.1 不可达」「未配合法域名」之类问题
+        const msg = (err && err.errMsg) ? err.errMsg : '网络异常';
+        reject(new Error(`${msg}（${method} ${config.baseUrl}${path}）`));
       },
     });
   });

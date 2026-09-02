@@ -75,6 +75,13 @@ class PageService
                         'category_ids' => [],
                     ],
                 ],
+                [
+                    'type'  => 'article_list',
+                    'sort'  => 5,
+                    'props' => [
+                        'hidden' => false,
+                    ],
+                ],
             ],
         ];
     }

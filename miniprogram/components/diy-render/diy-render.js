@@ -163,6 +163,19 @@ Component({
             props: Object.assign({}, props, { banners, columns: props.columns || 1 }),
           });
         }
+        if (c.type === 'article_list') {
+          const module = c.moduleConfig || {};
+          const articles = (c.articles || []).map((a) => {
+            const na = Object.assign({}, a);
+            if (na.cover_image) na.cover_image = ix(na.cover_image);
+            na.publish_time_text = this.formatDate(na.publish_time);
+            return na;
+          });
+          return Object.assign({}, c, {
+            articleModule: module,
+            articles,
+          });
+        }
         return c;
       });
       this.setData({ viewList: list });
@@ -188,6 +201,15 @@ Component({
     },
     onTapCategory(e) {
       wx.navigateTo({ url: '/pages/goods/list/list?category_id=' + e.currentTarget.dataset.id });
+    },
+    onTapArticle(e) {
+      wx.navigateTo({ url: '/pages/article/detail/detail?id=' + e.currentTarget.dataset.id });
+    },
+    formatDate(ts) {
+      if (!ts) return '';
+      const s = String(ts);
+      const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      return m ? `${m[1]}-${m[2]}-${m[3]}` : s;
     },
     onTapCart(e) {
       e.stopPropagation && e.stopPropagation();

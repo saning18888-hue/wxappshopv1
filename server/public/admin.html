@@ -480,6 +480,53 @@
     .switch input:checked + .switch-track{background:var(--primary)}
     .switch input:checked + .switch-track .switch-thumb{transform:translateX(18px)}
     .switch input:focus-visible + .switch-track{box-shadow:0 0 0 3px rgba(94,106,210,.25)}
+    /* 文章列表模块配置 */
+    .alm-row{display:flex;align-items:center;gap:16px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-top:14px}
+    .alm-row-block{display:block}
+    .alm-row-block>.alm-row-meta{margin-bottom:14px}
+    .alm-row-icon{width:48px;height:48px;border-radius:10px;background:var(--primary-50);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex:none}
+    .alm-row-meta{flex:1;min-width:0}
+    .alm-row-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.3;margin-bottom:3px}
+    .alm-row-desc{font-size:12.5px;color:var(--text-muted);line-height:1.4}
+    .alm-row-tail{font-size:12.5px;color:var(--text-muted);margin-left:8px}
+    .alm-input{padding:7px 10px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+    .alm-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(94,106,210,.15)}
+    .alm-layout-picker{display:flex;gap:14px;flex-wrap:wrap}
+    .alm-layout-item{flex:0 0 180px;border:1px solid var(--border);border-radius:12px;padding:12px 14px;cursor:pointer;text-align:center;background:var(--surface);transition:all .15s}
+    .alm-layout-item:hover{border-color:var(--primary-100);background:#fafbff}
+    .alm-layout-item.active{border-color:var(--primary);background:#fafbff;box-shadow:0 0 0 2px rgba(94,106,210,.2)}
+    .alm-layout-thumb{height:60px;border:1px dashed var(--border);border-radius:8px;margin-bottom:8px;background:#fafbff;padding:8px;display:flex;flex-direction:column;gap:4px;justify-content:center}
+    .alm-layout-thumb .mini-line{height:6px;background:#e4e6eb;border-radius:3px}
+    .alm-layout-thumb .mini-row{display:flex;align-items:center;gap:4px}
+    .alm-layout-thumb .mini-img{width:18px;height:14px;background:var(--primary-50);border-radius:3px;flex:none}
+    .alm-layout-name{font-size:12.5px;font-weight:500;color:var(--text)}
+    .alm-source-picker{display:flex;gap:18px;font-size:13px;color:var(--text)}
+    .alm-source-opt{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+    .alm-checks{display:flex;gap:18px;font-size:13px;color:var(--text)}
+    .alm-check{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+    .alm-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .alm-table-head{display:flex;background:#fafbfc;padding:12px 20px;border-bottom:1px solid var(--border);font-size:12.5px;font-weight:600;color:var(--text-secondary);letter-spacing:.2px}
+    .alm-empty{padding:32px 20px;text-align:center;color:var(--text-muted);font-size:13px}
+    .alm-row-item{display:flex;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid #f0f1f4}
+    .alm-row-item:first-child{border-top:0}
+    .alm-row-cover{width:48px;height:48px;border-radius:6px;background:#f0f1f4;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#cbd1d9;font-size:11px}
+    .alm-row-cover img{width:100%;height:100%;object-fit:cover}
+    .alm-row-info{flex:1;min-width:0}
+    .alm-row-title2{font-size:13.5px;color:var(--text);font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .alm-row-meta2{font-size:11.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .alm-row-actions{font-size:13px;display:flex;justify-content:flex-end;gap:2px}
+    .alm-arrow{cursor:pointer;color:var(--text-muted);user-select:none;padding:2px 8px;font-size:14px;line-height:1;border-radius:6px}
+    .alm-arrow:hover{color:var(--primary);background:var(--primary-50)}
+    .alm-link{color:var(--primary);cursor:pointer;font-size:12.5px}
+    .alm-link:hover{text-decoration:underline}
+    .alm-pick-card{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--surface);transition:all .15s}
+    .alm-pick-card:hover{border-color:var(--primary-100);background:#fafbff}
+    .alm-pick-card.picked{border-color:var(--primary);background:var(--primary-50)}
+    .alm-pick-cover{width:48px;height:48px;border-radius:6px;background:#f0f1f4;flex:none;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#cbd1d9;font-size:11px}
+    .alm-pick-cover img{width:100%;height:100%;object-fit:cover}
+    .alm-pick-meta{flex:1;min-width:0}
+    .alm-pick-title{font-size:13.5px;color:var(--text);font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .alm-pick-desc{font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .a-side{background:linear-gradient(180deg,#f8f9ff 0%,#f4f6fb 100%);border:1px solid var(--primary-100);border-radius:14px;padding:20px}
     .a-side-title{font-size:13px;font-weight:600;color:var(--text);margin:0 0 16px;letter-spacing:.2px}
     .a-article-cover .uploader-box{width:100%;aspect-ratio:16/9;max-height:220px;border-radius:12px;font-size:32px}
@@ -1890,6 +1937,7 @@
           <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
             <button class="btn outline sm" onclick="addRecommendMod()">＋ 添加推荐模块</button>
             <button class="btn outline sm" onclick="addBannerAdMod()">＋ 添加广告位</button>
+            <button class="btn outline sm" onclick="addArticleListMod()">＋ 添加文章列表模块</button>
           </div>
           <p class="sec-hint">修改后请先「保存草稿」，确认无误再「发布上线」。发布后小程序端即时生效。</p>
         </div>
@@ -5114,8 +5162,27 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn gray" onclick="closeModEditor()">取消</button>
-        <button class="btn" onclick="saveModEdit();closeModEditor()">确定</button>
+            <button class="btn gray" onclick="closeModEditor()">取消</button>
+            <button class="btn" onclick="saveModEdit();closeModEditor()">确定</button>
+          </div>
+        </div>
+  </div>
+
+  <!-- 文章选择弹窗 -->
+  <div id="almPickerModal" class="modal">
+    <div class="modal-card lg">
+      <div class="modal-header"><h3>选择文章</h3><span class="close" onclick="closeArticleListPicker()">&times;</span></div>
+      <div class="modal-body">
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <input class="alm-input" id="almPickerKw" placeholder="搜索标题或简介" style="flex:1">
+          <select id="almPickerCategory" class="alm-input" style="width:180px"><option value="">全部分类</option></select>
+          <button class="btn sm primary" onclick="loadAlmPicker()">搜索</button>
+        </div>
+        <div id="almPickerList" style="max-height:50vh;overflow:auto"></div>
+      </div>
+      <div class="modal-footer">
+        <span class="muted" id="almPickerCount" style="margin-right:auto;font-size:12.5px;color:var(--text-muted)"></span>
+        <button class="btn gray" onclick="closeArticleListPicker()">关闭</button>
       </div>
     </div>
   </div>
@@ -5240,6 +5307,85 @@
             </label>
           </div>
         </div>
+
+        <!-- 文章列表模块配置 -->
+        <div class="a-settings-head" style="margin-top:36px">
+          <h3 class="a-settings-title">文章列表模块</h3>
+          <p class="a-settings-desc">配置小程序首页「文章列表」模块的标题、布局样式、数据来源与显示字段；需在「首页布局」中添加该模块后才能显示。</p>
+        </div>
+
+        <!-- 标题名称 -->
+        <div class="alm-row">
+          <div class="alm-row-icon">标题</div>
+          <div class="alm-row-meta">
+            <div class="alm-row-title">模块标题名称</div>
+            <div class="alm-row-desc">展示在小程序首页该模块顶部的标题</div>
+          </div>
+          <input class="alm-input" id="almTitle" placeholder="示例文章" style="width:200px">
+          <label class="switch"><input type="checkbox" id="almHideTitle"><span class="switch-track"><span class="switch-thumb"></span></span></label>
+          <span class="alm-row-tail">隐藏</span>
+        </div>
+
+        <!-- 布局 -->
+        <div class="alm-row alm-row-block">
+          <div class="alm-row-meta">
+            <div class="alm-row-title">布局</div>
+            <div class="alm-row-desc">选择模块内文章的排列方式</div>
+          </div>
+          <div class="alm-layout-picker" id="almLayout">
+            <div class="alm-layout-item active" data-value="single" onclick="setAlmLayout('single',this)">
+              <div class="alm-layout-thumb alm-layout-single"></div>
+              <div class="alm-layout-name">大图+文字</div>
+            </div>
+            <div class="alm-layout-item" data-value="multi" onclick="setAlmLayout('multi',this)">
+              <div class="alm-layout-thumb alm-layout-multi"></div>
+              <div class="alm-layout-name">双图横排</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 添加文章 -->
+        <div class="alm-row alm-row-block">
+          <div class="alm-row-meta">
+            <div class="alm-row-title">添加文章</div>
+            <div class="alm-row-desc">按分类拉取该分类下的文章，或手动指定若干篇文章</div>
+          </div>
+          <div class="alm-source-picker">
+            <label class="alm-source-opt"><input type="radio" name="almSource" value="category" onchange="onAlmSourceChange()">选择分类</label>
+            <label class="alm-source-opt"><input type="radio" name="almSource" value="specific" onchange="onAlmSourceChange()" checked>指定文章</label>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;align-items:center">
+            <select id="almCategory" class="alm-input" style="display:none;width:240px" onchange="onAlmSourceChange()"><option value="">请选择文章分类</option></select>
+            <button type="button" class="btn sm primary" id="almPickBtn" onclick="openArticleListPicker()">选择文章</button>
+          </div>
+        </div>
+
+        <!-- 「选择分类」模式下的提示 -->
+        <div id="almCategoryHint" style="display:none;margin-top:10px;padding:12px 14px;background:#f4f7fb;border-radius:10px;color:var(--text-secondary);font-size:13px;line-height:1.6"></div>
+
+        <!-- 已选文章表格（指定文章模式才显示） -->
+        <div class="alm-table" id="almTable" style="margin-top:16px">
+          <div class="alm-table-head">
+            <div>文章</div>
+            <div style="width:90px;text-align:center">排序</div>
+            <div style="width:80px;text-align:center">操作</div>
+          </div>
+          <div id="almArticleRows"><div class="alm-empty">暂无文章，请选择添加</div></div>
+        </div>
+
+        <!-- 显示内容 -->
+        <div class="alm-row alm-row-block" style="margin-top:24px">
+          <div class="alm-row-meta">
+            <div class="alm-row-title">显示内容</div>
+            <div class="alm-row-desc">选择该模块内每篇文章需要展示的字段</div>
+          </div>
+          <div class="alm-checks">
+            <label class="alm-check"><input type="checkbox" id="almShowIntro" checked>文章简介</label>
+            <label class="alm-check"><input type="checkbox" id="almShowDate" checked>发布日期</label>
+            <label class="alm-check"><input type="checkbox" id="almShowViews">浏览量</label>
+          </div>
+        </div>
+
         <div style="margin-top:20px"><button class="btn sm primary" onclick="saveArticleSettings()">保存设置</button></div>
       </div>
     </div>
@@ -6086,6 +6232,7 @@
       if(panelId==='summaryStatsPanel') loadSummaryStatsPanel();
       if(panelId==='memberPanel') loadMembers();
       if(panelId==='albumPanel') loadAlbums(1);
+      if(panelId==='articlePanel') switchArticleTab('list');
       if(panelId==='miniappPanel') loadMiniApps(1);
       if(panelId==='memberGroupPanel') loadMemberGroups();
       if(panelId==='pluginsPanel') renderPlugins(state.second);
@@ -8774,8 +8921,8 @@
     let designConfig={page:'home',components:[]};
     let catOptionsCache=[];
 
-    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav',notice:'notice',bannerad:'banner_ad'};
-    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航',notice:'通知公告',bannerad:'广告位'};
+    const SECTION_TYPE={banner:'banner',nav:'nav_grid',goods:'goods_group',cat:'category_nav',notice:'notice',bannerad:'banner_ad',article:'article_list'};
+    const SECTION_TITLE={banner:'轮播设置',nav:'魔方导航',goods:'精选推荐',cat:'分类导航',notice:'通知公告',bannerad:'广告位',article:'文章列表'};
     function defaultRecommendModules(){
       const arr=[];
       for(let i=1;i<=4;i++){
@@ -8795,7 +8942,8 @@
       ]}},
       goods:{type:'goods_group',props:{title:'精选推荐',columns:2,modules:[{id:1,name:'精选推荐',title:'精选推荐',goods:[]}]}},
       cat:{type:'category_nav',props:{title:'商品分类',columns:4,source:'all',category_ids:[]}},
-      notice:{type:'notice',props:{style:'fixed',bg:'#F4F5FF',color:'#5e6ad2',items:[{text:'欢迎光临本商城，新用户注册即送专属优惠券！',link:{type:'none',id:0}}]}}
+      notice:{type:'notice',props:{style:'fixed',bg:'#F4F5FF',color:'#5e6ad2',items:[{text:'欢迎光临本商城，新用户注册即送专属优惠券！',link:{type:'none',id:0}}]}},
+      article:{type:'article_list',props:{hidden:false}}
     };
 
     function getSection(sec){return designConfig.components.find(c=>c.type===SECTION_TYPE[sec])||null;}
@@ -8857,7 +9005,7 @@
         }
       });
     }
-    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers,notice:ICONS.bell,bannerad:ICONS.megaphone};
+    const SECTION_ICON={banner:ICONS.image,nav:ICONS.grid,goods:ICONS.package,cat:ICONS.layers,notice:ICONS.bell,bannerad:ICONS.megaphone,article:ICONS.book};
     function renderLayout(){
       ensureHomeSections();
       const wrap=document.getElementById('layoutList'); if(!wrap)return;
@@ -8873,6 +9021,8 @@
           sub=(m.goods||[]).length+' 件商品';
         }else if(sec==='bannerad'){
           sub=(c.props.banners||[]).length+' 张广告';
+        }else if(sec==='article'){
+          sub='显示内容在「文章管理 → 基础设置」中配置';
         }
         const name=sec==='goods'?(c.props.title||'精选推荐'):(sec==='bannerad'?(c.props.title||'广告位'):SECTION_TITLE[sec]);
         const editable=sec==='goods'||sec==='bannerad'||sec==='cat';
@@ -9797,10 +9947,20 @@
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
     }
+    function addArticleListMod(){
+      // 单实例：已存在则不重复添加
+      if(designConfig.components.some(c=>c.type==='article_list')){
+        toast('文章列表模块已存在');
+        return;
+      }
+      designConfig.components.push({type:'article_list',props:{hidden:false}});
+      const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
+    }
     async function delRecommendMod(idx){
       const c=designConfig.components[idx];
-      if(!c||(c.type!=='goods_group'&&c.type!=='banner_ad'))return;
-      if(!(await confirmDialog('确定删除「'+(c.props.title||(c.type==='banner_ad'?'广告位':'精选推荐'))+'」吗？')))return;
+      if(!c||(c.type!=='goods_group'&&c.type!=='banner_ad'&&c.type!=='article_list'))return;
+      const name=c.type==='banner_ad'?'广告位':c.type==='article_list'?'文章列表':(c.props.title||'精选推荐');
+      if(!(await confirmDialog('确定删除「'+(c.props.title||name)+'」吗？')))return;
       designConfig.components.splice(idx,1);
       renderGoodsMods();
       const lp=document.getElementById('layoutPanel'); if(lp && !lp.classList.contains('hidden')) renderLayout();
@@ -12067,8 +12227,9 @@
           setRadio('aDisplayMode',a.display_mode||'native');
           setRadio('aRecommend',String(a.is_recommend||0));
           if(a.cover_image){aCoverUrl=a.cover_image;const p=document.getElementById('aCoverPreview');p.innerHTML='';p.style.backgroundImage=`url(${a.cover_image})`;}
-          // 确保分类加载后选中
-          const wait=setInterval(()=>{ if(sel.options.length>1){sel.value=String(a.category_id||0);clearInterval(wait);} },100);
+          // 等待分类树加载完成后,把当前文章的 category_id 同步到 select 上(原代码漏写 sel 定义,导致一直抛 ReferenceError)
+          const sel=document.getElementById('aCategory');
+          const wait=setInterval(()=>{ if(sel && sel.options.length>1){sel.value=String(a.category_id||0);clearInterval(wait);} },100);
         });
       }
       document.getElementById('articleModal').classList.add('show');
@@ -12190,20 +12351,193 @@
       });
     }
 
+    // ========== 文章列表模块（前端状态） ==========
+    const almState = {
+      picked: [],            // 已选文章详情
+      pickerList: [],        // 选择弹窗里当前列表
+    };
+    function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    function setAlmLayout(value,el){
+      if(!el) return;
+      document.querySelectorAll('#almLayout .alm-layout-item').forEach(n=>n.classList.remove('active'));
+      el.classList.add('active');
+    }
+    function onAlmSourceChange(){
+      const src=(document.querySelector('input[name="almSource"]:checked')||{}).value||'specific';
+      document.getElementById('almCategory').style.display = src==='category'?'':'none';
+      document.getElementById('almPickBtn').style.display  = src==='specific'?'':'none';
+      // 「指定文章」模式的已选表格
+      const tbl=document.getElementById('almTable');
+      if(tbl) tbl.style.display = src==='specific'?'':'none';
+      // 「选择分类」模式的提示
+      const hint=document.getElementById('almCategoryHint');
+      if(hint){
+        hint.style.display = src==='category'?'':'none';
+        if(src==='category'){
+          const sel=document.getElementById('almCategory');
+          const opt=(sel && sel.selectedIndex>=0)?sel.options[sel.selectedIndex]:null;
+          const txt=(opt && opt.value)?opt.text:'';
+          hint.textContent = txt
+            ? '已选分类「'+txt+'」,保存后该分类下文章(最新发布的在前,最多 20 篇)将自动展示,无需手动指定。'
+            : '请选择文章分类(保存后自动拉取该分类下文章)';
+        }
+      }
+    }
+    function renderAlmArticleRows(){
+      const wrap=document.getElementById('almArticleRows'); if(!wrap) return;
+      const list=almState.picked;
+      if(!list.length){
+        wrap.innerHTML='<div class="alm-empty">暂无文章，请选择添加</div>';
+        return;
+      }
+      wrap.innerHTML=list.map((a,i)=>{
+        const cover=a.cover_image||a.cover||'';
+        const placeholder='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>';
+        const coverHtml=cover?`<img src="${cover}" onerror="this.parentNode.innerHTML='${placeholder}'">`:placeholder;
+        return `<div class="alm-row-item" data-id="${a.id}">
+          <div class="alm-row-cover">${coverHtml}</div>
+          <div class="alm-row-info">
+            <div class="alm-row-title2">${escapeHtml(a.title||'')}</div>
+            <div class="alm-row-meta2">${escapeHtml(a.intro||a.category_name||'')}</div>
+          </div>
+          <div class="alm-row-actions">
+            <span class="alm-arrow" onclick="moveAlmArticle(${i},-1)" title="上移">↑</span>
+            <span class="alm-arrow" onclick="moveAlmArticle(${i},1)"  title="下移">↓</span>
+            <a class="alm-link" onclick="removeAlmArticle(${i})">删除</a>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    function moveAlmArticle(i,dir){
+      const j=i+dir; if(j<0||j>=almState.picked.length) return;
+      const arr=almState.picked; [arr[i],arr[j]]=[arr[j],arr[i]];
+      renderAlmArticleRows();
+    }
+    function removeAlmArticle(i){
+      almState.picked.splice(i,1);
+      renderAlmArticleRows();
+    }
+    async function loadAlmCategories(){
+      try{
+        const r=await fetchA(`${BASE}/article_categories`);
+        if(r.code!==0){ toast('分类加载失败:'+(r.msg||'未知错误')); return; }
+        const cats=(r.data&&r.data.list)||r.data||[];
+        const sel=document.getElementById('almCategory');
+        const pick=document.getElementById('almPickerCategory');
+        const opts='<option value="">'+(sel?'请选择文章分类':'全部分类')+'</option>'+cats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+        if(sel) sel.innerHTML=opts;
+        if(pick) pick.innerHTML=opts.replace('请选择文章分类','全部分类');
+      }catch(e){
+        toast('分类加载失败:'+(e.message||e.toString()||'网络异常'));
+      }
+    }
+    async function loadAlmPickedByIds(ids){
+      if(!ids||!ids.length){almState.picked=[];renderAlmArticleRows();return;}
+      const list=[];
+      for(const id of ids){
+        try{
+          const r=await fetchA(`${BASE}/articles/${id}`);
+          if(r.code===0&&r.data) list.push(r.data);
+        }catch(e){}
+      }
+      almState.picked=list;
+      renderAlmArticleRows();
+    }
+    function openArticleListPicker(){
+      document.getElementById('almPickerModal').classList.add('show');
+      document.getElementById('almPickerKw').value='';
+      loadAlmPicker();
+    }
+    function closeArticleListPicker(){
+      document.getElementById('almPickerModal').classList.remove('show');
+    }
+    async function loadAlmPicker(){
+      const kw=document.getElementById('almPickerKw').value.trim();
+      const cid=document.getElementById('almPickerCategory').value;
+      const params=new URLSearchParams({page:1,page_size:50,is_show:1});
+      if(kw) params.set('keyword',kw);
+      if(cid) params.set('category_id',cid);
+      const r=await fetchA(`${BASE}/articles?${params.toString()}`);
+      if(r.code!==0){toast(r.msg||'加载失败');return;}
+      const list=(r.data&&r.data.list)||[];
+      almState.pickerList=list;
+      const wrap=document.getElementById('almPickerList');
+      const pickedIds=new Set(almState.picked.map(a=>a.id));
+      wrap.innerHTML=list.length?list.map(a=>{
+        const isPicked=pickedIds.has(a.id);
+        const cover=a.cover_image||a.cover||'';
+        const placeholder='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>';
+        const coverHtml=cover?`<img src="${cover}" onerror="this.parentNode.innerHTML='${placeholder}'">`:placeholder;
+        return `<div class="alm-pick-card ${isPicked?'picked':''}" onclick="togglePickArticle(${a.id})">
+          <div class="alm-pick-cover">${coverHtml}</div>
+          <div class="alm-pick-meta">
+            <div class="alm-pick-title">${escapeHtml(a.title||'')}</div>
+            <div class="alm-pick-desc">${escapeHtml(a.intro||'')}</div>
+          </div>
+          <div class="alm-pick-action"><span class="alm-link">${isPicked?'已添加':'+ 添加'}</span></div>
+        </div>`;
+      }).join(''):'<div class="alm-empty">未找到文章</div>';
+      document.getElementById('almPickerCount').textContent=`共 ${list.length} 篇`;
+    }
+    function togglePickArticle(id){
+      const idx=almState.picked.findIndex(a=>a.id===id);
+      if(idx>=0){
+        almState.picked.splice(idx,1);
+      }else{
+        const item=(almState.pickerList||[]).find(a=>a.id===id);
+        if(item) almState.picked.push(item);
+      }
+      renderAlmArticleRows();
+      loadAlmPicker();
+    }
+
     function loadArticleSettings(){
-      fetchA(`${BASE}/settings`).then(r=>{
+      fetchA(`${BASE}/settings`).then(async r=>{
         if(r.code!==0) return;
         const cfg=((r.data&&r.data.article)||{});
         setCheck('aTitleShow',cfg.title_show??1);
         setCheck('aPublishShow',cfg.publish_show??1);
         setCheck('aViewsShow',cfg.views_show??1);
+
+        // 文章列表模块
+        const m=cfg.article_list_module||{};
+        document.getElementById('almTitle').value      = m.title||'示例文章';
+        setCheck('almHideTitle',  m.hide_title??0);
+        document.querySelectorAll('#almLayout .alm-layout-item').forEach(n=>n.classList.toggle('active',n.dataset.value===(m.layout||'single')));
+        const srcRadio=document.querySelector('input[name="almSource"][value="'+(m.source||'specific')+'"]');
+        if(srcRadio) srcRadio.checked=true;
+        onAlmSourceChange();
+        // 分类下拉
+        await loadAlmCategories();
+        const catSel=document.getElementById('almCategory');
+        if(catSel){ catSel.value=m.category_id||''; onAlmSourceChange(); }
+        // 显示内容
+        setCheck('almShowIntro', m.show_intro??1);
+        setCheck('almShowDate',  m.show_date??1);
+        setCheck('almShowViews', m.show_views??0);
+        // 已选文章
+        await loadAlmPickedByIds(m.article_ids||[]);
       });
     }
     function saveArticleSettings(){
+      const layoutEl=document.querySelector('#almLayout .alm-layout-item.active');
+      const srcRadio=document.querySelector('input[name="almSource"]:checked');
       const body={
         title_show:getCheck('aTitleShow')?1:0,
         publish_show:getCheck('aPublishShow')?1:0,
-        views_show:getCheck('aViewsShow')?1:0
+        views_show:getCheck('aViewsShow')?1:0,
+        article_list_module:{
+          title:       (document.getElementById('almTitle').value||'').trim()||'示例文章',
+          hide_title:  getCheck('almHideTitle')?1:0,
+          layout:      layoutEl?layoutEl.dataset.value:'single',
+          source:      srcRadio?srcRadio.value:'specific',
+          category_id: parseInt(document.getElementById('almCategory').value||0)||0,
+          article_ids: almState.picked.map(a=>a.id),
+          show_intro:  getCheck('almShowIntro')?1:0,
+          show_date:   getCheck('almShowDate')?1:0,
+          show_views:  getCheck('almShowViews')?1:0,
+          more_link:   {type:'page',id:'article_list'},
+        }
       };
       fetchA(`${BASE}/articles_settings`,{method:'POST',body}).then(r=>{
         if(r.code!==0){toast(r.msg||'保存失败');return;}

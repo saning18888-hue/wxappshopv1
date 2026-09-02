@@ -1,0 +1,27 @@
+<view class="page">
+  <view wx:if="{{loading && page === 1}}" class="state">加载中...</view>
+  <view wx:elif="{{error}}" class="state error">{{error}}</view>
+  <block wx:else>
+    <view wx:if="{{list.length === 0}}" class="state">暂无文章</view>
+    <view wx:else class="list">
+      <view wx:for="{{list}}" wx:key="id" class="item" data-id="{{item.id}}" bindtap="goDetail">
+        <view class="item-info">
+          <view class="item-title">{{item.title}}</view>
+          <view wx:if="{{item.intro}}" class="item-intro">{{item.intro}}</view>
+          <view class="item-meta">
+            <text wx:if="{{item.publish_time_text}}" class="item-date">{{item.publish_time_text}}</text>
+            <text wx:if="{{item.category_name}}" class="item-cat">{{item.category_name}}</text>
+            <text class="item-views">{{item.views}} 浏览</text>
+          </view>
+        </view>
+        <image wx:if="{{item.cover_image}}" class="item-cover" src="{{item.cover_image}}" mode="aspectFill" />
+      </view>
+      <view class="footer">
+        <text wx:if="{{finishing}}">— 已加载全部 —</text>
+        <text wx:elif="{{loading}}">加载中...</text>
+      </view>
+    </view>
+  </block>
+
+  <float-buttons />
+</view>

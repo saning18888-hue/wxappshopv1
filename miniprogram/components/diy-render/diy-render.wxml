@@ -91,5 +91,50 @@
       </view>
     </view>
 
+    <!-- 文章列表模块 -->
+    <view wx:if="{{c.type === 'article_list'}}" class="diy-articles">
+      <view wx:if="{{!c.articleModule.hide_title}}" class="diy-articles-head">
+        <view class="diy-articles-title">{{c.articleModule.title}}</view>
+        <view class="diy-articles-more" data-link="{{c.articleModule.more_link}}" bindtap="onTapLink">更多 ></view>
+      </view>
+
+      <!-- 单图+文字布局 -->
+      <view wx:if="{{c.articleModule.layout === 'single'}}" class="diy-articles-single">
+        <view wx:if="{{c.articles.length === 0}}" class="diy-articles-empty">暂无文章</view>
+        <view wx:for="{{c.articles}}" wx:key="id" wx:for-item="a"
+          class="diy-art-row" data-id="{{a.id}}" bindtap="onTapArticle">
+          <view class="diy-art-row-info">
+            <view class="diy-art-title">{{a.title}}</view>
+            <view wx:if="{{c.articleModule.show_intro && a.intro}}" class="diy-art-intro">{{a.intro}}</view>
+            <view class="diy-art-meta">
+              <text wx:if="{{c.articleModule.show_date && a.publish_time_text}}" class="diy-art-date">{{a.publish_time_text}}</text>
+              <text wx:if="{{c.articleModule.show_views}}" class="diy-art-views">{{a.views}} 浏览</text>
+            </view>
+          </view>
+          <image wx:if="{{a.cover_image}}" class="diy-art-cover" src="{{a.cover_image}}" mode="aspectFill" />
+        </view>
+      </view>
+
+      <!-- 双图横排布局 -->
+      <view wx:elif="{{c.articleModule.layout === 'multi'}}" class="diy-articles-multi">
+        <view wx:if="{{c.articles.length === 0}}" class="diy-articles-empty">暂无文章</view>
+        <view class="diy-articles-grid">
+          <view wx:for="{{c.articles}}" wx:key="id" wx:for-item="a"
+            class="diy-art-cell" data-id="{{a.id}}" bindtap="onTapArticle">
+            <image wx:if="{{a.cover_image}}" class="diy-art-cell-cover" src="{{a.cover_image}}" mode="aspectFill" />
+            <view wx:else class="diy-art-cell-cover diy-art-cell-cover--empty"></view>
+            <view class="diy-art-cell-info">
+              <view class="diy-art-title diy-art-title--cell">{{a.title}}</view>
+              <view wx:if="{{c.articleModule.show_intro && a.intro}}" class="diy-art-intro diy-art-intro--cell">{{a.intro}}</view>
+              <view class="diy-art-meta">
+                <text wx:if="{{c.articleModule.show_date && a.publish_time_text}}" class="diy-art-date">{{a.publish_time_text}}</text>
+                <text wx:if="{{c.articleModule.show_views}}" class="diy-art-views">{{a.views}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
   </block>
 </view>

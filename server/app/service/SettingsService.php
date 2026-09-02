@@ -74,6 +74,24 @@ class SettingsService
             'text_goods_comment' => '商品评价',   // 商品评价区块标题
             'cart_button'        => true,        // 加入购物车按钮
             'buy_button'         => true,        // 立即购买按钮
+            // 文章设置（详情页字段显示 + 文章列表模块）
+            'article'            => [
+                'title_show'   => 1,
+                'publish_show' => 1,
+                'views_show'   => 1,
+                'article_list_module' => [
+                    'title'       => '示例文章',
+                    'hide_title'  => 0,
+                    'layout'      => 'single',        // single=单图+文字、multi=双图横排
+                    'source'      => 'specific',      // specific=指定文章、category=按分类
+                    'category_id' => 0,
+                    'article_ids' => [],
+                    'show_intro'  => 1,
+                    'show_date'   => 1,
+                    'show_views'  => 0,
+                    'more_link'   => ['type' => 'page', 'id' => 'article_list'],
+                ],
+            ],
             // 交易设置
             'auto_cancel_minutes'=> 30,          // 未支付订单自动取消（分钟）
             'auto_receive_days'  => 7,           // 自动确认收货（天），0=关闭

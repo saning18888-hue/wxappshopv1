@@ -4,6 +4,8 @@
     "pages/category/category",
     "pages/goods/list/list",
     "pages/goods/detail/detail",
+    "pages/article/list/list",
+    "pages/article/detail/detail",
     "pages/cart/cart",
     "pages/order/confirm/confirm",
     "pages/address/address",

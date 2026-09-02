@@ -12,6 +12,11 @@ Route::group('api/v1', function () {
     // 首页 DIY 装修
     Route::get('home', 'api/v1.Home/index');
 
+    // 文章：首页模块数据 / 列表 / 详情（小程序端使用）
+    Route::get('article_list_module', 'api/v1.Article/listModule');
+    Route::get('articles', 'api/v1.Article/index');
+    Route::get('articles/:id', 'api/v1.Article/detail');
+
     // 底部导航配置下发
     Route::get('bottom_nav', 'api/v1.Design/bottomNav');
 

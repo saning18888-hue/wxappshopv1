@@ -1,3 +1,11 @@
+### v0.1.111 (2026-09-02) fix: 文章详情/列表 404 + 后台文章设置分类模式提示与结构修复
+
+**范围**：`miniprogram/pages/article/detail/detail.js`、`miniprogram/pages/article/list/list.js`、`server/public/admin.html`。
+
+- 修复小程序文章详情/列表请求 URL 重复拼接 `/api/v1`(`baseUrl` 已含前缀)导致 404：调用处去掉多余的 `/api/v1` 前缀,路径改为 `/settings`、`/articles/:id`、`/articles?...`。
+- 后台文章模块「基础设置」分类模式优化：选中「选择分类」时隐藏「已选文章表格」并显示提示「已选分类 X，保存后自动拉取（最新发布的在前，最多 20 篇）」，切换分类时提示实时刷新；相关容器补 `id="almTable"`、`#almCategoryHint` 以便 JS 显隐。
+- 修复后台文章设置 HTML 多塞一个 `</div>` 导致「已选文章表格 / 显示内容」区块溢出到「文章列表 / 文章分类」tab 下方的问题，现已收回到正确的 tab 容器内。
+
 ### v0.1.110 (2026-09-02) feat: 文章详情页字段设置 UI 重构（iOS 开关 + 区块标题 + 字段说明）
 
 **范围**：`server/public/admin.html`。
