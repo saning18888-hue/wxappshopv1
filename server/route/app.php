@@ -60,6 +60,14 @@ Route::group('api/v1', function () {
 
     // 物流轨迹查询
     Route::get('logistics/track', 'api/v1.Logistics/track');
+
+    // 商品评价（用户端）：提交评价 / 我的评价
+    Route::post('reviews', 'api/v1.Review/create');
+    Route::get('reviews/mine', 'api/v1.Review/mine');
+
+    // 流量埋点（无需登录）：访客会话 / 页面曝光
+    Route::post('track/visitor', 'api/v1.Track/visitor');
+    Route::post('track/page_view', 'api/v1.Track/pageView');
 });
 
 // 运营后台（本地管理用，简单口令登录，前缀 /admin）

@@ -30,6 +30,10 @@
           <text class="g-qty">x{{item.quantity}}</text>
         </view>
       </view>
+      <view wx:if="{{order.status===3 || order.status===5}}" class="g-review">
+        <text wx:if="{{item.reviewed}}" class="rv-done">已评价</text>
+        <text wx:else class="rv-btn" bindtap="goReview" data-item="{{item}}">评价</text>
+      </view>
     </view>
   </view>
 

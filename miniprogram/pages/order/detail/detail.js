@@ -52,4 +52,14 @@ Page({
   copyNo() {
     if (this.data.order) wx.setClipboardData({ data: this.data.order.order_no });
   },
+
+  goReview(e) {
+    const it = e.currentTarget.dataset.item;
+    wx.navigateTo({
+      url: '/pages/review/review?order_id=' + this.data.id +
+        '&goods_id=' + it.goods_id +
+        '&goods_title=' + encodeURIComponent(it.title || '') +
+        '&goods_image=' + encodeURIComponent(it.image || ''),
+    });
+  },
 });

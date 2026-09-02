@@ -33,3 +33,6 @@
 .btn.primary { background: var(--primary); color: #fff; }
 .btn.ghost { border: 1rpx solid var(--primary); color: var(--primary); }
 .empty { text-align: center; color: #999; padding: 120rpx 0; }
+.g-review { flex-shrink: 0; display: flex; align-items: center; margin-left: 12rpx; }
+.rv-btn { font-size: 24rpx; color: #fff; background: var(--primary); padding: 8rpx 22rpx; border-radius: 24rpx; }
+.rv-done { font-size: 24rpx; color: #999; }

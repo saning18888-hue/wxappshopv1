@@ -204,7 +204,13 @@ class OrderService
             return null;
         }
         $items = Db::name('order_items')->where('order_id', $id)->select()->toArray();
-        return $this->formatOrder($o, $items);
+        // 已评价商品（同一订单同一商品只评一次）
+        $reviewed = Db::name('goods_reviews')
+            ->where('order_id', $id)
+            ->where('user_id', $userId)
+            ->column('goods_id');
+        $reviewed = array_map('intval', $reviewed ?: []);
+        return $this->formatOrder($o, $items, $reviewed);
     }
 
     /** 申请售后：写入 refund_* 字段，订单置为退款中（status=11） */
@@ -421,7 +427,7 @@ class OrderService
         return $map;
     }
 
-    private function formatOrder($o, array $items): array
+    private function formatOrder($o, array $items, array $reviewedGoodsIds = []): array
     {
         $user = null;
         if (!empty($o['user_id'])) {
@@ -457,7 +463,10 @@ class OrderService
             'remark'          => $o['remark'] ?? '',
             'shipping_company'=> $o['shipping_company'] ?? '',
             'shipping_no'     => $o['shipping_no'] ?? '',
-            'items'           => $items,
+            'items'           => array_map(function ($it) use ($reviewedGoodsIds) {
+                $it['reviewed'] = in_array((int) ($it['goods_id'] ?? 0), $reviewedGoodsIds, true) ? 1 : 0;
+                return $it;
+            }, $items),
             'created_at'      => $o['created_at'],
             'updated_at'      => $o['updated_at'] ?? $o['created_at'],
             'refund_type'     => $o['refund_type'] ?? '',

@@ -1,3 +1,16 @@
+### v0.1.109 (2026-09-02) feat: 商品评价闭环 + 小程序流量埋点（与后台数据互通）
+
+**范围**：`miniprogram/utils/tracker.js`、`miniprogram/app.js`、`miniprogram/app.json`、`miniprogram/pages/review/*`、`miniprogram/pages/order/detail/*`、`server/app/controller/api/v1/Review.php`、`server/app/controller/api/v1/Track.php`、`server/app/service/ReviewService.php`、`server/app/service/OrderService.php`、`server/route/app.php`。
+
+- 商品评价闭环：新增小程序「发表评价」页面（评分 / 内容 / 传图），订单详情「去评价」可提交评价并写入 `goods_reviews`；后台评论管理（回复 / 隐藏 / 批量删除）实时可见真实评价。
+- 流量埋点：新增 `utils/tracker.js` 与后端 `Track` 接口，启动时登记访客会话、用 `wx.onAppRouteDone` 监听路由完成事件自动上报页面曝光与停留时长，后台网站 / 访客 / 商品分析收到真实流量。
+- 修复小程序开发者工具启动报错：`app.js` 原全局重写 `Page` 会触发 `appLaunch with non-empty page stack`，改为 `wx.onAppRouteDone` 事件挂载埋点。
+
+### v0.1.108 (2026-09-01) feat: 购物车空状态文案后台可配置
+
+**范围**：`miniprogram/pages/cart/cart.js`、`server/...`（commit 8d9c6a0）。
+- 购物车空状态提示文案改为后台可配置。
+
 ### v0.1.107 (2026-09-01) feat: 我的页面装修（订单模块）+ 轮播高度设置 + 订单图标预览
 
 **范围**：`miniprogram/pages/member/member.js`、`miniprogram/pages/member/member.wxml`、`server/app/controller/admin/Design.php`、`server/app/controller/api/v1/Design.php`、`server/app/service/PageService.php`、`server/public/admin.html`、`server/route/app.php`、`miniprogram/components/diy-render/diy-render.wxml`、`miniprogram/components/diy-render/diy-render.wxss`、`miniprogram/images/mine/refund.svg`、`server/public/images/mine/*`。

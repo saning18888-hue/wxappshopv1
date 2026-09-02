@@ -1,6 +1,7 @@
 const auth = require('./utils/auth');
 const settings = require('./utils/settings');
 const api = require('./utils/request');
+const tracker = require('./utils/tracker');
 
 // 后台底部导航 link.id -> 小程序 tabBar pagePath 映射
 const BOTTOM_NAV_PAGE_MAP = {
@@ -93,6 +94,20 @@ App({
     });
   },
   onLaunch() {
+    // 流量埋点：冷启动登记访客会话
+    tracker.registerVisitor();
+    // 页面曝光埋点：监听「路由完成」事件自动上报（用官方事件而非重写 Page，
+    // 避免微信开发者工具启动时报 appLaunch with non-empty page stack）
+    if (wx.onAppRouteDone) {
+      wx.onAppRouteDone(() => {
+        try {
+          const pages = getCurrentPages();
+          const cur = pages[pages.length - 1];
+          const route = (cur && cur.route) || '';
+          if (route) tracker.trackPage(route);
+        } catch (e) {}
+      });
+    }
     // 自动登录（Mock 模式直接换 token）
     auth.ensureLogin();
     // 冷启动：首次强制拉取最新基础设置并应用主题色

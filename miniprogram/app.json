@@ -14,6 +14,7 @@
     "pages/webview/webview",
     "pages/order/list/list",
     "pages/order/detail/detail",
+    "pages/review/review",
     "pages/aftersale/apply/apply",
     "pages/aftersale/list/list"
   ],
