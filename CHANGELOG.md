@@ -1,3 +1,11 @@
+### v0.1.110 (2026-09-02) feat: 文章详情页字段设置 UI 重构（iOS 开关 + 区块标题 + 字段说明）
+
+**范围**：`server/public/admin.html`。
+
+- 文章「基础设置」中「文章标题 / 发布时间 / 浏览量」三项字段展示开关，由文字 pill 单选（radio）改为 iOS 风格 toggle 开关（checkbox 语义），选中态以品牌色轨道 + 滑动 thumb 呈现，点击整行或开关任一位置均可切换，带 0.2s 缓动与 hover/focus 反馈。
+- 每项增加图标方块、字段标题与副标题说明（如「在文章详情页顶部显示文章标题」），并新增「详情页字段」区块标题与描述，信息层级更清晰。
+- 控件封装为独立 class（`.field-row` / `.switch` 等），不改动其他面板既有的 `.a-seg` 控件。
+
 ### v0.1.109 (2026-09-02) feat: 商品评价闭环 + 小程序流量埋点（与后台数据互通）
 
 **范围**：`miniprogram/utils/tracker.js`、`miniprogram/app.js`、`miniprogram/app.json`、`miniprogram/pages/review/*`、`miniprogram/pages/order/detail/*`、`server/app/controller/api/v1/Review.php`、`server/app/controller/api/v1/Track.php`、`server/app/service/ReviewService.php`、`server/app/service/OrderService.php`、`server/route/app.php`。

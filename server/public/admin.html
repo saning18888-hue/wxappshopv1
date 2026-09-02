@@ -459,16 +459,27 @@
     .a-field .radio{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--text-secondary);cursor:pointer;margin-right:0}
     .a-field .radio input{width:16px;height:16px;accent-color:var(--primary);margin:0}
     /* 基础设置：带图标分段控件（标签/图标/选项保持充足间距，避免拥挤死板） */
-    .a-set{display:flex;align-items:center;gap:22px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px}
-    .a-set-name{display:inline-flex;align-items:center;gap:9px;min-width:118px;font-size:13.5px;font-weight:500;color:var(--text)}
-    .a-set-name svg{width:16px;height:16px;color:var(--primary);flex:none}
-    .a-seg{display:inline-flex;background:#eef0f4;border-radius:10px;padding:3px;gap:3px}
-    .a-seg label{position:relative;display:inline-flex;align-items:center;gap:8px;padding:7px 18px;border-radius:8px;font-size:13px;color:var(--text-secondary);cursor:pointer;user-select:none;transition:all .15s}
-    .a-seg input{position:absolute;inset:0;opacity:0;cursor:pointer}
-    .a-seg .dot{width:9px;height:9px;border-radius:50%;border:1.5px solid #c4c8d4;transition:all .15s;flex:none}
-    .a-seg label:hover{color:var(--text)}
-    .a-seg label:has(input:checked){background:#fff;color:var(--primary);font-weight:600;box-shadow:0 1px 4px rgba(16,24,40,.12)}
-    .a-seg label:has(input:checked) .dot{background:var(--primary);border-color:var(--primary)}
+    /* 文章详情页字段设置：Linear 极简卡片 + iOS 风格 switch */
+    .a-settings-head{margin:0 0 14px}
+    .a-settings-title{font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:.2px;margin:0 0 4px}
+    .a-settings-desc{font-size:12.5px;color:var(--text-muted);margin:0;line-height:1.5}
+    .a-settings-list{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+    .field-row{display:flex;align-items:center;gap:16px;padding:16px 20px;border-top:1px solid #f0f1f4;transition:background .15s}
+    .field-row:first-child{border-top:0}
+    .field-row:hover{background:#fafbff}
+    .field-icon{width:36px;height:36px;border-radius:10px;background:var(--primary-50);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;flex:none}
+    .field-icon svg{width:18px;height:18px}
+    .field-meta{flex:1;min-width:0}
+    .field-title{font-size:14px;font-weight:600;color:var(--text);line-height:1.3;margin:0 0 3px}
+    .field-desc{font-size:12.5px;color:var(--text-muted);line-height:1.4;margin:0}
+    /* iOS 风格 switch */
+    .switch{position:relative;display:inline-block;width:40px;height:22px;flex:none;cursor:pointer}
+    .switch input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:2}
+    .switch-track{position:absolute;inset:0;background:#e4e6eb;border-radius:999px;transition:background .2s cubic-bezier(.4,0,.2,1)}
+    .switch-thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;box-shadow:0 1px 2px rgba(16,24,40,.2),0 1px 3px rgba(16,24,40,.12);transition:transform .2s cubic-bezier(.4,0,.2,1)}
+    .switch input:checked + .switch-track{background:var(--primary)}
+    .switch input:checked + .switch-track .switch-thumb{transform:translateX(18px)}
+    .switch input:focus-visible + .switch-track{box-shadow:0 0 0 3px rgba(94,106,210,.25)}
     .a-side{background:linear-gradient(180deg,#f8f9ff 0%,#f4f6fb 100%);border:1px solid var(--primary-100);border-radius:14px;padding:20px}
     .a-side-title{font-size:13px;font-weight:600;color:var(--text);margin:0 0 16px;letter-spacing:.2px}
     .a-article-cover .uploader-box{width:100%;aspect-ratio:16/9;max-height:220px;border-radius:12px;font-size:32px}
@@ -5190,28 +5201,43 @@
 
       <!-- 基础设置 -->
       <div id="tab-settings" class="article-pane">
-        <div class="a-hint" style="margin-bottom:18px">配置文章详情页默认展示的字段，保存后立即生效。</div>
-        <div class="a-col" style="max-width:460px">
-          <div class="a-set">
-            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M9 6v12M15 6v12"/></svg>文章标题</span>
-            <div class="a-seg">
-              <label><input type="radio" name="aTitleShow" value="1" checked><span class="dot"></span>显示</label>
-              <label><input type="radio" name="aTitleShow" value="0"><span class="dot"></span>隐藏</label>
+        <div class="a-settings-head">
+          <h3 class="a-settings-title">详情页字段</h3>
+          <p class="a-settings-desc">配置文章详情页默认展示的字段，保存后立即生效。</p>
+        </div>
+        <div class="a-settings-list">
+          <div class="field-row">
+            <div class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M9 6v12M15 6v12"/></svg></div>
+            <div class="field-meta">
+              <div class="field-title">文章标题</div>
+              <div class="field-desc">在文章详情页顶部显示文章标题</div>
             </div>
+            <label class="switch">
+              <input type="checkbox" name="aTitleShow" value="1" checked>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+            </label>
           </div>
-          <div class="a-set">
-            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>发布时间</span>
-            <div class="a-seg">
-              <label><input type="radio" name="aPublishShow" value="1" checked><span class="dot"></span>显示</label>
-              <label><input type="radio" name="aPublishShow" value="0"><span class="dot"></span>隐藏</label>
+          <div class="field-row">
+            <div class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
+            <div class="field-meta">
+              <div class="field-title">发布时间</div>
+              <div class="field-desc">显示文章的首次发布时间</div>
             </div>
+            <label class="switch">
+              <input type="checkbox" name="aPublishShow" value="1" checked>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+            </label>
           </div>
-          <div class="a-set">
-            <span class="a-set-name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>浏览量</span>
-            <div class="a-seg">
-              <label><input type="radio" name="aViewsShow" value="1" checked><span class="dot"></span>显示</label>
-              <label><input type="radio" name="aViewsShow" value="0"><span class="dot"></span>隐藏</label>
+          <div class="field-row">
+            <div class="field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="field-meta">
+              <div class="field-title">浏览量</div>
+              <div class="field-desc">显示文章累计浏览次数</div>
             </div>
+            <label class="switch">
+              <input type="checkbox" name="aViewsShow" value="1" checked>
+              <span class="switch-track"><span class="switch-thumb"></span></span>
+            </label>
           </div>
         </div>
         <div style="margin-top:20px"><button class="btn sm primary" onclick="saveArticleSettings()">保存设置</button></div>
@@ -7238,6 +7264,8 @@
     }
     function setRadio(name,val){document.querySelectorAll(`input[name="${name}"]`).forEach(r=>{r.checked=r.value===val;updateRadioStyle(r);});}
     function getRadio(name){const r=document.querySelector(`input[name="${name}"]:checked`);return r?r.value:null;}
+    function setCheck(name,val){const r=document.querySelector(`input[name="${name}"]`);if(r) r.checked=!!val;}
+    function getCheck(name){const r=document.querySelector(`input[name="${name}"]`);return r?!!r.checked:false;}
     function updateRadioStyle(r){
       const item=r.closest('.radio-item');
       if(item){item.classList.toggle('active',r.checked);return;}
@@ -12166,16 +12194,16 @@
       fetchA(`${BASE}/settings`).then(r=>{
         if(r.code!==0) return;
         const cfg=((r.data&&r.data.article)||{});
-        setRadio('aTitleShow',String(cfg.title_show??1));
-        setRadio('aPublishShow',String(cfg.publish_show??1));
-        setRadio('aViewsShow',String(cfg.views_show??1));
+        setCheck('aTitleShow',cfg.title_show??1);
+        setCheck('aPublishShow',cfg.publish_show??1);
+        setCheck('aViewsShow',cfg.views_show??1);
       });
     }
     function saveArticleSettings(){
       const body={
-        title_show:+getRadio('aTitleShow'),
-        publish_show:+getRadio('aPublishShow'),
-        views_show:+getRadio('aViewsShow')
+        title_show:getCheck('aTitleShow')?1:0,
+        publish_show:getCheck('aPublishShow')?1:0,
+        views_show:getCheck('aViewsShow')?1:0
       };
       fetchA(`${BASE}/articles_settings`,{method:'POST',body}).then(r=>{
         if(r.code!==0){toast(r.msg||'保存失败');return;}
