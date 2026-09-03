@@ -1,3 +1,8 @@
+### v0.1.112 (2026-09-03) fix: 后台相册管理 tab 初始化 + 编辑相册/分类状态被重置
+- 修复：进入「相册管理」默认不显示相册列表（需再点一下才显示）——`switchArticleTab` 用全局选择器污染了相册 tab 的 active，已限定到 `#articlePanel`，打开相册面板时自动激活首个 tab
+- 修复：编辑相册/相册分类时 `status`（手机端是否显示）被强制重置为「显示」，`Album::save` / `AlbumCategory::save` 编辑模式在前端未传 `status` 时保留原值
+- 核对：相册管理（列表/分类/图片上传/设封面/移动到其他相册/重命名/批量删除）前后端链路完整可用
+
 ### v0.1.111 (2026-09-02) fix: 文章详情/列表 404 + 后台文章设置分类模式提示与结构修复
 
 **范围**：`miniprogram/pages/article/detail/detail.js`、`miniprogram/pages/article/list/list.js`、`server/public/admin.html`。

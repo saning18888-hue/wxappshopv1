@@ -70,12 +70,15 @@ class AlbumCategory extends AdminController
             'name'  => $name,
             'icon'  => trim($d['icon'] ?? ''),
             'sort'  => intval($d['sort'] ?? 0),
-            'status'=> intval($d['status'] ?? 1),
         ];
 
         if ($id) {
+            if (isset($d['status'])) {
+                $fields['status'] = intval($d['status']);
+            }
             Db::name('album_categories')->where('id', $id)->update($fields);
         } else {
+            $fields['status'] = intval($d['status'] ?? 1);
             $id = Db::name('album_categories')->insertGetId($fields);
         }
 
