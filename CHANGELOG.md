@@ -1,3 +1,6 @@
+### v0.1.114 (2026-09-05) feat: 后台文章编辑弹窗加宽
+- 文章编辑弹窗 `#articleModal .modal-card` 宽度由 820px 调整为 1080px（`max-width` 94vw → 95vw），内容编辑器与基础信息两列同步变宽
+
 ### v0.1.113 (2026-09-05) feat: 后台平台权限「小程序版权显示」打通前后端
 - 后端 `SettingsService` 新增 `copyright_type`（hide/image/text）、`copyright_text`、`copyright_image` 字段，`/api/v1/settings` 自动返回
 - 后台「平台管理 → 平台权限」的「确定」由空保存改为真实 `POST /settings` 保存，并新增打开面板时回填、图片上传（base64 内联）、三态显隐切换

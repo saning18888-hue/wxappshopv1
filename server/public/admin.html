@@ -440,7 +440,7 @@
     .a-time{font-size:12.5px;color:var(--text-muted);white-space:nowrap}
 
     /* 编辑弹窗：两栏布局 */
-    #articleModal .modal-card{width:820px;max-width:94vw;border-radius:16px}
+    #articleModal .modal-card{width:1080px;max-width:95vw;border-radius:16px}
     #articleCategoryModal .modal-card{width:560px;max-width:94vw;border-radius:16px}
     .a-modal-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:28px;align-items:start}
     .a-col{min-width:0}
@@ -670,7 +670,7 @@
     .rte-toolbar .rte-select:hover{color:#409eff;background-color:#eef5ff}
     .rte-toolbar .rte-color{position:relative;overflow:hidden}
     .rte-toolbar .rte-color input[type=color]{position:absolute;inset:0;opacity:0;cursor:pointer}
-    .rte-toolbar .rte-picker{position:absolute;top:28px;left:0;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.12);padding:8px;z-index:20;display:none;min-width:180px}
+    .rte-toolbar .rte-picker{position:fixed;top:28px;left:0;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.12);padding:8px;z-index:20;display:none;min-width:180px}
     .rte-toolbar .rte-picker.show{display:block}
     .rte-emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px}
     .rte-emoji-grid button{width:24px;height:24px;font-size:16px;padding:0;border:0;background:transparent;border-radius:4px;cursor:pointer}
@@ -3623,51 +3623,119 @@
               <div class="agreement-block">
                 <h4 class="agreement-title">服务协议</h4>
                 <div class="rte-wrap" id="rteServiceWrap">
-                  <div class="rte-toolbar" id="rteServiceToolbar">
-                    <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
-                    <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
-                    <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
-                    <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="formatBlock" data-val="h2" title="标题">H</button>
-                    <button type="button" data-cmd="insertOrderedList" title="有序列表">1.</button>
-                    <button type="button" data-cmd="insertUnorderedList" title="无序列表">•</button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="justifyLeft" title="左对齐">左</button>
-                    <button type="button" data-cmd="justifyCenter" title="居中">中</button>
-                    <button type="button" data-cmd="justifyRight" title="右对齐">右</button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="link" title="链接">链接</button>
-                    <button type="button" data-cmd="image" title="图片">图片</button>
-                    <button type="button" data-cmd="source" title="源码">源码</button>
+                  <div class="rte-toolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
+                    <div class="rte-group">
+                      <select class="rte-select" onchange="rteFormatBlock(this.value);this.value=''" title="标题">
+                        <option value="" disabled selected>H</option>
+                        <option value="H1">H1</option>
+                        <option value="H2">H2</option>
+                        <option value="H3">H3</option>
+                        <option value="H4">H4</option>
+                        <option value="P">正文</option>
+                      </select>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="bold" title="加粗 (Ctrl+B)"><b>B</b></button>
+                      <button type="button" data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
+                      <button type="button" data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
+                      <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="justifyLeft" title="左对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                      <button type="button" data-cmd="justifyCenter" title="居中对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                      <button type="button" data-cmd="justifyRight" title="右对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="insertUnorderedList" title="无序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+                      <button type="button" data-cmd="insertOrderedList" title="有序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h2M4 12h2M4 18h2"/></svg></button>
+                      <button type="button" onclick="rteFormatBlock('blockquote')" title="引用"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h4v8H6zM14 8h4v8h-4z"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" onclick="rteInsertLink()" title="插入链接"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                      <button type="button" onclick="insertDetailImage()" title="插入图片"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                      <button type="button" onclick="insertDetailVideo()" title="插入视频"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></button>
+                      <button type="button" onclick="rteInsertTable()" title="插入表格"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+                      <button type="button" onclick="rteInsertHr()" title="插入分割线"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                      <button type="button" onclick="rteInsertEmoji(this)" title="表情"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="removeFormat" title="清除格式"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M7 7l2 10M14 7l-2 10M16 7l2 10"/></svg></button>
+                      <button type="button" onclick="rteWrapCode()" title="代码块"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                      <div class="rte-btn rte-color" title="文字颜色"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12M8 14h8"/></svg><input type="color" onchange="rteForeColor(this.value)" value="#333333"></div>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="undo" title="撤销 (Ctrl+Z)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                      <button type="button" data-cmd="redo" title="重做 (Ctrl+Y)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" class="rte-source-btn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                      <button type="button" onclick="rteToggleFullscreen()" title="全屏"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+                    </div>
+                    <div class="rte-picker">
+                      <div class="rte-emoji-grid"><button onclick="rtePickEmoji('😀')">😀</button><button onclick="rtePickEmoji('😃')">😃</button><button onclick="rtePickEmoji('😄')">😄</button><button onclick="rtePickEmoji('😁')">😁</button><button onclick="rtePickEmoji('😆')">😆</button><button onclick="rtePickEmoji('😅')">😅</button><button onclick="rtePickEmoji('🤣')">🤣</button><button onclick="rtePickEmoji('😂')">😂</button><button onclick="rtePickEmoji('🙂')">🙂</button><button onclick="rtePickEmoji('🙃')">🙃</button><button onclick="rtePickEmoji('😉')">😉</button><button onclick="rtePickEmoji('😊')">😊</button><button onclick="rtePickEmoji('😇')">😇</button><button onclick="rtePickEmoji('🥰')">🥰</button><button onclick="rtePickEmoji('😍')">😍</button><button onclick="rtePickEmoji('🤩')">🤩</button><button onclick="rtePickEmoji('😘')">😘</button><button onclick="rtePickEmoji('😗')">😗</button><button onclick="rtePickEmoji('😙')">😙</button><button onclick="rtePickEmoji('😚')">😚</button><button onclick="rtePickEmoji('😋')">😋</button><button onclick="rtePickEmoji('😛')">😛</button><button onclick="rtePickEmoji('😝')">😝</button><button onclick="rtePickEmoji('😜')">😜</button><button onclick="rtePickEmoji('🤪')">🤪</button><button onclick="rtePickEmoji('🤔')">🤔</button><button onclick="rtePickEmoji('🤨')">🤨</button><button onclick="rtePickEmoji('😐')">😐</button><button onclick="rtePickEmoji('😑')">😑</button><button onclick="rtePickEmoji('😶')">😶</button><button onclick="rtePickEmoji('🙄')">🙄</button><button onclick="rtePickEmoji('😏')">😏</button><button onclick="rtePickEmoji('😴')">😴</button><button onclick="rtePickEmoji('😷')">😷</button><button onclick="rtePickEmoji('🤒')">🤒</button><button onclick="rtePickEmoji('🤕')">🤕</button><button onclick="rtePickEmoji('🤑')">🤑</button><button onclick="rtePickEmoji('😤')">😤</button><button onclick="rtePickEmoji('😭')">😭</button><button onclick="rtePickEmoji('😡')">😡</button></div>
+                    </div>
                   </div>
-                  <div class="rte-editor" id="rteService" contenteditable="true"></div>
-                  <textarea class="rte-source" id="rteServiceSource" style="display:none"></textarea>
+                  <div class="rte-editor" id="rteService" contenteditable="true" placeholder="请输入服务协议内容"></div>
+                  <textarea class="rte-source" id="rteServiceSource" placeholder="HTML源码"></textarea>
                 </div>
               </div>
               <div class="agreement-block">
                 <h4 class="agreement-title">隐私政策</h4>
                 <div class="rte-wrap" id="rtePrivacyWrap">
-                  <div class="rte-toolbar" id="rtePrivacyToolbar">
-                    <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
-                    <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
-                    <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
-                    <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="formatBlock" data-val="h2" title="标题">H</button>
-                    <button type="button" data-cmd="insertOrderedList" title="有序列表">1.</button>
-                    <button type="button" data-cmd="insertUnorderedList" title="无序列表">•</button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="justifyLeft" title="左对齐">左</button>
-                    <button type="button" data-cmd="justifyCenter" title="居中">中</button>
-                    <button type="button" data-cmd="justifyRight" title="右对齐">右</button>
-                    <span class="rte-sep"></span>
-                    <button type="button" data-cmd="link" title="链接">链接</button>
-                    <button type="button" data-cmd="image" title="图片">图片</button>
-                    <button type="button" data-cmd="source" title="源码">源码</button>
+                  <div class="rte-toolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
+                    <div class="rte-group">
+                      <select class="rte-select" onchange="rteFormatBlock(this.value);this.value=''" title="标题">
+                        <option value="" disabled selected>H</option>
+                        <option value="H1">H1</option>
+                        <option value="H2">H2</option>
+                        <option value="H3">H3</option>
+                        <option value="H4">H4</option>
+                        <option value="P">正文</option>
+                      </select>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="bold" title="加粗 (Ctrl+B)"><b>B</b></button>
+                      <button type="button" data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
+                      <button type="button" data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
+                      <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="justifyLeft" title="左对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                      <button type="button" data-cmd="justifyCenter" title="居中对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                      <button type="button" data-cmd="justifyRight" title="右对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="insertUnorderedList" title="无序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+                      <button type="button" data-cmd="insertOrderedList" title="有序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h2M4 12h2M4 18h2"/></svg></button>
+                      <button type="button" onclick="rteFormatBlock('blockquote')" title="引用"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h4v8H6zM14 8h4v8h-4z"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" onclick="rteInsertLink()" title="插入链接"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                      <button type="button" onclick="insertDetailImage()" title="插入图片"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                      <button type="button" onclick="insertDetailVideo()" title="插入视频"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></button>
+                      <button type="button" onclick="rteInsertTable()" title="插入表格"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+                      <button type="button" onclick="rteInsertHr()" title="插入分割线"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                      <button type="button" onclick="rteInsertEmoji(this)" title="表情"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="removeFormat" title="清除格式"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M7 7l2 10M14 7l-2 10M16 7l2 10"/></svg></button>
+                      <button type="button" onclick="rteWrapCode()" title="代码块"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                      <div class="rte-btn rte-color" title="文字颜色"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12M8 14h8"/></svg><input type="color" onchange="rteForeColor(this.value)" value="#333333"></div>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" data-cmd="undo" title="撤销 (Ctrl+Z)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                      <button type="button" data-cmd="redo" title="重做 (Ctrl+Y)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+                    </div>
+                    <div class="rte-group">
+                      <button type="button" class="rte-source-btn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                      <button type="button" onclick="rteToggleFullscreen()" title="全屏"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+                    </div>
+                    <div class="rte-picker">
+                      <div class="rte-emoji-grid"><button onclick="rtePickEmoji('😀')">😀</button><button onclick="rtePickEmoji('😃')">😃</button><button onclick="rtePickEmoji('😄')">😄</button><button onclick="rtePickEmoji('😁')">😁</button><button onclick="rtePickEmoji('😆')">😆</button><button onclick="rtePickEmoji('😅')">😅</button><button onclick="rtePickEmoji('🤣')">🤣</button><button onclick="rtePickEmoji('😂')">😂</button><button onclick="rtePickEmoji('🙂')">🙂</button><button onclick="rtePickEmoji('🙃')">🙃</button><button onclick="rtePickEmoji('😉')">😉</button><button onclick="rtePickEmoji('😊')">😊</button><button onclick="rtePickEmoji('😇')">😇</button><button onclick="rtePickEmoji('🥰')">🥰</button><button onclick="rtePickEmoji('😍')">😍</button><button onclick="rtePickEmoji('🤩')">🤩</button><button onclick="rtePickEmoji('😘')">😘</button><button onclick="rtePickEmoji('😗')">😗</button><button onclick="rtePickEmoji('😙')">😙</button><button onclick="rtePickEmoji('😚')">😚</button><button onclick="rtePickEmoji('😋')">😋</button><button onclick="rtePickEmoji('😛')">😛</button><button onclick="rtePickEmoji('😝')">😝</button><button onclick="rtePickEmoji('😜')">😜</button><button onclick="rtePickEmoji('🤪')">🤪</button><button onclick="rtePickEmoji('🤔')">🤔</button><button onclick="rtePickEmoji('🤨')">🤨</button><button onclick="rtePickEmoji('😐')">😐</button><button onclick="rtePickEmoji('😑')">😑</button><button onclick="rtePickEmoji('😶')">😶</button><button onclick="rtePickEmoji('🙄')">🙄</button><button onclick="rtePickEmoji('😏')">😏</button><button onclick="rtePickEmoji('😴')">😴</button><button onclick="rtePickEmoji('😷')">😷</button><button onclick="rtePickEmoji('🤒')">🤒</button><button onclick="rtePickEmoji('🤕')">🤕</button><button onclick="rtePickEmoji('🤑')">🤑</button><button onclick="rtePickEmoji('😤')">😤</button><button onclick="rtePickEmoji('😭')">😭</button><button onclick="rtePickEmoji('😡')">😡</button></div>
+                    </div>
                   </div>
-                  <div class="rte-editor" id="rtePrivacy" contenteditable="true"></div>
-                  <textarea class="rte-source" id="rtePrivacySource" style="display:none"></textarea>
+                  <div class="rte-editor" id="rtePrivacy" contenteditable="true" placeholder="请输入隐私政策内容"></div>
+                  <textarea class="rte-source" id="rtePrivacySource" placeholder="HTML源码"></textarea>
                 </div>
               </div>
               <div style="margin-top:14px;text-align:right">
@@ -4232,7 +4300,7 @@
         <!-- 详情介绍 -->
         <div class="goods-panel" id="tab-detail" style="padding:0 20px 18px">
           <div class="rte-wrap">
-            <div class="rte-toolbar" id="rteToolbar" onmousedown="if(event.target.closest('button,.rte-btn,.rte-select'))event.preventDefault()">
+            <div class="rte-toolbar" id="rteToolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
               <div class="rte-group">
                 <select class="rte-select" id="rteHeading" onchange="rteFormatBlock(this.value);this.value=''" title="标题">
                   <option value="" disabled selected>H</option>
@@ -4277,10 +4345,10 @@
                 <button type="button" data-cmd="redo" title="重做 (Ctrl+Y)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
               </div>
               <div class="rte-group">
-                <button type="button" id="rteSourceBtn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                <button type="button" class="rte-source-btn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
                 <button type="button" onclick="rteToggleFullscreen()" title="全屏"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
               </div>
-              <div class="rte-picker" id="rteEmojiPicker">
+              <div class="rte-picker">
                 <div class="rte-emoji-grid">
                   <button onclick="rtePickEmoji('😀')">😀</button><button onclick="rtePickEmoji('😃')">😃</button><button onclick="rtePickEmoji('😄')">😄</button><button onclick="rtePickEmoji('😁')">😁</button>
                   <button onclick="rtePickEmoji('😆')">😆</button><button onclick="rtePickEmoji('😅')">😅</button><button onclick="rtePickEmoji('🤣')">🤣</button><button onclick="rtePickEmoji('😂')">😂</button>
@@ -5620,15 +5688,61 @@
           </div>
           <div class="a-full">
             <label class="a-content-label">内容</label>
-            <div class="editor">
-              <div class="editor-bar">
-                <button type="button" onclick="editorCmd('bold')"><b>B</b></button>
-                <button type="button" onclick="editorCmd('italic')"><i>I</i></button>
-                <button type="button" onclick="editorCmd('underline')"><u>U</u></button>
-                <button type="button" onclick="editorCmd('insertUnorderedList')">• 列表</button>
-                <button type="button" onclick="editorCmd('createLink')">🔗 链接</button>
+            <div class="editor rte-wrap">
+              <div class="rte-toolbar" onmousedown="if(event.target.closest('button'))event.preventDefault()">
+                <div class="rte-group">
+                  <select class="rte-select" onchange="rteFormatBlock(this.value);this.value=''" title="标题">
+                    <option value="" disabled selected>H</option>
+                    <option value="H1">H1</option>
+                    <option value="H2">H2</option>
+                    <option value="H3">H3</option>
+                    <option value="H4">H4</option>
+                    <option value="P">正文</option>
+                  </select>
+                </div>
+                <div class="rte-group">
+                  <button type="button" data-cmd="bold" title="加粗 (Ctrl+B)"><b>B</b></button>
+                  <button type="button" data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
+                  <button type="button" data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
+                  <button type="button" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+                </div>
+                <div class="rte-group">
+                  <button type="button" data-cmd="justifyLeft" title="左对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h16"/></svg></button>
+                  <button type="button" data-cmd="justifyCenter" title="居中对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M4 18h16"/></svg></button>
+                  <button type="button" data-cmd="justifyRight" title="右对齐"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M10 12h10M4 18h16"/></svg></button>
+                </div>
+                <div class="rte-group">
+                  <button type="button" data-cmd="insertUnorderedList" title="无序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></button>
+                  <button type="button" data-cmd="insertOrderedList" title="有序列表"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 6h11M10 12h11M10 18h11M4 6h2M4 12h2M4 18h2"/></svg></button>
+                  <button type="button" onclick="rteFormatBlock('blockquote')" title="引用"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h4v8H6zM14 8h4v8h-4z"/></svg></button>
+                </div>
+                <div class="rte-group">
+                  <button type="button" onclick="rteInsertLink()" title="插入链接"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                  <button type="button" onclick="insertDetailImage()" title="插入图片"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></button>
+                  <button type="button" onclick="insertDetailVideo()" title="插入视频"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/></svg></button>
+                  <button type="button" onclick="rteInsertTable()" title="插入表格"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></button>
+                  <button type="button" onclick="rteInsertHr()" title="插入分割线"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/></svg></button>
+                  <button type="button" onclick="rteInsertEmoji(this)" title="表情"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1"/><circle cx="15" cy="9" r="1"/></svg></button>
+                </div>
+                <div class="rte-group">
+                  <button type="button" data-cmd="removeFormat" title="清除格式"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h18M7 7l2 10M14 7l-2 10M16 7l2 10"/></svg></button>
+                  <button type="button" onclick="rteWrapCode()" title="代码块"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                  <div class="rte-btn rte-color" title="文字颜色"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12M8 14h8"/></svg><input type="color" onchange="rteForeColor(this.value)" value="#333333"></div>
+                </div>
+                <div class="rte-group">
+                  <button type="button" data-cmd="undo" title="撤销 (Ctrl+Z)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg></button>
+                  <button type="button" data-cmd="redo" title="重做 (Ctrl+Y)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg></button>
+                </div>
+                <div class="rte-group">
+                  <button type="button" class="rte-source-btn" onclick="rteToggleSource()" title="源码"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></button>
+                  <button type="button" onclick="rteToggleFullscreen()" title="全屏"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg></button>
+                </div>
+                <div class="rte-picker">
+                  <div class="rte-emoji-grid"><button onclick="rtePickEmoji('😀')">😀</button><button onclick="rtePickEmoji('😃')">😃</button><button onclick="rtePickEmoji('😄')">😄</button><button onclick="rtePickEmoji('😁')">😁</button><button onclick="rtePickEmoji('😆')">😆</button><button onclick="rtePickEmoji('😅')">😅</button><button onclick="rtePickEmoji('🤣')">🤣</button><button onclick="rtePickEmoji('😂')">😂</button><button onclick="rtePickEmoji('🙂')">🙂</button><button onclick="rtePickEmoji('🙃')">🙃</button><button onclick="rtePickEmoji('😉')">😉</button><button onclick="rtePickEmoji('😊')">😊</button><button onclick="rtePickEmoji('😇')">😇</button><button onclick="rtePickEmoji('🥰')">🥰</button><button onclick="rtePickEmoji('😍')">😍</button><button onclick="rtePickEmoji('🤩')">🤩</button><button onclick="rtePickEmoji('😘')">😘</button><button onclick="rtePickEmoji('😗')">😗</button><button onclick="rtePickEmoji('😙')">😙</button><button onclick="rtePickEmoji('😚')">😚</button><button onclick="rtePickEmoji('😋')">😋</button><button onclick="rtePickEmoji('😛')">😛</button><button onclick="rtePickEmoji('😝')">😝</button><button onclick="rtePickEmoji('😜')">😜</button><button onclick="rtePickEmoji('🤪')">🤪</button><button onclick="rtePickEmoji('🤔')">🤔</button><button onclick="rtePickEmoji('🤨')">🤨</button><button onclick="rtePickEmoji('😐')">😐</button><button onclick="rtePickEmoji('😑')">😑</button><button onclick="rtePickEmoji('😶')">😶</button><button onclick="rtePickEmoji('🙄')">🙄</button><button onclick="rtePickEmoji('😏')">😏</button><button onclick="rtePickEmoji('😴')">😴</button><button onclick="rtePickEmoji('😷')">😷</button><button onclick="rtePickEmoji('🤒')">🤒</button><button onclick="rtePickEmoji('🤕')">🤕</button><button onclick="rtePickEmoji('🤑')">🤑</button><button onclick="rtePickEmoji('😤')">😤</button><button onclick="rtePickEmoji('😭')">😭</button><button onclick="rtePickEmoji('😡')">😡</button></div>
+                </div>
               </div>
-              <div id="aContent" class="editor-body" contenteditable="true"></div>
+              <div id="aContent" class="editor-body rte-editor" contenteditable="true" placeholder="请输入文章内容"></div>
+              <textarea class="rte-source" id="aContentSource" placeholder="HTML源码"></textarea>
             </div>
           </div>
         </div>
@@ -6925,36 +7039,7 @@
     }
     function closeMemberDistributor(){document.getElementById('memberDistributorModal').classList.remove('open');}
 
-    /* 轻量富文本编辑器（会员协议双实例） */
-    function initSimpleRte(editorId,sourceId){
-      const editor=document.getElementById(editorId);
-      const source=document.getElementById(sourceId);
-      const wrap=editor.closest('.rte-wrap');
-      const toolbar=wrap.querySelector('.rte-toolbar');
-      let range=null;
-      const saveRange=()=>{const s=window.getSelection();if(s&&s.rangeCount&&editor.contains(s.anchorNode))range=s.getRangeAt(0).cloneRange();};
-      editor.addEventListener('mouseup',saveRange);
-      editor.addEventListener('keyup',saveRange);
-      const restore=()=>{if(range){editor.focus();const s=window.getSelection();s.removeAllRanges();s.addRange(range);}};
-      const exec=(cmd,val=null)=>{restore();try{document.execCommand(cmd,false,val);}catch(e){}};
-      toolbar.querySelectorAll('[data-cmd]').forEach(b=>b.addEventListener('click',async()=>{
-        const cmd=b.dataset.cmd,val=b.dataset.val;
-        if(cmd==='source'){toggleSource();return;}
-        if(cmd==='link'){const url=await promptDialog('链接地址','https://');if(url)exec('createLink',url);return;}
-        if(cmd==='image'){pickImage();return;}
-        exec(cmd,val);
-      }));
-      function toggleSource(){
-        const isSrc=wrap.classList.toggle('source-mode');
-        if(isSrc){source.value=editor.innerHTML;}else{editor.innerHTML=source.value;}
-        source.style.display=isSrc?'block':'none';
-      }
-      async function pickImage(){
-        const input=document.createElement('input');input.type='file';input.accept='image/*';
-        input.onchange=async()=>{if(input.files&&input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){restore();document.execCommand('insertImage',false,url);}}};
-        input.click();
-      }
-    }
+    /* 会员协议编辑器已统一为下方通用富文本逻辑（setupRte 全局事件委托） */
     function getRteHTML(editorId){
       const editor=document.getElementById(editorId);
       const wrap=editor.closest('.rte-wrap');
@@ -7005,8 +7090,10 @@
     }
 
     async function loadMemberAgreement(){
-      if(!rteInited){initSimpleRte('rteService','rteServiceSource');initSimpleRte('rtePrivacy','rtePrivacySource');rteInited=true;}
+      if(!rteInited){rteInited=true;}
       const d=await fetchA(`${BASE}/member_agreement`);
+      const sW=document.getElementById('rteServiceWrap');if(sW){sW.classList.remove('source-mode');const sS=sW.querySelector('.rte-source');if(sS)sS.value='';}
+      const pW=document.getElementById('rtePrivacyWrap');if(pW){pW.classList.remove('source-mode');const pS=pW.querySelector('.rte-source');if(pS)pS.value='';}
       document.getElementById('rteService').innerHTML=(d.data&&d.data.service_agreement)||'';
       document.getElementById('rtePrivacy').innerHTML=(d.data&&d.data.privacy_agreement)||'';
     }
@@ -7683,89 +7770,117 @@
       wrap.innerHTML=selected.map(a=>`<div style="margin-bottom:8px"><span style="color:#606266;font-size:13px">${escapeHtml(a.name)}：</span><span style="color:#303133;font-size:13px">${(a.values||[]).map(v=>escapeHtml(v)).join(', ')}</span></div>`).join('');
     }
 
-    /* Rich text editor（保存选区，工具栏/插入资源时不会丢失光标） */
-    let gDetailRange=null;
-    const gDetailEl=document.getElementById('gDetail');
-    const gDetailSource=document.getElementById('gDetailSource');
-    const rteWrap=gDetailEl.closest('.rte-wrap');
+    /* ===== 通用富文本编辑器：所有 .rte-editor 共用同一套工具栏逻辑（操作"当前活动编辑器"） ===== */
+    let rte={editor:null,wrap:null,source:null,range:null};
+    function rteSetActive(editor){
+      if(!editor)return;
+      rte.editor=editor;
+      rte.wrap=editor.closest('.rte-wrap');
+      rte.source=rte.wrap?rte.wrap.querySelector('.rte-source'):null;
+    }
     document.addEventListener('selectionchange',()=>{
       const s=window.getSelection();
-      if(s&&s.rangeCount&&gDetailEl.contains(s.anchorNode)){gDetailRange=s.getRangeAt(0).cloneRange();}
+      if(s&&s.rangeCount){
+        const n=s.anchorNode,ed=(n&&n.nodeType===3)?n.parentElement:n;
+        const editor=ed&&ed.closest?ed.closest('.rte-editor'):null;
+        if(editor){rteSetActive(editor);rte.range=s.getRangeAt(0).cloneRange();}
+      }
     });
-    function restoreDetailRange(){
-      if(!gDetailRange)return;
-      gDetailEl.focus();
-      const s=window.getSelection();s.removeAllRanges();s.addRange(gDetailRange);
+    function rteFocusEditor(){
+      if(!rte.editor)return false;
+      if(!rte.range){const r=document.createRange();r.selectNodeContents(rte.editor);r.collapse(false);rte.range=r;}
+      try{rte.editor.focus();}catch(e){}
+      const s=window.getSelection();s.removeAllRanges();s.addRange(rte.range);return true;
     }
     function rteExec(cmd,val=null){
-      restoreDetailRange();
+      rteFocusEditor();
       if(cmd==='hiliteColor'||cmd==='backColor')try{document.execCommand('styleWithCSS',false,true);}catch(e){}
       document.execCommand(cmd,false,val);
       rteUpdateActive();
     }
     function rteFormatBlock(tag){
       if(!tag)return;
-      restoreDetailRange();
+      if(!rte.editor)return;
+      if(!rte.range){const r=document.createRange();r.selectNodeContents(rte.editor);r.collapse(false);rte.range=r;}
+      rteFocusEditor();
       if(tag==='blockquote'){
         const s=window.getSelection();
-        if(s.rangeCount){const r=s.getRangeAt(0);const q=document.createElement('blockquote');r.surroundContents(q);}
+        if(s.rangeCount){const r=s.getRangeAt(0);const q=document.createElement('blockquote');try{r.surroundContents(q);}catch(e){q.appendChild(r.extractContents());r.insertNode(q);}}
       }else{
-        document.execCommand('formatBlock',false,tag);
+        try{document.execCommand('styleWithCSS',false,false);}catch(e){}
+        document.execCommand('formatBlock',false,'<'+tag+'>');
       }
       rteUpdateActive();
     }
     async function rteInsertLink(){
-      restoreDetailRange();
+      if(!rteFocusEditor())return;
       const url=await promptDialog('请输入链接地址：','https://');
       if(url)rteExec('createLink',url);
     }
     async function rteInsertTable(){
+      if(!rteFocusEditor())return;
       const cols=parseInt(await promptDialog('列数','3'),10)||3;
       const rows=parseInt(await promptDialog('行数','3'),10)||3;
       let html='<table><tbody>';
       for(let i=0;i<rows;i++){html+='<tr>';for(let j=0;j<cols;j++){html+='<td> </td>';}html+='</tr>';}
       html+='</tbody></table><p><br></p>';
-      restoreDetailRange();document.execCommand('insertHTML',false,html);
+      document.execCommand('insertHTML',false,html);
     }
-    function rteInsertHr(){restoreDetailRange();document.execCommand('insertHTML',false,'<hr>');}
+    function rteInsertHr(){if(rteFocusEditor())document.execCommand('insertHTML',false,'<hr>');}
     function rteWrapCode(){
-      restoreDetailRange();
+      if(!rteFocusEditor())return;
       const s=window.getSelection();
-      if(s.rangeCount){const r=s.getRangeAt(0);const pre=document.createElement('pre');const code=document.createElement('code');pre.appendChild(code);r.surroundContents(pre);}
+      if(s.rangeCount){const r=s.getRangeAt(0);const pre=document.createElement('pre');const code=document.createElement('code');pre.appendChild(code);try{r.surroundContents(pre);}catch(e){pre.appendChild(r.extractContents());r.insertNode(pre);}}
     }
-    function rteForeColor(color){restoreDetailRange();rteExec('foreColor',color);}
-    function rteInsertEmoji(btn){const picker=document.getElementById('rteEmojiPicker');const rect=btn.getBoundingClientRect();picker.style.left=Math.min(rect.left-4,document.documentElement.clientWidth-196)+'px';picker.style.top=(rect.bottom+4)+'px';picker.classList.toggle('show');}
-    function rtePickEmoji(emoji){restoreDetailRange();document.execCommand('insertText',false,emoji);document.getElementById('rteEmojiPicker').classList.remove('show');}
-    document.addEventListener('click',e=>{if(!e.target.closest('#rteEmojiPicker')&&!e.target.closest('[title="表情"]'))document.getElementById('rteEmojiPicker').classList.remove('show');});
+    function rteForeColor(color){if(rteFocusEditor())rteExec('foreColor',color);}
+    function rteInsertEmoji(btn){
+      const wrap=btn.closest('.rte-wrap');if(!wrap)return;
+      const picker=wrap.querySelector('.rte-picker');if(!picker)return;
+      const rect=btn.getBoundingClientRect();
+      picker.style.left=Math.min(rect.left-4,document.documentElement.clientWidth-196)+'px';
+      picker.style.top=(rect.bottom+4)+'px';
+      picker.classList.toggle('show');
+    }
+    function rtePickEmoji(emoji){if(rteFocusEditor())document.execCommand('insertText',false,emoji);const p=document.querySelector('.rte-picker.show');if(p)p.classList.remove('show');}
+    document.addEventListener('click',e=>{if(!e.target.closest('.rte-picker')&&!e.target.closest('[title="表情"]')){const p=document.querySelector('.rte-picker.show');if(p)p.classList.remove('show');}});
     function rteToggleSource(){
-      const isSrc=rteWrap.classList.toggle('source-mode');
-      if(isSrc){gDetailSource.value=gDetailEl.innerHTML;}else{gDetailEl.innerHTML=gDetailSource.value;}
-      document.getElementById('rteSourceBtn').classList.toggle('active',isSrc);
+      if(!rte.wrap)return;
+      const isSrc=rte.wrap.classList.toggle('source-mode');
+      if(isSrc){if(rte.source)rte.source.value=rte.editor.innerHTML;}else{if(rte.source)rte.editor.innerHTML=rte.source.value;}
+      const btn=rte.wrap.querySelector('.rte-source-btn');if(btn)btn.classList.toggle('active',isSrc);
     }
-    gDetailSource.addEventListener('input',()=>{if(rteWrap.classList.contains('source-mode'))gDetailEl.innerHTML=gDetailSource.value;});
-    function rteToggleFullscreen(){rteWrap.classList.toggle('fullscreen');}
+    document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('rte-source')){const wrap=e.target.closest('.rte-wrap');if(wrap&&wrap.classList.contains('source-mode')){const ed=wrap.querySelector('.rte-editor');if(ed)ed.innerHTML=e.target.value;}}});
+    function rteToggleFullscreen(){if(rte.wrap)rte.wrap.classList.toggle('fullscreen');}
     function rteUpdateActive(){
-      document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>{
+      if(!rte.wrap)return;
+      rte.wrap.querySelectorAll('button[data-cmd]').forEach(b=>{
         const cmd=b.dataset.cmd;if(!cmd)return;
         try{b.classList.toggle('active',document.queryCommandState(cmd));}catch(e){}
       });
     }
-    document.querySelectorAll('#rteToolbar button[data-cmd]').forEach(b=>b.addEventListener('click',()=>{
-      const cmd=b.dataset.cmd;rteExec(cmd);
-    }));
-    gDetailEl.addEventListener('keyup',rteUpdateActive);
-    gDetailEl.addEventListener('mouseup',rteUpdateActive);
-    gDetailEl.addEventListener('keydown',e=>{
-      if(e.ctrlKey&&(e.key==='b'||e.key==='i'||e.key==='u')){e.preventDefault();const cmd=e.key==='b'?'bold':e.key==='i'?'italic':'underline';rteExec(cmd);}
+    document.addEventListener('click',e=>{
+      const b=e.target.closest('.rte-toolbar button[data-cmd]');
+      if(!b)return;
+      const cmd=b.dataset.cmd;
+      if(cmd==='source'){rteToggleSource();return;}
+      if(cmd==='link'){rteInsertLink();return;}
+      if(cmd==='image'){insertDetailImage();return;}
+      rteExec(cmd);
+    });
+    document.addEventListener('mouseup',e=>{if(e.target.closest&&e.target.closest('.rte-editor'))rteUpdateActive();});
+    document.addEventListener('keyup',e=>{if(e.target.closest&&e.target.closest('.rte-editor'))rteUpdateActive();});
+    document.addEventListener('keydown',e=>{
+      if(e.ctrlKey&&(e.key==='b'||e.key==='i'||e.key==='u')&&e.target.closest&&e.target.closest('.rte-editor')){e.preventDefault();rteExec(e.key==='b'?'bold':e.key==='i'?'italic':'underline');}
     });
     async function insertDetailImage(){
+      if(!rteFocusEditor())return;
       const input=document.createElement('input');input.type='file';input.accept='image/*';
-      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){restoreDetailRange();document.execCommand('insertImage',false,url);}}};
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'image');if(url){rteFocusEditor();document.execCommand('insertImage',false,url);}}};
       input.click();
     }
     async function insertDetailVideo(){
       const input=document.createElement('input');input.type='file';input.accept='video/*';
-      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url){restoreDetailRange();document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}}};
+      input.onchange=async()=>{if(input.files[0]){const url=await uploadToServer(input.files[0],'video');if(url){rteFocusEditor();document.execCommand('insertHTML',false,`<video src="${url}" controls style="max-width:100%"></video>`);}}};
       input.click();
     }
     async function addMessageField(){const name=await promptDialog('留言字段名称');if(name)document.getElementById('gMessage').value=name;}
@@ -7783,6 +7898,7 @@
       document.getElementById('gPrice').value=g.price?g.price.toFixed(2):'';
       document.getElementById('gMarket').value=g.market_price?g.market_price.toFixed(2):'';
       document.getElementById('gStock').value=g.stock||'';
+      const dW=document.getElementById('gDetail').closest('.rte-wrap');if(dW){dW.classList.remove('source-mode');const dS=dW.querySelector('.rte-source');if(dS)dS.value='';}
       document.getElementById('gDetail').innerHTML=g.detail_html||'';
       gState.images=g.images||[];renderImages();
 
@@ -12249,6 +12365,7 @@
       setRadio('aDisplayMode','native');
       setRadio('aRecommend','0');
       document.getElementById('aVideoType').value='none';
+      const aW=document.getElementById('aContent').closest('.rte-wrap');if(aW){aW.classList.remove('source-mode');const aS=aW.querySelector('.rte-source');if(aS)aS.value='';}
       document.getElementById('aContent').innerHTML='';
       document.getElementById('aCoverPreview').innerHTML='+';
       document.getElementById('aCoverPreview').style.backgroundImage='';
@@ -12270,6 +12387,7 @@
           document.getElementById('aKeywords').value=a.keywords||'';
           document.getElementById('aLink').value=a.external_link||'';
           document.getElementById('aVideoType').value=a.video_type||'none';
+          const aW=document.getElementById('aContent').closest('.rte-wrap');if(aW){aW.classList.remove('source-mode');const aS=aW.querySelector('.rte-source');if(aS)aS.value='';}
           document.getElementById('aContent').innerHTML=a.content||'';
           setRadio('aDisplayMode',a.display_mode||'native');
           setRadio('aRecommend',String(a.is_recommend||0));
@@ -12310,7 +12428,7 @@
         is_show:1,
         views:+document.getElementById('aViews').value||0,
         video_type:document.getElementById('aVideoType').value,
-        content:document.getElementById('aContent').innerHTML
+        content:getRteHTML('aContent')
       };
       fetchA(aEditingId?`${BASE}/articles/${aEditingId}/save`:`${BASE}/articles`,{method:'POST',body}).then(r=>{
         if(r.code!==0){toast(r.msg||'保存失败');return;}
