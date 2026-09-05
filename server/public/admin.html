@@ -4016,7 +4016,14 @@
                 </div>
                 <div class="a-field" id="platformCopyrightTextWrap">
                   <label>小程序版权</label>
-                  <input type="text" class="input" id="platformCopyrightText" value="鲁ICP备2023037624号-1X 做同款小程序：186547235">
+                  <input type="text" class="input" id="platformCopyrightText" placeholder="如：鲁ICP备xxxx号 做同款小程序：13xxxx">
+                </div>
+                <div class="a-field hidden" id="platformCopyrightImageWrap">
+                  <label>小程序版权图片</label>
+                  <div id="platformCopyrightImagePreview" style="width:160px;height:90px;border:1px dashed #d9d9d9;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#fafafa">
+                    <span style="color:#bbb">点击上传</span>
+                  </div>
+                  <input type="file" id="platformCopyrightImageInput" accept="image/*" onchange="onPlatformCopyrightImageSelected(this)" style="margin-top:10px">
                 </div>
                 <button class="btn primary" onclick="savePlatformAuth()">确定</button>
               </div>
@@ -6455,6 +6462,7 @@
 
     function initPlatformManage(){
       switchPlatformTab('auth');
+      loadPlatformAuth();
       renderPlatformApps();
       document.querySelectorAll('input[name="copyrightType"]').forEach(el=>{
         el.addEventListener('change',togglePlatformCopyrightInput);
@@ -6464,8 +6472,10 @@
 
     function togglePlatformCopyrightInput(){
       const type=getRadioValue('copyrightType');
-      const wrap=document.getElementById('platformCopyrightTextWrap');
-      if(wrap) wrap.style.display=(type==='hide')?'none':'';
+      const textWrap=document.getElementById('platformCopyrightTextWrap');
+      const imgWrap=document.getElementById('platformCopyrightImageWrap');
+      if(textWrap) textWrap.style.display=(type==='text')?'':'none';
+      if(imgWrap) imgWrap.style.display=(type==='image')?'':'none';
     }
 
     function switchPlatformTab(tab){
@@ -6552,7 +6562,44 @@
     }
 
     function batchEditUploadSettings(){toast('正在批量修改上传设置...');}
-    function savePlatformAuth(){toast('平台权限已保存');}
+    let platformAuthData={};
+    let platformCopyrightImage='';
+    async function loadPlatformAuth(){
+      const d=await fetchA(`${BASE}/settings`);
+      if(d.code!==0){toast(d.msg||'加载失败');return;}
+      platformAuthData=d.data||{};
+      setRadioValue('copyrightType',platformAuthData.copyright_type||'text');
+      const textEl=document.getElementById('platformCopyrightText');
+      if(textEl) textEl.value=platformAuthData.copyright_text||'';
+      platformCopyrightImage=platformAuthData.copyright_image||'';
+      const pv=document.getElementById('platformCopyrightImagePreview');
+      if(pv) pv.innerHTML=platformCopyrightImage?`<img src="${platformCopyrightImage}" style="max-width:100%;max-height:100%">`:'<span style="color:#bbb">点击上传</span>';
+      togglePlatformCopyrightInput();
+    }
+    function onPlatformCopyrightImageSelected(fileEl){
+      const file=fileEl.files[0];
+      if(!file)return;
+      const reader=new FileReader();
+      reader.onload=evt=>{
+        platformCopyrightImage=evt.target.result;
+        const pv=document.getElementById('platformCopyrightImagePreview');
+        if(pv) pv.innerHTML=`<img src="${platformCopyrightImage}" style="max-width:100%;max-height:100%">`;
+      };
+      reader.readAsDataURL(file);
+      fileEl.value='';
+    }
+    async function savePlatformAuth(){
+      const type=getRadioValue('copyrightType');
+      const payload={
+        copyright_type: type,
+        copyright_text: (document.getElementById('platformCopyrightText')?.value||'').trim(),
+        copyright_image: (type==='image') ? (platformCopyrightImage||'') : ''
+      };
+      const d=await fetchA(`${BASE}/settings`,{method:'POST',body:{config:payload}});
+      if(d.code!==0){toast(d.msg||'保存失败');return;}
+      platformAuthData=Object.assign({},platformAuthData,d.data||{});
+      toast('平台权限已保存');
+    }
 
     /* ===== 会员管理 ===== */
     let memberTab='all',memberPage=1,memberSize=20,memberTotal=0;

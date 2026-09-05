@@ -37,4 +37,10 @@
       <view class="site-closed-reason">{{closeReason}}</view>
     </view>
   </view>
+
+  <!-- 小程序版权 -->
+  <view class="copyright-box" wx:if="{{copyright.type === 'image' || copyright.type === 'text'}}">
+    <image wx:if="{{copyright.type === 'image' && copyright.image}}" class="copyright-img" src="{{copyright.image}}" mode="widthFix" />
+    <text wx:if="{{copyright.type === 'text' && copyright.text}}" class="copyright-text">{{copyright.text}}</text>
+  </view>
 </view>

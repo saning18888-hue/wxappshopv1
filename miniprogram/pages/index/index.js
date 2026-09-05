@@ -70,6 +70,11 @@ Page({
         homeSubtitle: s.home_subtitle || '',
         scrollOrder: s.scroll_order || 'close',
         scrollOrderList: Array.isArray(s.scroll_order_list) ? s.scroll_order_list : [],
+        copyright: {
+          type: s.copyright_type || 'text',
+          text: s.copyright_text || '',
+          image: s.copyright_image || '',
+        },
       }, () => {
         this.showCollectTip();
         this.startScrollOrder();

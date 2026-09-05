@@ -64,6 +64,9 @@ const DEFAULTS = {
   captcha_order: false,
   slider_verify: true,
   risk_control: 'low',
+  copyright_type: 'text', // 小程序版权显示方式：hide=隐藏 / image=图片 / text=文字
+  copyright_text: '', // 小程序版权文字（type=text 时展示）
+  copyright_image: '', // 小程序版权图片地址（type=image 时展示）
 };
 
 let cache = null;

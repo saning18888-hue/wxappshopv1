@@ -22,7 +22,14 @@ Page({
     const u = auth.getUser();
     this.applyUser(u);
     settings.fetchSettings(true).then((s) => {
-      this.setData({ themeColor: s.theme_color || '#FF6B35' });
+      this.setData({
+        themeColor: s.theme_color || '#FF6B35',
+        copyright: {
+          type: s.copyright_type || 'text',
+          text: s.copyright_text || '',
+          image: s.copyright_image || '',
+        },
+      });
     });
     this.loadMemberDesign();
     this.loadOrderCounts();

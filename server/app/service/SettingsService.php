@@ -36,6 +36,10 @@ class SettingsService
             'search_placeholder' => '搜索你想要的好物', // 首页搜索框占位文字
             'mini_program_name_color' => '#333333', // 小程序首页顶部标题名称颜色
             'admin_copyright'    => '',          // 后台版权信息
+            // —— 小程序端版权（后台 → 平台管理 → 平台权限 → 小程序版权显示）——
+            'copyright_type'     => 'text',       // 小程序版权显示方式：hide=隐藏 / image=图片 / text=文字
+            'copyright_text'     => '',           // 小程序版权文字（type=text 时展示；留空则不渲染文字）
+            'copyright_image'    => '',           // 小程序版权图片地址（type=image 时展示，可填图片 URL 或 base64）
             'domain_verify_file' => '',           // 域名校验文件名
             'collect_tip'        => 'open',      // 收藏提示：open=开启 / close=关闭
             'home_subtitle'      => '',          // 首页副标题

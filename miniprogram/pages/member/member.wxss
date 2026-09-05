@@ -173,3 +173,12 @@
 .menu-item:last-child { border-bottom: none; }
 .menu-label { font-size: 30rpx; color: #333; }
 .menu-item .arrow { font-size: 30rpx; color: #ccc; }
+
+/* 小程序版权（后台平台权限配置） */
+.copyright-box {
+  padding: 40rpx 32rpx 60rpx;
+  text-align: center;
+  box-sizing: border-box;
+}
+.copyright-img { width: 360rpx; height: auto; }
+.copyright-text { font-size: 22rpx; color: #999; line-height: 1.6; word-break: break-all; }
